@@ -1,4 +1,4 @@
-import {Component, Input, OnDestroy, OnInit} from '@angular/core';
+import {Component, Input, OnDestroy} from '@angular/core';
 import {WeatherLocation} from "./weather-location";
 import {WeatherData} from "./weather-data";
 import {WeatherService} from "./weather.service";
@@ -9,7 +9,7 @@ import {Subscription} from "rxjs";
   templateUrl: './weather.component.html',
   styleUrls: ['./weather.component.scss']
 })
-export class WeatherComponent implements OnInit, OnDestroy {
+export class WeatherComponent implements OnDestroy {
 
   weather : WeatherData;
   loading : boolean;
@@ -20,19 +20,13 @@ export class WeatherComponent implements OnInit, OnDestroy {
 
   constructor(private weatherService : WeatherService) {
     this.weather = {
-      location: this.weatherLocation,
-      airTemperature: 21.3,
-      waterFlow: 143,
-      waterTemperature: 16.6,
-      weatherSymbol: 2,
-      timestamp: 0
+      airTemperature: 0, location: "", timestamp: 0, waterFlow: 0, waterTemperature: 0, weatherSymbol: 0
     }
     this.loading = true;
     this.weatherServiceSubscription = this.weatherService.getWeatherObservable().subscribe((data)=>this.refreshWeatherData(data));
   }
 
   private refreshWeatherData(data: WeatherData){
-    console.log(`Received data`, data);
     if(data.location === this.weatherLocation){
       this.weather.weatherSymbol = data.weatherSymbol;
       this.weather.airTemperature = data.airTemperature;
@@ -44,11 +38,7 @@ export class WeatherComponent implements OnInit, OnDestroy {
     }
   }
 
-  ngOnInit(): void {
-  }
-
   ngOnDestroy(): void {
     this.weatherServiceSubscription.unsubscribe();
   }
-
 }

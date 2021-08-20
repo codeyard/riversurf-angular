@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import {WeatherLocation} from "./components/weather/weather/weather.component";
+import {WeatherLocation} from "./components/weather/weather/weather-location";
 
 @Component({
   selector: 'app-root',
@@ -8,5 +8,4 @@ import {WeatherLocation} from "./components/weather/weather/weather.component";
 })
 export class AppComponent {
   title = 'RiverSurf';
-  eventLocation : WeatherLocation = 'thun';
 }

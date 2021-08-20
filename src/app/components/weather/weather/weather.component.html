@@ -1,21 +1,24 @@
 <mat-card>
-    <mat-spinner *ngIf="loading"></mat-spinner>
-    <mat-grid-list *ngIf="!loading" cols="2" rowHeight="50px">
-        <mat-grid-tile>
-            <img alt="Weather symbol" src="./assets/weather/{{weather.weatherSymbol}}.png">
-        </mat-grid-tile>
-        <mat-grid-tile class="water">
-            <mat-icon>waves</mat-icon>
-            {{weather.waterTemperature}} °C
-        </mat-grid-tile>
-        <mat-grid-tile class="air">
-            {{weather.airTemperature}} °C
-        </mat-grid-tile>
-        <mat-grid-tile class="water">
-            <mat-icon>waves</mat-icon>
-            {{weather.waterFlow}} m³/s
-        </mat-grid-tile>
-    </mat-grid-list>
+    <mat-card-title>{{weather.location}}</mat-card-title>
+    <mat-card-content>
+        <mat-spinner *ngIf="loading"></mat-spinner>
+        <mat-grid-list *ngIf="!loading" cols="2" rowHeight="50px">
+            <mat-grid-tile>
+                <img alt="Weather symbol" src="./assets/weather/{{weather.weatherSymbol}}.png">
+            </mat-grid-tile>
+            <mat-grid-tile class="water">
+                <mat-icon>waves</mat-icon>
+                {{weather.waterTemperature}} °C
+            </mat-grid-tile>
+            <mat-grid-tile class="air">
+                {{weather.airTemperature}} °C
+            </mat-grid-tile>
+            <mat-grid-tile class="water">
+                <mat-icon>waves</mat-icon>
+                {{weather.waterFlow}} m³/s
+            </mat-grid-tile>
+        </mat-grid-list>
+    </mat-card-content>
 </mat-card>
 
 

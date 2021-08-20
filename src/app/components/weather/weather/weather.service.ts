@@ -1,4 +1,4 @@
-import {Injectable, OnDestroy} from '@angular/core';
+import {Injectable, OnDestroy, OnInit} from '@angular/core';
 import {BehaviorSubject, Observable} from "rxjs";
 import {WeatherData} from "./weather-data";
 import {WeatherLocation} from "./weather-location";
@@ -7,12 +7,13 @@ import packageInfo from '../../../../../package.json'; // needed to gather appli
 @Injectable({
   providedIn: 'root'
 })
-export class WeatherService implements OnDestroy {
+export class WeatherService implements OnInit, OnDestroy {
 
-  private weatherLocation: WeatherLocation = 'thun';
+  private weatherLocations: WeatherLocation[] = [];
   private subject = new BehaviorSubject<WeatherData>({
     airTemperature: 0,
     location: "",
+    locationText: "",
     timestamp: 0,
     waterFlow: 0,
     waterTemperature: 0,
@@ -20,65 +21,66 @@ export class WeatherService implements OnDestroy {
   });
   private appVersion: string = packageInfo.version;
   private appName: string = packageInfo.name;
-  private readonly pollerIntervalNumber: number;
+  private pollerIntervalNumber: number = -1;
 
-  constructor() {
-    this.loadWeatherData();
-    this.pollerIntervalNumber = setInterval(()=>this.loadWeatherData(), 300000); // 5min interval is best practise
+  constructor() {  }
+
+  ngOnInit(): void {
+    this.startService();
   }
 
   ngOnDestroy(): void {
-    clearInterval(this.pollerIntervalNumber);
+    this.stopService();
   }
 
-  getWeatherObservable(): Observable<WeatherData> {
-
-    // ToDo Give location parameter to load different weather data for subscribers
-
-    // ToDo Remove locatio parameter when unsubscribing
-
+  getWeatherObservable(weatherLocation: WeatherLocation): Observable<WeatherData> {
+    if (!this.weatherLocations.includes(weatherLocation)) {
+      this.weatherLocations.push(weatherLocation);
+      this.stopService();
+      this.startService();
+    }
     return this.subject.asObservable()
   }
 
-  setLocation(newLocation: WeatherLocation) {
-    this.weatherLocation = newLocation;
+  private startService() {
+    this.loadWeatherData();
+    this.pollerIntervalNumber = setInterval(() => this.loadWeatherData(), 300000); // 5min interval is best practise
   }
 
-  getLocation(): WeatherLocation {
-    return this.weatherLocation;
+  private stopService() {
+    clearInterval(this.pollerIntervalNumber);
   }
 
   private loadWeatherData() {
+    if (this.weatherLocations.length > 0) {
+      this.weatherLocations.forEach(weatherLocation => {
+        // see https://aareguru.existenz.ch/openapi/ and https://aareguru.existenz.ch/#parameter for details
+        let weatherDataUrl = "https://aareguru.existenz.ch/v2018/current"
+        weatherDataUrl += "?city=" + weatherLocation.toString();
+        weatherDataUrl += "&app=" + this.appName;
+        weatherDataUrl += "&version=" + this.appVersion;
+        weatherDataUrl += "&values=";
+        weatherDataUrl += "aare.location,";
+        weatherDataUrl += "aare.timestamp,";
+        weatherDataUrl += "aare.temperature,";
+        weatherDataUrl += "aare.flow,";
+        weatherDataUrl += "weather.current.tt,";
+        weatherDataUrl += "weather.today.n.symt";
 
-    // see https://aareguru.existenz.ch/openapi/ and https://aareguru.existenz.ch/#parameter for details
-
-    let weatherDataUrl = "https://aareguru.existenz.ch/v2018/current"
-    weatherDataUrl += "?city=" + this.weatherLocation.toString();
-    weatherDataUrl += "&app=" + this.appName;
-    weatherDataUrl += "&version=" + this.appVersion;
-    weatherDataUrl += "&values=";
-
-    weatherDataUrl += "aare.location,";
-    weatherDataUrl += "aare.timestamp,";
-    weatherDataUrl += "aare.temperature,";
-    weatherDataUrl += "aare.flow,";
-    weatherDataUrl += "weather.current.tt,";
-    weatherDataUrl += "weather.today.n.symt";
-
-    console.log(`Refreshing weather data`);
-
-    fetch(weatherDataUrl)
-        .then(response => response.text())
-        .then(text => this.extractWeather(text))
-        .catch(error => console.log('ERROR:', error));
+        fetch(weatherDataUrl)
+            .then(response => response.text())
+            .then(text => this.extractWeatherForLocation(text, weatherLocation))
+            .catch(error => console.log(`ERROR loading data for ${weatherLocation.toString()}`, error));
+      });
+    }
   }
 
-  private extractWeather(text: string) {
+  private extractWeatherForLocation(text: string, weatherLocation: WeatherLocation) {
     const data = text.split('\n');
-
     if (data.length >= 6) {
       const weatherData: WeatherData = {
-        location: data[0].toLowerCase(),
+        location: weatherLocation.toString(),
+        locationText: data[0],
         timestamp: parseInt(data[1]),
         waterTemperature: parseFloat(data[2]),
         waterFlow: parseFloat(data[3]),

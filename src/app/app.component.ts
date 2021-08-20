@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import {WeatherLocation} from "./components/weather/weather/weather-location";
+import {WeatherLocation} from "./components/weather/weather-location";
 
 @Component({
   selector: 'app-root',

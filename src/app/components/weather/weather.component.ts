@@ -1,4 +1,4 @@
-import {Component, Input, OnDestroy, OnInit} from '@angular/core';
+import {Component, Inject, Input, OnDestroy, OnInit} from '@angular/core';
 import {WeatherLocation} from "./weather-location";
 import {WeatherData} from "./weather-data";
 import {WeatherService} from "./weather.service";

@@ -22,8 +22,8 @@
       row-gap: 5rem;
       column-gap: 1rem;
 
-      @media screen and (max-width: 1230px)  {
-        grid-template-columns: repeat(auto-fit, minmax(min-content, 1fr));
+      @media screen and (max-width: 847px)  {
+        grid-template-columns: repeat(auto-fit, minmax(100%, 1fr));
       }
     }
   }

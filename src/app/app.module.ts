@@ -15,13 +15,27 @@ import {MatChipsModule} from "@angular/material/chips";
 import { EventCardComponent } from './views/home/event-card/event-card.component';
 import {MatExpansionModule} from "@angular/material/expansion";
 import { RiderCardComponent } from './common/rider-card/rider-card.component';
+import { EventComponent } from './views/event/event.component';
+import { RidersComponent } from './views/riders/riders.component';
+import { RiderProfileComponent } from './views/riders/rider-profile/rider-profile.component';
+import { RegisterComponent } from './views/register/register.component';
+import { LoginComponent } from './views/login/login.component';
+import { CompetitionComponent } from './views/competition/competition.component';
+import { ErrorComponent } from './views/error/error.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     HomeComponent,
     EventCardComponent,
-    RiderCardComponent
+    RiderCardComponent,
+    EventComponent,
+    RidersComponent,
+    RiderProfileComponent,
+    RegisterComponent,
+    LoginComponent,
+    CompetitionComponent,
+    ErrorComponent
   ],
     imports: [
         BrowserModule,

@@ -10,7 +10,4 @@ import {Rider, riderExample} from "../../models/rider.model";
 export class HomeComponent {
     events: Event[] = [exampleEvent, exampleEvent, exampleEvent];
     riders: Rider[] = [riderExample, riderExample, riderExample, riderExample, riderExample];
-    panelOpenState = false;
-
-
 }

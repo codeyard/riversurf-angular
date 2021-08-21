@@ -1,13 +1,12 @@
 <mat-card
-        routerLink="/event/{{surfEvent.id}}"
-        class="event__card">
+    routerLink="/event/{{surfEvent.id}}"
+    class="event__card">
     <mat-card-header class="event__card__header">
         <div mat-card-avatar [style.background-image]="'url(' + surfEvent.logo + ')'"
              class="event__card__headerimage"></div>
         <mat-card-title>{{surfEvent.name}}</mat-card-title>
         <mat-card-subtitle>{{surfEvent.location}}</mat-card-subtitle>
         <p class="event__card__header__date">{{surfEvent.startDateTime | date:'dd.MM.YYYY'}}</p>
-    
     </mat-card-header>
     <img mat-card-image src="{{surfEvent.mainPicture}}"
          alt="{{surfEvent.name}}">
@@ -18,11 +17,11 @@
     </mat-card-content>
     <mat-chip-list aria-label="Divisions">
         <mat-chip
-                *ngFor="let competition of surfEvent.competitions"
-                [color]="getColorOfDivision(competition.division)"
-                selected>
+            *ngFor="let competition of surfEvent.competitions"
+            [color]="getColorOfDivision(competition.division)"
+            selected>
             {{competition.division}}
         </mat-chip>
-    
+
     </mat-chip-list>
 </mat-card>

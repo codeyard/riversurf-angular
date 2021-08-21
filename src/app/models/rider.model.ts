@@ -1,4 +1,4 @@
-import {Devision} from "./devision.type";
+import {Division} from "./division.type";
 
 export interface Rider {
     id: string;
@@ -7,7 +7,7 @@ export interface Rider {
     nickName: string;
     birthdate: Date;
     events: Event[];
-    category: Devision;
+    division: Division;
     email: string;
     biography: string;
     profilePicture: string;
@@ -21,7 +21,7 @@ export interface Rider {
 export const riderExample: Rider = {
     biography: "Schon lange dabei",
     birthdate: new Date(),
-    category: Devision.male,
+    division: 'male',
     email: "didi@riversurf.ch",
     events: [],
     facebookProfile: "facebook.com",

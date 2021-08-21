@@ -9,3 +9,11 @@ export interface User {
     role: Role;
     profile?: Rider;
 }
+
+export const examplejudge: User = {
+    email: "miki@miki.ch",
+    id: 0,
+    password: "",
+    role: 'judge',
+    userName: "mikimaus"
+}

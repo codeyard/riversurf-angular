@@ -1,9 +1,9 @@
-import {Devision} from "./devision.type";
+import {Division} from "./division.type";
 import {Color} from "./color.type";
 
 export interface Competition {
     id: string;
-    devision: Devision;
+    division: Division;
     maxRiders: number;
     rounds: Round[];
 }
@@ -29,7 +29,7 @@ export interface Result {
 }
 
 export const exampleComp: Competition = {
-    devision: Devision.male,
+    division: 'male',
     id: "comp1",
     maxRiders: 1,
     rounds: [

@@ -1,15 +1,16 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 
 @Component({
-  selector: 'surf-riders',
-  templateUrl: './riders.component.html',
-  styleUrls: ['./riders.component.scss']
+    selector: 'surf-riders',
+    templateUrl: './riders.component.html',
+    styleUrls: ['./riders.component.scss']
 })
 export class RidersComponent implements OnInit {
 
-  constructor() { }
+    constructor() {
+    }
 
-  ngOnInit(): void {
-  }
+    ngOnInit(): void {
+    }
 
 }

@@ -12,7 +12,6 @@ export class EventCardComponent {
     surfEvent!: Event;
 
     getColorOfDivision(division: Division) {
-        console.log(division)
         switch (division) {
             case "male":
                 return 'primary'

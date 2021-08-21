@@ -4,6 +4,14 @@
   cursor: pointer;
   margin-bottom: .5rem;
 
+  &:hover {
+    transform: scale(1.01);
+    box-shadow: 0 14px 28px rgba(0,0,0,0.1), 0 10px 10px rgba(0,0,0,0.1);
+  }
+
+  &:active {
+    transform: translateY(2px);
+  }
 
   &__header {
     &__image {
@@ -11,9 +19,7 @@
       background-size: contain;
       transition: .5s all;
 
-      &:hover {
-        transform: scale(1.5);
-      }
+
     }
   }
 }

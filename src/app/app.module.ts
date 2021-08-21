@@ -22,6 +22,7 @@ import { RegisterComponent } from './views/register/register.component';
 import { LoginComponent } from './views/login/login.component';
 import { CompetitionComponent } from './views/competition/competition.component';
 import { ErrorComponent } from './views/error/error.component';
+import { HeaderComponent } from './common/header/header.component';
 
 @NgModule({
   declarations: [
@@ -35,7 +36,8 @@ import { ErrorComponent } from './views/error/error.component';
     RegisterComponent,
     LoginComponent,
     CompetitionComponent,
-    ErrorComponent
+    ErrorComponent,
+    HeaderComponent
   ],
     imports: [
         BrowserModule,

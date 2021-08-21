@@ -1,0 +1,10 @@
+<mat-card class="rider__card">
+    <mat-card-header class="rider__card__header">
+        <div mat-card-avatar
+             class="rider__card__header__image"
+             [style.background-image]="'url(' + rider.profilePicture + ')'"></div>
+        <mat-card-title> {{rider.firstName}} {{rider.lastName}}</mat-card-title>
+        <mat-card-subtitle>{{rider.division}}</mat-card-subtitle>
+    </mat-card-header>
+    
+</mat-card>

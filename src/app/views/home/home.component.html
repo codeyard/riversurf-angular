@@ -1,0 +1,16 @@
+<div class="content">
+    <div class="main">
+        <h1>Upcoming Events</h1>
+        <div class="events">
+            <surf-event-card *ngFor="let surfEvent of events" [surfEvent]="surfEvent" ></surf-event-card>
+        </div>
+    </div>
+    <div class="side">
+        <h2>Some Awesome Riders</h2>
+        <surf-rider-card *ngFor="let rider of riders" [rider]="rider"></surf-rider-card>
+    </div>
+</div>
+<div class="map">
+    <h1>Some Awesome Locations</h1>
+    <img src="https://miro.medium.com/max/700/1*dUrRzzu4Mm4DMjH2jvmurQ.png" alt="">
+</div>

@@ -9,10 +9,19 @@ import {MatIconModule} from "@angular/material/icon";
 import {MatToolbarModule} from "@angular/material/toolbar";
 import {MatButtonModule} from "@angular/material/button";
 import {MatProgressSpinnerModule} from "@angular/material/progress-spinner";
+import { HomeComponent } from './views/home/home.component';
+import {MatCardModule} from "@angular/material/card";
+import {MatChipsModule} from "@angular/material/chips";
+import { EventCardComponent } from './views/home/event-card/event-card.component';
+import {MatExpansionModule} from "@angular/material/expansion";
+import { RiderCardComponent } from './common/rider-card/rider-card.component';
 
 @NgModule({
   declarations: [
-    AppComponent
+    AppComponent,
+    HomeComponent,
+    EventCardComponent,
+    RiderCardComponent
   ],
     imports: [
         BrowserModule,
@@ -22,7 +31,10 @@ import {MatProgressSpinnerModule} from "@angular/material/progress-spinner";
         MatIconModule,
         MatToolbarModule,
         MatButtonModule,
-        MatProgressSpinnerModule
+        MatProgressSpinnerModule,
+        MatCardModule,
+        MatChipsModule,
+        MatExpansionModule
     ],
   providers: [],
   bootstrap: [AppComponent]

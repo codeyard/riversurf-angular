@@ -23,6 +23,9 @@ import { LoginComponent } from './views/login/login.component';
 import { CompetitionComponent } from './views/competition/competition.component';
 import { ErrorComponent } from './views/error/error.component';
 import { HeaderComponent } from './common/header/header.component';
+import {MatAutocompleteModule} from "@angular/material/autocomplete";
+import {MatMenuModule} from "@angular/material/menu";
+import { NavigationComponent } from './common/header/navigation/navigation.component';
 
 @NgModule({
   declarations: [
@@ -37,7 +40,8 @@ import { HeaderComponent } from './common/header/header.component';
     LoginComponent,
     CompetitionComponent,
     ErrorComponent,
-    HeaderComponent
+    HeaderComponent,
+    NavigationComponent
   ],
     imports: [
         BrowserModule,
@@ -50,7 +54,9 @@ import { HeaderComponent } from './common/header/header.component';
         MatProgressSpinnerModule,
         MatCardModule,
         MatChipsModule,
-        MatExpansionModule
+        MatExpansionModule,
+        MatAutocompleteModule,
+        MatMenuModule
     ],
   providers: [],
   bootstrap: [AppComponent]

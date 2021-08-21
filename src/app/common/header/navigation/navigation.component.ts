@@ -1,4 +1,4 @@
-import {Component, ViewChild} from '@angular/core';
+import {Component} from '@angular/core';
 
 @Component({
     selector: 'surf-navigation',
@@ -7,12 +7,4 @@ import {Component, ViewChild} from '@angular/core';
 })
 
 export class NavigationComponent {
-    @ViewChild('navigation') navigation: any;
-    navigationIsOpen: boolean = false;
-
-    toggleNavigation(): void {
-        this.navigationIsOpen = !this.navigationIsOpen;
-
-        this.navigation.nativeElement.style.display = this.navigationIsOpen ? 'block' : 'none';
-    }
 }

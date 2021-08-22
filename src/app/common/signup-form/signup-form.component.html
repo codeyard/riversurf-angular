@@ -35,7 +35,7 @@
         </button>
         <mat-error *ngIf="signupForm.controls.passwordConfirmation.getError('required')">Please confirm the password</mat-error>
         <mat-error *ngIf="signupForm.controls.passwordConfirmation.getError('minlength')">Password Confirmation must be at least 5 characters long</mat-error>
-        <mat-error *ngIf="signupForm.controls.passwordConfirmation.getError('confirmPasswordValidator')">Password do not match</mat-error>
+        <mat-error *ngIf="signupForm.controls.passwordConfirmation.getError('confirmPasswordValidator')">Passwords do not match</mat-error>
     </mat-form-field>
 
     <button mat-raised-button color="primary" type="submit" [disabled]="!signupForm.valid">{{formMode | uppercase}}</button>

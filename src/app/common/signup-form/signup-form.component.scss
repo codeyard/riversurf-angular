@@ -1,0 +1,20 @@
+@import "../../../assets/scss/_mixins";
+@import "../../../assets/scss/_variables";
+
+.form {
+    width: 100%;
+    padding: 2rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+
+     mat-form-field {
+         max-width: 400px;
+         width: 100%;
+         margin-bottom: 1rem;
+
+     }
+
+}
+

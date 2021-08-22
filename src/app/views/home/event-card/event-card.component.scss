@@ -1,4 +1,6 @@
 @import "../../../../assets/scss/_variables";
+@import "../../../../assets/scss/_mixins";
+@import "../../../../assets/scss/_responsive";
 
 .event__card {
     max-width: 400px;
@@ -14,7 +16,7 @@
         transform: translateY(2px);
     }
 
-    @media screen and (max-width: 847px) {
+    @include respond(small) {
         max-width: 100%;
     }
 
@@ -22,10 +24,10 @@
         position: relative;
 
         &__date {
+            @include text;
             position: absolute;
             top: 0;
             right: 0;
-            font-size: 1.4rem;
             color: $color-text-2;
         }
     }

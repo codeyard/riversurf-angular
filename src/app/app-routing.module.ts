@@ -4,13 +4,11 @@ import {HomeComponent} from "./views/home/home.component";
 import {EventComponent} from "./views/event/event.component";
 import {RiderProfileComponent} from "./views/riders/rider-profile/rider-profile.component";
 import {RidersComponent} from "./views/riders/riders.component";
-import {RegisterComponent} from "./views/register/register.component";
 import {LoginComponent} from "./views/login/login.component";
 import {CompetitionComponent} from "./views/competition/competition.component";
 import {ErrorComponent} from "./views/error/error.component";
 
 const routes: Routes = [
-    {path: 'register', component: RegisterComponent},
     {path: 'login', component: LoginComponent},
     {path: 'event/:id', component: EventComponent, children: [
             {path: 'competition/:division', component: CompetitionComponent}

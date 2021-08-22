@@ -1,0 +1,15 @@
+@mixin title {
+    font-size: 2rem;
+}
+
+@mixin secondary-title {
+    font-size: 1.5rem;
+}
+
+@mixin text {
+    font-size: 0.875rem;
+}
+
+@mixin text-small {
+    font-size: .625rem;
+}

@@ -33,8 +33,8 @@
                 [attr.aria-pressed]="hidePasswordConfirmation">
             <mat-icon>{{hidePasswordConfirmation ? 'visibility_off' : 'visibility'}}</mat-icon>
         </button>
-        <mat-error *ngIf="signupForm.controls.passwordConfirmation.getError('required')">Please enter a password</mat-error>
-        <mat-error *ngIf="signupForm.controls.passwordConfirmation.getError('minlength')">Password must be at least 5 characters long</mat-error>
+        <mat-error *ngIf="signupForm.controls.passwordConfirmation.getError('required')">Please confirm the password</mat-error>
+        <mat-error *ngIf="signupForm.controls.passwordConfirmation.getError('minlength')">Password Confirmation must be at least 5 characters long</mat-error>
         <mat-error *ngIf="signupForm.controls.passwordConfirmation.getError('confirmPasswordValidator')">Password do not match</mat-error>
     </mat-form-field>
 

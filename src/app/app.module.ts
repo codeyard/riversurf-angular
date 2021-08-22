@@ -13,6 +13,8 @@ import {WeatherComponent} from './components/weather/weather.component';
 import {MatCardModule} from "@angular/material/card";
 import {MatGridListModule} from "@angular/material/grid-list";
 import {HttpClientModule} from "@angular/common/http";
+import {MatSelectModule} from "@angular/material/select";
+import {MatOptionModule} from "@angular/material/core";
 
 @NgModule({
   declarations: [
@@ -30,7 +32,9 @@ import {HttpClientModule} from "@angular/common/http";
         MatProgressSpinnerModule,
         MatCardModule,
         MatGridListModule,
-        HttpClientModule
+        HttpClientModule,
+        MatSelectModule,
+        MatOptionModule
     ],
   providers: [],
   bootstrap: [AppComponent]

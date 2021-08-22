@@ -8,15 +8,15 @@ import {HttpClient} from "@angular/common/http";
 @Injectable({
   providedIn: 'root'
 })
-export class WeatherService implements OnDestroy{
+export class WeatherService implements OnDestroy {
 
-  private weatherSubjects : WeatherSubject[] = [];
+  private weatherSubjects: WeatherSubject[] = [];
 
-  constructor(private httpClient: HttpClient) {  }
+  constructor(private httpClient: HttpClient) { }
 
-  getWeatherObservable(weatherLocation : WeatherLocation): Observable<WeatherData> {
-    let subject = this.weatherSubjects.find(subject=>subject.weatherLocation === weatherLocation);
-    if(!subject){
+  getWeatherObservable(weatherLocation: WeatherLocation): Observable<WeatherData> {
+    let subject = this.weatherSubjects.find(subject => subject.weatherLocation === weatherLocation);
+    if (!subject) {
       subject = new WeatherSubject(this.httpClient, weatherLocation);
       this.weatherSubjects.push(subject);
     }

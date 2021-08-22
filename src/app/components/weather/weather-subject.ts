@@ -1,31 +1,22 @@
 import {BehaviorSubject, Observable} from "rxjs";
-import {WeatherData} from "./weather-data";
+import {DefaultWeatherData, WeatherData} from "./weather-data";
 import {WeatherLocation} from "./weather-location";
 import packageInfo from '../../../../package.json'; // needed to gather application name and version
 import {HttpClient} from "@angular/common/http";
-import {Inject} from "@angular/core";
 
-export class WeatherSubject{
+export class WeatherSubject {
 
-    private subject :   BehaviorSubject<WeatherData> = new BehaviorSubject<WeatherData>({
-        airTemperature: 0,
-        location: "",
-        locationText: "",
-        timestamp: 0,
-        waterFlow: 0,
-        waterTemperature: 0,
-        weatherSymbol: 0
-    });
-    private readonly pollerNumber : number;
+    private subject: BehaviorSubject<WeatherData> = new BehaviorSubject<WeatherData>({...DefaultWeatherData});
+    private pollerNumber: number;
     private appVersion: string = packageInfo.version;
     private appName: string = packageInfo.name;
 
-    weatherLocation : WeatherLocation = 'thun';
+    readonly weatherLocation: WeatherLocation;
 
-    constructor(private httpClient : HttpClient, weatherLocation : WeatherLocation) {
+    constructor(private httpClient: HttpClient, weatherLocation: WeatherLocation) {
         this.weatherLocation = weatherLocation;
         this.loadWeatherData();
-        this.pollerNumber = setInterval(()=>this.loadWeatherData(), 300000); // 5min interval
+        this.pollerNumber = setInterval(() => this.loadWeatherData(), 30000); // 5min interval
     }
 
     getWeatherObservable(): Observable<WeatherData> {
@@ -37,6 +28,7 @@ export class WeatherSubject{
     }
 
     private loadWeatherData() {
+
         // see https://aareguru.existenz.ch/openapi/ and https://aareguru.existenz.ch/#parameter for details
         let weatherDataUrl = "https://aareguru.existenz.ch/v2018/current"
             + "?city=" + this.weatherLocation.toString()

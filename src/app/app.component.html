@@ -8,4 +8,15 @@
     <button mat-icon-button aria-label="Login icon"><mat-icon>lock</mat-icon></button>
 </mat-toolbar>
 
+<mat-form-field appearance="fill">
+    <mat-label>Choose a location</mat-label>
+    <mat-select (selectionChange)="onLocationChange($event)">
+        <mat-option value="thun">Thun</mat-option>
+        <mat-option value="bern">Bern</mat-option>
+        <mat-option value="biel">Biel</mat-option>
+    </mat-select>
+</mat-form-field>
+<app-weather [weatherLocation]="myLocation"></app-weather>
+<app-weather weatherLocation="bern"></app-weather>
+<app-weather weatherLocation="biel"></app-weather>
 <app-weather weatherLocation="thun"></app-weather>

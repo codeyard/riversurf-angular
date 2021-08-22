@@ -1,15 +1,55 @@
-import {Category} from "./category.model";
-import {Rider} from "./rider.model";
+import {Division} from "./division.type";
+import {Color} from "./color.type";
 
-export class Competition {
-    category: Category;
+export interface Competition {
+    id: string;
+    division: Division;
     maxRiders: number;
-    riders: Rider[];
+    rounds: Round[];
+}
 
+export interface Round {
+    id: string;
+    name?: string;
+    index: number;
+    heats: Heat[];
+}
 
-    constructor(category: Category, maxRiders: number, riders: Rider[]) {
-        this.category = category;
-        this.maxRiders = maxRiders;
-        this.riders = riders;
-    }
+export interface Heat {
+    id: string;
+    index: number;
+    results: Result[];
+}
+
+export interface Result {
+    id: string;
+    riderId: string;
+    color: Color;
+    value: number;
+}
+
+export const exampleComp: Competition = {
+    division: 'male',
+    id: "comp1",
+    maxRiders: 1,
+    rounds: [
+        {
+            id: 'round1_1',
+            name: 'Seeding ROund',
+            index: 0,
+            heats: [
+                {
+                    id: 'heat_1_1_1',
+                    index: 0,
+                    results: [{
+                        id: 'result1_1_1_1',
+                        riderId: 'rider123',
+                        color: Color.red,
+                        value: 1
+                    }]
+                }
+            ]
+        }
+    ]
+
 }

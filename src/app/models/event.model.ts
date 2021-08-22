@@ -1,34 +1,36 @@
-import {User} from "./user.model";
-import {Competition} from "./competition.model";
+import {examplejudge, User} from "./user.model";
+import {Competition, exampleComp} from "./competition.model";
 
-export class Event {
-    public id: number;
-    public name: string;
-    public description: string;
-    public profilePicture: string;
-    public startDateTime: Date;
-    public endDateTime: Date;
-    public location: string;
-    public locationLat: number;
-    public locationLong: number;
-    public hashTag: string;
-    public competitions: Competition[];
-    public judge: User;
-    public organizer: User;
+export interface Event {
+    id: string;
+    name: string;
+    description: string;
+    logo: string;
+    mainPicture: string;
+    startDateTime: Date;
+    endDateTime: Date;
+    location: string;
+    locationLat: number;
+    locationLong: number;
+    hashTag: string;
+    competitions: Competition[];
+    judge: User;
+    organizer: User;
+}
 
-    constructor(id: number, name: string, description: string, profilePicture: string, startDateTime: Date, endDateTime: Date, location: string, locationLat: number, locationLong: number, hashTag: string, competitions: Competition[], judge: User, organizer: User) {
-        this.id = id;
-        this.name = name;
-        this.description = description;
-        this.profilePicture = profilePicture;
-        this.startDateTime = startDateTime;
-        this.endDateTime = endDateTime;
-        this.location = location;
-        this.locationLat = locationLat;
-        this.locationLong = locationLong;
-        this.hashTag = hashTag;
-        this.competitions = competitions;
-        this.judge = judge;
-        this.organizer = organizer;
-    }
+export const exampleEvent: Event = {
+    competitions: [exampleComp],
+    description: "Das ist die Beschreibung vom Event",
+    endDateTime: new Date(),
+    hashTag: "#riversurf, #thun",
+    id: "riversurf-jam-thun-2021",
+    judge: examplejudge,
+    location: "somewhere",
+    locationLat: 0,
+    locationLong: 0,
+    name: "RiversurfJam",
+    organizer: examplejudge,
+    mainPicture: "https://riversurfstorage.blob.core.windows.net/eventimages/event1.jpg",
+    logo: "https://riversurfstorage.blob.core.windows.net/eventimages/logo_event1.jpg",
+    startDateTime: new Date()
 }

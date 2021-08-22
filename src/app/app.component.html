@@ -1,22 +1,3 @@
-<mat-toolbar color="primary">
-    <button mat-icon-button aria-label="Menu icon">
-        <mat-icon>menu</mat-icon>
-    </button>
-    {{ title }}
-    <span class="spacer"></span>
-    <button mat-icon-button aria-label="Profile icon"><mat-icon>person</mat-icon></button>
-    <button mat-icon-button aria-label="Login icon"><mat-icon>lock</mat-icon></button>
-</mat-toolbar>
+<surf-header></surf-header>
+<router-outlet></router-outlet>
 
-<mat-form-field appearance="fill">
-    <mat-label>Choose a location</mat-label>
-    <mat-select (selectionChange)="onLocationChange($event)">
-        <mat-option value="thun">Thun</mat-option>
-        <mat-option value="bern">Bern</mat-option>
-        <mat-option value="biel">Biel</mat-option>
-    </mat-select>
-</mat-form-field>
-<app-weather [weatherLocation]="myLocation"></app-weather>
-<app-weather weatherLocation="bern"></app-weather>
-<app-weather weatherLocation="biel"></app-weather>
-<app-weather weatherLocation="thun"></app-weather>

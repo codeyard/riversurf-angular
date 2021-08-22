@@ -1,0 +1,28 @@
+<div class="navigation">
+    <input type="checkbox" class="navigation__checkbox" id="navi-toggle" #navigationToggler>
+    <label for="navi-toggle" class="navigation__button">
+        <mat-icon>menu</mat-icon>
+    </label>
+
+    <div class="navigation__background">&nbsp;</div>
+    <nav class="navigation__nav">
+        <ul class="navigation__list">
+            <li class="navigation__item" routerLink="/" (click)="navigationToggler.checked = false"><div  class="navigation__link">
+                <mat-icon>event_note</mat-icon>
+                Events</div>
+            </li>
+            <li class="navigation__item" routerLink="/riders" (click)="navigationToggler.checked = false"><div class="navigation__link">
+                <mat-icon>person</mat-icon>
+                Riders</div>
+            </li>
+            <li class="navigation__item" routerLink="/login" (click)="navigationToggler.checked = false" ><div class="navigation__link">
+                <mat-icon>lock</mat-icon>
+                Login</div>
+            </li>
+            <li class="navigation__item" routerLink="/register" (click)="navigationToggler.checked = false"><div class="navigation__link">
+                <mat-icon>edit</mat-icon>
+                Register</div>
+            </li>
+        </ul>
+    </nav>
+</div>

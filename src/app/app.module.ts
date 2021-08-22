@@ -1,24 +1,32 @@
-import {NgModule} from '@angular/core';
-import {BrowserModule} from '@angular/platform-browser';
+import { NgModule } from '@angular/core';
+import { BrowserModule } from '@angular/platform-browser';
 
-import {AppRoutingModule} from './app-routing.module';
-import {AppComponent} from './app.component';
-import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
+import { AppRoutingModule } from './app-routing.module';
+import { AppComponent } from './app.component';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import {MatDividerModule} from "@angular/material/divider";
 import {MatIconModule} from "@angular/material/icon";
 import {MatToolbarModule} from "@angular/material/toolbar";
 import {MatButtonModule} from "@angular/material/button";
 import {MatProgressSpinnerModule} from "@angular/material/progress-spinner";
-import {HomeComponent} from './views/home/home.component';
+import { HomeComponent } from './views/home/home.component';
 import {MatCardModule} from "@angular/material/card";
 import {MatChipsModule} from "@angular/material/chips";
-import {EventCardComponent} from './views/home/event-card/event-card.component';
+import { EventCardComponent } from './views/home/event-card/event-card.component';
 import {MatExpansionModule} from "@angular/material/expansion";
 import {RiderCardComponent} from './common/rider-card/rider-card.component';
 import {EventComponent} from './views/event/event.component';
 import {RidersComponent} from './views/riders/riders.component';
 import {RiderProfileComponent} from './views/riders/rider-profile/rider-profile.component';
 import {RegisterComponent} from './views/register/register.component';
+import {LoginComponent} from './views/login/login.component';
+import {CompetitionComponent} from './views/competition/competition.component';
+import {ErrorComponent} from './views/error/error.component';
+import {HeaderComponent} from './common/header/header.component';
+import {RiderCardComponent} from './common/rider-card/rider-card.component';
+import {EventComponent} from './views/event/event.component';
+import {RidersComponent} from './views/riders/riders.component';
+import {RiderProfileComponent} from './views/riders/rider-profile/rider-profile.component';
 import {LoginComponent} from './views/login/login.component';
 import {CompetitionComponent} from './views/competition/competition.component';
 import {ErrorComponent} from './views/error/error.component';
@@ -30,6 +38,16 @@ import {WeatherComponent} from "./components/weather/weather.component";
 import {MatGridListModule} from "@angular/material/grid-list";
 import {WeatherService} from "./components/weather/weather.service";
 import {HttpClient, HttpClientModule} from "@angular/common/http";
+import {NavigationComponent} from './common/header/navigation/navigation.component';
+import {SignupFormComponent} from './common/signup-form/signup-form.component';
+import {MatFormFieldModule} from "@angular/material/form-field";
+import {FormsModule, ReactiveFormsModule} from "@angular/forms";
+import {MatSelectModule} from "@angular/material/select";
+import {MatCheckboxModule} from "@angular/material/checkbox";
+import {MatInputModule} from "@angular/material/input";
+import {MatTabsModule} from "@angular/material/tabs";
+import {MatSnackBarModule} from "@angular/material/snack-bar";
+
 
 @NgModule({
     declarations: [
@@ -48,6 +66,21 @@ import {HttpClient, HttpClientModule} from "@angular/common/http";
         NavigationComponent,
         WeatherComponent
     ],
+    declarations: [
+        AppComponent,
+        HomeComponent,
+        EventCardComponent,
+        RiderCardComponent,
+        EventComponent,
+        RidersComponent,
+        RiderProfileComponent,
+        LoginComponent,
+        CompetitionComponent,
+        ErrorComponent,
+        HeaderComponent,
+        NavigationComponent,
+        SignupFormComponent
+    ],
     imports: [
         BrowserModule,
         AppRoutingModule,
@@ -64,9 +97,19 @@ import {HttpClient, HttpClientModule} from "@angular/common/http";
         MatMenuModule,
         MatGridListModule,
         HttpClientModule
+        FormsModule,
+        ReactiveFormsModule,
+        MatMenuModule,
+        MatFormFieldModule,
+        MatFormFieldModule,
+        MatInputModule,
+        MatSelectModule,
+        MatCheckboxModule,
+        MatButtonModule,
+        MatTabsModule,
+        MatSnackBarModule
     ],
-    providers: [],
-    bootstrap: [AppComponent]
+  providers: [],
+  bootstrap: [AppComponent]
 })
-export class AppModule {
-}
+export class AppModule { }

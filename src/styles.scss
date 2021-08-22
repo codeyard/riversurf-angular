@@ -1,3 +1,6 @@
+@import "assets/scss/_mixins";
+@import "assets/scss/_variables";
+
 * {
     margin: 0;
     padding: 0;
@@ -11,12 +14,12 @@
 
 html {
     box-sizing: border-box;
-    font-size: 62.5%;
+    //font-size: 62.5%;
 }
 
 @media only screen and (max-width: 68.75em) {
     html {
-        font-size: 50%;
+        // font-size: 50%;
     }
 }
 
@@ -26,9 +29,38 @@ body {
 }
 
 h1 {
-    font-size: 3rem;
+    @include title;
 }
 
 h2 {
-    font-size: 2rem;
+    @include secondary-title;
+}
+
+snack-bar-container {
+
+
+
+    &.success,
+    &.warning,
+    &.error {
+        margin-top: 5rem;
+        z-index: 20;
+        text-transform: uppercase;
+        background-color: white;
+    }
+
+    &.success {
+        color: $color-text-1;
+    }
+
+    &.warning {
+        // TODO DEFINE COLOR SCHEME
+        color: $color-warn;
+    }
+
+    &.error {
+        // TODO DEFINE COLOR SCHEME
+        color: $color-error;
+    }
+
 }

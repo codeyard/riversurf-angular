@@ -1,4 +1,6 @@
 @import "../../../assets/scss/_variables";
+@import "../../../assets/scss/_mixins";
+@import "../../../assets/scss/_responsive";
 
 .header {
     display: flex;
@@ -7,39 +9,45 @@
     align-content: center;
 
     &__logo {
+        flex: 1 1;
         cursor: pointer;
         h1 {
             display: inline;
         }
 
         svg {
-            margin-right: 2rem;
+            margin-right: 1rem;
             vertical-align: middle;
         }
     }
 
     &__search {
-        flex-grow: 1;
+        flex: 3 1;
         display: flex;
         justify-content: center;
 
         input {
+            @include text;
             font-family: inherit;
-            font-size: 1.5rem;
             background-color: $color-white;
             border: none;
             color: $color-text-3;
             padding: 0.5rem 2rem;
             border-radius: 1.5rem;
             width: 40%;
+            min-width: 480px;
             transition: all 0.2s;
-            margin-right: -3.5rem;
             text-align: center;
 
             &:focus {
                 outline: none;
                 width: 45%;
                 padding: 0.7rem 2rem;
+
+                @include respond(medium) {
+                    width: 80%;
+                }
+
             }
 
             &::placeholder {
@@ -48,11 +56,20 @@
 
             }
 
+            @include respond(medium) {
+                width: 60%;
+            }
+
         }
 
-        @media screen and (max-width: 847px) {
+        @include respond(small) {
             display: none;
         }
+    }
+
+    surf-navigation {
+        flex: 1 1;
+        text-align: end;
     }
 }
 

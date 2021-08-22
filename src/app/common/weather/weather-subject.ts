@@ -6,15 +6,14 @@ import {HttpClient} from "@angular/common/http";
 
 export class WeatherSubject {
 
-    private appVersion: string = packageInfo.version;
-    private appName: string = packageInfo.name;
-    private subject: BehaviorSubject<WeatherData> = new BehaviorSubject<WeatherData>({...DefaultWeatherData});
-    private readonly pollerNumber: number;
-
     /**
      * Location of the weather-subject (every location gets it's own subject)
      */
     readonly weatherLocation: WeatherLocation;
+    private appVersion: string = packageInfo.version;
+    private appName: string = packageInfo.name;
+    private subject: BehaviorSubject<WeatherData> = new BehaviorSubject<WeatherData>({...DefaultWeatherData});
+    private readonly pollerNumber: number;
 
     constructor(private httpClient: HttpClient, weatherLocation: WeatherLocation) {
         this.weatherLocation = weatherLocation;

@@ -16,7 +16,7 @@ import {EventCardComponent} from './views/home/event-card/event-card.component';
 import {MatExpansionModule} from "@angular/material/expansion";
 import {MatAutocompleteModule} from "@angular/material/autocomplete";
 import {MatMenuModule} from "@angular/material/menu";
-import {WeatherComponent} from "./components/weather/weather.component";
+import {WeatherComponent} from "./common/weather/weather.component";
 import {MatGridListModule} from "@angular/material/grid-list";
 import {HttpClientModule} from "@angular/common/http";
 import {NavigationComponent} from './common/header/navigation/navigation.component';

@@ -8,7 +8,7 @@ export interface WeatherData {
     weatherSymbol: number;
 }
 
-export const DefaultWeatherData : WeatherData = {
+export const DefaultWeatherData: WeatherData = {
     airTemperature: 0,
     location: "",
     locationText: "",

@@ -1,1 +1,11 @@
-<p>login works!</p>
+<div class="main">
+    <mat-tab-group mat-align-tabs="center">
+        <mat-tab label="Login">
+            <surf-signup-form [formMode]="'login'"></surf-signup-form>
+        </mat-tab>
+        <mat-tab label="Register">
+            <surf-signup-form [formMode]="'register'"></surf-signup-form>
+        </mat-tab>
+    </mat-tab-group>
+</div>
+

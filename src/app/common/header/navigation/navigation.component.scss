@@ -25,7 +25,8 @@
         position: absolute;
         top: 0;
         left: 0;
-        background-color: #3f51b5;
+        background: $color-primary;
+        background: linear-gradient(180deg, rgba(63,81,181,1) 0%, rgba(101,115,195,1) 100%);
         z-index: 1000;
         transition: all 0.8s cubic-bezier(0.86, 0, 0.77, 1);
     }
@@ -49,22 +50,20 @@
 
     &__item {
         margin: 1rem;
+        cursor: pointer;
     }
 
     &__link {
-        &:link,
-        &:visited {
-            display: inline-block;
-            font-size: 3.5rem;
-            font-weight: 300;
-            padding: 1rem 2rem;
-            color: $color-white;
-            text-decoration: none;
-            text-transform: uppercase;
-            background-image: linear-gradient(120deg, transparent 0%, transparent 50%, $color-white 50%);
-            background-size: 230%;
-            transition: all 0.4s;
-        }
+        display: inline-block;
+        font-size: 3.5rem;
+        font-weight: 300;
+        padding: 1rem 2rem;
+        color: $color-white;
+        text-decoration: none;
+        text-transform: uppercase;
+        background-image: linear-gradient(120deg, transparent 0%, transparent 50%, $color-white 50%);
+        background-size: 230%;
+        transition: all 0.4s;
 
         &:hover,
         &:active {

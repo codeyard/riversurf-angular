@@ -7,7 +7,7 @@
     align-content: center;
 
     &__logo {
-
+        cursor: pointer;
         h1 {
             display: inline;
         }
@@ -39,13 +39,15 @@
             &:focus {
                 outline: none;
                 width: 45%;
-                background-color: #f0eeee;
+                padding: 0.7rem 2rem;
             }
 
             &::placeholder {
                 font-weight: 100;
-                color: $color-text-4
+                color: $color-text-4;
+
             }
+
         }
 
         @media screen and (max-width: 847px) {
@@ -53,3 +55,4 @@
         }
     }
 }
+

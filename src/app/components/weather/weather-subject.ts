@@ -1,34 +1,42 @@
 import {BehaviorSubject, Observable} from "rxjs";
 import {DefaultWeatherData, WeatherData} from "./weather-data";
 import {WeatherLocation} from "./weather-location";
-import packageInfo from '../../../../package.json'; // needed to gather application name and version
+import packageInfo from '../../../../package.json';
 import {HttpClient} from "@angular/common/http";
 
 export class WeatherSubject {
 
-    private subject: BehaviorSubject<WeatherData> = new BehaviorSubject<WeatherData>({...DefaultWeatherData});
-    private pollerNumber: number;
     private appVersion: string = packageInfo.version;
     private appName: string = packageInfo.name;
+    private subject: BehaviorSubject<WeatherData> = new BehaviorSubject<WeatherData>({...DefaultWeatherData});
+    private readonly pollerNumber: number;
 
+    /**
+     * Location of the weather-subject (every location gets it's own subject)
+     */
     readonly weatherLocation: WeatherLocation;
 
     constructor(private httpClient: HttpClient, weatherLocation: WeatherLocation) {
         this.weatherLocation = weatherLocation;
         this.loadWeatherData();
-        this.pollerNumber = setInterval(() => this.loadWeatherData(), 30000); // 5min interval
+        this.pollerNumber = setInterval(() => this.loadWeatherData(), 300000); // 5min interval as best-practise from aare.guru
     }
 
+    /**
+     * Get the location-specific observable for the weather data
+     */
     getWeatherObservable(): Observable<WeatherData> {
         return this.subject.asObservable()
     }
 
+    /**
+     * Stop the polling of weather data
+     */
     stop() {
         clearInterval(this.pollerNumber);
     }
 
     private loadWeatherData() {
-
         // see https://aareguru.existenz.ch/openapi/ and https://aareguru.existenz.ch/#parameter for details
         let weatherDataUrl = "https://aareguru.existenz.ch/v2018/current"
             + "?city=" + this.weatherLocation.toString()
@@ -41,8 +49,6 @@ export class WeatherSubject {
             + "aare.flow,"
             + "weather.current.tt,";
 
-        // ToDo Handle timezones for forecast, maybe depending on event date (and location)
-
         // depending of the time of the day we ask for the different weather forecast symbol
         const hourOfDay = new Date().getUTCHours() + 1; // utc+1
         if (hourOfDay >= 18) {
@@ -53,19 +59,14 @@ export class WeatherSubject {
             weatherDataUrl += "weather.today.v.symt"; // .v = vormittag
         }
 
-        // fetch(weatherDataUrl)
-        //     .then(response => response.text())
-        //     .then(text => this.extractWeather(text))
-        //     .catch(error => console.log(`ERROR loading data for ${this.weatherLocation.toString()}`, error));
-
+        // request data using httpclient
         this.httpClient.request('GET', weatherDataUrl, {responseType: 'text'}).subscribe(
-            text => this.extractWeather(text),
+            text => this.extractWeatherFromText(text),
             error => console.log(`ERROR loading data for ${this.weatherLocation.toString()}`, error)
         );
-
     }
 
-    private extractWeather(text: string) {
+    private extractWeatherFromText(text: string) {
         const data = text.split('\n');
         if (data.length >= 6) {
             const weatherData: WeatherData = {

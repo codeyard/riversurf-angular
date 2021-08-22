@@ -11,14 +11,25 @@ import {Subscription} from "rxjs";
 })
 export class WeatherComponent implements OnInit, OnDestroy, OnChanges {
 
+  /**
+   * Weather data used for view
+   */
   weather : WeatherData;
+
+  /**
+   * Loading flag to show a spinner when loading data
+   */
   loading : boolean;
+
+  /**
+   * Weather location as input
+   */
+  @Input() weatherLocation : WeatherLocation;
 
   private weatherServiceSubscription : Subscription = new Subscription();
 
-  @Input() weatherLocation! : WeatherLocation;
-
   constructor(private weatherService : WeatherService) {
+    this.weatherLocation = 'thun';
     this.weather = {...DefaultWeatherData};
     this.loading = true;
   }
@@ -32,9 +43,7 @@ export class WeatherComponent implements OnInit, OnDestroy, OnChanges {
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-    console.log(`Change detected`, changes);
     if(changes.weatherLocation.currentValue != changes.weatherLocation.previousValue && changes.weatherLocation.previousValue != undefined){
-      console.log(`Changed to`, this.weatherLocation);
       this.loading = true;
       this.stopSubscription();
       this.startSubscription();
@@ -42,16 +51,13 @@ export class WeatherComponent implements OnInit, OnDestroy, OnChanges {
   }
 
   private refreshWeatherData(data: WeatherData){
-    if(data.location === this.weatherLocation){
-      console.log(`Refreshing for`, this.weatherLocation);
-      this.weather.location = data.locationText;
-      this.weather.weatherSymbol = data.weatherSymbol;
-      this.weather.airTemperature = data.airTemperature;
-      this.weather.waterTemperature = data.waterTemperature;
-      this.weather.waterFlow = data.waterFlow;
-      if(this.loading){
-        this.loading = false;
-      }
+    this.weather.location = data.locationText;
+    this.weather.weatherSymbol = data.weatherSymbol;
+    this.weather.airTemperature = data.airTemperature;
+    this.weather.waterTemperature = data.waterTemperature;
+    this.weather.waterFlow = data.waterFlow;
+    if(this.loading){
+      this.loading = false;
     }
   }
 

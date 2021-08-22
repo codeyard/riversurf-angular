@@ -14,16 +14,11 @@ import {MatCardModule} from "@angular/material/card";
 import {MatChipsModule} from "@angular/material/chips";
 import {EventCardComponent} from './views/home/event-card/event-card.component';
 import {MatExpansionModule} from "@angular/material/expansion";
-import {RiderCardComponent} from './common/rider-card/rider-card.component';
-import {EventComponent} from './views/event/event.component';
-import {RidersComponent} from './views/riders/riders.component';
-import {RiderProfileComponent} from './views/riders/rider-profile/rider-profile.component';
-import {LoginComponent} from './views/login/login.component';
-import {CompetitionComponent} from './views/competition/competition.component';
-import {ErrorComponent} from './views/error/error.component';
-import {HeaderComponent} from './common/header/header.component';
 import {MatAutocompleteModule} from "@angular/material/autocomplete";
 import {MatMenuModule} from "@angular/material/menu";
+import {WeatherComponent} from "./common/weather/weather.component";
+import {MatGridListModule} from "@angular/material/grid-list";
+import {HttpClientModule} from "@angular/common/http";
 import {NavigationComponent} from './common/header/navigation/navigation.component';
 import {SignupFormComponent} from './common/signup-form/signup-form.component';
 import {MatFormFieldModule} from "@angular/material/form-field";
@@ -33,7 +28,14 @@ import {MatCheckboxModule} from "@angular/material/checkbox";
 import {MatInputModule} from "@angular/material/input";
 import {MatTabsModule} from "@angular/material/tabs";
 import {MatSnackBarModule} from "@angular/material/snack-bar";
-
+import {RiderCardComponent} from "./common/rider-card/rider-card.component";
+import {EventComponent} from "./views/event/event.component";
+import {ErrorComponent} from "./views/error/error.component";
+import {RiderProfileComponent} from "./views/riders/rider-profile/rider-profile.component";
+import {LoginComponent} from "./views/login/login.component";
+import {RidersComponent} from "./views/riders/riders.component";
+import {CompetitionComponent} from "./views/competition/competition.component";
+import {HeaderComponent} from "./common/header/header.component";
 
 @NgModule({
     declarations: [
@@ -47,9 +49,10 @@ import {MatSnackBarModule} from "@angular/material/snack-bar";
         LoginComponent,
         CompetitionComponent,
         ErrorComponent,
-        HeaderComponent,
         NavigationComponent,
-        SignupFormComponent
+        SignupFormComponent,
+        WeatherComponent,
+        HeaderComponent
     ],
     imports: [
         BrowserModule,
@@ -58,16 +61,16 @@ import {MatSnackBarModule} from "@angular/material/snack-bar";
         MatDividerModule,
         MatIconModule,
         MatToolbarModule,
-        MatButtonModule,
         MatProgressSpinnerModule,
         MatCardModule,
         MatChipsModule,
         MatExpansionModule,
         MatAutocompleteModule,
+        MatGridListModule,
+        HttpClientModule,
         FormsModule,
         ReactiveFormsModule,
         MatMenuModule,
-        MatFormFieldModule,
         MatFormFieldModule,
         MatInputModule,
         MatSelectModule,

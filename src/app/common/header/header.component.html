@@ -14,5 +14,6 @@
                autocomplete="off"
         >
     </div>
+    <mat-icon *ngIf="(networkStatus$ | async) === 'OFFLINE'">portable_wifi_off</mat-icon>
     <surf-navigation></surf-navigation>
 </mat-toolbar>

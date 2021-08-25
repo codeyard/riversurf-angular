@@ -1,7 +1,8 @@
 import {Component, Input, OnInit} from '@angular/core';
-import {FormControl, FormGroup, Validators} from "@angular/forms";
+import {FormBuilder, FormGroup, Validators} from "@angular/forms";
 import {Router} from "@angular/router";
 import {SnackbarService} from "../snackbar.service";
+import {ConfirmPasswordValidator} from "./confirm-password.validator";
 
 @Component({
     selector: 'surf-signup-form',
@@ -12,24 +13,31 @@ export class SignupFormComponent implements OnInit {
     @Input()
     formMode!: string;
     hidePassword = true;
-    signupForm!: FormGroup;
+    hidePasswordConfirmation = true;
+    signupForm: FormGroup = new FormGroup({});
 
-    constructor(private router: Router, private snackBar: SnackbarService) {
+    constructor(
+        private formBuilder: FormBuilder,
+        private router: Router,
+        private snackBar: SnackbarService) {
     }
 
     ngOnInit(): void {
-        this.signupForm = new FormGroup({
-            'username': new FormControl(null, [Validators.required, Validators.minLength(5)]),
-            'password': new FormControl(null, [Validators.required, Validators.minLength(5)])
-        });
-
         if (this.formMode === 'register') {
-            this.signupForm
-                .addControl(
-                    'email', new FormControl(null, [Validators.required, Validators.pattern("^[a-z0-9._%+-]+@[a-z0-9.-]+\\.[a-z]{2,4}$")],
-                    ))
+            this.signupForm = this.formBuilder.group({
+                email: ['', [Validators.required, Validators.pattern("^[a-z0-9._%+-]+@[a-z0-9.-]+\\.[a-z]{2,4}$")]],
+                username: ['', [Validators.required, Validators.minLength(5)]],
+                password: ['', [Validators.required, Validators.minLength(5)]],
+                passwordConfirmation: ['', [Validators.required, Validators.minLength(5)]]
+            }, {
+                validator: ConfirmPasswordValidator('password', 'passwordConfirmation')
+            });
+        } else {
+            this.signupForm = this.formBuilder.group({
+                username: ['', [Validators.required, Validators.minLength(5)]],
+                password: ['', [Validators.required, Validators.minLength(5)]]
+            });
         }
-
     }
 
     onSubmit() {
@@ -39,6 +47,6 @@ export class SignupFormComponent implements OnInit {
                 : 'Successfully registered',
             'success'
         )
-        this.router.navigate(["/"]);
+        this.router.navigate(["/"]).then();
     }
 }

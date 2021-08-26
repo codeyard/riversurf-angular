@@ -18,7 +18,7 @@
     <mat-form-field appearance="outline">
         <mat-label>Password</mat-label>
         <input formControlName="password" matInput [type]="hidePassword ? 'password' : 'text'">
-        <button mat-icon-button matSuffix (click)="hidePassword = !hidePassword" [attr.aria-label]="'Hide password'"
+        <button type="button" mat-icon-button matSuffix (click)="hidePassword = !hidePassword" [attr.aria-label]="'Hide password'"
                 [attr.aria-pressed]="hidePassword">
             <mat-icon>{{hidePassword ? 'visibility_off' : 'visibility'}}</mat-icon>
         </button>
@@ -29,7 +29,7 @@
     <mat-form-field *ngIf="formMode === 'register'" appearance="outline">
         <mat-label>Password Confirmation</mat-label>
         <input formControlName="passwordConfirmation" matInput [type]="hidePasswordConfirmation ? 'password' : 'text'">
-        <button mat-icon-button matSuffix (click)="hidePasswordConfirmation = !hidePasswordConfirmation" [attr.aria-label]="'Hide password'"
+        <button type="button" mat-icon-button matSuffix (click)="hidePasswordConfirmation = !hidePasswordConfirmation" [attr.aria-label]="'Hide password'"
                 [attr.aria-pressed]="hidePasswordConfirmation">
             <mat-icon>{{hidePasswordConfirmation ? 'visibility_off' : 'visibility'}}</mat-icon>
         </button>

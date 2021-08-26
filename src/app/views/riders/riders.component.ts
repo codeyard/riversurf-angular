@@ -32,6 +32,8 @@ export class RidersComponent implements OnInit, AfterViewInit {
     @ViewChild(MatPaginator) paginator!: MatPaginator;
     @ViewChild(MatSort) sort!: MatSort;
 
+    division: string = '';
+
     ngAfterViewInit() {
         this.dataSource.paginator = this.paginator;
         this.dataSource.sort = this.sort;
@@ -48,4 +50,7 @@ export class RidersComponent implements OnInit, AfterViewInit {
         this.dataSource.filter = filterValue.trim().toLowerCase();
     }
 
+    toggleDivision(): void {
+        this.dataSource.filter = this.division;
+    }
 }

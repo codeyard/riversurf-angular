@@ -5,17 +5,17 @@ import {
     OnInit,
     ViewChild
 } from '@angular/core';
-import {TimelineItem, TimelineItemIcon} from "./timeline-item.model";
+import {TimeLineItem, TimeLineItemIcon} from "../../models/timeline-item.model";
 import {MatStepper} from "@angular/material/stepper";
 
 @Component({
     selector: 'surf-timeline',
-    templateUrl: './timeline.component.html',
-    styleUrls: ['./timeline.component.scss']
+    templateUrl: './time-line.component.html',
+    styleUrls: ['./time-line.component.scss']
 })
-export class TimelineComponent implements OnInit, AfterViewInit {
+export class TimeLineComponent implements OnInit, AfterViewInit {
 
-    @Input() timeline: TimelineItem[] = [];
+    @Input() timeline: TimeLineItem[] = [];
 
     private animationStepDuration = 200;
 
@@ -38,7 +38,7 @@ export class TimelineComponent implements OnInit, AfterViewInit {
         }
     }
 
-    getIconForTimeline(iconName: TimelineItemIcon) {
+    getIconForTimeline(iconName: TimeLineItemIcon) {
         switch (iconName) {
             case "default":
             default:

@@ -39,7 +39,7 @@ import {HeaderComponent} from "./common/header/header.component";
 import { RiderOverviewComponent } from './views/riders/rider-profile/rider-overview/rider-overview.component';
 import { RiderTimelineComponent } from './views/riders/rider-profile/rider-timeline/rider-timeline.component';
 import {MatListModule} from "@angular/material/list";
-import { TimelineComponent } from './common/timeline/timeline.component';
+import { TimeLineComponent } from './common/timeline/time-line.component';
 import {MatStepperModule} from "@angular/material/stepper";
 
 @NgModule({
@@ -60,7 +60,7 @@ import {MatStepperModule} from "@angular/material/stepper";
         HeaderComponent,
         RiderOverviewComponent,
         RiderTimelineComponent,
-        TimelineComponent
+        TimeLineComponent
     ],
     imports: [
         BrowserModule,

@@ -1,9 +1,14 @@
 import {Component, Input, OnChanges, OnInit, SimpleChanges} from '@angular/core';
 import {
-    DefaultTimelineItemsLoosing,
-    DefaultTimelineItemsWinning,
-    TimelineItem
-} from "../../../../common/timeline/timeline-item.model";
+    DefaultTimeLineItemsLoosing,
+    DefaultTimeLineItemsWinning,
+    TimeLineItem
+} from "../../../../models/timeline-item.model";
+import {
+    EventTimeline,
+    GenerateEventTimeLine,
+    GenerateHistoryEventTimeLine
+} from "../../../../models/event-timeline.model";
 
 @Component({
     selector: 'surf-rider-timeline',
@@ -12,8 +17,8 @@ import {
 })
 export class RiderTimelineComponent implements OnInit, OnChanges {
 
-    currentTimeline: TimelineItem[] = [];
-    oldTimeLine: TimelineItem[] = [];
+    currentTimeline ?: EventTimeline;
+    historyTimeline ?: EventTimeline[];
 
     @Input() riderId ?: string;
 
@@ -27,8 +32,8 @@ export class RiderTimelineComponent implements OnInit, OnChanges {
         if (changes.riderId.currentValue != changes.riderId.previousValue && changes.riderId.currentValue != undefined) {
 
             // ToDo: Load timeline items from service
-            this.currentTimeline = [...DefaultTimelineItemsWinning];
-            this.oldTimeLine = [...DefaultTimelineItemsLoosing];
+            this.currentTimeline = GenerateEventTimeLine(2021, this.riderId || '');
+            this.historyTimeline = GenerateHistoryEventTimeLine(2021, 3, this.riderId || '');
         }
     }
 }

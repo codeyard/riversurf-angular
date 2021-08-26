@@ -1,20 +1,20 @@
-export type TimelineItemIcon = 'default' | 'start' | 'finish' | 'loose' | 'win';
+export type TimeLineItemIcon = 'default' | 'start' | 'finish' | 'loose' | 'win';
 
-export interface TimelineItem {
+export interface TimeLineItem {
     title: string;
     time: Date;
     content: string;
-    icon: TimelineItemIcon;
+    icon: TimeLineItemIcon;
 }
 
-export const DefaultTimelineItem : TimelineItem = {
+export const DefaultTimeLineItem : TimeLineItem = {
     title : "",
     content : "",
     time : new Date(),
     icon : "default"
 }
 
-export const DefaultTimelineItemsWinning: TimelineItem[] = [{
+export const DefaultTimeLineItemsWinning: TimeLineItem[] = [{
     title: "Rides in heat 2 of round 1",
     content: "",
     time: new Date(2021, 9, 11, 12, 1),
@@ -52,7 +52,7 @@ export const DefaultTimelineItemsWinning: TimelineItem[] = [{
 }
 ]
 
-export const DefaultTimelineItemsLoosing: TimelineItem[] = [{
+export const DefaultTimeLineItemsLoosing: TimeLineItem[] = [{
     title: "Rides in heat 2 of round 1",
     content: "",
     time: new Date(2020, 9, 11, 12, 1),

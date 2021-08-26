@@ -1,6 +1,3 @@
-@import "../../../assets/scss/_mixins";
-@import "../../../assets/scss/_variables";
-
 .form {
     width: 100%;
     padding: 2rem;
@@ -14,7 +11,9 @@
          width: 100%;
          margin-bottom: 1rem;
 
+         mat-icon {
+             margin-right: 8px;
+         }
      }
-
 }
 

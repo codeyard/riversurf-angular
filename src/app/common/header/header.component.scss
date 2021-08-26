@@ -8,9 +8,21 @@
     justify-content: space-between;
     align-content: center;
 
+    @include respond(small) {
+        background-color: transparent;
+        display: block;
+        height: 0;
+    }
+
     &__logo {
         flex: 1 1;
         cursor: pointer;
+        outline: none;
+
+        @include respond(small) {
+            display: none;
+        }
+
         h1 {
             display: inline;
         }
@@ -25,6 +37,10 @@
         flex: 3 1;
         display: flex;
         justify-content: center;
+
+        @include respond(small) {
+            display: none;
+        }
 
         input {
             @include text;
@@ -70,6 +86,15 @@
     surf-navigation {
         flex: 1 1;
         text-align: end;
+
+        @include respond(small) {
+            background-color: $color-primary;
+            bottom: 0;
+            left: 0;
+            position: fixed;
+            width: 100%;
+            z-index: 50;
+        }
     }
 }
 

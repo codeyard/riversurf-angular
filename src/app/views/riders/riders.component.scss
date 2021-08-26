@@ -44,12 +44,16 @@
             h2 {
                 font-weight: 300;
                 padding-bottom: 1rem;
+
+                @include respond(small) {
+                    font-size: 1.2rem;
+                }
+
             }
         }
 
         &__icon {
             align-self: flex-end;
-            margin-right: 1rem;
             font-size: 2rem;
             color: $color-white;
 
@@ -83,23 +87,54 @@
         flex-direction: column;
     }
 
-    & > * {
-        padding: 1rem;
-    }
+
 
     & .main {
         flex: 70%;
+        padding: 3rem;
+
+        @include respond(small) {
+            padding: .5rem;
+        }
 
         @include respond(medium) {
             flex: 100%;
         }
 
+        &--center {
+            box-shadow: 0px 2px 1px -1px rgb(0 0 0 / 20%), 0px 1px 1px 0px rgb(0 0 0 / 14%), 0px 1px 3px 0px rgb(0 0 0 / 12%);
+            display: flex;
+            flex-direction: column;
+            padding: 2rem;
+
+            @include respond(small) {
+                padding: .3rem;
+            }
+
+        }
+
         .mat-form-field {
-            width: 100%;
+            width: 40%;
+
+            @include respond(medium) {
+                width: 100%;
+            }
         }
 
         .table {
             width: 100%;
+
+            @include respond(medium) {
+                width: 100%;
+            }
+
+            @include respond(small) {
+                overflow-x: auto;
+            }
+
+            & tr {
+                transition: all .3s;
+            }
 
             & tr:hover {
                 background-color: #eee;
@@ -107,6 +142,8 @@
 
             & .mat-column-avatar {
                 width: 15%;
+
+
             }
 
             & .mat-column-name {
@@ -115,6 +152,7 @@
 
             & .mat-column-nickname {
                 width: 20%;
+
             }
 
             & .mat-column-division {
@@ -125,6 +163,10 @@
                 width: 15%;
                 white-space: nowrap;
                 text-align: right;
+
+                @include respond(small) {
+                    white-space: pre-wrap;
+                }
             }
 
             &__data {
@@ -135,6 +177,11 @@
                     border-radius: 50%;
                     padding: 0.5rem;
                     transition: .5s all;
+
+                    @include respond(small) {
+                        width: 3rem;
+                        height: 3rem;
+                    }
                 }
 
                 &__favorite {
@@ -145,7 +192,19 @@
     }
 
     & .aside {
-        flex: 30%;
+        @include aside-default;
+
+        &__favorite {
+            margin: 1rem;
+            padding: .5rem;
+            background-color: $color-white;
+            border-radius: 4px;
+
+            & h2 {
+                margin-bottom: 1rem;
+                color: black;
+            }
+        }
 
         &__favorite-riders {
 
@@ -163,14 +222,34 @@
             }
 
         }
-        @include respond(medium) {
-            flex: 100%;
 
-        }
 
     }
 }
 
 .favorite {
     color: $color-favorite;
+}
+
+mat-paginator {
+    width: 80%;
+
+    @include respond(small) {
+        width: 100%;
+        margin: .5rem 0;
+    }
+
+}
+
+.th.mat-header-cell:first-of-type, td.mat-cell:first-of-type, td.mat-footer-cell:first-of-type {
+    @include respond(small) {
+        padding-left: 0.1rem;
+    }
+}
+
+
+.th.mat-header-cell, td.mat-cell, td.mat-footer-cell {
+    @include respond(small) {
+        text-align: center;
+    }
 }

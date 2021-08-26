@@ -1,16 +1,16 @@
 <div class="content">
-    <div class="main">
+    <main class="main">
         <h1>Upcoming Events</h1>
         <div class="events">
             <surf-event-card *ngFor="let surfEvent of events" [surfEvent]="surfEvent"></surf-event-card>
         </div>
-    </div>
-    <div class="side">
+    </main>
+    <aside class="aside">
         <h2>Some Awesome Riders</h2>
         <div class="rider__cards">
             <surf-rider-card *ngFor="let rider of riders" [rider]="rider"></surf-rider-card>
         </div>
-    </div>
+    </aside>
 </div>
 <div class="map">
     <h1>Some Awesome Locations</h1>

@@ -1,6 +1,6 @@
 import {Component} from '@angular/core';
 import {Event, exampleEvent} from "../../models/event.model";
-import {Rider, riderExample} from "../../models/rider.model";
+import {Rider, exampleRiderMale, exampleRiderFemale, exampleRiderKid} from "../../models/rider.model";
 
 @Component({
     selector: 'surf-home',
@@ -9,5 +9,5 @@ import {Rider, riderExample} from "../../models/rider.model";
 })
 export class HomeComponent {
     events: Event[] = [exampleEvent, exampleEvent, exampleEvent];
-    riders: Rider[] = [riderExample, riderExample, riderExample, riderExample, riderExample];
+    riders: Rider[] = [exampleRiderMale, exampleRiderFemale, exampleRiderKid, exampleRiderMale, exampleRiderFemale];
 }

@@ -13,3 +13,7 @@
 @mixin text-small {
     font-size: .625rem;
 }
+
+@mixin bottom-space {
+    margin-bottom: 3rem;
+}

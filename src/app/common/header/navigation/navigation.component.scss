@@ -79,6 +79,10 @@
         @include respond(small) {
             margin: 0;
             padding: 1rem;
+
+            &:hover {
+                transform: none;
+            }
         }
     }
 
@@ -112,10 +116,14 @@
             color: $color-primary;
             transform: translateX(1rem);
 
-            @include respond(small) {
-                background-position: inherit;
-                color: inherit;
+        }
+
+        @include respond(small) {
+            &:hover {
                 transform: none;
+                background-position: 0 0;
+                color: $color-white;
+
             }
         }
     }
@@ -143,5 +151,10 @@
     @include respond(small) {
         border-radius: 10px;
         transform: none;
+
+        &:hover {
+            background-position: 100%;
+            color: $color-primary;
+        }
     }
 }

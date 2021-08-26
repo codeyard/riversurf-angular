@@ -113,6 +113,8 @@
             transform: translateX(1rem);
 
             @include respond(small) {
+                background-position: inherit;
+                color: inherit;
                 transform: none;
             }
         }

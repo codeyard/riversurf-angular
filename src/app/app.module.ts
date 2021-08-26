@@ -38,6 +38,7 @@ import {CompetitionComponent} from "./views/competition/competition.component";
 import {HeaderComponent} from "./common/header/header.component";
 import { RiderOverviewComponent } from './views/riders/rider-profile/rider-overview/rider-overview.component';
 import { RiderDetailsComponent } from './views/riders/rider-profile/rider-details/rider-details.component';
+import {MatListModule} from "@angular/material/list";
 
 @NgModule({
     declarations: [
@@ -81,7 +82,8 @@ import { RiderDetailsComponent } from './views/riders/rider-profile/rider-detail
         MatCheckboxModule,
         MatButtonModule,
         MatTabsModule,
-        MatSnackBarModule
+        MatSnackBarModule,
+        MatListModule
     ],
     providers: [],
     bootstrap: [AppComponent]

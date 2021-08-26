@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import {Rider, riderExample} from "../../../../models/rider.model";
 
 @Component({
   selector: 'surf-rider-overview',
@@ -6,6 +7,8 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./rider-overview.component.scss']
 })
 export class RiderOverviewComponent implements OnInit {
+
+    rider : Rider = {...riderExample};
 
   constructor() { }
 

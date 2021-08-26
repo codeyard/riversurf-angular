@@ -4,12 +4,16 @@
     <ng-template matStepperIcon="number"></ng-template>
     <ng-template matStepperIcon="error"></ng-template>
     <ng-container *ngFor="let timelineItem of timeline">
-    <mat-step>
-        <ng-template matStepLabel>
-            {{timelineItem.icon}}
-            {{timelineItem.title}}
-        </ng-template>
-        {{timelineItem.content}}
-    </mat-step>
+        <mat-step state="{{timelineItem.icon}}">
+            <ng-template matStepLabel>
+                <div class="step">
+                    <mat-icon *ngIf="timelineItem.icon != 'default'">{{getIconForTimeline(timelineItem.icon)}}</mat-icon>
+                    {{timelineItem.title}}
+                </div>
+                <i>{{timelineItem.time | date}}</i>
+                <br>
+                <i>{{timelineItem.content}}</i>
+            </ng-template>
+        </mat-step>
     </ng-container>
 </mat-vertical-stepper>

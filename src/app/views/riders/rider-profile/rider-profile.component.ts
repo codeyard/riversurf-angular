@@ -12,7 +12,6 @@ export class RiderProfileComponent implements OnInit {
 
     constructor(private route: ActivatedRoute) {
         this.route.params.subscribe(params => {
-            console.log(`Parameters`, params);
             this.riderId = params['id'];
         });
     }

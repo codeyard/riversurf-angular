@@ -14,7 +14,7 @@ export const DefaultTimelineItem : TimelineItem = {
     icon : "default"
 }
 
-export const DefaultTimelineItems: TimelineItem[] = [{
+export const DefaultTimelineItemsWinning: TimelineItem[] = [{
     title: "Rides in heat 2 of round 1",
     content: "",
     time: new Date(2021, 9, 11, 12, 1),
@@ -49,5 +49,38 @@ export const DefaultTimelineItems: TimelineItem[] = [{
     content: "",
     time: new Date(2021, 9, 11, 15, 59),
     icon: "win"
+}
+]
+
+export const DefaultTimelineItemsLoosing: TimelineItem[] = [{
+    title: "Rides in heat 2 of round 1",
+    content: "",
+    time: new Date(2020, 9, 11, 12, 1),
+    icon: "start"
+}, {
+    title: "Won heat 2 of round 1",
+    content: "Scored 30 points",
+    time: new Date(2020, 9, 11, 12, 34),
+    icon: "default"
+}, {
+    title: "Rides in heat 3 of round 2",
+    content: "",
+    time: new Date(2020, 9, 11, 13, 15),
+    icon: "default"
+}, {
+    title: "Won heat 3 of round 2",
+    content: "Scored 24 points",
+    time: new Date(2020, 9, 11, 13, 41),
+    icon: "default"
+}, {
+    title: "Rides in heat 1 of round 3",
+    content: "",
+    time: new Date(2020, 9, 11, 15, 20),
+    icon: "default"
+}, {
+    title: "Lost in heat 1 of round 3",
+    content: "Scored 12 points",
+    time: new Date(2020, 9, 11, 15, 59),
+    icon: "loose"
 }
 ]

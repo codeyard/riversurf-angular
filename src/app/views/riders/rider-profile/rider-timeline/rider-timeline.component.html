@@ -3,16 +3,16 @@
         <h1>RiverSurfJam 2021</h1>
         <h2>Thun</h2>
         <p>Ride the waves!</p>
-        <surf-timeline></surf-timeline>
+        <surf-timeline [timeline]="currentTimeline"></surf-timeline>
     </mat-tab>
     <mat-tab label="2020">
         <h1>RiverSurfJam 2020</h1>
         <h2>Thun</h2>
-        <p>Attended</p>
+        <surf-timeline [timeline]="oldTimeLine"></surf-timeline>
     </mat-tab>
     <mat-tab label="2019">
         <h1>RiverSurfJam 2019</h1>
         <h2>Thun</h2>
-        <p>Attended</p>
+        <surf-timeline [timeline]="oldTimeLine"></surf-timeline>
     </mat-tab>
 </mat-tab-group>

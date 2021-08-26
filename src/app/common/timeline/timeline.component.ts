@@ -5,7 +5,7 @@ import {
     OnInit,
     ViewChild
 } from '@angular/core';
-import {DefaultTimelineItems, TimelineItem} from "./timeline-item.model";
+import {DefaultTimelineItemsWinning, TimelineItem, TimelineItemIcon} from "./timeline-item.model";
 import {MatStepper} from "@angular/material/stepper";
 
 @Component({
@@ -15,7 +15,7 @@ import {MatStepper} from "@angular/material/stepper";
 })
 export class TimelineComponent implements OnInit, AfterViewInit {
 
-    @Input() timeline: TimelineItem[] = [...DefaultTimelineItems];
+    @Input() timeline: TimelineItem[] = [];
 
     private animationStepDuration = 200;
 
@@ -35,6 +35,26 @@ export class TimelineComponent implements OnInit, AfterViewInit {
         if (this.stepper.selectedIndex < this.stepper.steps.length - 1) {
             this.stepper.next();
             setTimeout(() => this.animateTimeline(), this.animationStepDuration);
+        }
+    }
+
+    getIconForTimeline(iconName : TimelineItemIcon){
+        switch (iconName) {
+            case "default":
+            default:
+                return "";
+
+            case "start":
+                return "play_arrow";
+
+            case "finish":
+                return "stop";
+
+            case "win":
+                return "flare";
+
+            case "loose":
+                return "flash_on";
         }
     }
 }

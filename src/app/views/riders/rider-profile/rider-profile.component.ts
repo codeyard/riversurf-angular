@@ -1,4 +1,5 @@
-import {Component, OnInit} from '@angular/core';
+import {AfterViewInit, Component, OnInit} from '@angular/core';
+import {ActivatedRoute} from "@angular/router";
 
 @Component({
     selector: 'surf-rider-profile',
@@ -7,10 +8,15 @@ import {Component, OnInit} from '@angular/core';
 })
 export class RiderProfileComponent implements OnInit {
 
-    constructor() {
+    riderId : String = 'unknown';
+
+    constructor(private route: ActivatedRoute) {
+        this.route.params.subscribe(params => {
+            console.log(`Parameters`, params);
+            this.riderId = params['id'];
+        });
     }
 
     ngOnInit(): void {
     }
-
 }

@@ -1,5 +1,6 @@
-import {AfterViewInit, Component, OnInit} from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {ActivatedRoute} from "@angular/router";
+import {Rider, riderExample} from "../../../models/rider.model";
 
 @Component({
     selector: 'surf-rider-profile',
@@ -8,11 +9,16 @@ import {ActivatedRoute} from "@angular/router";
 })
 export class RiderProfileComponent implements OnInit {
 
-    riderId : String = 'unknown';
+    riderId: String = 'unknown';
+
+    rider ?: Rider;
 
     constructor(private route: ActivatedRoute) {
         this.route.params.subscribe(params => {
             this.riderId = params['id'];
+
+            // ToDo: Get rider details from db-service
+            this.rider = {...riderExample};
         });
     }
 

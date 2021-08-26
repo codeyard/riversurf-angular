@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, Input, OnChanges, OnInit, SimpleChanges} from '@angular/core';
 import {
     DefaultTimelineItemsLoosing,
     DefaultTimelineItemsWinning,
@@ -6,18 +6,29 @@ import {
 } from "../../../../common/timeline/timeline-item.model";
 
 @Component({
-  selector: 'surf-rider-timeline',
-  templateUrl: './rider-timeline.component.html',
-  styleUrls: ['./rider-timeline.component.scss']
+    selector: 'surf-rider-timeline',
+    templateUrl: './rider-timeline.component.html',
+    styleUrls: ['./rider-timeline.component.scss']
 })
-export class RiderTimelineComponent implements OnInit {
+export class RiderTimelineComponent implements OnInit, OnChanges {
 
-    currentTimeline : TimelineItem[] = [...DefaultTimelineItemsWinning];
-    oldTimeLine : TimelineItem[] = [...DefaultTimelineItemsLoosing];
+    currentTimeline: TimelineItem[] = [];
+    oldTimeLine: TimelineItem[] = [];
 
-  constructor() { }
+    @Input() riderId ?: string;
 
-  ngOnInit(): void {
-  }
+    constructor() {
+    }
 
+    ngOnInit(): void {
+    }
+
+    ngOnChanges(changes: SimpleChanges): void {
+        if (changes.riderId.currentValue != changes.riderId.previousValue && changes.riderId.currentValue != undefined) {
+
+            // ToDo: Load timeline items from service
+            this.currentTimeline = [...DefaultTimelineItemsWinning];
+            this.oldTimeLine = [...DefaultTimelineItemsLoosing];
+        }
+    }
 }

@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, Input, OnInit} from '@angular/core';
 import {Rider, riderExample} from "../../../../models/rider.model";
 
 @Component({
@@ -8,11 +8,12 @@ import {Rider, riderExample} from "../../../../models/rider.model";
 })
 export class RiderOverviewComponent implements OnInit {
 
-    rider : Rider = {...riderExample};
+    @Input() rider !: Rider;
 
-  constructor() { }
+    constructor() {
+    }
 
-  ngOnInit(): void {
-  }
+    ngOnInit(): void {
+    }
 
 }

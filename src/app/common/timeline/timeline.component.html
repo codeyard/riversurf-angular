@@ -7,7 +7,8 @@
         <mat-step state="{{timelineItem.icon}}">
             <ng-template matStepLabel>
                 <div class="step">
-                    <mat-icon *ngIf="timelineItem.icon != 'default'">{{getIconForTimeline(timelineItem.icon)}}</mat-icon>
+                    <mat-icon
+                        *ngIf="timelineItem.icon != 'default'">{{getIconForTimeline(timelineItem.icon)}}</mat-icon>
                     {{timelineItem.title}}
                 </div>
                 <i>{{timelineItem.time | date}}</i>

@@ -5,13 +5,13 @@ import {
     OnInit,
     ViewChild
 } from '@angular/core';
-import {DefaultTimelineItemsWinning, TimelineItem, TimelineItemIcon} from "./timeline-item.model";
+import {TimelineItem, TimelineItemIcon} from "./timeline-item.model";
 import {MatStepper} from "@angular/material/stepper";
 
 @Component({
-  selector: 'surf-timeline',
-  templateUrl: './timeline.component.html',
-  styleUrls: ['./timeline.component.scss']
+    selector: 'surf-timeline',
+    templateUrl: './timeline.component.html',
+    styleUrls: ['./timeline.component.scss']
 })
 export class TimelineComponent implements OnInit, AfterViewInit {
 
@@ -38,7 +38,7 @@ export class TimelineComponent implements OnInit, AfterViewInit {
         }
     }
 
-    getIconForTimeline(iconName : TimelineItemIcon){
+    getIconForTimeline(iconName: TimelineItemIcon) {
         switch (iconName) {
             case "default":
             default:

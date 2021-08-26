@@ -37,7 +37,7 @@ import {RidersComponent} from "./views/riders/riders.component";
 import {CompetitionComponent} from "./views/competition/competition.component";
 import {HeaderComponent} from "./common/header/header.component";
 import { RiderOverviewComponent } from './views/riders/rider-profile/rider-overview/rider-overview.component';
-import { RiderDetailsComponent } from './views/riders/rider-profile/rider-details/rider-details.component';
+import { RiderTimelineComponent } from './views/riders/rider-profile/rider-timeline/rider-timeline.component';
 import {MatListModule} from "@angular/material/list";
 
 @NgModule({
@@ -57,7 +57,7 @@ import {MatListModule} from "@angular/material/list";
         WeatherComponent,
         HeaderComponent,
         RiderOverviewComponent,
-        RiderDetailsComponent
+        RiderTimelineComponent
     ],
     imports: [
         BrowserModule,

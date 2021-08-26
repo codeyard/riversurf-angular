@@ -1,6 +1,11 @@
 @import "../../../assets/scss/_mixins";
 @import "../../../assets/scss/_responsive";
 
+surf-carousel {
+    width: 400px;
+    max-width: 100%;
+}
+
 .content {
     width: 100%;
     display: flex;

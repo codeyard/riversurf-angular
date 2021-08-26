@@ -1,5 +1,5 @@
 import {NgModule} from '@angular/core';
-import {BrowserModule} from '@angular/platform-browser';
+import {BrowserModule, HammerModule} from '@angular/platform-browser';
 
 import {AppRoutingModule} from './app-routing.module';
 import {AppComponent} from './app.component';
@@ -40,6 +40,8 @@ import {MatButtonToggleModule} from "@angular/material/button-toggle";
 import {MatTableModule} from "@angular/material/table";
 import {MatPaginatorModule} from "@angular/material/paginator";
 import {MatSortModule} from "@angular/material/sort";
+import {CarouselComponent, CarrousellItemDirective} from './common/carousel/carousel.component';
+import {CarouselItemComponent} from './common/carousel/carousel-item/carousel-item.component';
 
 @NgModule({
     declarations: [
@@ -56,7 +58,10 @@ import {MatSortModule} from "@angular/material/sort";
         NavigationComponent,
         SignupFormComponent,
         WeatherComponent,
-        HeaderComponent
+        HeaderComponent,
+        CarouselComponent,
+        CarrousellItemDirective,
+        CarouselItemComponent
     ],
     imports: [
         BrowserModule,
@@ -85,7 +90,8 @@ import {MatSortModule} from "@angular/material/sort";
         MatButtonToggleModule,
         MatTableModule,
         MatPaginatorModule,
-        MatSortModule
+        MatSortModule,
+        HammerModule
     ],
     providers: [],
     bootstrap: [AppComponent]

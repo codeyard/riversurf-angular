@@ -1,0 +1,20 @@
+.carrousel {
+    display: flex;
+    flex-direction: row;
+    overflow: hidden;
+    max-width: 100%;
+
+    & ul {
+        display: flex;
+        max-width: 100%;
+    }
+
+    & li {
+        list-style: none;
+        max-width: 100%;
+
+        & .elementwrapper {
+            margin: 0.8rem;
+        }
+    }
+}

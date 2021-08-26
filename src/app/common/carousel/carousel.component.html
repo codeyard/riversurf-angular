@@ -1,0 +1,14 @@
+<div class="carrousel">
+    <ul *ngIf="true" #carouselList>
+        <li *ngFor="let element of elements" #craouselListItem
+            (panleft)="onPan($event, element)"
+            (panright)="onPan($event, element)"
+            (panend)="onPanEnd($event, element)"
+            [style.touch-action]="'pan-y'"
+        >
+            <div class="elementwrapper">
+                <ng-container [ngTemplateOutlet]="element.el"></ng-container>
+            </div>
+        </li>
+    </ul>
+</div>

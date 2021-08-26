@@ -39,6 +39,8 @@ import {HeaderComponent} from "./common/header/header.component";
 import { RiderOverviewComponent } from './views/riders/rider-profile/rider-overview/rider-overview.component';
 import { RiderTimelineComponent } from './views/riders/rider-profile/rider-timeline/rider-timeline.component';
 import {MatListModule} from "@angular/material/list";
+import { TimelineComponent } from './common/timeline/timeline.component';
+import {MatStepperModule} from "@angular/material/stepper";
 
 @NgModule({
     declarations: [
@@ -57,7 +59,8 @@ import {MatListModule} from "@angular/material/list";
         WeatherComponent,
         HeaderComponent,
         RiderOverviewComponent,
-        RiderTimelineComponent
+        RiderTimelineComponent,
+        TimelineComponent
     ],
     imports: [
         BrowserModule,
@@ -83,7 +86,8 @@ import {MatListModule} from "@angular/material/list";
         MatButtonModule,
         MatTabsModule,
         MatSnackBarModule,
-        MatListModule
+        MatListModule,
+        MatStepperModule
     ],
     providers: [],
     bootstrap: [AppComponent]

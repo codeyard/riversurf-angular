@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 
 @Component({
-  selector: 'surf-rider-details',
+  selector: 'surf-rider-timeline',
   templateUrl: './rider-timeline.component.html',
   styleUrls: ['./rider-timeline.component.scss']
 })

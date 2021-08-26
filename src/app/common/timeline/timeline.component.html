@@ -1,0 +1,15 @@
+<mat-vertical-stepper *ngIf="timeline" #stepper>
+    <ng-template matStepperIcon="edit"></ng-template>
+    <ng-template matStepperIcon="done"></ng-template>
+    <ng-template matStepperIcon="number"></ng-template>
+    <ng-template matStepperIcon="error"></ng-template>
+    <ng-container *ngFor="let timelineItem of timeline">
+    <mat-step>
+        <ng-template matStepLabel>
+            {{timelineItem.icon}}
+            {{timelineItem.title}}
+        </ng-template>
+        {{timelineItem.content}}
+    </mat-step>
+    </ng-container>
+</mat-vertical-stepper>

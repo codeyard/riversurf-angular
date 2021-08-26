@@ -33,14 +33,7 @@
     }
 
     & .aside {
-        flex: 30%;
-        padding: 2rem;
-        display: flex;
-        flex-direction: column;
-
-        @include respond(medium) {
-            flex: 100%
-        }
+        @include aside-default;
 
         & .rider__cards {
             @include respond(medium) {

@@ -25,6 +25,7 @@
 
 <div class="content">
     <main class="main">
+        <div class="main--center">
         <mat-form-field appearance="standard">
             <mat-label>Search Riders</mat-label>
             <input matInput (keyup)="applyFilter($event)" placeholder="Search Riders" #input>
@@ -79,13 +80,15 @@
 
         <mat-paginator [pageSizeOptions]="[10, 20, 50]"
                        showFirstLastButtons
-                       aria-label="Select page of periodic elements">
+                       aria-label="Select page of periodic elements" class="paginator">
         </mat-paginator>
+        </div>
     </main>
 
     <aside class="aside">
+        <div class="aside__favorite">
         <h2 *ngIf="!favoriteRiders.length">
-            <mat-icon class="table__data__favorite">favorite_border</mat-icon>
+            <mat-icon>favorite_border</mat-icon>
             your favorite Riders!
         </h2>
         <h2 *ngIf="favoriteRiders.length">
@@ -95,6 +98,7 @@
         </h2>
         <div class="aside__favorite-riders">
             <surf-rider-card *ngFor="let rider of favoriteRiders" [rider]="rider"></surf-rider-card>
+        </div>
         </div>
     </aside>
 </div>

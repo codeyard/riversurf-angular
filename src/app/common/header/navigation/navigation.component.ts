@@ -22,5 +22,9 @@ export class NavigationComponent {
             document.body.style.overflow = 'hidden';
         }
 
+        if (!isFromMenu && this.isChecked) {
+            document.body.style.overflow = 'visible';
+        }
     }
+
 }

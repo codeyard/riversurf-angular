@@ -1,5 +1,6 @@
 <div class="">
-    <mat-button-toggle-group class="statistic-bar" [(ngModel)]="division" aria-label="Division" (change)="toggleDivision()">
+    <mat-button-toggle-group class="statistic-bar" [(ngModel)]="division" aria-label="Division"
+                             (change)="toggleDivision()">
         <mat-button-toggle value="male" class="statistic-bar__item statistic-bar__item--male">
             <mat-icon class="statistic-bar__item__icon">male</mat-icon>
             <div class="statistic-bar__item__info">
@@ -61,7 +62,7 @@
                         <mat-icon *ngIf="isFavoriteRider(rider.id)" class="table__data__favorite">favorite</mat-icon>
                         <mat-icon *ngIf="!isFavoriteRider(rider.id)">favorite_border</mat-icon>
                     </button>
-                    <button mat-icon-button aria-label="View rider profile"  routerLink="/rider/{{rider.id}}">
+                    <button mat-icon-button aria-label="View rider profile" routerLink="/rider/{{rider.id}}">
                         <mat-icon>visibility</mat-icon>
                     </button>
                 </td>
@@ -84,10 +85,16 @@
 
     <aside class="aside">
         <h2 *ngIf="!favoriteRiders.length">
-            <mat-icon  class="table__data__favorite">favorite_border</mat-icon> your favorite Riders!
+            <mat-icon class="table__data__favorite">favorite_border</mat-icon>
+            your favorite Riders!
         </h2>
         <h2 *ngIf="favoriteRiders.length">
-            Your <mat-icon  class="favorite">favorite</mat-icon>  Riders:</h2>
-        <surf-rider-card *ngFor="let rider of favoriteRiders" [rider]="rider"></surf-rider-card>
+            Your
+            <mat-icon class="favorite">favorite</mat-icon>
+            Riders:
+        </h2>
+        <div class="aside__favorite-riders">
+            <surf-rider-card *ngFor="let rider of favoriteRiders" [rider]="rider"></surf-rider-card>
+        </div>
     </aside>
 </div>

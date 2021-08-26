@@ -36,6 +36,8 @@ import {LoginComponent} from "./views/login/login.component";
 import {RidersComponent} from "./views/riders/riders.component";
 import {CompetitionComponent} from "./views/competition/competition.component";
 import {HeaderComponent} from "./common/header/header.component";
+import { RiderOverviewComponent } from './views/riders/rider-profile/rider-overview/rider-overview.component';
+import { RiderDetailsComponent } from './views/riders/rider-profile/rider-details/rider-details.component';
 
 @NgModule({
     declarations: [
@@ -52,7 +54,9 @@ import {HeaderComponent} from "./common/header/header.component";
         NavigationComponent,
         SignupFormComponent,
         WeatherComponent,
-        HeaderComponent
+        HeaderComponent,
+        RiderOverviewComponent,
+        RiderDetailsComponent
     ],
     imports: [
         BrowserModule,

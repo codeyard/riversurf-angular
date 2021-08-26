@@ -136,6 +136,10 @@
                     padding: 0.5rem;
                     transition: .5s all;
                 }
+
+                &__favorite {
+                    color: $color-favorite;
+                }
             }
         }
     }
@@ -147,4 +151,8 @@
             flex: 100%;
         }
     }
+}
+
+.favorite {
+    color: $color-favorite;
 }

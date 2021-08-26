@@ -57,10 +57,11 @@
             <ng-container matColumnDef="action">
                 <th mat-header-cell *matHeaderCellDef>&nbsp;</th>
                 <td mat-cell *matCellDef="let rider">
-                    <button mat-icon-button aria-label="Follow this rider">
-                        <mat-icon>favorite_border</mat-icon>
+                    <button mat-icon-button aria-label="Follow this rider" (click)="toggleFavorites(rider)">
+                        <mat-icon *ngIf="isFavoriteRider(rider.id)" class="table__data__favorite">favorite</mat-icon>
+                        <mat-icon *ngIf="!isFavoriteRider(rider.id)">favorite_border</mat-icon>
                     </button>
-                    <button mat-icon-button aria-label="View rider profile">
+                    <button mat-icon-button aria-label="View rider profile"  routerLink="/rider/{{rider.id}}">
                         <mat-icon>visibility</mat-icon>
                     </button>
                 </td>
@@ -82,6 +83,11 @@
     </main>
 
     <aside class="aside">
-        Aside
+        <h2 *ngIf="!favoriteRiders.length">
+            <mat-icon  class="table__data__favorite">favorite_border</mat-icon> your favorite Riders!
+        </h2>
+        <h2 *ngIf="favoriteRiders.length">
+            Your <mat-icon  class="favorite">favorite</mat-icon>  Riders:</h2>
+        <surf-rider-card *ngFor="let rider of favoriteRiders" [rider]="rider"></surf-rider-card>
     </aside>
 </div>

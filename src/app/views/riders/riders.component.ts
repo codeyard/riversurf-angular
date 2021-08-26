@@ -28,18 +28,19 @@ const RIDERS_DATA: Rider[] = [
 export class RidersComponent implements OnInit, AfterViewInit {
     displayedColumns: string[] = ['avatar', 'name', 'nickName', 'division', 'action'];
     dataSource = new MatTableDataSource(RIDERS_DATA);
+    favoriteRiders: Rider[] = [];
 
     @ViewChild(MatPaginator) paginator!: MatPaginator;
     @ViewChild(MatSort) sort!: MatSort;
 
     division: string = '';
 
+    constructor() {
+    }
+
     ngAfterViewInit() {
         this.dataSource.paginator = this.paginator;
         this.dataSource.sort = this.sort;
-    }
-
-    constructor() {
     }
 
     ngOnInit(): void {
@@ -53,4 +54,17 @@ export class RidersComponent implements OnInit, AfterViewInit {
     toggleDivision(): void {
         this.dataSource.filter = this.division;
     }
+
+    toggleFavorites(rider: Rider) {
+        const indexOfRider = this.favoriteRiders.findIndex(elementRider => elementRider.id === rider.id);
+
+        indexOfRider > -1
+            ? this.favoriteRiders.splice(indexOfRider, 1)
+            : this.favoriteRiders.push(rider);
+    }
+
+    isFavoriteRider(riderId: string): boolean {
+        return this.favoriteRiders.findIndex(elementRider => elementRider.id === riderId) > -1;
+    }
+
 }

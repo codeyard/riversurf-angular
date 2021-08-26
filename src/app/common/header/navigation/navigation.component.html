@@ -7,17 +7,17 @@
     <div class="navigation__background">&nbsp;</div>
     <nav class="navigation__nav">
         <ul class="navigation__list">
-            <li class="navigation__item" routerLink="/" (click)="navigationToggler.checked = false"><div  class="navigation__link">
+            <li class="navigation__item" routerLink="/" (click)="navigationToggler.checked = false"><div  class="navigation__link" [routerLinkActiveOptions]="{exact: true}" routerLinkActive="active-route">
                 <mat-icon>event_note</mat-icon>
-                Events</div>
+                <span>Events</span></div>
             </li>
-            <li class="navigation__item" routerLink="/riders" (click)="navigationToggler.checked = false"><div class="navigation__link">
+            <li class="navigation__item" routerLink="/riders" (click)="navigationToggler.checked = false"><div class="navigation__link" [routerLinkActiveOptions]="{exact: true}" routerLinkActive="active-route">
                 <mat-icon>person</mat-icon>
-                Riders</div>
+                <span>Riders</span></div>
             </li>
-            <li class="navigation__item" routerLink="/login" (click)="navigationToggler.checked = false" ><div class="navigation__link">
+            <li class="navigation__item" routerLink="/login" (click)="navigationToggler.checked = false" ><div class="navigation__link" [routerLinkActiveOptions]="{exact: true}" routerLinkActive="active-route">
                 <mat-icon>lock</mat-icon>
-                Login</div>
+                <span>Login</span></div>
             </li>
         </ul>
     </nav>

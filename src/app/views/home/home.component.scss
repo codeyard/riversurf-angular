@@ -1,9 +1,11 @@
+@import "../../../assets/scss/_mixins";
 @import "../../../assets/scss/_responsive";
 
 .content {
     width: 100%;
     display: flex;
     flex-direction: row;
+    @include bottom-space;
 
     @include respond(medium) {
         flex-direction: column;
@@ -30,7 +32,7 @@
         }
     }
 
-    & .side {
+    & .aside {
         flex: 30%;
         padding: 2rem;
         display: flex;

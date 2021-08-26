@@ -36,6 +36,10 @@ import {LoginComponent} from "./views/login/login.component";
 import {RidersComponent} from "./views/riders/riders.component";
 import {CompetitionComponent} from "./views/competition/competition.component";
 import {HeaderComponent} from "./common/header/header.component";
+import {MatButtonToggleModule} from "@angular/material/button-toggle";
+import {MatTableModule} from "@angular/material/table";
+import {MatPaginatorModule} from "@angular/material/paginator";
+import {MatSortModule} from "@angular/material/sort";
 
 @NgModule({
     declarations: [
@@ -77,7 +81,11 @@ import {HeaderComponent} from "./common/header/header.component";
         MatCheckboxModule,
         MatButtonModule,
         MatTabsModule,
-        MatSnackBarModule
+        MatSnackBarModule,
+        MatButtonToggleModule,
+        MatTableModule,
+        MatPaginatorModule,
+        MatSortModule
     ],
     providers: [],
     bootstrap: [AppComponent]

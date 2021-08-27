@@ -28,7 +28,10 @@
         <div class="main--center">
         <mat-form-field appearance="standard">
             <mat-label>Search Riders</mat-label>
-            <input matInput (keyup)="applyFilter($event)" placeholder="Search Riders" #input>
+            <input matInput [(ngModel)]="filter" (keyup)="applyFilter($event)" placeholder="Search Riders">
+            <button mat-button *ngIf="filter" matSuffix mat-icon-button aria-label="Clear" (click)="clearFilter()">
+                <mat-icon>close</mat-icon>
+            </button>
         </mat-form-field>
 
         <table class="table" mat-table [dataSource]="dataSource" matSort>
@@ -74,13 +77,18 @@
 
             <!-- Row shown when there is no matching data. -->
             <tr class="mat-row" *matNoDataRow>
-                <td class="mat-cell" colspan="5">No data matching the filter "{{input.value}}"</td>
+                <td class="mat-cell" colspan="5">No data matching the filter "{{ filter }}"</td>
             </tr>
         </table>
 
-        <mat-paginator [pageSizeOptions]="[10, 20, 50]"
+        <mat-paginator [disabled]="length < 1"
+                       [length]="length"
+                       [pageIndex]="pageIndex"
+                       [pageSize]="pageSize"
+                       (page)="handlePage($event)"
+                       [pageSizeOptions]="[10, 20, 50]"
                        showFirstLastButtons
-                       aria-label="Select page of periodic elements" class="paginator">
+                       aria-label="Select page of riders" class="paginator">
         </mat-paginator>
         </div>
     </main>

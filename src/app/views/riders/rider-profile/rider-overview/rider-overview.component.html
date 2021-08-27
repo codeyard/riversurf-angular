@@ -21,7 +21,7 @@
         </ng-container>
         <ng-container *ngIf="rider.birthdate">
             <div class="container__attribute">Birthdate</div>
-            <div class="container__value">{{rider.birthdate | date}}</div>
+            <div class="container__value">{{rider.birthdate | date:'d. MMMM YYYY'}}</div>
         </ng-container>
         <ng-container *ngIf="rider.email">
             <div class="container__attribute">Mail</div>

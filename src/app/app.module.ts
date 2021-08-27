@@ -41,7 +41,6 @@ import {MatTableModule} from "@angular/material/table";
 import {MatPaginatorModule} from "@angular/material/paginator";
 import {MatSortModule} from "@angular/material/sort";
 import {CarouselComponent, CarrousellItemDirective} from './common/carousel/carousel.component';
-import {CarouselItemComponent} from './common/carousel/carousel-item/carousel-item.component';
 
 @NgModule({
     declarations: [
@@ -60,8 +59,7 @@ import {CarouselItemComponent} from './common/carousel/carousel-item/carousel-it
         WeatherComponent,
         HeaderComponent,
         CarouselComponent,
-        CarrousellItemDirective,
-        CarouselItemComponent
+        CarrousellItemDirective
     ],
     imports: [
         BrowserModule,

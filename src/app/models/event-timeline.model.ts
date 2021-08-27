@@ -20,8 +20,8 @@ export function GenerateEventTimeLine(year : number, riderId : string) : EventTi
     return {
         event : {...exampleEvent,
             id: "riversurf-jam-thun-" + year,
-            startDateTime: new Date(year),
-            endDateTime: new Date(year)},
+            startDateTime: new Date(year, 1, 1),
+            endDateTime: new Date(year, 1, 1)},
         riderId : riderId,
         timeline : timeline
     }

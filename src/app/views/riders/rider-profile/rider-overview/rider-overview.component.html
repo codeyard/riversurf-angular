@@ -1,40 +1,31 @@
 <mat-card>
-    <mat-list></mat-list>
-    <mat-list-item>
-        <div class="riderHeader">
+    <div class="container">
+        <div class="container__header">
             <img src="{{rider.profilePicture}}" alt="Profile Picture">
             <h1>{{rider.firstName}} {{rider.lastName}}</h1>
             <h2 *ngIf="rider.nickName">{{rider.nickName}}</h2>
         </div>
-    </mat-list-item>
-    <mat-divider></mat-divider>
-    <mat-list-item>
-        <div class="socialBar">
-            <mat-icon>notifications_none</mat-icon>
-            Facebook
-            <mat-icon>notifications_none</mat-icon>
-            Instagram
-            <mat-icon>notifications_none</mat-icon>
-            Twitter
-            <mat-icon>notifications_none</mat-icon>
-            Notify me
+        <div class="container__social">
+            <!-- ToDo: Replace with social component -->
+            <mat-icon>notifications_none</mat-icon>Facebook
+            <mat-icon>notifications_none</mat-icon>Instagram
+            <mat-icon>notifications_none</mat-icon>Twitter
+            <mat-icon>notifications_none</mat-icon>Notify me
         </div>
-    </mat-list-item>
-    <mat-divider></mat-divider>
-    <p>{{rider.biography}}</p>
-    <mat-divider></mat-divider>
-    <table class="mat-table">
-        <tr class="mat-row">
-            <td class="mat-cell">Division</td>
-            <td class="mat-cell">{{rider.division}}</td>
-        </tr>
-        <tr class="mat-row">
-            <td class="mat-cell">Birthdate</td>
-            <td class="mat-cell">{{rider.birthdate | date}}</td>
-        </tr>
-        <tr class="mat-row">
-            <td class="mat-cell">Mail</td>
-            <td class="mat-cell"><a href="mailto:{{rider.email}}">{{rider.email}}</a></td>
-        </tr>
-    </table>
+        <div *ngIf="rider.biography" class="container__biography">
+            {{rider.biography}}
+        </div>
+        <ng-container *ngIf="rider.biography">
+            <div class="container__attribute">Division</div>
+            <div class="container__value">{{rider.division}}</div>
+        </ng-container>
+        <ng-container *ngIf="rider.birthdate">
+            <div class="container__attribute">Birthdate</div>
+            <div class="container__value">{{rider.birthdate | date}}</div>
+        </ng-container>
+        <ng-container *ngIf="rider.email">
+            <div class="container__attribute">Mail</div>
+            <div class="container__value"><a href="mailto:{{rider.email}}">{{rider.email}}</a></div>
+        </ng-container>
+    </div>
 </mat-card>

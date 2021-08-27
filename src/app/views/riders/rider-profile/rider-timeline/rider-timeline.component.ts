@@ -32,7 +32,7 @@ export class RiderTimelineComponent implements OnInit, OnChanges {
         if (changes.riderId.currentValue != changes.riderId.previousValue && changes.riderId.currentValue != undefined) {
 
             // ToDo: Load timeline items from service
-            this.currentTimeline = GenerateEventTimeLine(2021, this.riderId || '');
+            this.currentTimeline = GenerateEventTimeLine(2021, this.riderId || '', true);
             this.historyTimeline = GenerateHistoryEventTimeLine(2021, 3, this.riderId || '');
         }
     }

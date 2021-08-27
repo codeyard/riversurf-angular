@@ -1,4 +1,9 @@
-import {DefaultTimeLineItemsLoosing, DefaultTimeLineItemsWinning, TimeLineItem} from "./timeline-item.model";
+import {
+    DefaultTimeLineItemsLoosing,
+    DefaultTimeLineItemsOngoing,
+    DefaultTimeLineItemsWinning,
+    TimeLineItem
+} from "./timeline-item.model";
 import {Event, exampleEvent} from "./event.model";
 
 export interface EventTimeline {
@@ -7,14 +12,18 @@ export interface EventTimeline {
     timeline : TimeLineItem[];
 }
 
-export function GenerateEventTimeLine(year : number, riderId : string) : EventTimeline {
+export function GenerateEventTimeLine(year : number, riderId : string, ongoing : boolean) : EventTimeline {
 
     let timeline : TimeLineItem[] = [];
 
-    if(year === 2021){
-        timeline = [...DefaultTimeLineItemsWinning];
+    if(ongoing){
+        timeline = [...DefaultTimeLineItemsOngoing];
     } else {
-        timeline = [...DefaultTimeLineItemsLoosing];
+        if (year === 2021) {
+            timeline = [...DefaultTimeLineItemsWinning];
+        } else {
+            timeline = [...DefaultTimeLineItemsLoosing];
+        }
     }
 
     return {
@@ -31,7 +40,7 @@ export function GenerateHistoryEventTimeLine(startingYear : number, years : numb
     let timeline : EventTimeline[] = [];
 
     for(let history = startingYear; history > (startingYear - years); history--){
-        timeline.push(GenerateEventTimeLine(history, riderId));
+        timeline.push(GenerateEventTimeLine(history, riderId, false));
     }
 
     return timeline;

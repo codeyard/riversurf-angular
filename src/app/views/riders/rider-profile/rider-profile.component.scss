@@ -11,7 +11,7 @@
 
     & .overview {
         flex: 30%;
-        padding: 2rem;
+        padding: 1rem;
 
         @include respond(small) {
             flex: 100%
@@ -20,7 +20,7 @@
 
     & .details {
         flex: 70%;
-        padding: 2rem;
+        padding: 1rem;
 
         @include respond(small) {
             flex: 100%

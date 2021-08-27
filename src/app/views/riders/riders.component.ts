@@ -2,7 +2,7 @@ import {AfterViewInit, Component, OnChanges, OnInit, ViewChild} from '@angular/c
 import {exampleRiderFemale, exampleRiderKid, exampleRiderMale, Rider} from "../../models/rider.model";
 import {MatTableDataSource} from "@angular/material/table";
 import {MatPaginator, PageEvent} from "@angular/material/paginator";
-import {MatSort, Sort} from "@angular/material/sort";
+import {MatSort, Sort, SortDirection} from "@angular/material/sort";
 import {ActivatedRoute, Router} from "@angular/router";
 
 const RIDERS_DATA: Rider[] = [
@@ -41,6 +41,8 @@ export class RidersComponent implements OnInit, AfterViewInit, OnChanges {
     pageIndex?: number;
     pageSize!: number;
     length!: number;
+    sortBy = 'name';
+    sortDir: SortDirection = 'asc';
 
     maleCount: number = RIDERS_DATA.filter(rider => rider.division === 'male').length;
     femaleCount: number = RIDERS_DATA.filter(rider => rider.division === 'female').length;
@@ -65,27 +67,32 @@ export class RidersComponent implements OnInit, AfterViewInit, OnChanges {
             if (params['pageSize']) {
                 this.pageSize = params['pageSize'];
             }
+            if (params['sortBy']) {
+                this.sortBy = params['sortBy'];
+            }
+            if (params['sortDir']) {
+                this.sortDir = params['sortDir'];
+            }
         });
     }
 
     ngAfterViewInit() {
-        this.dataSource.paginator = this.paginator;
-        this.dataSource.sort = this.sort;
-
-        if (this.filter && this.filter.length) {
-            this.dataSource.filter = this.filter;
-        }
+        this.updateTable();
     }
 
     ngOnChanges() {
         if (this.dataSource) {
             this.length = this.dataSource.data.length;
-            this.dataSource.sort = this.sort;
-            this.dataSource.paginator = this.paginator;
+            this.updateTable();
+        }
+    }
 
-            if (this.filter && this.filter.length) {
-                this.dataSource.filter = this.filter;
-            }
+    private updateTable(): void {
+        this.dataSource.paginator = this.paginator;
+        this.dataSource.sort = this.sort;
+
+        if (this.filter && this.filter.length) {
+            this.dataSource.filter = this.filter;
         }
     }
 
@@ -157,6 +164,19 @@ export class RidersComponent implements OnInit, AfterViewInit, OnChanges {
                 queryParamsHandling: 'merge',
             }).then();
         }
+    }
+
+    sortTable(sort: Sort) {
+        this.sortBy = sort.active ?? null;
+        this.sortDir = sort.direction ?? null;
+
+        this.router.navigate([], {
+            queryParams: {
+                sortBy: this.sortBy,
+                sortDir: this.sortDir
+            },
+            queryParamsHandling: 'merge',
+        }).then();
     }
 
     toggleFavorites(rider: Rider) {

@@ -1,5 +1,5 @@
 import {Component, Input, OnInit} from '@angular/core';
-import {Rider, riderExample} from "../../../../models/rider.model";
+import {Rider} from "../../../../models/rider.model";
 
 @Component({
   selector: 'surf-rider-overview',

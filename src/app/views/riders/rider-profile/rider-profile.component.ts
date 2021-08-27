@@ -1,6 +1,6 @@
 import {Component, OnInit} from '@angular/core';
 import {ActivatedRoute} from "@angular/router";
-import {Rider, riderExample} from "../../../models/rider.model";
+import {Rider, exampleRiderMale} from "../../../models/rider.model";
 
 @Component({
     selector: 'surf-rider-profile',
@@ -18,7 +18,7 @@ export class RiderProfileComponent implements OnInit {
             this.riderId = params['id'];
 
             // ToDo: Get rider details from db-service
-            this.rider = {...riderExample};
+            this.rider = {...exampleRiderMale};
         });
     }
 

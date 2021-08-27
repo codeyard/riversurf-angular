@@ -9,7 +9,7 @@ import {TimeLineItem, TimeLineItemIcon} from "../../models/timeline-item.model";
 import {MatStepper} from "@angular/material/stepper";
 
 @Component({
-    selector: 'surf-timeline',
+    selector: 'surf-time-line',
     templateUrl: './time-line.component.html',
     styleUrls: ['./time-line.component.scss']
 })

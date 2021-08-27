@@ -41,7 +41,7 @@ import { RiderTimelineComponent } from './views/riders/rider-profile/rider-timel
 import {MatListModule} from "@angular/material/list";
 import { TimeLineComponent } from './common/timeline/time-line.component';
 import {MatStepperModule} from "@angular/material/stepper";
-import { TimeLineLineComponent } from './common/timeline/time-line-icon/time-line-line.component';
+import { TimeLineLineComponent } from './common/timeline/time-line-line/time-line-line.component';
 
 @NgModule({
     declarations: [

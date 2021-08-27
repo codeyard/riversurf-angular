@@ -3,7 +3,7 @@
         <h1>{{currentTimeline.event.name}}</h1>
         <h2>{{currentTimeline.event.location}}</h2>
         <p>{{currentTimeline.event.description}}</p>
-        <surf-time-line *ngIf="currentTimeline.timeline" [timeline]="currentTimeline.timeline"></surf-time-line>
+        <surf-time-line *ngIf="currentTimeline.timeline" [timeline]="currentTimeline.timeline" [ongoing]="true"></surf-time-line>
     </mat-tab>
     <mat-tab *ngFor="let historicalEvent of historyTimeline" label="{{historicalEvent.event.startDateTime.getFullYear()}}">
         <h1>{{historicalEvent.event.name}}</h1>

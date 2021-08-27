@@ -1,5 +1,14 @@
-.step{
-    display: flex;
-    align-items: center;
-}
+.container {
+    display: grid;
+    grid-template-columns: 1fr 4fr;
+    align-items: stretch;
 
+    &__timeline{
+        grid-column: 1 / 2;
+    }
+
+    &__details{
+        grid-column: 2 / 3;
+        margin: 0.5rem 0;
+    }
+}

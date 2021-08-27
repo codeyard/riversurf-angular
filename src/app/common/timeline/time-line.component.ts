@@ -13,29 +13,15 @@ import {MatStepper} from "@angular/material/stepper";
     templateUrl: './time-line.component.html',
     styleUrls: ['./time-line.component.scss']
 })
-export class TimeLineComponent implements OnInit, AfterViewInit {
+export class TimeLineComponent implements OnInit {
 
     @Input() timeline: TimeLineItem[] = [];
-
-    private animationStepDuration = 200;
-
-    @ViewChild('stepper') stepper !: MatStepper;
+    @Input() ongoing : boolean = false;
 
     constructor() {
     }
 
     ngOnInit(): void {
-    }
-
-    ngAfterViewInit(): void {
-        setTimeout(() => this.animateTimeline(), this.animationStepDuration);
-    }
-
-    private animateTimeline() {
-        if (this.stepper.selectedIndex < this.stepper.steps.length - 1) {
-            this.stepper.next();
-            setTimeout(() => this.animateTimeline(), this.animationStepDuration);
-        }
     }
 
     getIconForTimeline(iconName: TimeLineItemIcon) {

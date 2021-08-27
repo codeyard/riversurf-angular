@@ -1,23 +1,15 @@
-<surf-time-line-line [next]="true"></surf-time-line-line>
-<surf-time-line-line [previous]="true" [next]="true"></surf-time-line-line>
-<surf-time-line-line [ongoing]="true" [previous]="true"></surf-time-line-line>
-<mat-vertical-stepper *ngIf="timeline" #stepper>
-    <ng-template matStepperIcon="edit"></ng-template>
-    <ng-template matStepperIcon="done"></ng-template>
-    <ng-template matStepperIcon="number"></ng-template>
-    <ng-template matStepperIcon="error"></ng-template>
-    <ng-container *ngFor="let timelineItem of timeline">
-        <mat-step state="{{timelineItem.icon}}">
-            <ng-template matStepLabel>
-                <div class="step">
-                    <mat-icon
-                        *ngIf="timelineItem.icon != 'default'">{{getIconForTimeline(timelineItem.icon)}}</mat-icon>
-                    {{timelineItem.title}}
-                </div>
-                <i>{{timelineItem.time | date}}</i>
-                <br>
-                <i>{{timelineItem.content}}</i>
-            </ng-template>
-        </mat-step>
-    </ng-container>
-</mat-vertical-stepper>
+<div class="container" *ngFor="let timelineItem of timeline; first as isFirst; last as isLast">
+    <div class="container__timeline">
+        <surf-time-line-line *ngIf="isFirst && isLast" [ongoing]="ongoing"></surf-time-line-line>
+        <surf-time-line-line *ngIf="isFirst && !isLast" [next]="true"></surf-time-line-line>
+        <surf-time-line-line *ngIf="isLast" [previous]="true" [ongoing]="ongoing"></surf-time-line-line>
+        <surf-time-line-line *ngIf="!isLast && !isFirst" [next]="true" [previous]="true"></surf-time-line-line>
+    </div>
+    <div class="container__details">
+        <mat-icon *ngIf="timelineItem.icon != 'default'">{{getIconForTimeline(timelineItem.icon)}}</mat-icon>
+        {{timelineItem.title}}
+        <i>{{timelineItem.time | date}}</i>
+        <br>
+        <i>{{timelineItem.content}}</i>
+    </div>
+</div>

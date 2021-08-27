@@ -36,6 +36,10 @@ import {LoginComponent} from "./views/login/login.component";
 import {RidersComponent} from "./views/riders/riders.component";
 import {CompetitionComponent} from "./views/competition/competition.component";
 import {HeaderComponent} from "./common/header/header.component";
+import {MatButtonToggleModule} from "@angular/material/button-toggle";
+import {MatTableModule} from "@angular/material/table";
+import {MatPaginatorModule} from "@angular/material/paginator";
+import {MatSortModule} from "@angular/material/sort";
 import { RiderOverviewComponent } from './views/riders/rider-profile/rider-overview/rider-overview.component';
 import { RiderTimelineComponent } from './views/riders/rider-profile/rider-timeline/rider-timeline.component';
 import {MatListModule} from "@angular/material/list";
@@ -87,6 +91,11 @@ import { TimeLineLineComponent } from './common/time-line/time-line-line/time-li
         MatCheckboxModule,
         MatButtonModule,
         MatTabsModule,
+        MatSnackBarModule,
+        MatButtonToggleModule,
+        MatTableModule,
+        MatPaginatorModule,
+        MatSortModule,
         MatSnackBarModule,
         MatListModule,
         MatStepperModule

@@ -1,22 +1,24 @@
 <div class="">
-    <mat-button-toggle-group class="statistic-bar" [(ngModel)]="division" aria-label="Division"
-                             (change)="toggleDivision()">
-        <mat-button-toggle value="male" class="statistic-bar__item statistic-bar__item--male">
+    <mat-button-toggle-group class="statistic-bar"  aria-label="Division" #group="matButtonToggleGroup">
+        <mat-button-toggle value="male" (change)="toggleDivision($event, group)" [checked]="division === 'male'"
+                           class="statistic-bar__item statistic-bar__item--male">
             <mat-icon class="statistic-bar__item__icon">male</mat-icon>
             <div class="statistic-bar__item__info">
-                <h2>40 Men</h2>
+                <h2>{{ maleCount }} Men</h2>
             </div>
         </mat-button-toggle>
-        <mat-button-toggle value="female" class="statistic-bar__item statistic-bar__item--female">
+        <mat-button-toggle value="female" (change)="toggleDivision($event, group)" [checked]="division === 'female'"
+                           class="statistic-bar__item statistic-bar__item--female">
             <mat-icon class="statistic-bar__item__icon">female</mat-icon>
             <div class="statistic-bar__item__info">
-                <h2>40 female</h2>
+                <h2>{{ femaleCount }} female</h2>
             </div>
         </mat-button-toggle>
-        <mat-button-toggle value="kid" class="statistic-bar__item statistic-bar__item--kids">
+        <mat-button-toggle value="kid" (change)="toggleDivision($event, group)" [checked]="division === 'kid'"
+                           class="statistic-bar__item statistic-bar__item--kids">
             <mat-icon class="statistic-bar__item__icon">cruelty_free</mat-icon>
             <div class="statistic-bar__item__info">
-                <h2>40 kids </h2>
+                <h2>{{ kidCount }} kids </h2>
             </div>
         </mat-button-toggle>
     </mat-button-toggle-group>

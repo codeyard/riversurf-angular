@@ -37,10 +37,14 @@ export class RidersComponent implements OnInit, AfterViewInit, OnChanges {
     division: string = '';
 
     filter: string = '';
-    pageEvent?: PageEvent; // Attention: don't remove, even if IntelliJ suggests it!
+    pageEvent?: PageEvent; // Attention: don't remove, even if IntelliJ suggests it! Pagination will break if missing
     pageIndex?: number;
     pageSize!: number;
     length!: number;
+
+    maleCount: number = RIDERS_DATA.filter(rider => rider.division === 'male').length;
+    femaleCount: number = RIDERS_DATA.filter(rider => rider.division === 'female').length;
+    kidCount: number = RIDERS_DATA.filter(rider => rider.division === 'kid').length;
 
     constructor(private router: Router,
                 private route: ActivatedRoute) {
@@ -128,17 +132,31 @@ export class RidersComponent implements OnInit, AfterViewInit, OnChanges {
         }).then();
     }
 
-    toggleDivision(): void {
-        this.dataSource.data = RIDERS_DATA.filter(rider => rider.division === this.division);
-        console.log(this.dataSource.data)
+    toggleDivision(event: any, group: any): void {
+        if (this.division === event.value) {
+            group.value = '';
+            this.division = '';
+            this.dataSource.data = RIDERS_DATA;
 
-        this.router.navigate([], {
-            queryParams: {
-                division: this.division,
-                page: null
-            },
-            queryParamsHandling: 'merge',
-        }).then();
+            this.router.navigate([], {
+                queryParams: {
+                    division: null,
+                    page: null
+                },
+                queryParamsHandling: 'merge',
+            }).then();
+        } else {
+            this.division = event.value;
+            this.dataSource.data = RIDERS_DATA.filter(rider => rider.division === this.division);
+
+            this.router.navigate([], {
+                queryParams: {
+                    division: this.division,
+                    page: null
+                },
+                queryParamsHandling: 'merge',
+            }).then();
+        }
     }
 
     toggleFavorites(rider: Rider) {

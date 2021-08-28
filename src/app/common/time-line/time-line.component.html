@@ -6,7 +6,7 @@
         <surf-time-line-line *ngIf="!isLast && !isFirst" [next]="true" [previous]="true"></surf-time-line-line>
     </div>
     <div class="container__details">
-        <mat-card>
+        <mat-card class="container__details__card">
             <mat-card-title>
                 <div class="container__details__title">
                     <div class="container__details__title__icon" *ngIf="timelineItem.icon != 'default'">
@@ -18,7 +18,7 @@
                 </div>
             </mat-card-title>
             <mat-card-subtitle *ngIf="timelineItem.time" >{{timelineItem.time | date:'HH:mm | d. MMMM YYYY'}}</mat-card-subtitle>
-            <mat-card-content *ngIf="timelineItem.content">{{timelineItem.content}}</mat-card-content>
+            <p  class="container__details__points" *ngIf="timelineItem.content">{{timelineItem.content}}</p>
         </mat-card>
     </div>
 </div>

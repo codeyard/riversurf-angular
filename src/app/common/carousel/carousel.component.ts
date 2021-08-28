@@ -2,12 +2,11 @@ import {
     AfterContentInit,
     AfterViewInit,
     Component,
-    ContentChildren, Directive, ElementRef,
+    ContentChildren, Directive, ElementRef, HostListener, Input,
     OnInit,
     QueryList, Renderer2, TemplateRef, ViewChild,
     ViewChildren
 } from '@angular/core';
-import {ListKeyManager, ListKeyManagerOption} from "@angular/cdk/a11y";
 import {animate, AnimationBuilder, style} from "@angular/animations";
 
 @Directive({selector: '[carousel-item]'})
@@ -25,18 +24,30 @@ export class CarrousellItemDirective {
     templateUrl: './carousel.component.html',
     styleUrls: ['./carousel.component.scss']
 })
-export class CarouselComponent implements OnInit, AfterContentInit {
+export class CarouselComponent implements OnInit, AfterContentInit, AfterViewInit {
+
+    TIMING = '250ms ease-in';
 
     @ViewChild('carouselList') private carouselList!: ElementRef<HTMLElement>;
     @ViewChild('craouselListItem') private carouselListItem!: ElementRef<HTMLElement>;
+
     @ViewChildren('craouselListItem') private carouselListItems!: QueryList<ElementRef>;
 
     @ContentChildren(CarrousellItemDirective) elements!: QueryList<any>;
 
-    public ready = false;
-    currentOffset: number = 0;
+    @Input()
+    startIndex?: number;
 
-    timings = '250ms ease-in';
+
+    public ready = false;
+
+    private currentIndex = 0;
+
+    private currentOffset: number = 0;
+    private offsetwidth = 0;
+    private carouselWidth = 0;
+    private itemWidth = 0;
+    private itemOffsetSpacing = 0;
 
     constructor(
         private elementRef: ElementRef,
@@ -49,19 +60,35 @@ export class CarouselComponent implements OnInit, AfterContentInit {
     }
 
     ngAfterContentInit(): void {
-        this.ready = true;
         // console.log(this.elements.first.nativeElement.clientWidth);
     }
 
-    public onPan(event: any, element: CarrousellItemDirective): void {
+    ngAfterViewInit() {
+        this.ready = true;
+        this.initCarousel();
+    }
+
+    @HostListener('window:resize', ['$event'])
+    onResize() {
+        this.initCarousel();
+    }
+
+    private initCarousel() {
+        this.carouselWidth = this.carouselList.nativeElement.clientWidth;
+        this.itemWidth = this.carouselListItem.nativeElement.clientWidth;
+        this.itemOffsetSpacing = (this.carouselWidth-this.itemWidth)/2;
+        this.offsetwidth = this.itemWidth + this.itemOffsetSpacing;
+        this.goToIndex(this.startIndex ? this.startIndex : 0);
+        this.playAnimation();
+    }
+
+    public onPan(event: any, element: HTMLElement): void {
         // https://github.com/angular/angular/issues/10541#issuecomment-346539242
         // if y velocity is greater, it's a panup/pandown, so ignore.
         if (Math.abs(event.velocityY) > Math.abs(event.velocityX)) {
             return;
         }
-        let deltaX = event.deltaX;
-        let sign = Math.sign(deltaX)
-        //this.renderer.setStyle(slideElem, 'cursor', 'grabbing');
+        let deltaX = event.deltaX + this.itemOffsetSpacing;
         this.renderer.setStyle(
             this.carouselList.nativeElement,
             'transform',
@@ -69,7 +96,7 @@ export class CarouselComponent implements OnInit, AfterContentInit {
         );
     }
 
-    onPanEnd(event: any, element: CarrousellItemDirective) {
+    onPanEnd(event: any, element: HTMLLIElement) {
         let deltaX = event.deltaX;
 
         let sign = Math.sign(deltaX)
@@ -79,10 +106,14 @@ export class CarouselComponent implements OnInit, AfterContentInit {
         if (Math.abs(deltaX) <= this.carouselListItem.nativeElement.clientWidth / 3) {
             deltaX = 0;
         }
-        console.log(this.calcTotalWidth())
         if (0 >= this.currentOffset + deltaX && this.currentOffset + deltaX > -this.calcTotalWidth()) {
             this.currentOffset += deltaX;
         }
+        this.playAnimation();
+    }
+
+    private goToIndex(index: number) {
+        this.currentOffset = -index * this.itemWidth;
         this.playAnimation();
     }
 
@@ -91,9 +122,9 @@ export class CarouselComponent implements OnInit, AfterContentInit {
     }
 
     private playAnimation(): void {
-        const translation = this.getTranslation(this.currentOffset);
+        const translation = this.getTranslation(this.currentOffset+this.itemOffsetSpacing);
         const factory = this.animationBuilder.build(
-            animate(this.timings, style({transform: translation}))
+            animate(this.TIMING, style({transform: translation}))
         );
         const animation = factory.create(this.carouselList.nativeElement);
 
@@ -114,4 +145,5 @@ export class CarouselComponent implements OnInit, AfterContentInit {
     private calcTotalWidth() {
         return this.carouselListItems.reduce((acc, item) => acc + item.nativeElement.clientWidth, 0);
     }
+
 }

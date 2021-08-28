@@ -1,1 +1,8 @@
-<p>rider-profile works!</p>
+<div class="container">
+    <div class="overview">
+        <surf-rider-overview *ngIf="rider" [rider]="rider"></surf-rider-overview>
+    </div>
+    <div class="details">
+        <surf-rider-timeline *ngIf="rider" [riderId]="rider.id"></surf-rider-timeline>
+    </div>
+</div>

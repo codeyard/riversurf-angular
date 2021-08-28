@@ -1,0 +1,31 @@
+<mat-card>
+    <div class="container">
+        <div class="container__header">
+            <img src="{{rider.profilePicture}}" alt="Profile Picture">
+            <h1>{{rider.firstName}} {{rider.lastName}}</h1>
+            <h2 *ngIf="rider.nickName">{{rider.nickName}}</h2>
+        </div>
+        <div class="container__social">
+            <!-- ToDo: Replace with social component -->
+            <mat-icon>notifications_none</mat-icon>Facebook
+            <mat-icon>notifications_none</mat-icon>Instagram
+            <mat-icon>notifications_none</mat-icon>Twitter
+            <mat-icon>notifications_none</mat-icon>Notify me
+        </div>
+        <div *ngIf="rider.biography" class="container__biography">
+            {{rider.biography}}
+        </div>
+        <ng-container *ngIf="rider.biography">
+            <div class="container__attribute">Division</div>
+            <div class="container__value">{{rider.division}}</div>
+        </ng-container>
+        <ng-container *ngIf="rider.birthdate">
+            <div class="container__attribute">Birthdate</div>
+            <div class="container__value">{{rider.birthdate | date:'d. MMMM YYYY'}}</div>
+        </ng-container>
+        <ng-container *ngIf="rider.email">
+            <div class="container__attribute">Mail</div>
+            <div class="container__value"><a href="mailto:{{rider.email}}">{{rider.email}}</a></div>
+        </ng-container>
+    </div>
+</mat-card>

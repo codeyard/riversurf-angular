@@ -1,6 +1,11 @@
+@import "../../../assets/scss/_responsive";
+
 .container {
     display: grid;
-    grid-template-columns: min-content auto;
+    grid-template-columns: min-content minmax(max-content, 60%);
+    @include respond(medium) {
+        grid-template-columns: min-content auto;
+    }
     align-items: stretch;
 
     &__timeline{

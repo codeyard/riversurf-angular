@@ -1,14 +1,24 @@
-<mat-tab-group>
-    <mat-tab *ngIf="currentTimeline" label="Ongoing" class="padded">
-        <h1>{{currentTimeline.event.name}}</h1>
-        <h2>{{currentTimeline.event.location}}</h2>
-        <p>{{currentTimeline.event.description}}</p>
-        <surf-time-line *ngIf="currentTimeline.timeline" [timeline]="currentTimeline.timeline" [ongoing]="true"></surf-time-line>
+<mat-tab-group class="container__timeline">
+    <mat-tab *ngIf="currentTimeline" label="Ongoing" class="container__timeline-tab">
+        <div class="timeline__description">
+            <h1 class="timeline__description__title">{{currentTimeline.event.name}}</h1>
+            <h2 class="timeline__description__location">{{currentTimeline.event.location}}</h2>
+            <hr>
+            <p class="timeline__description__description">{{currentTimeline.event.description}}</p>
+        </div>
+        <surf-time-line *ngIf="currentTimeline.timeline" [timeline]="currentTimeline.timeline"
+                        [ongoing]="true"></surf-time-line>
     </mat-tab>
-    <mat-tab *ngFor="let historicalEvent of historyTimeline" label="{{historicalEvent.event.startDateTime.getFullYear()}}" class="padded">
-        <h1>{{historicalEvent.event.name}}</h1>
-        <h2>{{historicalEvent.event.location}}</h2>
-        <p>{{historicalEvent.event.description}}</p>
-        <surf-time-line *ngIf="historicalEvent.timeline" [timeline]="historicalEvent.timeline"></surf-time-line>
+    <mat-tab *ngFor="let historicalEvent of historyTimeline"
+             label="{{historicalEvent.event.startDateTime.getFullYear()}}"
+    >
+        <div class="timeline__description">
+            <h1 class="timeline__description__title">{{historicalEvent.event.name}}</h1>
+            <span><h2 class="timeline__description__location">{{historicalEvent.event.location}}</h2></span>
+            <hr>
+            <p class="timeline__description__description">{{historicalEvent.event.description}}</p>
+            <surf-time-line *ngIf="historicalEvent.timeline" [timeline]="historicalEvent.timeline"></surf-time-line>
+        </div>
+
     </mat-tab>
 </mat-tab-group>

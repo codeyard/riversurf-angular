@@ -1,16 +1,19 @@
 @import "../../../../assets/scss/_responsive";
+@import "../../../../assets/scss/_mixins";
 
 .container{
     display: flex;
     flex-direction: row;
     width: 100%;
 
+    @include bottom-space;
+
     @include respond(small) {
         flex-direction: column;
     }
 
     & .overview {
-        flex: 30%;
+        flex: 25%;
         padding: 1rem;
 
         @include respond(small) {
@@ -19,7 +22,7 @@
     }
 
     & .details {
-        flex: 70%;
+        flex: 75%;
         padding: 1rem;
 
         @include respond(small) {

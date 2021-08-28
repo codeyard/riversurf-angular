@@ -1,9 +1,11 @@
+@import "../../../assets/scss/_mixins";
 @import "../../../assets/scss/_responsive";
 
 .main {
     padding: 1rem;
     margin: 0 auto;
     width: 60%;
+    @include bottom-space;
 
     @include respond(small) {
         width: 90%;

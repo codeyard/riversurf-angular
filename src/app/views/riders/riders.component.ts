@@ -1,10 +1,11 @@
 import {AfterViewInit, Component, OnChanges, OnInit, ViewChild} from '@angular/core';
 import {exampleRiderFemale, exampleRiderKid, exampleRiderMale, Rider} from "../../models/rider.model";
 import {MatTableDataSource} from "@angular/material/table";
-import {MatPaginator, PageEvent} from "@angular/material/paginator";
+import {MatPaginator} from "@angular/material/paginator";
 import {MatSort, Sort, SortDirection} from "@angular/material/sort";
 import {ActivatedRoute, Router} from "@angular/router";
 
+// TODO: Remove mock data & replace with real data
 const RIDERS_DATA: Rider[] = [
     exampleRiderMale, exampleRiderMale, exampleRiderMale, exampleRiderMale, exampleRiderMale, exampleRiderMale,
     exampleRiderFemale, exampleRiderFemale, exampleRiderFemale, exampleRiderFemale, exampleRiderFemale,
@@ -37,7 +38,6 @@ export class RidersComponent implements OnInit, AfterViewInit, OnChanges {
     division: string = '';
 
     filter: string = '';
-    pageEvent?: PageEvent; // Attention: don't remove, even if IntelliJ suggests it! Pagination will break if missing
     pageIndex?: number;
     pageSize!: number;
     length!: number;
@@ -103,10 +103,7 @@ export class RidersComponent implements OnInit, AfterViewInit, OnChanges {
             this.dataSource.filter = filterValue.trim().toLowerCase();
 
             this.router.navigate([], {
-                queryParams: {
-                    filter: filterValue,
-                    page: null
-                },
+                queryParams: {filter: filterValue},
                 queryParamsHandling: 'merge',
             }).then();
         } else {
@@ -119,9 +116,7 @@ export class RidersComponent implements OnInit, AfterViewInit, OnChanges {
         this.dataSource.filter = '';
 
         this.router.navigate([], {
-            queryParams: {
-                filter: null
-            },
+            queryParams: {filter: null},
             queryParamsHandling: 'merge',
         }).then();
     }
@@ -146,10 +141,7 @@ export class RidersComponent implements OnInit, AfterViewInit, OnChanges {
             this.dataSource.data = RIDERS_DATA;
 
             this.router.navigate([], {
-                queryParams: {
-                    division: null,
-                    page: null
-                },
+                queryParams: {division: null},
                 queryParamsHandling: 'merge',
             }).then();
         } else {
@@ -157,10 +149,7 @@ export class RidersComponent implements OnInit, AfterViewInit, OnChanges {
             this.dataSource.data = RIDERS_DATA.filter(rider => rider.division === this.division);
 
             this.router.navigate([], {
-                queryParams: {
-                    division: this.division,
-                    page: null
-                },
+                queryParams: {division: this.division},
                 queryParamsHandling: 'merge',
             }).then();
         }
@@ -179,6 +168,7 @@ export class RidersComponent implements OnInit, AfterViewInit, OnChanges {
         }).then();
     }
 
+    // TODO: add/read favorite riders to/from storage
     toggleFavorites(rider: Rider) {
         const indexOfRider = this.favoriteRiders.findIndex(elementRider => elementRider.id === rider.id);
 

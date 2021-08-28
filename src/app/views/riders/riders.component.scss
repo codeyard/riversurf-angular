@@ -2,7 +2,7 @@
 @import "../../../assets/scss/_responsive";
 @import "../../../assets/scss/_variables";
 
-.statistic-bar {
+.division-selector {
     display: flex;
     justify-content: space-around;
     padding-top: 1rem;
@@ -95,6 +95,7 @@
 
         @include respond(small) {
             padding: .5rem;
+            @include bottom-space;
         }
 
         @include respond(medium) {
@@ -114,7 +115,11 @@
         }
 
         .mat-form-field {
-            width: 100%;
+            width: 40%;
+
+            @include respond(medium) {
+                width: 100%;
+            }
         }
 
         .table {
@@ -137,32 +142,46 @@
             }
 
             & .mat-column-avatar {
-                width: 15%;
-
-
+                width: 12%;
             }
 
             & .mat-column-name {
                 width: 35%;
+
+                @include respond(small) {
+                    width: 37%;
+                }
             }
 
             & .mat-column-nickname {
-                width: 20%;
+                width: 23%;
 
+                @include respond(small) {
+                    width: 26%
+                }
             }
 
             & .mat-column-division {
                 width: 15%;
+
+                & mat-icon {
+                    vertical-align: middle;
+                    margin-right: 0.5rem;
+                }
+
+                @include respond(small) {
+                    width: 10%;
+
+                    & span {
+                        display: none;
+                    }
+                }
             }
 
             & .mat-column-action {
                 width: 15%;
                 white-space: nowrap;
                 text-align: right;
-
-                @include respond(small) {
-                    white-space: pre-wrap;
-                }
             }
 
             &__data {
@@ -216,10 +235,7 @@
                 display: block;
                 grid-template-columns: none;
             }
-
         }
-
-
     }
 }
 
@@ -234,18 +250,16 @@ mat-paginator {
     @include respond(small) {
         margin: 1rem 0;
     }
-
 }
 
-.th.mat-header-cell:first-of-type, td.mat-cell:first-of-type, td.mat-footer-cell:first-of-type {
+th.mat-header-cell:first-of-type, td.mat-cell:first-of-type, td.mat-footer-cell:first-of-type {
     @include respond(small) {
         padding-left: 0.1rem;
     }
 }
 
-
-.th.mat-header-cell, td.mat-cell, td.mat-footer-cell {
+th.mat-header-cell:last-of-type, td.mat-cell:last-of-type, td.mat-footer-cell:last-of-type {
     @include respond(small) {
-        text-align: center;
+        padding-right: 0.1rem;
     }
 }

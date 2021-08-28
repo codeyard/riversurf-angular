@@ -14,7 +14,7 @@ Team:
 ## Test
 Each commit to the develop branch will trigger the build and deploy pipeline for the test environment.
 
-[test.riversurf.app](test.riversurf.app)
+[test.riversurf.app](https://test.riversurf.app)
 
 ## Deployment
 ### .htaccess

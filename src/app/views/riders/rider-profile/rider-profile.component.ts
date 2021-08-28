@@ -1,4 +1,6 @@
 import {Component, OnInit} from '@angular/core';
+import {ActivatedRoute} from "@angular/router";
+import {Rider, exampleRiderMale} from "../../../models/rider.model";
 
 @Component({
     selector: 'surf-rider-profile',
@@ -7,10 +9,19 @@ import {Component, OnInit} from '@angular/core';
 })
 export class RiderProfileComponent implements OnInit {
 
-    constructor() {
+    riderId: String = 'unknown';
+
+    rider ?: Rider;
+
+    constructor(private route: ActivatedRoute) {
+        this.route.params.subscribe(params => {
+            this.riderId = params['id'];
+
+            // ToDo: Get rider details from db-service
+            this.rider = {...exampleRiderMale};
+        });
     }
 
     ngOnInit(): void {
     }
-
 }

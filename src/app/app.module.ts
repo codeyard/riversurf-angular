@@ -40,6 +40,12 @@ import {MatButtonToggleModule} from "@angular/material/button-toggle";
 import {MatTableModule} from "@angular/material/table";
 import {MatPaginatorModule} from "@angular/material/paginator";
 import {MatSortModule} from "@angular/material/sort";
+import { RiderOverviewComponent } from './views/riders/rider-profile/rider-overview/rider-overview.component';
+import { RiderTimelineComponent } from './views/riders/rider-profile/rider-timeline/rider-timeline.component';
+import {MatListModule} from "@angular/material/list";
+import { TimeLineComponent } from './common/time-line/time-line.component';
+import {MatStepperModule} from "@angular/material/stepper";
+import { TimeLineLineComponent } from './common/time-line/time-line-line/time-line-line.component';
 
 @NgModule({
     declarations: [
@@ -56,7 +62,11 @@ import {MatSortModule} from "@angular/material/sort";
         NavigationComponent,
         SignupFormComponent,
         WeatherComponent,
-        HeaderComponent
+        HeaderComponent,
+        RiderOverviewComponent,
+        RiderTimelineComponent,
+        TimeLineComponent,
+        TimeLineLineComponent
     ],
     imports: [
         BrowserModule,
@@ -85,7 +95,10 @@ import {MatSortModule} from "@angular/material/sort";
         MatButtonToggleModule,
         MatTableModule,
         MatPaginatorModule,
-        MatSortModule
+        MatSortModule,
+        MatSnackBarModule,
+        MatListModule,
+        MatStepperModule
     ],
     providers: [],
     bootstrap: [AppComponent]

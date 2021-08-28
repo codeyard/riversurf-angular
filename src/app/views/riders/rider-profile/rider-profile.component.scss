@@ -1,0 +1,30 @@
+@import "../../../../assets/scss/_responsive";
+
+.container{
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+
+    @include respond(small) {
+        flex-direction: column;
+    }
+
+    & .overview {
+        flex: 30%;
+        padding: 1rem;
+
+        @include respond(small) {
+            flex: 100%
+        }
+    }
+
+    & .details {
+        flex: 70%;
+        padding: 1rem;
+
+        @include respond(small) {
+            flex: 100%
+        }
+
+    }
+}

@@ -41,7 +41,7 @@ export class SignupFormComponent implements OnInit {
     }
 
     onSubmit() {
-        // TODO Send to backend
+        // TODO: Send to backend
         this.snackBar.send(this.formMode === 'login'
                 ? 'Login successful'
                 : 'Successfully registered',

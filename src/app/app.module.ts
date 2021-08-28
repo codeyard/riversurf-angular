@@ -40,6 +40,12 @@ import {MatButtonToggleModule} from "@angular/material/button-toggle";
 import {MatTableModule} from "@angular/material/table";
 import {MatPaginatorModule} from "@angular/material/paginator";
 import {MatSortModule} from "@angular/material/sort";
+import { RiderOverviewComponent } from './views/riders/rider-profile/rider-overview/rider-overview.component';
+import { RiderTimelineComponent } from './views/riders/rider-profile/rider-timeline/rider-timeline.component';
+import {MatListModule} from "@angular/material/list";
+import { TimeLineComponent } from './common/time-line/time-line.component';
+import {MatStepperModule} from "@angular/material/stepper";
+import { TimeLineLineComponent } from './common/time-line/time-line-line/time-line-line.component';
 import {CarouselComponent, CarrousellItemDirective} from './common/carousel/carousel.component';
 
 @NgModule({
@@ -57,6 +63,11 @@ import {CarouselComponent, CarrousellItemDirective} from './common/carousel/caro
         NavigationComponent,
         SignupFormComponent,
         WeatherComponent,
+        HeaderComponent,
+        RiderOverviewComponent,
+        RiderTimelineComponent,
+        TimeLineComponent,
+        TimeLineLineComponent,
         HeaderComponent,
         CarouselComponent,
         CarrousellItemDirective
@@ -88,6 +99,10 @@ import {CarouselComponent, CarrousellItemDirective} from './common/carousel/caro
         MatButtonToggleModule,
         MatTableModule,
         MatPaginatorModule,
+        MatSortModule,
+        MatSnackBarModule,
+        MatListModule,
+        MatStepperModule,
         MatSortModule,
         HammerModule
     ],

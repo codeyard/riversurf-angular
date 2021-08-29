@@ -1,5 +1,5 @@
 import {NgModule} from '@angular/core';
-import {BrowserModule} from '@angular/platform-browser';
+import {BrowserModule, HammerModule} from '@angular/platform-browser';
 
 import {AppRoutingModule} from './app-routing.module';
 import {AppComponent} from './app.component';
@@ -46,6 +46,7 @@ import {MatListModule} from "@angular/material/list";
 import { TimeLineComponent } from './common/time-line/time-line.component';
 import {MatStepperModule} from "@angular/material/stepper";
 import { TimeLineLineComponent } from './common/time-line/time-line-line/time-line-line.component';
+import {CarouselComponent, CarrousellItemDirective} from './common/carousel/carousel.component';
 
 @NgModule({
     declarations: [
@@ -66,7 +67,10 @@ import { TimeLineLineComponent } from './common/time-line/time-line-line/time-li
         RiderOverviewComponent,
         RiderTimelineComponent,
         TimeLineComponent,
-        TimeLineLineComponent
+        TimeLineLineComponent,
+        HeaderComponent,
+        CarouselComponent,
+        CarrousellItemDirective
     ],
     imports: [
         BrowserModule,
@@ -98,7 +102,9 @@ import { TimeLineLineComponent } from './common/time-line/time-line-line/time-li
         MatSortModule,
         MatSnackBarModule,
         MatListModule,
-        MatStepperModule
+        MatStepperModule,
+        MatSortModule,
+        HammerModule
     ],
     providers: [],
     bootstrap: [AppComponent]

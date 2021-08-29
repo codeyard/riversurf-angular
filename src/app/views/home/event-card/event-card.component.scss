@@ -3,9 +3,10 @@
 @import "../../../../assets/scss/_responsive";
 
 .event__card {
-    max-width: 400px;
+    width: 400px;
     transition: all .3s;
     cursor: pointer;
+    max-width: 50%;
 
     &:hover {
         transform: scale(1.01);

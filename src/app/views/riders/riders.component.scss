@@ -118,7 +118,7 @@
             width: 40%;
 
             @include respond(medium) {
-                width: 100%;
+                width: 50%;
             }
         }
 
@@ -263,3 +263,5 @@ th.mat-header-cell:last-of-type, td.mat-cell:last-of-type, td.mat-footer-cell:la
         padding-right: 0.1rem;
     }
 }
+
+

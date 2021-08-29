@@ -5,8 +5,6 @@
 .container__timeline {
     padding: 3rem;
 
-
-
     @include respond(medium) {
         padding: 1rem;
     }
@@ -19,17 +17,20 @@
 
     &__title {
         display: inline-block;
-        color: $color-primary;
     }
 
     &__location {
         display: inline-block;
         margin-left: .3rem;
-        position: relative; top: -1rem;
+        position: relative;
+        top: -1rem;
         font-weight: 400;
         text-transform: uppercase;
+        padding: .3rem .5rem;
         font-size: 1rem;
-
+        background-color: $color-primary;
+        color: $color-white;
+        border-radius: 1.5rem;
     }
 
     hr {

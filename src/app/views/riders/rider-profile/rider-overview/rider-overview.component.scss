@@ -16,7 +16,7 @@
 
     &__header {
         margin: auto;
-        text-align: center;
+        text-align: left;
 
         img {
             padding: .5rem;
@@ -30,8 +30,8 @@
     }
 
     &__social{
-        align-self: flex-end;
-
+        display: flex;
+        justify-content: space-around;
     }
 
     &__biography {
@@ -46,11 +46,4 @@
             content: close-quote;
         }
     }
-
-    &__birthday {
-        text-align: right;
-    }
-
-
-
 }

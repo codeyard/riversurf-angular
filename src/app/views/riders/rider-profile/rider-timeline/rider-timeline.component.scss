@@ -5,7 +5,9 @@
 .container__timeline {
     padding: 3rem;
 
-    @include respond(small) {
+
+
+    @include respond(medium) {
         padding: 1rem;
     }
 }

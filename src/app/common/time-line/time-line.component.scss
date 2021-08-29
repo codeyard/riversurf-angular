@@ -3,17 +3,23 @@
 
 .container {
     display: grid;
-    grid-template-columns: min-content minmax(max-content, 400px);
+    grid-template-columns: min-content minmax(400px, 40%);
+
+
     @include respond(medium) {
-        grid-template-columns: min-content minmax(max-content, 400px);
+        grid-template-columns: min-content minmax(max-content, 80%);
+    }
+
+    @include respond(small) {
+        grid-template-columns: min-content auto;
     }
     align-items: stretch;
 
-    &__timeline{
+    &__timeline {
         grid-column: 1 / 2;
     }
 
-    &__details{
+    &__details {
         grid-column: 2 / 3;
         margin: 0.5rem 0;
         position: relative;
@@ -24,9 +30,9 @@
             align-items: baseline;
         }
 
-        &__title{
+        &__title {
 
-            &__icon{
+            &__icon {
                 position: absolute;
                 top: 1rem;
                 right: 1rem;
@@ -39,16 +45,24 @@
                 align-items: center;
                 color: $color-white;
 
+                @include respond(medium) {
+                    top: 0;
+                    right: 0;
+                    transform: translate(50%, -20%);
+
+                }
+
+
                 @include respond(small) {
                     width: 1.5rem;
                     height: 1.5rem;
-                    top: .2rem;
-                    right: .2rem;
+                    transform: translate(0, 0);
                     font-weight: bold;
+
                 }
             }
 
-            &__description{
+            &__description {
                 grid-column: 2 / 3;
             }
         }
@@ -62,6 +76,6 @@
     }
 }
 
-mat-card{
+mat-card {
     margin: 0 0.5rem;
 }

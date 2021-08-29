@@ -6,13 +6,12 @@
     justify-content: space-around;
     background-color: $color-primary;
     color: $color-white;
-    padding: 3rem;
     @include respond(small) {
         padding: 1rem;
     }
 
     & > * {
-        margin: 1.5rem 0;
+        margin: .5rem 0;
     }
 
     &__header {
@@ -31,49 +30,27 @@
     }
 
     &__social{
-        display: grid;
-        grid-template-columns: repeat(2, 1fr);
-        grid-template-rows: repeat(2, 1fr);
-        row-gap: 1rem;
-
-        &__element {
-            cursor: pointer;
-            font-size: 1.5rem;
-            font-weight: 300;
-            text-transform: uppercase;
-            display: flex;
-            align-items: center;
-
-            @include respond(small) {
-                font-size: 1rem;
-            }
-        }
+        align-self: flex-end;
 
     }
 
-    &__rider-info {
-        display: flex;
-        flex-direction: column;
+    &__biography {
+        font-style: italic;
+        quotes: "«" "»";
 
-        & > * {
-            margin-bottom: 1rem;
+        &:before {
+            content: open-quote;
+        }
+
+        &:after {
+            content: close-quote;
         }
     }
 
-    &__attribute{
-        font-size: 1.5rem;
-        font-weight: 300;
-        text-transform: uppercase;
-
-        & a, & a:active {
-            text-decoration: none;
-            color: $color-white;
-        }
-
-        @include respond(small) {
-            font-size: 1rem;
-        }
-
+    &__birthday {
+        text-align: right;
     }
+
+
 
 }

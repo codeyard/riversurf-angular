@@ -1,28 +1,30 @@
 <mat-card class="container">
+    <div class="container__social">
+        <!-- ToDo: Replace with social component -->
+        <mat-icon class="container__social__element">facebook</mat-icon>
+        <mat-icon class="container__social__element">facebook</mat-icon>
+        <mat-icon class="container__social__element">facebook</mat-icon>
+        <mat-icon class="container__social__element">facebook</mat-icon>
+    </div>
+
     <div class="container__header">
         <img src="{{rider.profilePicture}}" alt="Profile Picture">
         <h1>{{rider.firstName}} {{rider.lastName}}</h1>
-        <h2 *ngIf="rider.nickName">{{rider.nickName}}</h2>
+        <h2 *ngIf="rider.nickName">{{rider.nickName}}
+            <span>
+                <mat-icon *ngIf="rider.division === 'male'">male</mat-icon>
+                <mat-icon *ngIf="rider.division === 'female'">female</mat-icon>
+                <mat-icon *ngIf="rider.division === 'kid'">child_care</mat-icon>
+            </span>
+        </h2>
     </div>
-    <div class="container__social">
-        <!-- ToDo: Replace with social component -->
-        <span class="container__social__element"><mat-icon>notifications_none</mat-icon>Facebook</span>
-        <span class="container__social__element"><mat-icon>notifications_none</mat-icon>Instagram</span>
-        <span class="container__social__element"><mat-icon>notifications_none</mat-icon>Twitter</span>
-        <span class="container__social__element"><mat-icon>notifications_none</mat-icon>Notify me</span>
-    </div>
+
     <div *ngIf="rider.biography" class="container__biography">
         {{rider.biography}}
     </div>
-    <div class="container__rider-info">
-        <div *ngIf="rider.biography">
-            <p class="container__attribute">Division: {{rider.division}}</p>
-        </div>
-        <div *ngIf="rider.birthdate">
-            <p class="container__attribute">Birthdate: {{rider.birthdate | date:'d. MMMM YYYY'}}</p>
-        </div>
-        <div *ngIf="rider.email">
-            <p class="container__attribute">Mail: <a href="mailto:{{rider.email}}">{{rider.email}}</a></p>
-        </div>
+
+    <div *ngIf="rider.birthdate">
+        <p class="container__birthday">Birthdate: {{rider.birthdate | date:'d. MMMM YYYY'}}</p>
     </div>
+
 </mat-card>

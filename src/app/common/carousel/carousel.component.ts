@@ -2,9 +2,9 @@ import {
     AfterContentInit,
     AfterViewInit,
     Component,
-    ContentChildren, Directive, ElementRef, HostListener, Input,
+    ContentChildren, Directive, ElementRef, HostListener, Input, OnChanges, OnDestroy,
     OnInit,
-    QueryList, Renderer2, TemplateRef, ViewChild,
+    QueryList, Renderer2, SimpleChanges, TemplateRef, ViewChild,
     ViewChildren
 } from '@angular/core';
 import {animate, AnimationBuilder, style} from "@angular/animations";
@@ -24,7 +24,7 @@ export class CarrousellItemDirective {
     templateUrl: './carousel.component.html',
     styleUrls: ['./carousel.component.scss']
 })
-export class CarouselComponent implements OnInit, AfterContentInit, AfterViewInit {
+export class CarouselComponent implements OnInit, OnDestroy, OnChanges, AfterContentInit, AfterViewInit {
 
     TIMING = '250ms ease-in';
 
@@ -49,6 +49,8 @@ export class CarouselComponent implements OnInit, AfterContentInit, AfterViewIni
     private itemWidth = 0;
     private itemOffsetSpacing = 0;
 
+    private resizeObserver = new ResizeObserver(() => this.onResize());
+
     constructor(
         private elementRef: ElementRef,
         private renderer: Renderer2,
@@ -57,29 +59,45 @@ export class CarouselComponent implements OnInit, AfterContentInit, AfterViewIni
     }
 
     ngOnInit(): void {
+        this.resizeObserver.observe(this.elementRef.nativeElement);
+    }
+
+    ngOnDestroy() {
+        this.resizeObserver.disconnect()
     }
 
     ngAfterContentInit(): void {
-        // console.log(this.elements.first.nativeElement.clientWidth);
+        // content- Childs are ready here
     }
 
     ngAfterViewInit() {
+        // view-Childs are ready here
         this.ready = true;
         this.initCarousel();
     }
 
-    @HostListener('window:resize', ['$event'])
+    ngOnChanges(changes: SimpleChanges) {
+        console.log("CHANGES!!!");
+        if(this.ready && changes.startIndex.currentValue !== changes.startIndex.previousValue) {
+            this.goToIndex(changes.startIndex.currentValue);
+        }
+    }
+
     onResize() {
-        this.initCarousel();
+        this.calculateSizes();
     }
 
     private initCarousel() {
+        this.calculateSizes();
+        this.goToIndex(this.startIndex ? this.startIndex : 0);
+        this.playAnimation();
+    }
+
+    private calculateSizes() {
         this.carouselWidth = this.carouselList.nativeElement.clientWidth;
         this.itemWidth = this.carouselListItem.nativeElement.clientWidth;
         this.itemOffsetSpacing = (this.carouselWidth-this.itemWidth)/2;
         this.offsetwidth = this.itemWidth + this.itemOffsetSpacing;
-        this.goToIndex(this.startIndex ? this.startIndex : 0);
-        this.playAnimation();
     }
 
     public onPan(event: any, element: HTMLElement): void {
@@ -97,13 +115,17 @@ export class CarouselComponent implements OnInit, AfterContentInit, AfterViewIni
     }
 
     onPanEnd(event: any, element: HTMLLIElement) {
+        // this should not be nececery, but on panup and pandown deltaX is always >200 ???
+        if(event.additionalEvent === "panup" || event.additionalEvent === "pandown") {
+            return;
+        }
         let deltaX = event.deltaX;
 
         let sign = Math.sign(deltaX)
-        if (Math.abs(deltaX) >= this.carouselListItem.nativeElement.clientWidth / 3) {
+        if (Math.abs(deltaX) >= this.carouselListItem.nativeElement.clientWidth / 4) {
             deltaX = sign * this.carouselListItem.nativeElement.clientWidth;
         }
-        if (Math.abs(deltaX) <= this.carouselListItem.nativeElement.clientWidth / 3) {
+        if (Math.abs(deltaX) <= this.carouselListItem.nativeElement.clientWidth / 4) {
             deltaX = 0;
         }
         if (0 >= this.currentOffset + deltaX && this.currentOffset + deltaX > -this.calcTotalWidth()) {

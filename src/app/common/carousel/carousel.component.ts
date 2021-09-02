@@ -36,7 +36,7 @@ export class CarouselComponent implements OnInit, OnDestroy, OnChanges, AfterCon
     @ContentChildren(CarrousellItemDirective) elements!: QueryList<any>;
 
     @Input()
-    startIndex?: number;
+    index?: number;
 
 
     public ready = false;
@@ -77,9 +77,8 @@ export class CarouselComponent implements OnInit, OnDestroy, OnChanges, AfterCon
     }
 
     ngOnChanges(changes: SimpleChanges) {
-        console.log("CHANGES!!!");
-        if(this.ready && changes.startIndex.currentValue !== changes.startIndex.previousValue) {
-            this.goToIndex(changes.startIndex.currentValue);
+        if(this.ready && changes.index.currentValue !== changes.index.previousValue) {
+            this.goToIndex(changes.index.currentValue);
         }
     }
 
@@ -89,7 +88,7 @@ export class CarouselComponent implements OnInit, OnDestroy, OnChanges, AfterCon
 
     private initCarousel() {
         this.calculateSizes();
-        this.goToIndex(this.startIndex ? this.startIndex : 0);
+        this.goToIndex(this.index ? this.index : 0);
         this.playAnimation();
     }
 
@@ -135,6 +134,9 @@ export class CarouselComponent implements OnInit, OnDestroy, OnChanges, AfterCon
     }
 
     private goToIndex(index: number) {
+        if(this.isIndexInvalid(index)) {
+            return;
+        }
         this.currentOffset = -index * this.itemWidth;
         this.playAnimation();
     }
@@ -144,6 +146,7 @@ export class CarouselComponent implements OnInit, OnDestroy, OnChanges, AfterCon
     }
 
     private playAnimation(): void {
+        console.log('currentIndex: ', this.calcCurrentIndex());
         const translation = this.getTranslation(this.currentOffset+this.itemOffsetSpacing);
         const factory = this.animationBuilder.build(
             animate(this.TIMING, style({transform: translation}))
@@ -166,6 +169,18 @@ export class CarouselComponent implements OnInit, OnDestroy, OnChanges, AfterCon
 
     private calcTotalWidth() {
         return this.carouselListItems.reduce((acc, item) => acc + item.nativeElement.clientWidth, 0);
+    }
+
+    private calcCurrentIndex() {
+        return Math.floor(Math.abs(this.currentOffset) / this.itemWidth);
+    }
+
+    private isIndexInvalid(index: number): boolean {
+        if(Math.abs(index*this.itemWidth) >= this.calcTotalWidth()) {
+            console.warn('CarouselIndex out of Bound');
+            return true;
+        }
+        return false;
     }
 
 }

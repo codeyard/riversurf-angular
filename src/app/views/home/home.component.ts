@@ -12,6 +12,7 @@ export class HomeComponent {
     events: Event[] = [exampleEvent, exampleEvent, exampleEvent, exampleEvent, exampleEvent, exampleEvent];
     riders: Rider[] = [exampleRiderMale, exampleRiderFemale, exampleRiderKid, exampleRiderMale, exampleRiderFemale];
 
+    currentEvent = 0;
 
     smallScreen?: boolean;
 

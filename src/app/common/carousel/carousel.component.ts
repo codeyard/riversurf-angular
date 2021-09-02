@@ -29,8 +29,6 @@ export class CarouselComponent implements OnInit, OnDestroy, OnChanges, AfterCon
     TIMING = '250ms ease-in';
 
     @ViewChild('carouselList') private carouselList!: ElementRef<HTMLElement>;
-    @ViewChild('craouselListItem') private carouselListItem!: ElementRef<HTMLElement>;
-
     @ViewChildren('craouselListItem') private carouselListItems!: QueryList<ElementRef>;
 
     @ContentChildren(CarrousellItemDirective) elements!: QueryList<any>;
@@ -39,12 +37,14 @@ export class CarouselComponent implements OnInit, OnDestroy, OnChanges, AfterCon
     index?: number;
 
 
+
+    private readonly PAN_THRESHOLD = 1/4;
+    private readonly VELOCITY_THRESHOLD = 1;
+
     public ready = false;
 
     private currentIndex = 0;
 
-    private currentOffset: number = 0;
-    private offsetwidth = 0;
     private carouselWidth = 0;
     private itemWidth = 0;
     private itemOffsetSpacing = 0;
@@ -77,7 +77,7 @@ export class CarouselComponent implements OnInit, OnDestroy, OnChanges, AfterCon
     }
 
     ngOnChanges(changes: SimpleChanges) {
-        if(this.ready && changes.index.currentValue !== changes.index.previousValue) {
+        if (this.ready && changes.index.currentValue !== changes.index.previousValue) {
             this.goToIndex(changes.index.currentValue);
         }
     }
@@ -89,14 +89,12 @@ export class CarouselComponent implements OnInit, OnDestroy, OnChanges, AfterCon
     private initCarousel() {
         this.calculateSizes();
         this.goToIndex(this.index ? this.index : 0);
-        this.playAnimation();
     }
 
     private calculateSizes() {
         this.carouselWidth = this.carouselList.nativeElement.clientWidth;
-        this.itemWidth = this.carouselListItem.nativeElement.clientWidth;
-        this.itemOffsetSpacing = (this.carouselWidth-this.itemWidth)/2;
-        this.offsetwidth = this.itemWidth + this.itemOffsetSpacing;
+        this.itemWidth = this.carouselListItems.first.nativeElement.clientWidth;
+        this.itemOffsetSpacing = (this.carouselWidth - this.itemWidth) / 2;
     }
 
     public onPan(event: any, element: HTMLElement): void {
@@ -105,49 +103,49 @@ export class CarouselComponent implements OnInit, OnDestroy, OnChanges, AfterCon
         if (Math.abs(event.velocityY) > Math.abs(event.velocityX)) {
             return;
         }
+
         let deltaX = event.deltaX + this.itemOffsetSpacing;
         this.renderer.setStyle(
             this.carouselList.nativeElement,
             'transform',
-            `translateX(${this.currentOffset + deltaX}px)`
+            `translateX(${this.currentIndex*(-this.itemWidth) + deltaX}px)`
         );
     }
 
     onPanEnd(event: any, element: HTMLLIElement) {
-        // this should not be nececery, but on panup and pandown deltaX is always >200 ???
-        if(event.additionalEvent === "panup" || event.additionalEvent === "pandown") {
+        if (event.additionalEvent === "panup" || event.additionalEvent === "pandown") {
             return;
         }
         let deltaX = event.deltaX;
 
-        let sign = Math.sign(deltaX)
-        if (Math.abs(deltaX) >= this.carouselListItem.nativeElement.clientWidth / 4) {
-            deltaX = sign * this.carouselListItem.nativeElement.clientWidth;
+        console.log(event.velocity);
+
+        let direction = Math.sign(deltaX)
+
+        if (Math.abs(deltaX) >= this.itemWidth * this.PAN_THRESHOLD) {
+            this.goToIndex(this.currentIndex-direction);
+            return;
         }
-        if (Math.abs(deltaX) <= this.carouselListItem.nativeElement.clientWidth / 4) {
-            deltaX = 0;
-        }
-        if (0 >= this.currentOffset + deltaX && this.currentOffset + deltaX > -this.calcTotalWidth()) {
-            this.currentOffset += deltaX;
-        }
-        this.playAnimation();
+        this.goToIndex(this.currentIndex);
     }
 
     private goToIndex(index: number) {
-        if(this.isIndexInvalid(index)) {
+        if (!this.isIndexValid(index)) {
+            this.playAnimation();
             return;
         }
-        this.currentOffset = -index * this.itemWidth;
+        this.currentIndex = index;
         this.playAnimation();
     }
 
-    private getTranslation(offset: number): string {
+    private calcTranslation(): string {
+        const offset = (this.currentIndex * (-this.itemWidth)) + this.itemOffsetSpacing;
         return `translateX(${offset}px)`;
     }
 
     private playAnimation(): void {
-        console.log('currentIndex: ', this.calcCurrentIndex());
-        const translation = this.getTranslation(this.currentOffset+this.itemOffsetSpacing);
+        console.log(this.currentIndex);
+        const translation = this.calcTranslation();
         const factory = this.animationBuilder.build(
             animate(this.TIMING, style({transform: translation}))
         );
@@ -167,20 +165,8 @@ export class CarouselComponent implements OnInit, OnDestroy, OnChanges, AfterCon
         animation.play();
     }
 
-    private calcTotalWidth() {
-        return this.carouselListItems.reduce((acc, item) => acc + item.nativeElement.clientWidth, 0);
-    }
-
-    private calcCurrentIndex() {
-        return Math.floor(Math.abs(this.currentOffset) / this.itemWidth);
-    }
-
-    private isIndexInvalid(index: number): boolean {
-        if(Math.abs(index*this.itemWidth) >= this.calcTotalWidth()) {
-            console.warn('CarouselIndex out of Bound');
-            return true;
-        }
-        return false;
+    private isIndexValid(index: number): boolean {
+        return (index >= 0) && (index < this.carouselListItems.length) ? true : false;
     }
 
 }

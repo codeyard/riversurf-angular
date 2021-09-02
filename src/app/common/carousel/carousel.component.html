@@ -1,15 +1,32 @@
 <div class="carrousel">
-    <ul *ngIf="true" #carouselList>
+    <ul #carouselList
+        (panleft)="onPan($event)"
+        (panright)="onPan($event)"
+        (panend)="onPanEnd($event)"
+        (pancancel)="onPanEnd($event)"
+        [style.touch-action]="'pan-y'"
+    >
         <li *ngFor="let element of elements" #craouselListItem
-            (panleft)="onPan($event, craouselListItem)"
-            (panright)="onPan($event, craouselListItem)"
-            (panend)="onPanEnd($event, craouselListItem)"
-            (pancancel)="onPanEnd($event, craouselListItem)"
-            [style.touch-action]="'pan-y'"
+
         >
             <div class="elementwrapper">
                 <ng-container [ngTemplateOutlet]="element.el"></ng-container>
             </div>
         </li>
     </ul>
+    <button
+        *ngIf="showControls"
+        [disabled]="currentIndex === 0"
+        (click)="goToPrevious()"
+    >
+        <mat-icon>arrow_back_ios</mat-icon>
+    </button>
+
+    <button
+        *ngIf="showControls"
+        [disabled]="currentIndex >= elements.length -1"
+        (click)="goToNex()"
+    >
+        <mat-icon>arrow_forward_ios</mat-icon>
+    </button>
 </div>

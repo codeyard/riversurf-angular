@@ -8,6 +8,8 @@ import {
     ViewChildren
 } from '@angular/core';
 import {animate, AnimationBuilder, style} from "@angular/animations";
+import {interval, Subject} from "rxjs";
+import {filter, takeUntil} from "rxjs/operators";
 
 @Directive({selector: '[carousel-item]'})
 export class CarrousellItemDirective {
@@ -29,7 +31,7 @@ export class CarouselComponent implements OnInit, OnDestroy, OnChanges, AfterCon
     @Input() showControls: boolean = true;
     @Input() focusCurrent: boolean = true;
     @Input() auto: boolean = false;
-    @Input() intervalTime: number = 5000;
+    @Input() intervalTime: number = 3000;
 
     ready = false;
     currentIndex = 0;
@@ -51,7 +53,10 @@ export class CarouselComponent implements OnInit, OnDestroy, OnChanges, AfterCon
     private itemWidth = 0;
     private itemOffsetSpacing = 0;
 
-    /* Asyncronous staff that needs to be cleaned up on Destroy */
+    private intervalIsPaused: boolean = false;
+
+    /* Asyncronous stuff that needs to be cleaned up on Destroy */
+    private destroy$ = new Subject();
     private resizeObserver = new ResizeObserver(() => this.onResize());
     private interval: any;
 
@@ -67,6 +72,8 @@ export class CarouselComponent implements OnInit, OnDestroy, OnChanges, AfterCon
     }
 
     ngOnDestroy() {
+        this.destroy$.next(null);
+        this.destroy$.complete();
         this.resizeObserver.disconnect();
         clearInterval(this.interval);
     }
@@ -100,13 +107,13 @@ export class CarouselComponent implements OnInit, OnDestroy, OnChanges, AfterCon
     private initCarousel() {
         this.calculateSizes();
         if (this.auto) {
-            this.interval = setInterval(() => {
-                if(this.isIndexValid(this.currentIndex+1)) {
-                    this.goToNex();
-                } else {
-                    this.goToIndex(0);
-                }
-            }, this.intervalTime)
+            this.interval = interval(this.intervalTime)
+                .pipe(
+                    takeUntil(this.destroy$),
+                    filter(() => !this.intervalIsPaused))
+                .subscribe(() => {
+                    this.goToNextOrFirst();
+                });
         }
         this.goToIndex(this.index ? this.index : 0);
     }
@@ -115,6 +122,9 @@ export class CarouselComponent implements OnInit, OnDestroy, OnChanges, AfterCon
     onPan(event: any): void {
         // https://github.com/angular/angular/issues/10541#issuecomment-346539242
         // if y velocity is greater, it's a panup/pandown, so ignore.
+
+        this.intervalIsPaused = true;
+
         if (Math.abs(event.velocityY) > Math.abs(event.velocityX)) {
             return;
         }
@@ -149,6 +159,14 @@ export class CarouselComponent implements OnInit, OnDestroy, OnChanges, AfterCon
             return;
         }
         this.goToIndex(this.currentIndex);
+    }
+
+    goToNextOrFirst()  {
+        if (this.isIndexValid(this.currentIndex + 1)) {
+            this.goToNex();
+        } else {
+            this.goToIndex(0);
+        }
     }
 
     goToNex() {
@@ -188,6 +206,7 @@ export class CarouselComponent implements OnInit, OnDestroy, OnChanges, AfterCon
                 translation
             );
             translationAnimation.destroy();
+            this.intervalIsPaused = false;
         });
         translationAnimation.play();
     }

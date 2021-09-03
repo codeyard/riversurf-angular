@@ -61,12 +61,12 @@
                 </ng-container>
 
                 <ng-container matColumnDef="division">
-                    <th mat-header-cell *matHeaderCellDef mat-sort-header>Division</th>
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header><span>Division</span></th>
                     <td mat-cell *matCellDef="let rider">
                         <mat-icon *ngIf="rider.division === 'male'" title="{{ rider.division | titlecase }}">male</mat-icon>
                         <mat-icon *ngIf="rider.division === 'female'" title="{{ rider.division | titlecase }}">female</mat-icon>
                         <mat-icon *ngIf="rider.division === 'kid'" title="{{ rider.division | titlecase }}">child_care</mat-icon>
-                        <span class="division-label">{{ rider.division | titlecase }}</span>
+                        <span>{{ rider.division | titlecase }}</span>
                     </td>
                 </ng-container>
 

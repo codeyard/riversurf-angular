@@ -122,12 +122,11 @@ export class CarouselComponent implements OnInit, OnDestroy, OnChanges, AfterCon
     onPan(event: any): void {
         // https://github.com/angular/angular/issues/10541#issuecomment-346539242
         // if y velocity is greater, it's a panup/pandown, so ignore.
-
-        this.intervalIsPaused = true;
-
         if (Math.abs(event.velocityY) > Math.abs(event.velocityX)) {
             return;
         }
+
+        this.intervalIsPaused = true;
 
         let deltaX = event.deltaX;
         let direction = Math.sign(deltaX);

@@ -46,6 +46,7 @@ import {MatListModule} from "@angular/material/list";
 import { TimeLineComponent } from './common/time-line/time-line.component';
 import {MatStepperModule} from "@angular/material/stepper";
 import { TimeLineLineComponent } from './common/time-line/time-line-line/time-line-line.component';
+import { AgePipe } from './views/riders/rider-profile/rider-overview/age.pipe';
 
 @NgModule({
     declarations: [
@@ -66,7 +67,8 @@ import { TimeLineLineComponent } from './common/time-line/time-line-line/time-li
         RiderOverviewComponent,
         RiderTimelineComponent,
         TimeLineComponent,
-        TimeLineLineComponent
+        TimeLineLineComponent,
+        AgePipe
     ],
     imports: [
         BrowserModule,

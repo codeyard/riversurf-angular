@@ -2,12 +2,14 @@ import {
     AfterContentInit,
     AfterViewInit,
     Component,
-    ContentChildren, Directive, ElementRef, HostListener, Input,
+    ContentChildren, Directive, ElementRef, HostListener, Input, OnChanges, OnDestroy,
     OnInit,
-    QueryList, Renderer2, TemplateRef, ViewChild,
+    QueryList, Renderer2, SimpleChanges, TemplateRef, ViewChild,
     ViewChildren
 } from '@angular/core';
 import {animate, AnimationBuilder, style} from "@angular/animations";
+import {interval, Subject} from "rxjs";
+import {filter, takeUntil} from "rxjs/operators";
 
 @Directive({selector: '[carousel-item]'})
 export class CarrousellItemDirective {
@@ -18,36 +20,45 @@ export class CarrousellItemDirective {
     }
 }
 
-
 @Component({
     selector: 'surf-carousel',
     templateUrl: './carousel.component.html',
     styleUrls: ['./carousel.component.scss']
 })
-export class CarouselComponent implements OnInit, AfterContentInit, AfterViewInit {
+export class CarouselComponent implements OnInit, OnDestroy, OnChanges, AfterContentInit, AfterViewInit {
 
-    TIMING = '250ms ease-in';
+    @Input() index?: number;
+    @Input() showControls: boolean = true;
+    @Input() focusCurrent: boolean = true;
+    @Input() auto: boolean = false;
+    @Input() intervalTime: number = 3000;
 
+    ready = false;
+    currentIndex = 0;
+    previousIndex = 0;
+
+    /* CONST */
+    private readonly TIMING = '250ms ease-in';
+    private readonly MINIMAL_OPACITY = 0.4;
+    private readonly PAN_THRESHOLD = 1 / 4;
+    private readonly VELOCITY_THRESHOLD = 1;
+
+    /* Content- and ViewElements */
     @ViewChild('carouselList') private carouselList!: ElementRef<HTMLElement>;
-    @ViewChild('craouselListItem') private carouselListItem!: ElementRef<HTMLElement>;
-
-    @ViewChildren('craouselListItem') private carouselListItems!: QueryList<ElementRef>;
-
+    @ViewChildren('craouselListItem') public carouselListItems!: QueryList<ElementRef>;
     @ContentChildren(CarrousellItemDirective) elements!: QueryList<any>;
 
-    @Input()
-    startIndex?: number;
-
-
-    public ready = false;
-
-    private currentIndex = 0;
-
-    private currentOffset: number = 0;
-    private offsetwidth = 0;
+    /* Calculated Values on Resize*/
     private carouselWidth = 0;
     private itemWidth = 0;
     private itemOffsetSpacing = 0;
+
+    private intervalIsPaused: boolean = false;
+
+    /* Asyncronous stuff that needs to be cleaned up on Destroy */
+    private destroy$ = new Subject();
+    private resizeObserver = new ResizeObserver(() => this.onResize());
+    private interval: any;
 
     constructor(
         private elementRef: ElementRef,
@@ -57,93 +68,178 @@ export class CarouselComponent implements OnInit, AfterContentInit, AfterViewIni
     }
 
     ngOnInit(): void {
+        this.resizeObserver.observe(this.elementRef.nativeElement);
+    }
+
+    ngOnDestroy() {
+        this.destroy$.next(null);
+        this.destroy$.complete();
+        this.resizeObserver.disconnect();
+        clearInterval(this.interval);
     }
 
     ngAfterContentInit(): void {
-        // console.log(this.elements.first.nativeElement.clientWidth);
+        // content- Childs are ready here
     }
 
     ngAfterViewInit() {
+        // view-Childs are ready here
         this.ready = true;
         this.initCarousel();
     }
 
-    @HostListener('window:resize', ['$event'])
+    ngOnChanges(changes: SimpleChanges) {
+        if (this.ready && changes.index && changes.index.currentValue !== changes.index.previousValue) {
+            this.goToIndex(changes.index.currentValue);
+        }
+    }
+
     onResize() {
-        this.initCarousel();
+        this.calculateSizes();
+    }
+
+    private calculateSizes() {
+        this.carouselWidth = this.carouselList.nativeElement.clientWidth;
+        this.itemWidth = this.carouselListItems.first.nativeElement.clientWidth;
+        this.itemOffsetSpacing = (this.carouselWidth - this.itemWidth) / 2;
     }
 
     private initCarousel() {
-        this.carouselWidth = this.carouselList.nativeElement.clientWidth;
-        this.itemWidth = this.carouselListItem.nativeElement.clientWidth;
-        this.itemOffsetSpacing = (this.carouselWidth-this.itemWidth)/2;
-        this.offsetwidth = this.itemWidth + this.itemOffsetSpacing;
-        this.goToIndex(this.startIndex ? this.startIndex : 0);
-        this.playAnimation();
+        this.calculateSizes();
+        if (this.auto) {
+            this.interval = interval(this.intervalTime)
+                .pipe(
+                    takeUntil(this.destroy$),
+                    filter(() => !this.intervalIsPaused))
+                .subscribe(() => {
+                    this.goToNextOrFirst();
+                });
+        }
+        this.goToIndex(this.index ? this.index : 0);
     }
 
-    public onPan(event: any, element: HTMLElement): void {
+    /* When User starts to swipe (and keeps swiping) */
+    onPan(event: any): void {
         // https://github.com/angular/angular/issues/10541#issuecomment-346539242
         // if y velocity is greater, it's a panup/pandown, so ignore.
         if (Math.abs(event.velocityY) > Math.abs(event.velocityX)) {
             return;
         }
-        let deltaX = event.deltaX + this.itemOffsetSpacing;
+
+        this.intervalIsPaused = true;
+
+        let deltaX = event.deltaX;
+        let direction = Math.sign(deltaX);
+
+        /* inputvalue: focusCurrent -> blur every element except for the focused one */
+        if (this.focusCurrent) {
+            this.focusOnTransition(deltaX, direction);
+        }
+
         this.renderer.setStyle(
             this.carouselList.nativeElement,
             'transform',
-            `translateX(${this.currentOffset + deltaX}px)`
+            `translateX(${this.currentIndex * (-this.itemWidth) + deltaX + this.itemOffsetSpacing}px)`
         );
     }
 
-    onPanEnd(event: any, element: HTMLLIElement) {
+    /* when User lifts finger after swiping */
+    onPanEnd(event: any) {
+
+        if (event.additionalEvent === "panup" || event.additionalEvent === "pandown") {
+            return;
+        }
         let deltaX = event.deltaX;
 
-        let sign = Math.sign(deltaX)
-        if (Math.abs(deltaX) >= this.carouselListItem.nativeElement.clientWidth / 3) {
-            deltaX = sign * this.carouselListItem.nativeElement.clientWidth;
+        let direction = Math.sign(deltaX)
+
+        if (Math.abs(deltaX) >= this.itemWidth * this.PAN_THRESHOLD) {
+            this.goToIndex(this.currentIndex - direction);
+            return;
         }
-        if (Math.abs(deltaX) <= this.carouselListItem.nativeElement.clientWidth / 3) {
-            deltaX = 0;
+        this.goToIndex(this.currentIndex);
+    }
+
+    goToNextOrFirst()  {
+        if (this.isIndexValid(this.currentIndex + 1)) {
+            this.goToNex();
+        } else {
+            this.goToIndex(0);
         }
-        if (0 >= this.currentOffset + deltaX && this.currentOffset + deltaX > -this.calcTotalWidth()) {
-            this.currentOffset += deltaX;
-        }
-        this.playAnimation();
+    }
+
+    goToNex() {
+        this.goToIndex(this.currentIndex + 1);
+    }
+
+    goToPrevious() {
+        this.goToIndex(this.currentIndex - 1);
     }
 
     private goToIndex(index: number) {
-        this.currentOffset = -index * this.itemWidth;
+        if (!this.isIndexValid(index)) {
+            this.playAnimation();
+            return;
+        }
+        this.previousIndex = this.currentIndex;
+        this.currentIndex = index;
         this.playAnimation();
     }
 
-    private getTranslation(offset: number): string {
-        return `translateX(${offset}px)`;
-    }
-
+    /* when we move to an index we want to animate it */
     private playAnimation(): void {
-        const translation = this.getTranslation(this.currentOffset+this.itemOffsetSpacing);
-        const factory = this.animationBuilder.build(
+        /* inputvalue: focusCurrent -> blur every element except for the focused one */
+        if (this.focusCurrent) {
+            this.stopTransitionFocus();
+        }
+
+        const translation = this.calcTranslation();
+        const translationFactory = this.animationBuilder.build(
             animate(this.TIMING, style({transform: translation}))
         );
-        const animation = factory.create(this.carouselList.nativeElement);
-
-        animation.onStart(() => {
-            // this.playing = true;
-        });
-        animation.onDone(() => {
+        const translationAnimation = translationFactory.create(this.carouselList.nativeElement);
+        translationAnimation.onDone(() => {
             this.renderer.setStyle(
                 this.carouselList.nativeElement,
                 'transform',
                 translation
             );
-            animation.destroy();
+            translationAnimation.destroy();
+            this.intervalIsPaused = false;
         });
-        animation.play();
+        translationAnimation.play();
     }
 
-    private calcTotalWidth() {
-        return this.carouselListItems.reduce((acc, item) => acc + item.nativeElement.clientWidth, 0);
+    private calcTranslation(): string {
+        const offset = (this.currentIndex * (-this.itemWidth)) + this.itemOffsetSpacing;
+        return `translateX(${offset}px)`;
+    }
+
+    private focusOnTransition(deltaX: number, direction: number): void {
+        /* Change Opacity while sliding of the Current Element */
+        const opacity = 1 - ((Math.abs(deltaX) / this.itemWidth) * (1 - this.MINIMAL_OPACITY));
+        this.renderer.setStyle(this.carouselListItems.get(this.currentIndex)!.nativeElement, 'transition', 'opacity 0s');
+        this.renderer.setStyle(this.carouselListItems.get(this.currentIndex)!.nativeElement, 'opacity', opacity);
+
+        /* Change the Opacity while sliding of the next Element */
+        if (this.carouselListItems.get(this.currentIndex - direction) !== undefined) {
+            const opacity = this.MINIMAL_OPACITY + ((Math.abs(deltaX) / this.itemWidth) * (1 - this.MINIMAL_OPACITY));
+            this.renderer.setStyle(this.carouselListItems.get(this.currentIndex - direction)!.nativeElement, 'transition', 'opacity 0s');
+            this.renderer.setStyle(this.carouselListItems.get(this.currentIndex - direction)!.nativeElement, 'opacity', opacity);
+        }
+    }
+
+    private stopTransitionFocus(): void {
+        this.renderer.removeStyle(this.carouselListItems.get(this.currentIndex)!.nativeElement, 'opacity');
+        this.renderer.removeStyle(this.carouselListItems.get(this.currentIndex)!.nativeElement, 'transition');
+        this.renderer.removeStyle(this.carouselListItems.get(this.previousIndex)!.nativeElement, 'opacity');
+        this.renderer.removeStyle(this.carouselListItems.get(this.previousIndex)!.nativeElement, 'transition');
+        this.renderer.removeClass(this.carouselListItems.get(this.previousIndex)!.nativeElement, 'focus');
+        this.renderer.addClass(this.carouselListItems.get(this.currentIndex)!.nativeElement, 'focus');
+    }
+
+    private isIndexValid(index: number): boolean {
+        return (index >= 0) && (index < this.carouselListItems.length) ? true : false;
     }
 
 }

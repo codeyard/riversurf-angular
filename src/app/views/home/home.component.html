@@ -2,7 +2,7 @@
     <main class="main">
         <h2>Upcoming Events</h2>
         <div class="events">
-            <surf-carousel *ngIf="smallScreen" [startIndex]="2">
+            <surf-carousel *ngIf="smallScreen" [index]="currentEvent" [auto]="true">
                 <ng-container *ngFor="let surfEvent of events">
                     <surf-event-card [surfEvent]="surfEvent" *carousel-item></surf-event-card>
                 </ng-container>

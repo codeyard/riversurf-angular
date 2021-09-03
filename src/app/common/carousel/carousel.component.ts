@@ -2,9 +2,18 @@ import {
     AfterContentInit,
     AfterViewInit,
     Component,
-    ContentChildren, Directive, ElementRef, HostListener, Input, OnChanges, OnDestroy,
+    ContentChildren,
+    Directive,
+    ElementRef,
+    Input,
+    OnChanges,
+    OnDestroy,
     OnInit,
-    QueryList, Renderer2, SimpleChanges, TemplateRef, ViewChild,
+    QueryList,
+    Renderer2,
+    SimpleChanges,
+    TemplateRef,
+    ViewChild,
     ViewChildren
 } from '@angular/core';
 import {animate, AnimationBuilder, style} from "@angular/animations";
@@ -36,18 +45,15 @@ export class CarouselComponent implements OnInit, OnDestroy, OnChanges, AfterCon
     ready = false;
     currentIndex = 0;
     previousIndex = 0;
-
+    @ViewChildren('craouselListItem') public carouselListItems!: QueryList<ElementRef>;
+    @ContentChildren(CarrousellItemDirective) elements!: QueryList<any>;
     /* CONST */
     private readonly TIMING = '250ms ease-in';
     private readonly MINIMAL_OPACITY = 0.4;
     private readonly PAN_THRESHOLD = 1 / 4;
     private readonly VELOCITY_THRESHOLD = 1;
-
     /* Content- and ViewElements */
     @ViewChild('carouselList') private carouselList!: ElementRef<HTMLElement>;
-    @ViewChildren('craouselListItem') public carouselListItems!: QueryList<ElementRef>;
-    @ContentChildren(CarrousellItemDirective) elements!: QueryList<any>;
-
     /* Calculated Values on Resize*/
     private carouselWidth = 0;
     private itemWidth = 0;
@@ -98,26 +104,6 @@ export class CarouselComponent implements OnInit, OnDestroy, OnChanges, AfterCon
         this.calculateSizes();
     }
 
-    private calculateSizes() {
-        this.carouselWidth = this.carouselList.nativeElement.clientWidth;
-        this.itemWidth = this.carouselListItems.first.nativeElement.clientWidth;
-        this.itemOffsetSpacing = (this.carouselWidth - this.itemWidth) / 2;
-    }
-
-    private initCarousel() {
-        this.calculateSizes();
-        if (this.auto) {
-            this.interval = interval(this.intervalTime)
-                .pipe(
-                    takeUntil(this.destroy$),
-                    filter(() => !this.intervalIsPaused))
-                .subscribe(() => {
-                    this.goToNextOrFirst();
-                });
-        }
-        this.goToIndex(this.index ? this.index : 0);
-    }
-
     /* When User starts to swipe (and keeps swiping) */
     onPan(event: any): void {
         // https://github.com/angular/angular/issues/10541#issuecomment-346539242
@@ -160,7 +146,7 @@ export class CarouselComponent implements OnInit, OnDestroy, OnChanges, AfterCon
         this.goToIndex(this.currentIndex);
     }
 
-    goToNextOrFirst()  {
+    goToNextOrFirst() {
         if (this.isIndexValid(this.currentIndex + 1)) {
             this.goToNex();
         } else {
@@ -174,6 +160,26 @@ export class CarouselComponent implements OnInit, OnDestroy, OnChanges, AfterCon
 
     goToPrevious() {
         this.goToIndex(this.currentIndex - 1);
+    }
+
+    private calculateSizes() {
+        this.carouselWidth = this.carouselList.nativeElement.clientWidth;
+        this.itemWidth = this.carouselListItems.first.nativeElement.clientWidth;
+        this.itemOffsetSpacing = (this.carouselWidth - this.itemWidth) / 2;
+    }
+
+    private initCarousel() {
+        this.calculateSizes();
+        if (this.auto) {
+            this.interval = interval(this.intervalTime)
+                .pipe(
+                    takeUntil(this.destroy$),
+                    filter(() => !this.intervalIsPaused))
+                .subscribe(() => {
+                    this.goToNextOrFirst();
+                });
+        }
+        this.goToIndex(this.index ? this.index : 0);
     }
 
     private goToIndex(index: number) {

@@ -1,4 +1,5 @@
 @use "sass:math";
+@import "../../../../assets/scss/_variables";
 
 $event-color: #3f51b5;
 $event-width:1.5rem;
@@ -21,27 +22,27 @@ $line-width: 0.1rem;
         &__one{
             grid-column: 1 / 2;
             grid-row: 1 / 2;
-            border-right: math.div($line-width, 2) solid $line-color;
+            border-right: math.div($line-width, 2) solid $color-grey-light-1;
         }
 
         &__two{
             grid-column: 2 / 3;
             grid-row: 1 / 2;
-            border-left: math.div($line-width, 2) solid $line-color;
-            border-bottom: math.div($line-width, 2) dashed $line-color;
+            border-left: math.div($line-width, 2) solid $color-grey-light-1;
+            border-bottom: math.div($line-width, 2) dashed $color-grey-light-1;
         }
 
         &__three{
             grid-column: 1 / 2;
             grid-row: 2 / 3;
-            border-right: math.div($line-width, 2) solid $line-color;
+            border-right: math.div($line-width, 2) solid $color-grey-light-1;
         }
 
         &__four{
             grid-column: 2 / 3;
             grid-row: 2 / 3;
-            border-left: math.div($line-width, 2) solid $line-color;
-            border-top: math.div($line-width, 2) dashed $line-color;
+            border-left: math.div($line-width, 2) solid $color-grey-light-1;
+            border-top: math.div($line-width, 2) dashed $color-grey-light-1;
         }
 
         &__full{

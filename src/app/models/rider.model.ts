@@ -20,7 +20,7 @@ export interface Rider {
 
 export const exampleRiderMale: Rider = {
     biography: "Schon lange dabei",
-    birthdate: new Date(),
+    birthdate: new Date('1975/6/19'),
     division: 'male',
     email: "didi@riversurf.ch",
     events: [],

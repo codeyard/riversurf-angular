@@ -47,6 +47,7 @@ import { TimeLineComponent } from './common/time-line/time-line.component';
 import {MatStepperModule} from "@angular/material/stepper";
 import { TimeLineLineComponent } from './common/time-line/time-line-line/time-line-line.component';
 import {CarouselComponent, CarrousellItemDirective} from './common/carousel/carousel.component';
+import {AgePipe} from "./views/riders/rider-profile/rider-overview/age.pipe";
 
 @NgModule({
     declarations: [
@@ -70,7 +71,8 @@ import {CarouselComponent, CarrousellItemDirective} from './common/carousel/caro
         TimeLineLineComponent,
         HeaderComponent,
         CarouselComponent,
-        CarrousellItemDirective
+        CarrousellItemDirective,
+        AgePipe
     ],
     imports: [
         BrowserModule,

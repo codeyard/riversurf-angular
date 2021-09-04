@@ -1,4 +1,4 @@
-<div class="carrousel">
+<div class="carousel">
     <ul #carouselList
         (panleft)="onPan($event)"
         (panright)="onPan($event)"
@@ -6,7 +6,7 @@
         (pancancel)="onPanEnd($event)"
         [style.touch-action]="'pan-y'"
     >
-        <li *ngFor="let element of elements" #craouselListItem
+        <li *ngFor="let element of elements" #carouselListItem
 
         >
             <div class="elementwrapper">

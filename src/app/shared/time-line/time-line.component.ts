@@ -1,5 +1,5 @@
 import {Component, Input, OnInit} from '@angular/core';
-import {TimeLineItem, TimeLineItemIcon} from "../../models/timeline-item.model";
+import {TimeLineItem, TimeLineItemIcon} from "../../core/models/timeline-item.model";
 
 @Component({
     selector: 'rs-time-line',

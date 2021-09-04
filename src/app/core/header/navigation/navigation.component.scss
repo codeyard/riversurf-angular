@@ -1,6 +1,6 @@
-@import "../../../../assets/scss/_variables";
-@import "../../../../assets/scss/_mixins";
-@import "../../../../assets/scss/_responsive";
+@import "src/assets/scss/variables";
+@import "src/assets/scss/mixins";
+@import "src/assets/scss/responsive";
 
 
 .navigation {
@@ -33,7 +33,7 @@
         top: 0;
         left: 0;
         background: $color-primary;
-        background: linear-gradient(180deg, rgba(63,81,181,1) 0%, rgba(101,115,195,1) 100%);
+        background: linear-gradient(180deg, rgba(63, 81, 181, 1) 0%, rgba(101, 115, 195, 1) 100%);
         z-index: 10;
         transition: all 0.8s cubic-bezier(0.86, 0, 0.77, 1);
 

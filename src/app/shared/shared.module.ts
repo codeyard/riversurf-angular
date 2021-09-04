@@ -6,10 +6,15 @@ import {TimeLineLineComponent} from "./time-line/time-line-line/time-line-line.c
 import {MatCardModule} from "@angular/material/card";
 import {MatIconModule} from "@angular/material/icon";
 import {RouterModule} from "@angular/router";
+import {CarouselComponent, CarouselItemDirective} from "./carousel/carousel.component";
+import {ErrorComponent} from "./error/error.component";
 
 
 @NgModule({
     declarations: [
+        CarouselComponent,
+        CarouselItemDirective,
+        ErrorComponent,
         RiderCardComponent,
         TimeLineComponent,
         TimeLineLineComponent
@@ -21,6 +26,9 @@ import {RouterModule} from "@angular/router";
         RouterModule
     ],
     exports: [
+        CarouselComponent,
+        CarouselItemDirective,
+        ErrorComponent,
         RiderCardComponent,
         TimeLineComponent
     ]

@@ -1,5 +1,5 @@
 import {AfterViewInit, Component, OnChanges, OnInit, ViewChild} from '@angular/core';
-import {exampleRiderFemale, exampleRiderKid, exampleRiderMale, Rider} from "../models/rider.model";
+import {exampleRiderFemale, exampleRiderKid, exampleRiderMale, Rider} from "../core/models/rider.model";
 import {MatTableDataSource} from "@angular/material/table";
 import {MatPaginator} from "@angular/material/paginator";
 import {MatSort, Sort, SortDirection} from "@angular/material/sort";

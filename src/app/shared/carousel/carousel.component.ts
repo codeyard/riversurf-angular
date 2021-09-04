@@ -20,8 +20,8 @@ import {animate, AnimationBuilder, style} from "@angular/animations";
 import {interval, Subject} from "rxjs";
 import {filter, takeUntil} from "rxjs/operators";
 
-@Directive({selector: '[carousel-item]'})
-export class CarrousellItemDirective {
+@Directive({selector: '[rs-carousel-item]'})
+export class CarouselItemDirective {
     constructor(
         public el: TemplateRef<any>,
         public elementRef: ElementRef
@@ -30,7 +30,7 @@ export class CarrousellItemDirective {
 }
 
 @Component({
-    selector: 'surf-carousel',
+    selector: 'rs-carousel',
     templateUrl: './carousel.component.html',
     styleUrls: ['./carousel.component.scss']
 })
@@ -45,8 +45,8 @@ export class CarouselComponent implements OnInit, OnDestroy, OnChanges, AfterCon
     ready = false;
     currentIndex = 0;
     previousIndex = 0;
-    @ViewChildren('craouselListItem') public carouselListItems!: QueryList<ElementRef>;
-    @ContentChildren(CarrousellItemDirective) elements!: QueryList<any>;
+    @ViewChildren('carouselListItem') public carouselListItems!: QueryList<ElementRef>;
+    @ContentChildren(CarouselItemDirective) elements!: QueryList<any>;
     /* CONST */
     private readonly TIMING = '250ms ease-in';
     private readonly MINIMAL_OPACITY = 0.4;

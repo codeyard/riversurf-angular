@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 
 @Component({
-  selector: 'surf-error',
+  selector: 'rs-error',
   templateUrl: './error.component.html',
   styleUrls: ['./error.component.scss']
 })

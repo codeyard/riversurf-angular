@@ -1,10 +1,10 @@
 import {Component} from '@angular/core';
-import {Event, exampleEvent} from "../../models/event.model";
-import {Rider, exampleRiderMale, exampleRiderFemale, exampleRiderKid} from "../../models/rider.model";
+import {Event, exampleEvent} from "../core/models/event.model";
+import {Rider, exampleRiderMale, exampleRiderFemale, exampleRiderKid} from "../core/models/rider.model";
 import {BreakpointObserver} from "@angular/cdk/layout";
 
 @Component({
-    selector: 'surf-home',
+    selector: 'rs-home',
     templateUrl: './home.component.html',
     styleUrls: ['./home.component.scss']
 })

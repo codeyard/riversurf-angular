@@ -20,8 +20,5 @@ export class SnackbarService {
             horizontalPosition: 'end',
             panelClass: [level]
         });
-
     }
-
-
 }

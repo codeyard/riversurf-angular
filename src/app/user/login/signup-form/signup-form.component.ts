@@ -1,7 +1,7 @@
 import {Component, Input, OnInit} from '@angular/core';
 import {FormBuilder, FormGroup, Validators} from "@angular/forms";
 import {Router} from "@angular/router";
-import {SnackbarService} from "../../../common/snackbar.service";
+import {SnackbarService} from "../../../core/services/snackbar.service";
 import {ConfirmPasswordValidator} from "./confirm-password.validator";
 
 @Component({

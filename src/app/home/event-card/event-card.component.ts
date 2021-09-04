@@ -1,9 +1,9 @@
 import {Component, Input} from '@angular/core';
-import {Event} from "../../../models/event.model";
-import {Division} from "../../../models/division.type";
+import {Event} from "../../core/models/event.model";
+import {Division} from "../../core/models/division.type";
 
 @Component({
-    selector: 'surf-event-card',
+    selector: 'rs-event-card',
     templateUrl: './event-card.component.html',
     styleUrls: ['./event-card.component.scss']
 })

@@ -1,6 +1,6 @@
 import {Component, OnInit} from '@angular/core';
 import {ActivatedRoute} from "@angular/router";
-import {Rider, exampleRiderMale} from "../../models/rider.model";
+import {Rider, exampleRiderMale} from "../../core/models/rider.model";
 
 @Component({
     selector: 'rs-rider-profile',

@@ -13,7 +13,7 @@ export class WeatherSubject {
     private appVersion: string = packageInfo.version;
     private appName: string = packageInfo.name;
     private subject: BehaviorSubject<WeatherData> = new BehaviorSubject<WeatherData>({...DefaultWeatherData});
-    private readonly pollerNumber: number;
+    private readonly pollerNumber: any;
 
     constructor(private httpClient: HttpClient, weatherLocation: WeatherLocation) {
         this.weatherLocation = weatherLocation;

@@ -1,5 +1,5 @@
 import {Component, Input} from '@angular/core';
-import {Rider} from "../../models/rider.model";
+import {Rider} from "../../core/models/rider.model";
 
 @Component({
     selector: 'rs-rider-card',

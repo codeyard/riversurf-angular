@@ -1,0 +1,27 @@
+<div class="content">
+    <main class="main">
+        <h2>Upcoming Events</h2>
+        <div class="events">
+            <rs-carousel *ngIf="smallScreen" [index]="currentEvent" [auto]="false">
+                <ng-container *ngFor="let surfEvent of events">
+                    <rs-event-card [surfEvent]="surfEvent" *rs-carousel-item></rs-event-card>
+                </ng-container>
+            </rs-carousel>
+            <ng-container *ngIf="!smallScreen">
+                <ng-container *ngFor="let surfEvent of events">
+                    <rs-event-card [surfEvent]="surfEvent"></rs-event-card>
+                </ng-container>
+            </ng-container>
+        </div>
+    </main>
+    <aside class="aside">
+        <h2>Some Awesome Riders</h2>
+        <div class="rider__cards">
+            <rs-rider-card *ngFor="let rider of riders" [rider]="rider"></rs-rider-card>
+        </div>
+    </aside>
+</div>
+<div class="map">
+    <h1>Some Awesome Locations</h1>
+    <img style="max-width: 100%" src="https://miro.medium.com/max/700/1*dUrRzzu4Mm4DMjH2jvmurQ.png" alt="">
+</div>

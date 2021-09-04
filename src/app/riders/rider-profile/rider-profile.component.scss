@@ -1,0 +1,34 @@
+@import "src/assets/scss/responsive";
+@import "src/assets/scss/mixins";
+
+.container{
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+
+    @include bottom-space;
+
+    @include respond(small) {
+        flex-direction: column;
+    }
+
+    & .overview {
+        flex: 25%;
+        padding: 1rem;
+
+        @include respond(small) {
+            flex: 100%
+        }
+    }
+
+    & .details {
+        flex: 75%;
+        padding: 1rem;
+        overflow: hidden;
+
+        @include respond(small) {
+            flex: 100%
+        }
+
+    }
+}

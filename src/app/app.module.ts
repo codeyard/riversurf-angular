@@ -1,114 +1,38 @@
 import {NgModule} from '@angular/core';
-import {BrowserModule, HammerModule} from '@angular/platform-browser';
+import {BrowserModule} from '@angular/platform-browser';
 
 import {AppRoutingModule} from './app-routing.module';
 import {AppComponent} from './app.component';
-import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
-import {MatDividerModule} from "@angular/material/divider";
-import {MatIconModule} from "@angular/material/icon";
-import {MatToolbarModule} from "@angular/material/toolbar";
-import {MatButtonModule} from "@angular/material/button";
-import {MatProgressSpinnerModule} from "@angular/material/progress-spinner";
-import {HomeComponent} from './views/home/home.component';
+import {HomeComponent} from './home/home.component';
+import {SharedModule} from "./shared/shared.module";
+import {CoreModule} from "./core/core.module";
+import {EventCardComponent} from "./home/event-card/event-card.component";
 import {MatCardModule} from "@angular/material/card";
 import {MatChipsModule} from "@angular/material/chips";
-import {EventCardComponent} from './views/home/event-card/event-card.component';
-import {MatExpansionModule} from "@angular/material/expansion";
-import {MatAutocompleteModule} from "@angular/material/autocomplete";
-import {MatMenuModule} from "@angular/material/menu";
-import {WeatherComponent} from "./common/weather/weather.component";
-import {MatGridListModule} from "@angular/material/grid-list";
+import {UserModule} from "./user/user.module";
+import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
 import {HttpClientModule} from "@angular/common/http";
-import {NavigationComponent} from './common/header/navigation/navigation.component';
-import {SignupFormComponent} from './common/signup-form/signup-form.component';
-import {MatFormFieldModule} from "@angular/material/form-field";
-import {FormsModule, ReactiveFormsModule} from "@angular/forms";
-import {MatSelectModule} from "@angular/material/select";
-import {MatCheckboxModule} from "@angular/material/checkbox";
-import {MatInputModule} from "@angular/material/input";
-import {MatTabsModule} from "@angular/material/tabs";
-import {MatSnackBarModule} from "@angular/material/snack-bar";
-import {RiderCardComponent} from "./common/rider-card/rider-card.component";
-import {EventComponent} from "./views/event/event.component";
-import {ErrorComponent} from "./views/error/error.component";
-import {RiderProfileComponent} from "./views/riders/rider-profile/rider-profile.component";
-import {LoginComponent} from "./views/login/login.component";
-import {RidersComponent} from "./views/riders/riders.component";
-import {CompetitionComponent} from "./views/competition/competition.component";
-import {HeaderComponent} from "./common/header/header.component";
-import {MatButtonToggleModule} from "@angular/material/button-toggle";
-import {MatTableModule} from "@angular/material/table";
-import {MatPaginatorModule} from "@angular/material/paginator";
-import {MatSortModule} from "@angular/material/sort";
-import { RiderOverviewComponent } from './views/riders/rider-profile/rider-overview/rider-overview.component';
-import { RiderTimelineComponent } from './views/riders/rider-profile/rider-timeline/rider-timeline.component';
-import {MatListModule} from "@angular/material/list";
-import { TimeLineComponent } from './common/time-line/time-line.component';
-import {MatStepperModule} from "@angular/material/stepper";
-import { TimeLineLineComponent } from './common/time-line/time-line-line/time-line-line.component';
-import {CarouselComponent, CarrousellItemDirective} from './common/carousel/carousel.component';
-import {AgePipe} from "./views/riders/rider-profile/rider-overview/age.pipe";
 
 @NgModule({
     declarations: [
         AppComponent,
         HomeComponent,
-        EventCardComponent,
-        RiderCardComponent,
-        EventComponent,
-        RidersComponent,
-        RiderProfileComponent,
-        LoginComponent,
-        CompetitionComponent,
-        ErrorComponent,
-        NavigationComponent,
-        SignupFormComponent,
-        WeatherComponent,
-        HeaderComponent,
-        RiderOverviewComponent,
-        RiderTimelineComponent,
-        TimeLineComponent,
-        TimeLineLineComponent,
-        HeaderComponent,
-        CarouselComponent,
-        CarrousellItemDirective,
-        AgePipe
+        EventCardComponent
+
     ],
     imports: [
-        BrowserModule,
         AppRoutingModule,
+        BrowserModule,
         BrowserAnimationsModule,
-        MatDividerModule,
-        MatIconModule,
-        MatToolbarModule,
-        MatProgressSpinnerModule,
+        CoreModule,
+        HttpClientModule,
+        SharedModule,
         MatCardModule,
         MatChipsModule,
-        MatExpansionModule,
-        MatAutocompleteModule,
-        MatGridListModule,
-        HttpClientModule,
-        FormsModule,
-        ReactiveFormsModule,
-        MatMenuModule,
-        MatFormFieldModule,
-        MatInputModule,
-        MatSelectModule,
-        MatCheckboxModule,
-        MatButtonModule,
-        MatTabsModule,
-        MatSnackBarModule,
-        MatButtonToggleModule,
-        MatTableModule,
-        MatPaginatorModule,
-        MatSortModule,
-        MatSnackBarModule,
-        MatListModule,
-        MatStepperModule,
-        MatSortModule,
-        HammerModule
+        UserModule
     ],
     providers: [],
+    exports: [],
     bootstrap: [AppComponent]
 })
 export class AppModule {

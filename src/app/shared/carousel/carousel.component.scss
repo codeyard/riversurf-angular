@@ -1,0 +1,57 @@
+.carousel {
+    display: flex;
+    position: relative;
+    flex-direction: row;
+    overflow: hidden;
+    max-width: 100%;
+
+    & > button {
+        position: absolute;
+        background: transparent;
+        cursor: pointer;
+        border: none;
+        height: 100%;
+        width: 20%;
+        transition: all 0.3s ease;
+
+        &:first-of-type {
+            left: 0px;
+        }
+
+        &:last-of-type {
+            right: 0px;
+        }
+
+        & mat-icon {
+            color: darkgray;
+            text-shadow: rgba(255,255,255,0.6) 3px 3px;
+            height: 60px;
+            width: 60px;
+            font-size: 60px;
+        }
+
+        &:disabled {
+            opacity: 0.2;
+        }
+    }
+
+    & ul {
+        display: flex;
+        max-width: 100%;
+    }
+
+    & li {
+        list-style: none;
+        max-width: 100%;
+        opacity: 0.4;
+        transition: opacity 600ms ease-in-out;
+
+        &.focus {
+            opacity: 1;
+        }
+
+        & .elementwrapper {
+            margin: 0.8rem;
+        }
+    }
+}

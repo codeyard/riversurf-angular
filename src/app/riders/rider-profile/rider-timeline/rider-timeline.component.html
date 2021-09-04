@@ -1,0 +1,24 @@
+<mat-tab-group class="container__timeline">
+    <mat-tab *ngIf="currentTimeline" label="Ongoing" class="container__timeline-tab">
+        <div class="timeline__description">
+            <h1 class="timeline__description__title">{{currentTimeline.event.name}}</h1>
+            <h2 class="timeline__description__location">{{currentTimeline.event.location}}</h2>
+            <hr>
+            <p class="timeline__description__description">{{currentTimeline.event.description}}</p>
+        </div>
+        <rs-time-line *ngIf="currentTimeline.timeline" [timeline]="currentTimeline.timeline"
+                      [ongoing]="true"></rs-time-line>
+    </mat-tab>
+    <mat-tab *ngFor="let historicalEvent of historyTimeline"
+             label="{{historicalEvent.event.startDateTime.getFullYear()}}"
+    >
+        <div class="timeline__description">
+            <h1 class="timeline__description__title">{{historicalEvent.event.name}}</h1>
+            <span><h2 class="timeline__description__location">{{historicalEvent.event.location}}</h2></span>
+            <hr>
+            <p class="timeline__description__description">{{historicalEvent.event.description}}</p>
+            <rs-time-line *ngIf="historicalEvent.timeline" [timeline]="historicalEvent.timeline"></rs-time-line>
+        </div>
+
+    </mat-tab>
+</mat-tab-group>

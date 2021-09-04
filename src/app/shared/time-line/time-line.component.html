@@ -1,0 +1,25 @@
+<div class="container" *ngFor="let timelineItem of timeline; first as isFirst; last as isLast">
+    <div class="container__timeline">
+        <rs-time-line-line *ngIf="isFirst && isLast" [ongoing]="ongoing"></rs-time-line-line>
+        <rs-time-line-line *ngIf="isFirst && !isLast" [next]="true"></rs-time-line-line>
+        <rs-time-line-line *ngIf="isLast" [previous]="true" [ongoing]="ongoing"></rs-time-line-line>
+        <rs-time-line-line *ngIf="!isLast && !isFirst" [next]="true" [previous]="true"></rs-time-line-line>
+    </div>
+    <div class="container__details">
+        <mat-card class="container__details__card">
+            <mat-card-title>
+                <div class="container__details__title">
+                    <div class="container__details__title__icon" *ngIf="timelineItem.icon != 'default'">
+                        <mat-icon>{{getIconForTimeline(timelineItem.icon)}}</mat-icon>
+                    </div>
+                    <div class="container__details__title__description">
+                        {{timelineItem.title}}
+                    </div>
+                </div>
+            </mat-card-title>
+            <mat-card-subtitle
+                *ngIf="timelineItem.time">{{timelineItem.time | date:'HH:mm | d. MMMM YYYY'}}</mat-card-subtitle>
+            <p class="container__details__points" *ngIf="timelineItem.content">{{timelineItem.content}}</p>
+        </mat-card>
+    </div>
+</div>

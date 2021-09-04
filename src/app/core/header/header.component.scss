@@ -1,0 +1,100 @@
+@import "src/assets/scss/variables";
+@import "src/assets/scss/mixins";
+@import "src/assets/scss/responsive";
+
+.header {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-content: center;
+
+    @include respond(small) {
+        background-color: transparent;
+        display: block;
+        height: 0;
+    }
+
+    &__logo {
+        flex: 1 1;
+        cursor: pointer;
+        outline: none;
+
+        @include respond(small) {
+            display: none;
+        }
+
+        h1 {
+            display: inline;
+        }
+
+        svg {
+            margin-right: 1rem;
+            vertical-align: middle;
+        }
+    }
+
+    &__search {
+        flex: 3 1;
+        display: flex;
+        justify-content: center;
+
+        @include respond(small) {
+            display: none;
+        }
+
+        input {
+            @include text;
+            font-family: inherit;
+            background-color: $color-white;
+            border: none;
+            color: $color-text-3;
+            padding: 0.5rem 2rem;
+            border-radius: 1.5rem;
+            width: 40%;
+            min-width: 480px;
+            transition: all 0.2s;
+            text-align: center;
+
+            &:focus {
+                outline: none;
+                width: 45%;
+                padding: 0.7rem 2rem;
+
+                @include respond(medium) {
+                    width: 80%;
+                }
+
+            }
+
+            &::placeholder {
+                font-weight: 100;
+                color: $color-text-4;
+
+            }
+
+            @include respond(medium) {
+                width: 60%;
+            }
+
+        }
+
+        @include respond(small) {
+            display: none;
+        }
+    }
+
+    rs-navigation {
+        flex: 1 1;
+        text-align: end;
+
+        @include respond(small) {
+            background-color: $color-primary;
+            bottom: 0;
+            left: 0;
+            position: fixed;
+            width: 100%;
+            z-index: 50;
+        }
+    }
+}
+

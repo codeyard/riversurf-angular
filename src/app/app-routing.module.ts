@@ -1,20 +1,19 @@
 import {NgModule} from '@angular/core';
 import {RouterModule, Routes} from '@angular/router';
-import {HomeComponent} from "./views/home/home.component";
-import {EventComponent} from "./views/event/event.component";
-import {RiderProfileComponent} from "./views/riders/rider-profile/rider-profile.component";
-import {RidersComponent} from "./views/riders/riders.component";
-import {LoginComponent} from "./views/login/login.component";
-import {CompetitionComponent} from "./views/competition/competition.component";
-import {ErrorComponent} from "./views/error/error.component";
+import {HomeComponent} from "./home/home.component";
+import {LoginComponent} from "./user/login/login.component";
+import {ErrorComponent} from "./shared/error/error.component";
 
 const routes: Routes = [
     {path: 'login', component: LoginComponent},
-    {path: 'event/:id', component: EventComponent, children: [
-            {path: 'competition/:division', component: CompetitionComponent}
-        ]},
-    {path: 'riders', component: RidersComponent},
-    {path: 'rider/:id', component: RiderProfileComponent},
+    {
+        path: 'event',
+        loadChildren: () => import('./surf-event/surf-event.module').then(m => m.SurfEventModule)
+    },
+    {
+        path: 'riders',
+        loadChildren: () => import('./riders/riders.module').then(m => m.RidersModule)
+    },
     {path: '', pathMatch: 'full', component: HomeComponent},
     {path: 'page-not-found', component: ErrorComponent},
     {path: '**', redirectTo: '/page-not-found'},

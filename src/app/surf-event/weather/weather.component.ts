@@ -5,7 +5,7 @@ import {WeatherService} from "./weather.service";
 import {Subscription} from "rxjs";
 
 @Component({
-    selector: 'surf-weather',
+    selector: 'rs-weather',
     templateUrl: './weather.component.html',
     styleUrls: ['./weather.component.scss']
 })

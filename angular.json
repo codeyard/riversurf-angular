@@ -18,7 +18,7 @@
       },
       "root": "",
       "sourceRoot": "src",
-      "prefix": "surf",
+      "prefix": "rs",
       "architect": {
         "build": {
           "builder": "@angular-devkit/build-angular:browser",

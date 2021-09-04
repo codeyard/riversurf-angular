@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 
 @Component({
-  selector: 'surf-competition',
+  selector: 'rs-competition',
   templateUrl: './competition.component.html',
   styleUrls: ['./competition.component.scss']
 })

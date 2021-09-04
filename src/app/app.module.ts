@@ -16,7 +16,6 @@ import {EventCardComponent} from './views/home/event-card/event-card.component';
 import {MatExpansionModule} from "@angular/material/expansion";
 import {MatAutocompleteModule} from "@angular/material/autocomplete";
 import {MatMenuModule} from "@angular/material/menu";
-import {WeatherComponent} from "./common/weather/weather.component";
 import {MatGridListModule} from "@angular/material/grid-list";
 import {HttpClientModule} from "@angular/common/http";
 import {NavigationComponent} from './common/header/navigation/navigation.component';
@@ -29,12 +28,10 @@ import {MatInputModule} from "@angular/material/input";
 import {MatTabsModule} from "@angular/material/tabs";
 import {MatSnackBarModule} from "@angular/material/snack-bar";
 import {RiderCardComponent} from "./common/rider-card/rider-card.component";
-import {EventComponent} from "./views/event/event.component";
 import {ErrorComponent} from "./views/error/error.component";
 import {RiderProfileComponent} from "./views/riders/rider-profile/rider-profile.component";
 import {LoginComponent} from "./views/login/login.component";
 import {RidersComponent} from "./views/riders/riders.component";
-import {CompetitionComponent} from "./views/competition/competition.component";
 import {HeaderComponent} from "./common/header/header.component";
 import {MatButtonToggleModule} from "@angular/material/button-toggle";
 import {MatTableModule} from "@angular/material/table";
@@ -55,15 +52,12 @@ import {AgePipe} from "./views/riders/rider-profile/rider-overview/age.pipe";
         HomeComponent,
         EventCardComponent,
         RiderCardComponent,
-        EventComponent,
         RidersComponent,
         RiderProfileComponent,
         LoginComponent,
-        CompetitionComponent,
         ErrorComponent,
         NavigationComponent,
         SignupFormComponent,
-        WeatherComponent,
         HeaderComponent,
         RiderOverviewComponent,
         RiderTimelineComponent,

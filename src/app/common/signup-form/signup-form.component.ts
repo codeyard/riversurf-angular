@@ -10,8 +10,7 @@ import {ConfirmPasswordValidator} from "./confirm-password.validator";
     styleUrls: ['./signup-form.component.scss'],
 })
 export class SignupFormComponent implements OnInit {
-    @Input()
-    formMode!: string;
+    @Input() formMode!: string;
     hidePassword = true;
     hidePasswordConfirmation = true;
     signupForm: FormGroup = new FormGroup({});

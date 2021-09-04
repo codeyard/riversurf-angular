@@ -1,7 +1,7 @@
 import {Component, OnInit} from '@angular/core';
 
 @Component({
-    selector: 'surf-login',
+    selector: 'rs-login',
     templateUrl: './login.component.html',
     styleUrls: ['./login.component.scss']
 })

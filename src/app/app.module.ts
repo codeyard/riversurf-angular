@@ -19,7 +19,6 @@ import {MatMenuModule} from "@angular/material/menu";
 import {MatGridListModule} from "@angular/material/grid-list";
 import {HttpClientModule} from "@angular/common/http";
 import {NavigationComponent} from './common/header/navigation/navigation.component';
-import {SignupFormComponent} from './common/signup-form/signup-form.component';
 import {MatFormFieldModule} from "@angular/material/form-field";
 import {FormsModule, ReactiveFormsModule} from "@angular/forms";
 import {MatSelectModule} from "@angular/material/select";
@@ -30,7 +29,6 @@ import {MatSnackBarModule} from "@angular/material/snack-bar";
 import {RiderCardComponent} from "./common/rider-card/rider-card.component";
 import {ErrorComponent} from "./views/error/error.component";
 import {RiderProfileComponent} from "./views/riders/rider-profile/rider-profile.component";
-import {LoginComponent} from "./views/login/login.component";
 import {RidersComponent} from "./views/riders/riders.component";
 import {HeaderComponent} from "./common/header/header.component";
 import {MatButtonToggleModule} from "@angular/material/button-toggle";
@@ -45,6 +43,7 @@ import {MatStepperModule} from "@angular/material/stepper";
 import { TimeLineLineComponent } from './common/time-line/time-line-line/time-line-line.component';
 import {CarouselComponent, CarrousellItemDirective} from './common/carousel/carousel.component';
 import {AgePipe} from "./views/riders/rider-profile/rider-overview/age.pipe";
+import {UserModule} from "./user/user.module";
 
 @NgModule({
     declarations: [
@@ -54,10 +53,8 @@ import {AgePipe} from "./views/riders/rider-profile/rider-overview/age.pipe";
         RiderCardComponent,
         RidersComponent,
         RiderProfileComponent,
-        LoginComponent,
         ErrorComponent,
         NavigationComponent,
-        SignupFormComponent,
         HeaderComponent,
         RiderOverviewComponent,
         RiderTimelineComponent,
@@ -91,7 +88,6 @@ import {AgePipe} from "./views/riders/rider-profile/rider-overview/age.pipe";
         MatCheckboxModule,
         MatButtonModule,
         MatTabsModule,
-        MatSnackBarModule,
         MatButtonToggleModule,
         MatTableModule,
         MatPaginatorModule,
@@ -100,7 +96,8 @@ import {AgePipe} from "./views/riders/rider-profile/rider-overview/age.pipe";
         MatListModule,
         MatStepperModule,
         MatSortModule,
-        HammerModule
+        HammerModule,
+        UserModule
     ],
     providers: [],
     bootstrap: [AppComponent]

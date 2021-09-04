@@ -1,11 +1,11 @@
 import {Component, Input, OnInit} from '@angular/core';
 import {FormBuilder, FormGroup, Validators} from "@angular/forms";
 import {Router} from "@angular/router";
-import {SnackbarService} from "../snackbar.service";
+import {SnackbarService} from "../../../common/snackbar.service";
 import {ConfirmPasswordValidator} from "./confirm-password.validator";
 
 @Component({
-    selector: 'surf-signup-form',
+    selector: 'rs-signup-form',
     templateUrl: './signup-form.component.html',
     styleUrls: ['./signup-form.component.scss'],
 })

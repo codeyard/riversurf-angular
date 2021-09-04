@@ -1,8 +1,6 @@
 import {NgModule} from '@angular/core';
 import {RouterModule, Routes} from '@angular/router';
 import {HomeComponent} from "./views/home/home.component";
-import {RiderProfileComponent} from "./views/riders/rider-profile/rider-profile.component";
-import {RidersComponent} from "./views/riders/riders.component";
 import {LoginComponent} from "./user/login/login.component";
 import {ErrorComponent} from "./views/error/error.component";
 
@@ -12,8 +10,10 @@ const routes: Routes = [
         path: 'event',
         loadChildren: () => import('./surf-event/surf-event.module').then(m => m.SurfEventModule)
     },
-    {path: 'riders', component: RidersComponent},
-    {path: 'rider/:id', component: RiderProfileComponent},
+    {
+        path: 'riders',
+        loadChildren: () => import('./riders/riders.module').then(m => m.RidersModule)
+    },
     {path: '', pathMatch: 'full', component: HomeComponent},
     {path: 'page-not-found', component: ErrorComponent},
     {path: '**', redirectTo: '/page-not-found'},

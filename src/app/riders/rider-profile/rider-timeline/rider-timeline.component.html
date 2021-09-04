@@ -6,8 +6,8 @@
             <hr>
             <p class="timeline__description__description">{{currentTimeline.event.description}}</p>
         </div>
-        <surf-time-line *ngIf="currentTimeline.timeline" [timeline]="currentTimeline.timeline"
-                        [ongoing]="true"></surf-time-line>
+        <rs-time-line *ngIf="currentTimeline.timeline" [timeline]="currentTimeline.timeline"
+                      [ongoing]="true"></rs-time-line>
     </mat-tab>
     <mat-tab *ngFor="let historicalEvent of historyTimeline"
              label="{{historicalEvent.event.startDateTime.getFullYear()}}"
@@ -17,7 +17,7 @@
             <span><h2 class="timeline__description__location">{{historicalEvent.event.location}}</h2></span>
             <hr>
             <p class="timeline__description__description">{{historicalEvent.event.description}}</p>
-            <surf-time-line *ngIf="historicalEvent.timeline" [timeline]="historicalEvent.timeline"></surf-time-line>
+            <rs-time-line *ngIf="historicalEvent.timeline" [timeline]="historicalEvent.timeline"></rs-time-line>
         </div>
 
     </mat-tab>

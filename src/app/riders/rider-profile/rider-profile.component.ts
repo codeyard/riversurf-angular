@@ -1,9 +1,9 @@
 import {Component, OnInit} from '@angular/core';
 import {ActivatedRoute} from "@angular/router";
-import {Rider, exampleRiderMale} from "../../../models/rider.model";
+import {Rider, exampleRiderMale} from "../../models/rider.model";
 
 @Component({
-    selector: 'surf-rider-profile',
+    selector: 'rs-rider-profile',
     templateUrl: './rider-profile.component.html',
     styleUrls: ['./rider-profile.component.scss']
 })

@@ -2,7 +2,7 @@ import {Component, Input} from '@angular/core';
 import {Rider} from "../../models/rider.model";
 
 @Component({
-    selector: 'surf-rider-card',
+    selector: 'rs-rider-card',
     templateUrl: './rider-card.component.html',
     styleUrls: ['./rider-card.component.scss']
 })

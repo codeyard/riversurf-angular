@@ -1,4 +1,4 @@
-<div class="">
+<div>
     <mat-button-toggle-group class="division-selector" aria-label="Division" #group="matButtonToggleGroup">
         <mat-button-toggle value="male" (change)="toggleDivision($event, group)" [checked]="division === 'male'"
                            class="division-selector__item division-selector__item--male">
@@ -77,7 +77,7 @@
                             <mat-icon *ngIf="isFavoriteRider(rider.id)" class="table__data__favorite">favorite</mat-icon>
                             <mat-icon *ngIf="!isFavoriteRider(rider.id)">favorite_border</mat-icon>
                         </button>
-                        <button mat-icon-button title="View rider profile" aria-label="View rider profile" routerLink="/rider/{{rider.id}}">
+                        <button mat-icon-button title="View rider profile" aria-label="View rider profile" routerLink="/riders/{{rider.id}}">
                             <mat-icon>visibility</mat-icon>
                         </button>
                     </td>
@@ -116,7 +116,7 @@
             Riders:
         </h2>
         <div class="aside__favorite-riders">
-            <surf-rider-card *ngFor="let rider of favoriteRiders" [rider]="rider"></surf-rider-card>
+            <rs-rider-card *ngFor="let rider of favoriteRiders" [rider]="rider"></rs-rider-card>
         </div>
         </div>
     </aside>

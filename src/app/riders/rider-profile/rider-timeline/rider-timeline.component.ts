@@ -1,17 +1,12 @@
 import {Component, Input, OnChanges, OnInit, SimpleChanges} from '@angular/core';
 import {
-    DefaultTimeLineItemsLoosing,
-    DefaultTimeLineItemsWinning,
-    TimeLineItem
-} from "../../../../models/timeline-item.model";
-import {
     EventTimeline,
     GenerateEventTimeLine,
     GenerateHistoryEventTimeLine
-} from "../../../../models/event-timeline.model";
+} from "../../../models/event-timeline.model";
 
 @Component({
-    selector: 'surf-rider-timeline',
+    selector: 'rs-rider-timeline',
     templateUrl: './rider-timeline.component.html',
     styleUrls: ['./rider-timeline.component.scss']
 })

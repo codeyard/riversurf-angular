@@ -1,0 +1,8 @@
+<div class="container">
+    <div class="overview">
+        <rs-rider-overview *ngIf="rider" [rider]="rider"></rs-rider-overview>
+    </div>
+    <div class="details">
+        <rs-rider-timeline *ngIf="rider" [riderId]="rider.id"></rs-rider-timeline>
+    </div>
+</div>

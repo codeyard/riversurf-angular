@@ -26,47 +26,33 @@ import {MatCheckboxModule} from "@angular/material/checkbox";
 import {MatInputModule} from "@angular/material/input";
 import {MatTabsModule} from "@angular/material/tabs";
 import {MatSnackBarModule} from "@angular/material/snack-bar";
-import {RiderCardComponent} from "./common/rider-card/rider-card.component";
 import {ErrorComponent} from "./views/error/error.component";
-import {RiderProfileComponent} from "./views/riders/rider-profile/rider-profile.component";
-import {RidersComponent} from "./views/riders/riders.component";
 import {HeaderComponent} from "./common/header/header.component";
 import {MatButtonToggleModule} from "@angular/material/button-toggle";
 import {MatTableModule} from "@angular/material/table";
 import {MatPaginatorModule} from "@angular/material/paginator";
 import {MatSortModule} from "@angular/material/sort";
-import { RiderOverviewComponent } from './views/riders/rider-profile/rider-overview/rider-overview.component';
-import { RiderTimelineComponent } from './views/riders/rider-profile/rider-timeline/rider-timeline.component';
 import {MatListModule} from "@angular/material/list";
-import { TimeLineComponent } from './common/time-line/time-line.component';
 import {MatStepperModule} from "@angular/material/stepper";
-import { TimeLineLineComponent } from './common/time-line/time-line-line/time-line-line.component';
 import {CarouselComponent, CarrousellItemDirective} from './common/carousel/carousel.component';
-import {AgePipe} from "./views/riders/rider-profile/rider-overview/age.pipe";
 import {UserModule} from "./user/user.module";
+import {SharedModule} from "./shared/shared.module";
 
 @NgModule({
     declarations: [
         AppComponent,
         HomeComponent,
         EventCardComponent,
-        RiderCardComponent,
-        RidersComponent,
-        RiderProfileComponent,
         ErrorComponent,
         NavigationComponent,
         HeaderComponent,
-        RiderOverviewComponent,
-        RiderTimelineComponent,
-        TimeLineComponent,
-        TimeLineLineComponent,
         HeaderComponent,
         CarouselComponent,
-        CarrousellItemDirective,
-        AgePipe
+        CarrousellItemDirective
     ],
     imports: [
         BrowserModule,
+        SharedModule,
         AppRoutingModule,
         BrowserAnimationsModule,
         MatDividerModule,
@@ -100,6 +86,7 @@ import {UserModule} from "./user/user.module";
         UserModule
     ],
     providers: [],
+    exports: [],
     bootstrap: [AppComponent]
 })
 export class AppModule {

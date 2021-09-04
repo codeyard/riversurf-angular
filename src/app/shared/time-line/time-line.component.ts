@@ -1,22 +1,15 @@
-import {
-    AfterViewInit,
-    Component,
-    Input,
-    OnInit,
-    ViewChild
-} from '@angular/core';
+import {Component, Input, OnInit} from '@angular/core';
 import {TimeLineItem, TimeLineItemIcon} from "../../models/timeline-item.model";
-import {MatStepper} from "@angular/material/stepper";
 
 @Component({
-    selector: 'surf-time-line',
+    selector: 'rs-time-line',
     templateUrl: './time-line.component.html',
     styleUrls: ['./time-line.component.scss']
 })
 export class TimeLineComponent implements OnInit {
 
     @Input() timeline: TimeLineItem[] = [];
-    @Input() ongoing : boolean = false;
+    @Input() ongoing: boolean = false;
 
     constructor() {
     }

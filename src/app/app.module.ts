@@ -1,5 +1,5 @@
 import {NgModule} from '@angular/core';
-import {BrowserModule} from '@angular/platform-browser';
+import {BrowserModule, HammerModule} from '@angular/platform-browser';
 
 import {AppRoutingModule} from './app-routing.module';
 import {AppComponent} from './app.component';
@@ -29,7 +29,8 @@ import {HttpClientModule} from "@angular/common/http";
         SharedModule,
         MatCardModule,
         MatChipsModule,
-        UserModule
+        UserModule,
+        HammerModule
     ],
     providers: [],
     exports: [],

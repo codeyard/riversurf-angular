@@ -1,4 +1,4 @@
-<mat-card routerLink="/riders/{{rider.id}}" class="rider__card">
+<mat-card routerLink="/riders/{{ rider.nickName + '-' + rider.id | slugify }}" class="rider__card">
     <mat-card-header class="rider__card__header">
         <div mat-card-avatar
              class="rider__card__header__image"

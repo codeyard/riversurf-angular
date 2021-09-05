@@ -8,6 +8,7 @@ import {MatIconModule} from "@angular/material/icon";
 import {RouterModule} from "@angular/router";
 import {CarouselComponent, CarouselItemDirective} from "./carousel/carousel.component";
 import {ErrorComponent} from "./error/error.component";
+import {SlugifyPipe} from "./pipes/slugify.pipe";
 
 
 @NgModule({
@@ -17,7 +18,8 @@ import {ErrorComponent} from "./error/error.component";
         ErrorComponent,
         RiderCardComponent,
         TimeLineComponent,
-        TimeLineLineComponent
+        TimeLineLineComponent,
+        SlugifyPipe
     ],
     imports: [
         CommonModule,
@@ -30,7 +32,8 @@ import {ErrorComponent} from "./error/error.component";
         CarouselItemDirective,
         ErrorComponent,
         RiderCardComponent,
-        TimeLineComponent
+        TimeLineComponent,
+        SlugifyPipe
     ]
 })
 export class SharedModule {

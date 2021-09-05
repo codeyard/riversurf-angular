@@ -92,7 +92,7 @@
                                 <mat-icon *ngIf="!isFavoriteRider(rider.id)">favorite_border</mat-icon>
                             </button>
                             <button mat-icon-button title="View rider profile" aria-label="View rider profile"
-                                    routerLink="/riders/{{rider.id}}">
+                                    routerLink="/riders/{{ rider.nickName + '-' + rider.id | slugify }}">
                                 <mat-icon>visibility</mat-icon>
                             </button>
                         </td>

@@ -24,7 +24,7 @@ export class RiderProfileComponent implements OnInit, OnDestroy {
         this.routeSubscription = this.route.params
             .pipe(
                 switchMap(params => {
-                    const id = params['id'];
+                    const id = params['id'].split('-').pop();
                     return this.ridersService.getRider(id)
                 })
             )

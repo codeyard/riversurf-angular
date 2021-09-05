@@ -1,0 +1,54 @@
+@import "src/assets/scss/responsive";
+@import "src/assets/scss/mixins";
+
+.event{
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+
+    @include respond(medium) {
+        flex-direction: column;
+    }
+
+    @include bottom-space;
+
+    &__details{
+        flex: 70%;
+        padding: 2rem;
+
+        @include respond(medium) {
+            flex: 100%;
+        }
+
+        &__header{
+
+
+            &-logo{
+                max-height: 200px;
+            }
+
+        }
+    }
+
+    &__divisions{
+        flex: 30%;
+        padding: 2rem;
+
+        @include respond(medium) {
+            flex: 100%;
+        }
+
+        &__selection{
+
+        }
+
+        &__riders{
+
+        }
+    }
+
+    &__map{
+        flex: 100%;
+        padding: 2rem;
+    }
+}

@@ -19,15 +19,15 @@ export interface Event {
 }
 
 export const exampleEvent: Event = {
-    competitions: [exampleComp],
+    competitions: [exampleComp, {...exampleComp, division:"female"}],
     description: "Das ist die Beschreibung vom Event",
     endDateTime: new Date(),
     hashTag: "#riversurf, #thun",
     id: "riversurf-jam-thun-2021",
     judge: examplejudge,
     location: "somewhere",
-    locationLat: 0,
-    locationLong: 0,
+    locationLat: 46.761725,
+    locationLong: 7.617745,
     name: "RiversurfJam",
     organizer: examplejudge,
     mainPicture: "https://riversurfstorage.blob.core.windows.net/eventimages/event1.jpg",

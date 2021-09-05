@@ -1,1 +1,33 @@
-<rs-weather weatherLocation="thun"></rs-weather>
+<div class="event">
+    <div class="event__details">
+        <div class="event__details__header">
+            <img class="event__details__header-logo" src="{{surfEvent.logo}}">
+            <h1>{{surfEvent.name}}</h1>
+            <dl>
+                <dt>Description:</dt>
+                <dd>{{surfEvent.description}}</dd>
+                <dt>Start:</dt>
+                <dd>{{surfEvent.startDateTime | date:'d MMMM YYYY HH:mm'}}</dd>
+                <dt>End:</dt>
+                <dd>{{surfEvent.endDateTime | date:'d MMMM YYYY HH:mm'}}</dd>
+                <dt>Location:</dt>
+                <dd>{{surfEvent.location}}</dd>
+                <dt>Hashtag:</dt>
+                <dd>{{surfEvent.hashTag}}</dd>
+            </dl>
+        </div>
+    </div>
+    <div class="event__divisions">
+        <div class="event__divisions__selection">
+            <button *ngFor="let division of surfEvent.competitions">
+                {{division.division}}
+            </button>
+        </div>
+        <div *ngFor="let division of surfEvent.competitions" class="event__divisions__riders">
+            {{division.division}}
+        </div>
+    </div>
+</div>
+<div class="event__map">
+    Map
+</div>

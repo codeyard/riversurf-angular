@@ -24,8 +24,15 @@
             </button>
         </div>
         <div *ngFor="let division of surfEvent.competitions" class="event__divisions__riders">
-            {{division.division}}
+            <rs-rider-card *ngFor="let rider of division.riders | slice:0:1" [rider]="rider"></rs-rider-card>
         </div>
+<!--        <div *ngFor="let division of surfEvent.competitions" class="event__divisions__riders">-->
+<!--            <rs-carousel [index]="0" [auto]="false">-->
+<!--                <ng-container *ngFor="let rider of division.riders">-->
+<!--                    <rs-rider-card [rider]="rider" *rs-carousel-item></rs-rider-card>-->
+<!--                </ng-container>-->
+<!--            </rs-carousel>-->
+<!--        </div>-->
     </div>
 </div>
 <div class="event__map">

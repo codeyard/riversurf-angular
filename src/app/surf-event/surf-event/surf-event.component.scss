@@ -44,6 +44,10 @@
 
         &__riders{
 
+            & rs-carousel {
+                width: 100%;
+                max-width: 100%;
+            }
         }
     }
 

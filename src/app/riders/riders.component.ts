@@ -1,21 +1,25 @@
-import {AfterViewInit, Component, OnChanges, OnInit, ViewChild} from '@angular/core';
+import {AfterViewInit, Component, OnChanges, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {Rider} from "../core/models/rider.model";
 import {MatTableDataSource} from "@angular/material/table";
 import {MatPaginator} from "@angular/material/paginator";
 import {MatSort, Sort, SortDirection} from "@angular/material/sort";
 import {ActivatedRoute, Router} from "@angular/router";
 import {RidersService} from "../core/services/riders.service";
+import {Subscription} from "rxjs";
 
 @Component({
     selector: 'rs-riders',
     templateUrl: './riders.component.html',
     styleUrls: ['./riders.component.scss']
 })
-export class RidersComponent implements OnInit, AfterViewInit, OnChanges {
+export class RidersComponent implements OnInit, AfterViewInit, OnChanges, OnDestroy {
     displayedColumns: string[] = ['avatar', 'name', 'nickName', 'division', 'action'];
     dataSource: MatTableDataSource<Rider> = new MatTableDataSource<Rider>();
+    ridersSubscription?: Subscription;
     ridersData: Rider[] = [];
+    routeSubscription?: Subscription;
     favoriteRiders: Rider[] = [];
+    isLoading = true;
 
     @ViewChild(MatPaginator) paginator!: MatPaginator;
     @ViewChild(MatSort) sort!: MatSort;
@@ -39,7 +43,7 @@ export class RidersComponent implements OnInit, AfterViewInit, OnChanges {
     }
 
     ngOnInit(): void {
-        this.route.queryParams.subscribe(params => {
+        this.routeSubscription = this.route.queryParams.subscribe(params => {
             if (params['filter']) {
                 this.filter = params['filter'];
             }
@@ -61,12 +65,17 @@ export class RidersComponent implements OnInit, AfterViewInit, OnChanges {
             this.initTableData();
         });
 
-        this.ridersService.riders.subscribe(
+        this.ridersSubscription = this.ridersService.riders.subscribe(
             response => {
+                console.log(response)
+                this.isLoading = false;
                 this.ridersData = response;
                 this.initTableData();
             },
-            error => console.log('ERROR loading riders data :-(', error)
+            error =>  {
+                this.isLoading = false;
+                console.log('ERROR loading riders data :-(', error)
+            }
         );
     }
 
@@ -183,6 +192,11 @@ export class RidersComponent implements OnInit, AfterViewInit, OnChanges {
         if (this.filter && this.filter.length) {
             this.dataSource.filter = this.filter;
         }
+    }
+
+    ngOnDestroy(): void {
+        this.routeSubscription?.unsubscribe();
+        this.ridersSubscription?.unsubscribe();
     }
 
 }

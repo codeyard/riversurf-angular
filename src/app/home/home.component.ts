@@ -1,6 +1,6 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
 import {Event, exampleEvent} from "../core/models/event.model";
-import {Rider, exampleRiderMale, exampleRiderFemale, exampleRiderKid} from "../core/models/rider.model";
+import {Rider} from "../core/models/rider.model";
 import {BreakpointObserver} from "@angular/cdk/layout";
 import {RidersService} from "../core/services/riders.service";
 import {Subscription} from "rxjs";
@@ -11,7 +11,7 @@ import {SnackbarService} from "../core/services/snackbar.service";
     templateUrl: './home.component.html',
     styleUrls: ['./home.component.scss']
 })
-export class HomeComponent implements OnInit, OnDestroy{
+export class HomeComponent implements OnInit, OnDestroy {
     events: Event[] = [exampleEvent, exampleEvent, exampleEvent, exampleEvent, exampleEvent, exampleEvent];
     randomRiders: Rider[] = [];
     ridersSubscription?: Subscription;
@@ -39,7 +39,7 @@ export class HomeComponent implements OnInit, OnDestroy{
                 error => {
                     this.isLoadingRandomRiders = false;
                     this.snackBarService.send("Unable to load Riders", "error");
-                    console.log('ERROR loading riders data :-(' , error)
+                    console.log('ERROR loading riders data :-(', error)
                 })
 
 

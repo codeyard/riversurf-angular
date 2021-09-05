@@ -4,7 +4,6 @@ import {Rider} from "../models/rider.model";
 import {BehaviorSubject, Observable, of} from "rxjs";
 import {AppConfigService} from "./app-config.service";
 import {map} from "rxjs/operators";
-import {SnackbarService} from "./snackbar.service";
 
 @Injectable({
     providedIn: 'root'
@@ -19,10 +18,6 @@ export class RidersService {
     constructor(private httpClient: HttpClient, private appConfigService: AppConfigService) {
     }
 
-    get riders() {
-        return this.ridersData;
-    }
-
     getRiders(): Observable<Rider[]> {
         const requestUrl = this.PROTOCOL_HTTPS + this.appConfigService.getHostName() + this.PATH_ENDPOINT;
         this.httpClient.get<Rider[]>(requestUrl).subscribe(
@@ -35,8 +30,6 @@ export class RidersService {
         return this.riders$;
     }
 
-    // TODO: Get Random Riders
-
     getRider(id: string): Observable<Rider> {
         const index = this.ridersData.value.findIndex(rider => rider.id === id);
 
@@ -46,7 +39,7 @@ export class RidersService {
 
     }
 
-    fetchRider(id: string): Observable<Rider> {
+    private fetchRider(id: string): Observable<Rider> {
         const requestUrl = this.PROTOCOL_HTTPS + this.appConfigService.getHostName() + this.PATH_ENDPOINT + '/' + id;
         this.httpClient.get<Rider>(requestUrl)
             .subscribe(
@@ -71,7 +64,6 @@ export class RidersService {
             + '?amount=' + amount;
 
         return this.httpClient.get<Rider[]>(requestUrl)
-
     }
 
 

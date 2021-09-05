@@ -13,7 +13,6 @@ import {SnackbarService} from "../../core/services/snackbar.service";
 })
 export class RiderProfileComponent implements OnInit, OnDestroy {
     routeSubscription?: Subscription;
-    riderId: String = 'unknown';
     rider ?: Rider;
     isLoading = true;
 
@@ -29,7 +28,8 @@ export class RiderProfileComponent implements OnInit, OnDestroy {
                     return this.ridersService.getRider(id)
                 })
             )
-            .subscribe(rider => {
+            .subscribe(
+                rider => {
                     this.isLoading = false;
                     this.rider = rider;
                 },

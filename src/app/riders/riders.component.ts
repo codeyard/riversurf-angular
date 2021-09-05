@@ -89,6 +89,11 @@ export class RidersComponent implements OnInit, AfterViewInit, OnDestroy {
             );
     }
 
+    ngOnDestroy(): void {
+        this.routeSubscription?.unsubscribe();
+        this.ridersSubscription?.unsubscribe();
+    }
+
     ngAfterViewInit() {
         this.updateTable();
     }
@@ -186,11 +191,6 @@ export class RidersComponent implements OnInit, AfterViewInit, OnDestroy {
 
     isFavoriteRider(riderId: string): boolean {
         return this.favoriteRiders.findIndex(elementRider => elementRider.id === riderId) > -1;
-    }
-
-    ngOnDestroy(): void {
-        this.routeSubscription?.unsubscribe();
-        this.ridersSubscription?.unsubscribe();
     }
 
     private updateTable(): void {

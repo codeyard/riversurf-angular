@@ -7,6 +7,7 @@ import {ActivatedRoute, Router} from "@angular/router";
 import {RidersService} from "../core/services/riders.service";
 import {Subscription} from "rxjs";
 import {filter} from "rxjs/operators";
+import {SnackbarService} from "../core/services/snackbar.service";
 
 @Component({
     selector: 'rs-riders',
@@ -40,7 +41,8 @@ export class RidersComponent implements OnInit, AfterViewInit, OnDestroy {
 
     constructor(private ridersService: RidersService,
                 private router: Router,
-                private route: ActivatedRoute) {
+                private route: ActivatedRoute,
+                private snackBarService: SnackbarService) {
     }
 
     ngOnInit(): void {
@@ -72,7 +74,6 @@ export class RidersComponent implements OnInit, AfterViewInit, OnDestroy {
             )
             .subscribe(
                 (riders: Rider[]) => {
-                    console.log(riders)
                     this.isLoading = false;
                     this.ridersData = riders;
                     this.initTableData();
@@ -82,6 +83,7 @@ export class RidersComponent implements OnInit, AfterViewInit, OnDestroy {
                 },
                 error => {
                     this.isLoading = false;
+                    this.snackBarService.send("Unable to load Riders", "error");
                     console.log('ERROR loading riders data :-(', error)
                 }
             );

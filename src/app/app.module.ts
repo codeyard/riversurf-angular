@@ -14,6 +14,7 @@ import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
 import {HttpClientModule} from "@angular/common/http";
 import {loadInitialData} from "./init";
 import {AppConfigService} from "./core/services/app-config.service";
+import {MatProgressSpinnerModule} from "@angular/material/progress-spinner";
 
 @NgModule({
     declarations: [
@@ -31,7 +32,8 @@ import {AppConfigService} from "./core/services/app-config.service";
         SharedModule,
         MatCardModule,
         MatChipsModule,
-        UserModule
+        UserModule,
+        MatProgressSpinnerModule
     ],
     providers: [{
         provide: APP_INITIALIZER,

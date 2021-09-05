@@ -1,9 +1,10 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
 import {ActivatedRoute} from "@angular/router";
-import {Rider, exampleRiderMale} from "../../core/models/rider.model";
+import {Rider} from "../../core/models/rider.model";
 import {Subscription} from "rxjs";
 import {switchMap} from "rxjs/operators";
 import {RidersService} from "../../core/services/riders.service";
+import {SnackbarService} from "../../core/services/snackbar.service";
 
 @Component({
     selector: 'rs-rider-profile',
@@ -14,8 +15,9 @@ export class RiderProfileComponent implements OnInit, OnDestroy {
     routeSubscription?: Subscription;
     riderId: String = 'unknown';
     rider ?: Rider;
+    isLoading = true;
 
-    constructor(private route: ActivatedRoute, private ridersService: RidersService) {
+    constructor(private route: ActivatedRoute, private ridersService: RidersService, private snackBarService: SnackbarService) {
 
     }
 
@@ -28,8 +30,14 @@ export class RiderProfileComponent implements OnInit, OnDestroy {
                 })
             )
             .subscribe(rider => {
-                this.rider = rider;
-        });
+                    this.isLoading = false;
+                    this.rider = rider;
+                },
+                error => {
+                    this.isLoading = false;
+                    this.snackBarService.send("Unable to load Riders", "error");
+                    console.log('ERROR loading riders data :-(', error)
+                });
     }
 
     ngOnDestroy(): void {

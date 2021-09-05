@@ -1,4 +1,4 @@
-import {AfterViewInit, Component, OnChanges, OnDestroy, OnInit, ViewChild} from '@angular/core';
+import {AfterViewInit, Component, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {Rider} from "../core/models/rider.model";
 import {MatTableDataSource} from "@angular/material/table";
 import {MatPaginator} from "@angular/material/paginator";
@@ -6,13 +6,14 @@ import {MatSort, Sort, SortDirection} from "@angular/material/sort";
 import {ActivatedRoute, Router} from "@angular/router";
 import {RidersService} from "../core/services/riders.service";
 import {Subscription} from "rxjs";
+import {filter} from "rxjs/operators";
 
 @Component({
     selector: 'rs-riders',
     templateUrl: './riders.component.html',
     styleUrls: ['./riders.component.scss']
 })
-export class RidersComponent implements OnInit, AfterViewInit, OnChanges, OnDestroy {
+export class RidersComponent implements OnInit, AfterViewInit, OnDestroy {
     displayedColumns: string[] = ['avatar', 'name', 'nickName', 'division', 'action'];
     dataSource: MatTableDataSource<Rider> = new MatTableDataSource<Rider>();
     ridersSubscription?: Subscription;
@@ -65,29 +66,29 @@ export class RidersComponent implements OnInit, AfterViewInit, OnChanges, OnDest
             this.initTableData();
         });
 
-        this.ridersSubscription = this.ridersService.riders.subscribe(
-            response => {
-                console.log(response)
-                this.isLoading = false;
-                this.ridersData = response;
-                this.initTableData();
-            },
-            error =>  {
-                this.isLoading = false;
-                console.log('ERROR loading riders data :-(', error)
-            }
-        );
+        this.ridersSubscription = this.ridersService.getRiders()
+            .pipe(
+                filter(riders => riders.length > 0)
+            )
+            .subscribe(
+                (riders: Rider[]) => {
+                    console.log(riders)
+                    this.isLoading = false;
+                    this.ridersData = riders;
+                    this.initTableData();
+                    this.length = this.dataSource.data.length;
+                    this.updateTable();
+
+                },
+                error => {
+                    this.isLoading = false;
+                    console.log('ERROR loading riders data :-(', error)
+                }
+            );
     }
 
     ngAfterViewInit() {
         this.updateTable();
-    }
-
-    ngOnChanges() {
-        if (this.dataSource) {
-            this.length = this.dataSource.data.length;
-            this.updateTable();
-        }
     }
 
     initTableData() {
@@ -185,6 +186,11 @@ export class RidersComponent implements OnInit, AfterViewInit, OnChanges, OnDest
         return this.favoriteRiders.findIndex(elementRider => elementRider.id === riderId) > -1;
     }
 
+    ngOnDestroy(): void {
+        this.routeSubscription?.unsubscribe();
+        this.ridersSubscription?.unsubscribe();
+    }
+
     private updateTable(): void {
         this.dataSource.paginator = this.paginator;
         this.dataSource.sort = this.sort;
@@ -192,11 +198,6 @@ export class RidersComponent implements OnInit, AfterViewInit, OnChanges, OnDest
         if (this.filter && this.filter.length) {
             this.dataSource.filter = this.filter;
         }
-    }
-
-    ngOnDestroy(): void {
-        this.routeSubscription?.unsubscribe();
-        this.ridersSubscription?.unsubscribe();
     }
 
 }

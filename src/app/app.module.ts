@@ -1,4 +1,4 @@
-import {NgModule} from '@angular/core';
+import {APP_INITIALIZER, NgModule} from '@angular/core';
 import {BrowserModule} from '@angular/platform-browser';
 
 import {AppRoutingModule} from './app-routing.module';
@@ -12,6 +12,8 @@ import {MatChipsModule} from "@angular/material/chips";
 import {UserModule} from "./user/user.module";
 import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
 import {HttpClientModule} from "@angular/common/http";
+import {loadInitialData} from "./init";
+import {AppConfigService} from "./core/services/app-config.service";
 
 @NgModule({
     declarations: [
@@ -31,7 +33,12 @@ import {HttpClientModule} from "@angular/common/http";
         MatChipsModule,
         UserModule
     ],
-    providers: [],
+    providers: [{
+        provide: APP_INITIALIZER,
+        multi: true,
+        useFactory: loadInitialData,
+        deps: [AppConfigService]
+    }],
     exports: [],
     bootstrap: [AppComponent]
 })

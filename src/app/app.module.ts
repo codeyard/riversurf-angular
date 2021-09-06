@@ -1,5 +1,5 @@
-import {NgModule} from '@angular/core';
-import {BrowserModule, HammerModule} from '@angular/platform-browser';
+import {APP_INITIALIZER, NgModule} from '@angular/core';
+import {BrowserModule} from '@angular/platform-browser';
 
 import {AppRoutingModule} from './app-routing.module';
 import {AppComponent} from './app.component';
@@ -12,6 +12,9 @@ import {MatChipsModule} from "@angular/material/chips";
 import {UserModule} from "./user/user.module";
 import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
 import {HttpClientModule} from "@angular/common/http";
+import {loadInitialData} from "./init";
+import {AppConfigService} from "./core/services/app-config.service";
+import {MatProgressSpinnerModule} from "@angular/material/progress-spinner";
 
 @NgModule({
     declarations: [
@@ -30,9 +33,14 @@ import {HttpClientModule} from "@angular/common/http";
         MatCardModule,
         MatChipsModule,
         UserModule,
-        HammerModule
+        MatProgressSpinnerModule
     ],
-    providers: [],
+    providers: [{
+        provide: APP_INITIALIZER,
+        multi: true,
+        useFactory: loadInitialData,
+        deps: [AppConfigService]
+    }],
     exports: [],
     bootstrap: [AppComponent]
 })

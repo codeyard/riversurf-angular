@@ -1,5 +1,6 @@
 <div class="content">
     <main class="main">
+
         <h2>Upcoming Events</h2>
         <div class="events">
             <rs-carousel *ngIf="smallScreen" [index]="currentEvent" [auto]="false">
@@ -15,9 +16,12 @@
         </div>
     </main>
     <aside class="aside">
-        <h2>Some Awesome Riders</h2>
-        <div class="rider__cards">
-            <rs-rider-card *ngFor="let rider of riders" [rider]="rider"></rs-rider-card>
+        <mat-spinner *ngIf="isLoadingRandomRiders" diameter="40"></mat-spinner>
+        <div *ngIf="!isLoadingRandomRiders && randomRiders.length">
+            <h2>Some Awesome Riders</h2>
+            <div class="rider__cards">
+                <rs-rider-card *ngFor="let rider of randomRiders" [rider]="rider"></rs-rider-card>
+            </div>
         </div>
     </aside>
 </div>

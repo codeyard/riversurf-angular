@@ -1,36 +1,27 @@
-import {AfterViewInit, Component, OnChanges, OnInit, ViewChild} from '@angular/core';
-import {exampleRiderFemale, exampleRiderKid, exampleRiderMale, Rider} from "../core/models/rider.model";
+import {AfterViewInit, Component, OnDestroy, OnInit, ViewChild} from '@angular/core';
+import {Rider} from "../core/models/rider.model";
 import {MatTableDataSource} from "@angular/material/table";
 import {MatPaginator} from "@angular/material/paginator";
 import {MatSort, Sort, SortDirection} from "@angular/material/sort";
 import {ActivatedRoute, Router} from "@angular/router";
-
-// TODO: Remove mock data & replace with real data
-const RIDERS_DATA: Rider[] = [
-    exampleRiderMale, exampleRiderMale, exampleRiderMale, exampleRiderMale, exampleRiderMale, exampleRiderMale,
-    exampleRiderFemale, exampleRiderFemale, exampleRiderFemale, exampleRiderFemale, exampleRiderFemale,
-    exampleRiderKid, exampleRiderKid, exampleRiderKid, exampleRiderKid, exampleRiderKid, exampleRiderKid,
-    exampleRiderMale, exampleRiderMale, exampleRiderMale, exampleRiderMale, exampleRiderMale, exampleRiderMale,
-    exampleRiderFemale, exampleRiderFemale, exampleRiderFemale, exampleRiderFemale, exampleRiderFemale,
-    exampleRiderMale, exampleRiderMale, exampleRiderMale, exampleRiderMale, exampleRiderMale, exampleRiderMale,
-    exampleRiderMale, exampleRiderMale, exampleRiderMale, exampleRiderMale, exampleRiderMale, exampleRiderMale,
-    exampleRiderMale, exampleRiderMale, exampleRiderMale, exampleRiderMale, exampleRiderMale, exampleRiderMale,
-    exampleRiderMale, exampleRiderMale, exampleRiderMale, exampleRiderMale, exampleRiderMale, exampleRiderMale,
-    exampleRiderMale, exampleRiderMale, exampleRiderMale, exampleRiderMale,
-    exampleRiderFemale, exampleRiderFemale, exampleRiderFemale, exampleRiderFemale, exampleRiderFemale,
-    exampleRiderFemale, exampleRiderFemale, exampleRiderFemale,
-    exampleRiderKid, exampleRiderKid, exampleRiderKid, exampleRiderKid, exampleRiderKid, exampleRiderKid
-];
+import {RidersService} from "../core/services/riders.service";
+import {Subscription} from "rxjs";
+import {filter} from "rxjs/operators";
+import {SnackbarService} from "../core/services/snackbar.service";
 
 @Component({
     selector: 'rs-riders',
     templateUrl: './riders.component.html',
     styleUrls: ['./riders.component.scss']
 })
-export class RidersComponent implements OnInit, AfterViewInit, OnChanges {
+export class RidersComponent implements OnInit, AfterViewInit, OnDestroy {
     displayedColumns: string[] = ['avatar', 'name', 'nickName', 'division', 'action'];
-    dataSource = new MatTableDataSource(RIDERS_DATA);
+    dataSource: MatTableDataSource<Rider> = new MatTableDataSource<Rider>();
+    ridersSubscription?: Subscription;
+    ridersData: Rider[] = [];
+    routeSubscription?: Subscription;
     favoriteRiders: Rider[] = [];
+    isLoading = true;
 
     @ViewChild(MatPaginator) paginator!: MatPaginator;
     @ViewChild(MatSort) sort!: MatSort;
@@ -44,22 +35,23 @@ export class RidersComponent implements OnInit, AfterViewInit, OnChanges {
     sortBy = 'name';
     sortDir: SortDirection = 'asc';
 
-    maleCount: number = RIDERS_DATA.filter(rider => rider.division === 'male').length;
-    femaleCount: number = RIDERS_DATA.filter(rider => rider.division === 'female').length;
-    kidCount: number = RIDERS_DATA.filter(rider => rider.division === 'kid').length;
+    maleCount: number = 0;
+    femaleCount: number = 0;
+    kidCount: number = 0;
 
-    constructor(private router: Router,
-                private route: ActivatedRoute) {
+    constructor(private ridersService: RidersService,
+                private router: Router,
+                private route: ActivatedRoute,
+                private snackBarService: SnackbarService) {
     }
 
     ngOnInit(): void {
-        this.route.queryParams.subscribe(params => {
+        this.routeSubscription = this.route.queryParams.subscribe(params => {
             if (params['filter']) {
                 this.filter = params['filter'];
             }
             if (params['division']) {
                 this.division = params['division'];
-                this.dataSource.data = RIDERS_DATA.filter(rider => rider.division === this.division);
             }
             if (params['page']) {
                 this.pageIndex = params['page'];
@@ -73,27 +65,47 @@ export class RidersComponent implements OnInit, AfterViewInit, OnChanges {
             if (params['sortDir']) {
                 this.sortDir = params['sortDir'];
             }
+            this.initTableData();
         });
+
+        this.ridersSubscription = this.ridersService.getRiders()
+            .pipe(
+                filter(riders => riders.length > 0)
+            )
+            .subscribe(
+                (riders: Rider[]) => {
+                    this.isLoading = false;
+                    this.ridersData = riders;
+                    this.initTableData();
+                    this.length = this.dataSource.data.length;
+                    this.updateTable();
+
+                },
+                error => {
+                    this.isLoading = false;
+                    this.snackBarService.send("Unable to load Riders", "error");
+                    console.log('ERROR loading riders data :-(', error)
+                }
+            );
+    }
+
+    ngOnDestroy(): void {
+        this.routeSubscription?.unsubscribe();
+        this.ridersSubscription?.unsubscribe();
     }
 
     ngAfterViewInit() {
         this.updateTable();
     }
 
-    ngOnChanges() {
-        if (this.dataSource) {
-            this.length = this.dataSource.data.length;
-            this.updateTable();
-        }
-    }
-
-    private updateTable(): void {
-        this.dataSource.paginator = this.paginator;
-        this.dataSource.sort = this.sort;
-
-        if (this.filter && this.filter.length) {
-            this.dataSource.filter = this.filter;
-        }
+    initTableData() {
+        this.division
+            ? this.dataSource.data = this.ridersData.filter(rider => rider.division === this.division)
+            : this.dataSource.data = this.ridersData
+        ;
+        this.maleCount = this.ridersData.filter(rider => rider.division === 'male').length;
+        this.femaleCount = this.ridersData.filter(rider => rider.division === 'female').length;
+        this.kidCount = this.ridersData.filter(rider => rider.division === 'kid').length;
     }
 
     applyFilter(event: Event) {
@@ -138,7 +150,7 @@ export class RidersComponent implements OnInit, AfterViewInit, OnChanges {
         if (this.division === event.value) {
             group.value = '';
             this.division = '';
-            this.dataSource.data = RIDERS_DATA;
+            this.dataSource.data = this.ridersData;
 
             this.router.navigate([], {
                 queryParams: {division: null},
@@ -146,7 +158,7 @@ export class RidersComponent implements OnInit, AfterViewInit, OnChanges {
             }).then();
         } else {
             this.division = event.value;
-            this.dataSource.data = RIDERS_DATA.filter(rider => rider.division === this.division);
+            this.dataSource.data = this.ridersData.filter(rider => rider.division === this.division);
 
             this.router.navigate([], {
                 queryParams: {division: this.division},
@@ -179,6 +191,15 @@ export class RidersComponent implements OnInit, AfterViewInit, OnChanges {
 
     isFavoriteRider(riderId: string): boolean {
         return this.favoriteRiders.findIndex(elementRider => elementRider.id === riderId) > -1;
+    }
+
+    private updateTable(): void {
+        this.dataSource.paginator = this.paginator;
+        this.dataSource.sort = this.sort;
+
+        if (this.filter && this.filter.length) {
+            this.dataSource.filter = this.filter;
+        }
     }
 
 }

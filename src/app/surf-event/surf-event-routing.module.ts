@@ -6,7 +6,7 @@ import {NgModule} from "@angular/core";
 
 const routes: Routes = [
     {path: ':id', component: SurfEventComponent},
-    {path: 'competition/:division', component: CompetitionComponent}
+    {path: ':id/competition/:division', component: CompetitionComponent}
 ]
 
 @NgModule({

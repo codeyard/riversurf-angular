@@ -19,7 +19,8 @@
     </div>
     <div class="event__divisions">
         <div class="event__divisions__selection">
-            <button *ngFor="let division of surfEvent.competitions">
+            <button *ngFor="let division of surfEvent.competitions"
+                    routerLink="/event/{{surfEvent.id}}/competition/{{ division.division }}">
                 {{division.division}}
             </button>
         </div>

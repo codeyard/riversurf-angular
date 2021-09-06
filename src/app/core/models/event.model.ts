@@ -22,7 +22,7 @@ export const exampleEvent: Event = {
     competitions: [exampleComp, {...exampleComp, division:"female"}],
     description: "Das ist die Beschreibung vom Event",
     endDateTime: new Date(),
-    hashTag: "#riversurf, #thun",
+    hashTag: "riversurf-thun",
     id: "riversurf-jam-thun-2021",
     judge: examplejudge,
     location: "somewhere",

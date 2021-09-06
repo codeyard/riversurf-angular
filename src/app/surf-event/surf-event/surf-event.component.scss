@@ -22,6 +22,14 @@
 
         &__header{
 
+            dl > dd{
+                padding-bottom: 1rem;
+            }
+
+            dt{
+                font-weight: bold;
+            }
+
 
             &-logo{
                 max-height: 200px;

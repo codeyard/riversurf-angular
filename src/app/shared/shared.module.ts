@@ -9,6 +9,7 @@ import {RouterModule} from "@angular/router";
 import {CarouselComponent, CarouselItemDirective} from "./carousel/carousel.component";
 import {ErrorComponent} from "./error/error.component";
 import {SlugifyPipe} from "./pipes/slugify.pipe";
+import { DivisionColorPipe } from './pipes/division-color.pipe';
 
 
 @NgModule({
@@ -19,7 +20,8 @@ import {SlugifyPipe} from "./pipes/slugify.pipe";
         RiderCardComponent,
         TimeLineComponent,
         TimeLineLineComponent,
-        SlugifyPipe
+        SlugifyPipe,
+        DivisionColorPipe
     ],
     imports: [
         CommonModule,
@@ -33,7 +35,8 @@ import {SlugifyPipe} from "./pipes/slugify.pipe";
         ErrorComponent,
         RiderCardComponent,
         TimeLineComponent,
-        SlugifyPipe
+        SlugifyPipe,
+        DivisionColorPipe
     ]
 })
 export class SharedModule {

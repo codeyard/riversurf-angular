@@ -10,8 +10,6 @@
         flex-direction: column;
     }
 
-    @include bottom-space;
-
     &__details{
         flex: 70%;
         padding: 2rem;
@@ -23,7 +21,7 @@
         &__header{
 
             dl > dd{
-                padding-bottom: 1rem;
+                padding: 1rem;
             }
 
             dt{
@@ -32,7 +30,7 @@
 
 
             &-logo{
-                max-height: 200px;
+                width: 100%;
             }
 
         }
@@ -66,5 +64,13 @@
     &__map{
         flex: 100%;
         padding: 2rem;
+
+        @include bottom-space;
+
+        iframe {
+            height: 500px;
+            width: 100%;
+            border: none;
+        }
     }
 }

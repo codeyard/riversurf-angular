@@ -1,19 +1,16 @@
-import {Component, Input, OnInit} from '@angular/core';
+import {Component, Input} from '@angular/core';
 
 @Component({
-  selector: 'rs-time-line-line',
-  templateUrl: './time-line-line.component.html',
-  styleUrls: ['./time-line-line.component.scss']
+    selector: 'rs-time-line-line',
+    templateUrl: './time-line-line.component.html',
+    styleUrls: ['./time-line-line.component.scss']
 })
-export class TimeLineLineComponent implements OnInit {
+export class TimeLineLineComponent {
 
-    @Input() previous : boolean = false;
-    @Input() next : boolean = false;
-    @Input() ongoing : boolean = false;
+    @Input() previous: boolean = false;
+    @Input() next: boolean = false;
+    @Input() ongoing: boolean = false;
 
-  constructor() { }
-
-  ngOnInit(): void {
-  }
-
+    constructor() {
+    }
 }

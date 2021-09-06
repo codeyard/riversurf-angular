@@ -32,7 +32,6 @@
                 font-weight: bold;
             }
 
-
             &-logo{
                 width: 100%;
             }
@@ -49,7 +48,7 @@
         }
 
         &__selection{
-
+            padding-bottom: 0.5rem;
 
             mat-chip{
                 cursor: pointer;
@@ -57,6 +56,7 @@
         }
 
         &__riders{
+            padding-bottom: 0.5rem;
 
             & rs-carousel {
                 width: 100%;

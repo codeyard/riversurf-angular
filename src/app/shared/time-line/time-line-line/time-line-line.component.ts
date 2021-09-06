@@ -1,4 +1,4 @@
-import {AfterViewInit, Component, ElementRef, Input, OnDestroy, OnInit, ViewChild} from '@angular/core';
+import {Component, Input} from '@angular/core';
 
 @Component({
     selector: 'rs-time-line-line',

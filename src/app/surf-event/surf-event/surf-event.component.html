@@ -18,12 +18,17 @@
         </div>
     </div>
     <div class="event__divisions">
-        <div class="event__divisions__selection">
-            <button *ngFor="let division of surfEvent.competitions"
-                    routerLink="/event/{{surfEvent.id}}/competition/{{ division.division }}">
-                {{division.division}}
-            </button>
-        </div>
+        <h2>Competitions</h2>
+        <mat-chip-list aria-label="Divisions" class="event__divisions__selection">
+            <mat-chip
+                *ngFor="let competition of surfEvent.competitions"
+                [color]="competition.division | divisionColor"
+                routerLink="/event/{{surfEvent.id}}/competition/{{ competition.division }}"
+                selected>
+                {{competition.division}}
+            </mat-chip>
+        </mat-chip-list>
+        <h2>Riders</h2>
         <div *ngFor="let division of surfEvent.competitions" class="event__divisions__riders">
             <rs-rider-card *ngFor="let rider of division.riders | slice:0:1" [rider]="rider"></rs-rider-card>
         </div>

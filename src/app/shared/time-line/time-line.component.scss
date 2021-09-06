@@ -5,7 +5,6 @@
     display: grid;
     grid-template-columns: min-content minmax(400px, 40%);
 
-
     @include respond(medium) {
         grid-template-columns: min-content minmax(max-content, 80%);
     }
@@ -51,7 +50,6 @@
                     transform: translate(50%, -20%);
 
                 }
-
 
                 @include respond(small) {
                     width: 1.5rem;

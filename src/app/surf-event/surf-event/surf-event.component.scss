@@ -1,45 +1,73 @@
 @import "src/assets/scss/responsive";
 @import "src/assets/scss/mixins";
+@import "src/assets/scss/variables";
 
-.event{
+.event {
     display: flex;
     flex-direction: row;
-    width: 100%;
-
-    h1, h2{
-        padding-bottom: 0.5rem;
-    }
+    align-items: stretch;
 
     @include respond(medium) {
         flex-direction: column;
     }
 
-    &__details{
-        flex: 70%;
+    h1, h2 {
+        padding-bottom: 0.5rem;
+    }
+
+    &__details {
+        flex: 30%;
         padding: 2rem;
+
+        mat-card {
+            background-color: $color-primary;
+            color: $color-white;
+        }
+
+        &-logo {
+            border: 1rem solid $color-white;
+            border-radius: 1rem;
+            width: 100%;
+        }
 
         @include respond(medium) {
             flex: 100%;
         }
 
-        &__header{
+        dl > dd {
+            padding: 1rem;
+        }
 
-            dl > dd{
-                padding: 1rem;
-            }
+        dt {
+            font-weight: bold;
+        }
 
-            dt{
-                font-weight: bold;
-            }
-
-            &-logo{
-                width: 100%;
-            }
-
+        a {
+            color: $color-white;
         }
     }
 
-    &__divisions{
+    &__images {
+        flex: 40%;
+        padding: 2rem;
+
+        &__slideshow {
+            display: flex;
+            justify-content: center;
+            height: 100%;
+
+            &-image {
+                width: 100%;
+                align-self: center;
+            }
+        }
+
+        @include respond(medium) {
+            flex: 100%;
+        }
+    }
+
+    &__divisions {
         flex: 30%;
         padding: 2rem;
 
@@ -47,15 +75,15 @@
             flex: 100%;
         }
 
-        &__selection{
+        &__selection {
             padding-bottom: 0.5rem;
 
-            mat-chip{
+            mat-chip {
                 cursor: pointer;
             }
         }
 
-        &__riders{
+        &__riders {
             padding-bottom: 0.5rem;
 
             & rs-carousel {
@@ -65,11 +93,13 @@
         }
     }
 
-    &__map{
+    &__map {
         flex: 100%;
         padding: 2rem;
 
-        @include bottom-space;
+        @include respond(small) {
+            @include bottom-space;
+        }
 
         iframe {
             height: 500px;

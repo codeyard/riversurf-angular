@@ -1,7 +1,7 @@
 <div class="event">
     <div class="event__details">
-        <div class="event__details__header">
-            <img class="event__details__header-logo" src="{{surfEvent.logo}}" alt="event logo">
+        <mat-card>
+            <img class="event__details-logo" src="{{surfEvent.logo}}" alt="event logo">
             <h1>{{surfEvent.name}}</h1>
             <dl>
                 <dt>Description</dt>
@@ -20,6 +20,11 @@
                     </a>
                 </dd>
             </dl>
+        </mat-card>
+    </div>
+    <div class="event__images">
+        <div class="event__images__slideshow">
+            <img class="event__images__slideshow-image" src="{{surfEvent.mainPicture}}" alt="event images"/>
         </div>
     </div>
     <div class="event__divisions">
@@ -40,16 +45,18 @@
             <div *ngFor="let division of surfEvent.competitions">
                 <rs-rider-card *ngFor="let rider of division.riders | slice:0:1" [rider]="rider"></rs-rider-card>
             </div>
-<!--            <div *ngFor="let division of surfEvent.competitions" class="event__divisions__riders">-->
-<!--                <rs-carousel [index]="0" [auto]="false">-->
-<!--                    <ng-container *ngFor="let rider of division.riders">-->
-<!--                        <rs-rider-card [rider]="rider" *rs-carousel-item></rs-rider-card>-->
-<!--                    </ng-container>-->
-<!--                </rs-carousel>-->
-<!--            </div>-->
+            <!--            <div *ngFor="let division of surfEvent.competitions" class="event__divisions__riders">-->
+            <!--                <rs-carousel [index]="0" [auto]="false">-->
+            <!--                    <ng-container *ngFor="let rider of division.riders">-->
+            <!--                        <rs-rider-card [rider]="rider" *rs-carousel-item></rs-rider-card>-->
+            <!--                    </ng-container>-->
+            <!--                </rs-carousel>-->
+            <!--            </div>-->
         </div>
     </div>
 </div>
 <div class="event__map">
-    <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2733.1607076880637!2d7.6155563160159705!3d46.761728653948126!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zNDbCsDQ1JzQyLjIiTiA3wrAzNycwMy45IkU!5e0!3m2!1sde!2sch!4v1630915170035!5m2!1sde!2sch" allowfullscreen="" loading="lazy"></iframe>
+    <iframe
+        src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2733.1607076880637!2d7.6155563160159705!3d46.761728653948126!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zNDbCsDQ1JzQyLjIiTiA3wrAzNycwMy45IkU!5e0!3m2!1sde!2sch!4v1630915170035!5m2!1sde!2sch"
+        allowfullscreen="" loading="lazy"></iframe>
 </div>

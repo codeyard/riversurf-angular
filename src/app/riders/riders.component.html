@@ -1,8 +1,4 @@
-<div class="loading" *ngIf="isLoading">
-    <mat-spinner></mat-spinner>
-</div>
-
-<div *ngIf="!isLoading">
+<div>
     <div>
         <mat-button-toggle-group class="division-selector" aria-label="Division" #group="matButtonToggleGroup">
             <mat-button-toggle value="male" (change)="toggleDivision($event, group)" [checked]="division === 'male'"
@@ -36,7 +32,11 @@
                 <h1 *ngIf="division">{{ division | titlecase}} Riders</h1>
                 <h1 *ngIf="!division">Riders</h1>
 
-                <mat-form-field appearance="standard">
+                <div class="loading" *ngIf="isLoading">
+                    <mat-spinner diameter="40"></mat-spinner>
+                </div>
+
+                <mat-form-field *ngIf="!isLoading" appearance="standard">
                     <mat-label>Search Riders</mat-label>
                     <input matInput [(ngModel)]="filter" (keyup)="applyFilter($event)" placeholder="Search Riders">
                     <button mat-button *ngIf="filter" matSuffix mat-icon-button aria-label="Clear"
@@ -45,7 +45,7 @@
                     </button>
                 </mat-form-field>
 
-                <table class="table" mat-table [dataSource]="dataSource"
+                <table *ngIf="!isLoading" class="table" mat-table [dataSource]="dataSource"
                        matSort [matSortActive]="sortBy" [matSortDirection]="sortDir" matSortDisableClear
                        (matSortChange)="sortTable($event)">
 

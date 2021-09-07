@@ -16,9 +16,9 @@ import {SnackbarService} from "../core/services/snackbar.service";
 })
 export class RidersComponent implements OnInit, AfterViewInit, OnDestroy {
     displayedColumns: string[] = ['avatar', 'name', 'nickName', 'division', 'action'];
-    dataSource: MatTableDataSource<Rider> = new MatTableDataSource<Rider>();
     ridersSubscription?: Subscription;
     ridersData: Rider[] = [];
+    dataSource: MatTableDataSource<Rider> = new MatTableDataSource(this.ridersData);
     routeSubscription?: Subscription;
     favoriteRiders: Rider[] = [];
     isLoading = true;
@@ -29,8 +29,8 @@ export class RidersComponent implements OnInit, AfterViewInit, OnDestroy {
     division: string = '';
 
     filter: string = '';
-    pageIndex?: number;
-    pageSize!: number;
+    pageIndex: number = 0;
+    pageSize: number = 10;
     length!: number;
     sortBy = 'name';
     sortDir: SortDirection = 'asc';
@@ -54,10 +54,10 @@ export class RidersComponent implements OnInit, AfterViewInit, OnDestroy {
                 this.division = params['division'];
             }
             if (params['page']) {
-                this.pageIndex = params['page'];
+                this.pageIndex = params['page'] as number;
             }
             if (params['pageSize']) {
-                this.pageSize = params['pageSize'];
+                this.pageSize = params['pageSize'] as number;
             }
             if (params['sortBy']) {
                 this.sortBy = params['sortBy'];
@@ -65,7 +65,9 @@ export class RidersComponent implements OnInit, AfterViewInit, OnDestroy {
             if (params['sortDir']) {
                 this.sortDir = params['sortDir'];
             }
-            this.initTableData();
+            if (Object.keys(params).length) {
+                this.initTableData();
+            }
         });
 
         this.ridersSubscription = this.ridersService.getRiders()
@@ -77,8 +79,6 @@ export class RidersComponent implements OnInit, AfterViewInit, OnDestroy {
                     this.isLoading = false;
                     this.ridersData = riders;
                     this.initTableData();
-                    this.length = this.dataSource.data.length;
-                    this.updateTable();
 
                 },
                 error => {
@@ -89,13 +89,13 @@ export class RidersComponent implements OnInit, AfterViewInit, OnDestroy {
             );
     }
 
+    ngAfterViewInit() {
+        this.updateTable();
+    }
+
     ngOnDestroy(): void {
         this.routeSubscription?.unsubscribe();
         this.ridersSubscription?.unsubscribe();
-    }
-
-    ngAfterViewInit() {
-        this.updateTable();
     }
 
     initTableData() {
@@ -103,9 +103,11 @@ export class RidersComponent implements OnInit, AfterViewInit, OnDestroy {
             ? this.dataSource.data = this.ridersData.filter(rider => rider.division === this.division)
             : this.dataSource.data = this.ridersData
         ;
+        this.length = this.dataSource.data.length;
         this.maleCount = this.ridersData.filter(rider => rider.division === 'male').length;
         this.femaleCount = this.ridersData.filter(rider => rider.division === 'female').length;
         this.kidCount = this.ridersData.filter(rider => rider.division === 'kid').length;
+        this.updateTable();
     }
 
     applyFilter(event: Event) {
@@ -184,12 +186,14 @@ export class RidersComponent implements OnInit, AfterViewInit, OnDestroy {
     toggleFavorites(rider: Rider, event: Event) {
         event.stopPropagation();
         const indexOfRider = this.favoriteRiders.findIndex(elementRider => elementRider.id === rider.id);
-        indexOfRider > -1
-            ? this.favoriteRiders.splice(indexOfRider, 1)
-            : this.favoriteRiders.push(rider);
 
-        this.snackBarService.send(`You'll get updated about ${rider.nickName}!`, "success")
-
+        if (indexOfRider > -1) {
+            this.favoriteRiders.splice(indexOfRider, 1);
+            this.snackBarService.send(`You'll no longer get updated about ${rider.nickName}!`, "success");
+        } else {
+            this.favoriteRiders.push(rider);
+            this.snackBarService.send(`You'll get updated about ${rider.nickName}!`, "success");
+        }
     }
 
     isFavoriteRider(riderId: string): boolean {
@@ -197,6 +201,10 @@ export class RidersComponent implements OnInit, AfterViewInit, OnDestroy {
     }
 
     private updateTable(): void {
+        if (this.paginator) {
+            this.paginator.pageIndex = this.pageIndex;
+            this.paginator.pageSize = this.pageSize;
+        }
         this.dataSource.paginator = this.paginator;
         this.dataSource.sort = this.sort;
 

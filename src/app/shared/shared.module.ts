@@ -9,6 +9,7 @@ import {RouterModule} from "@angular/router";
 import {CarouselComponent, CarouselItemDirective} from "./carousel/carousel.component";
 import {ErrorComponent} from "./error/error.component";
 import {SlugifyPipe} from "./pipes/slugify.pipe";
+import {HammerModule} from "@angular/platform-browser";
 
 
 @NgModule({
@@ -25,7 +26,8 @@ import {SlugifyPipe} from "./pipes/slugify.pipe";
         CommonModule,
         MatCardModule,
         MatIconModule,
-        RouterModule
+        RouterModule,
+        HammerModule
     ],
     exports: [
         CarouselComponent,

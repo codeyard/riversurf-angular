@@ -1,8 +1,9 @@
-<div class="container">
-    <div class="container__item__one" [ngClass]="{'noBorder' : !previous}"></div>
-    <div class="container__item__two" [ngClass]="{'noBorder' : !previous}"></div>
-    <div class="container__item__three" [ngClass]="{'noBorder' : !next}"></div>
-    <div class="container__item__four" [ngClass]="{'noBorder' : !next}"></div>
-    <div class="container__item__full"></div>
-    <div class="container__item__full" [ngClass]="{'ongoing' : ongoing}"></div>
+<div class="container" #svgContainer>
+    <svg viewBox="0 0 10 10">
+        <line *ngIf="previous" x1="5" x2="5" y1="-2500" y2="5" />
+        <line *ngIf="next" x1="5" x2="5" y1="5" y2="2500" />
+        <line class="info" x1="5" x2="10" y1="5" y2="5" />
+        <circle cx="5" cy="5" r="1"/>
+        <circle *ngIf="ongoing" class="ongoing" cx="5" cy="5" r="1.5"/>
+    </svg>
 </div>

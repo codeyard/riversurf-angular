@@ -10,6 +10,7 @@ import {CarouselComponent, CarouselItemDirective} from "./carousel/carousel.comp
 import {ErrorComponent} from "./error/error.component";
 import {SlugifyPipe} from "./pipes/slugify.pipe";
 import { DivisionColorPipe } from './pipes/division-color.pipe';
+import {HammerModule} from "@angular/platform-browser";
 
 
 @NgModule({
@@ -27,7 +28,8 @@ import { DivisionColorPipe } from './pipes/division-color.pipe';
         CommonModule,
         MatCardModule,
         MatIconModule,
-        RouterModule
+        RouterModule,
+        HammerModule
     ],
     exports: [
         CarouselComponent,

@@ -2,73 +2,43 @@
 @import "src/assets/scss/variables";
 
 $event-color: #3f51b5;
-$event-width: 1.5rem;
 $ongoing-color: #bb4444;
 $line-color: #b4bbe4;
 $line-width: 0.1rem;
+$line-dash-width: 0.35rem;
 
 .container {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    grid-template-rows: 1fr 1fr;
-    column-gap: 0;
-    row-gap: 0;
-    min-height: 2rem;
+
+    width: 80px;
     height: 100%;
-    min-width: $event-width * 2;
 
-    &__item {
+    svg{
+        stroke: $line-color;
+        height: 100%;
+        width: 100%;
 
-        &__one {
-            grid-column: 1 / 2;
-            grid-row: 1 / 2;
-            border-right: math.div($line-width, 2) solid $color-grey-light-1;
+        line{
+            stroke-width: $line-width;
+            vector-effect: non-scaling-stroke;
         }
 
-        &__two {
-            grid-column: 2 / 3;
-            grid-row: 1 / 2;
-            border-left: math.div($line-width, 2) solid $color-grey-light-1;
-            border-bottom: math.div($line-width, 2) dashed $color-grey-light-1;
+        .info{
+            stroke-dasharray: $line-dash-width $line-dash-width;
         }
 
-        &__three {
-            grid-column: 1 / 2;
-            grid-row: 2 / 3;
-            border-right: math.div($line-width, 2) solid $color-grey-light-1;
+        circle{
+            fill: $event-color;
+            vector-effect: non-scaling-stroke;
         }
 
-        &__four {
-            grid-column: 2 / 3;
-            grid-row: 2 / 3;
-            border-left: math.div($line-width, 2) solid $color-grey-light-1;
-            border-top: math.div($line-width, 2) dashed $color-grey-light-1;
-        }
-
-        &__full {
-            grid-column: 1 / 3;
-            grid-row: 1 / 3;
-            margin: auto;
-            background: $event-color;
-            border-radius: 50%;
-            height: 0;
-            width: $event-width;
-            padding-bottom: $event-width;
+        .ongoing {
+            animation: ongoingAnimation 1s linear infinite;
         }
     }
-}
-
-.ongoing {
-    animation: ongoingAnimation 1s linear infinite;
 }
 
 @keyframes ongoingAnimation {
     50% {
-        background-color: $ongoing-color;
+        fill: $ongoing-color;
     }
-}
-
-.noBorder {
-    border-left: none;
-    border-right: none;
 }

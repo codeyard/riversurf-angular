@@ -21,7 +21,6 @@ import {MatProgressSpinnerModule} from "@angular/material/progress-spinner";
         AppComponent,
         HomeComponent,
         EventCardComponent
-
     ],
     imports: [
         AppRoutingModule,

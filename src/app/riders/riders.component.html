@@ -86,7 +86,7 @@
                         <th mat-header-cell *matHeaderCellDef>&nbsp;</th>
                         <td mat-cell *matCellDef="let rider">
                             <button mat-icon-button title="Follow this rider" aria-label="Follow this rider"
-                                    (click)="toggleFavorites(rider)">
+                                    (click)="toggleFavorites(rider, $event)" >
                                 <mat-icon *ngIf="isFavoriteRider(rider.id)" class="table__data__favorite">favorite
                                 </mat-icon>
                                 <mat-icon *ngIf="!isFavoriteRider(rider.id)">favorite_border</mat-icon>
@@ -99,7 +99,8 @@
                     </ng-container>
 
                     <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-                    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+                    <tr mat-row *matRowDef="let row; columns: displayedColumns;"
+                        routerLink="/riders/{{ row.nickName + '-' + row.id | slugify }}"></tr>
 
                     <!-- Row shown when there is no matching data. -->
                     <tr class="mat-row" *matNoDataRow>
@@ -123,7 +124,7 @@
             <div class="aside__favorite">
                 <h2 *ngIf="!favoriteRiders.length">
                     <mat-icon>favorite_border</mat-icon>
-                    your favorite Riders!
+                    your favorite Riders to get notified about their results!
                 </h2>
                 <h2 *ngIf="favoriteRiders.length">
                     Your

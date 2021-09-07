@@ -181,12 +181,15 @@ export class RidersComponent implements OnInit, AfterViewInit, OnDestroy {
     }
 
     // TODO: add/read favorite riders to/from storage
-    toggleFavorites(rider: Rider) {
+    toggleFavorites(rider: Rider, event: Event) {
+        event.stopPropagation();
         const indexOfRider = this.favoriteRiders.findIndex(elementRider => elementRider.id === rider.id);
-
         indexOfRider > -1
             ? this.favoriteRiders.splice(indexOfRider, 1)
             : this.favoriteRiders.push(rider);
+
+        this.snackBarService.send(`You'll get updated about ${rider.nickName}!`, "success")
+
     }
 
     isFavoriteRider(riderId: string): boolean {

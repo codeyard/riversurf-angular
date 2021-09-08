@@ -1,15 +1,18 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, Input, OnInit} from '@angular/core';
 
 @Component({
-  selector: 'rs-drop-zone',
-  templateUrl: './drop-zone.component.html',
-  styleUrls: ['./drop-zone.component.scss']
+    selector: 'rs-drop-zone',
+    templateUrl: './drop-zone.component.html',
+    styleUrls: ['./drop-zone.component.scss']
 })
 export class DropZoneComponent implements OnInit {
 
-  constructor() { }
+    @Input() itemLimit : Number = 4;
 
-  ngOnInit(): void {
-  }
+    constructor() {
+    }
+
+    ngOnInit(): void {
+    }
 
 }

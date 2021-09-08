@@ -2,7 +2,6 @@ import {
     Component,
     ContentChild,
     Directive,
-    ElementRef,
     OnInit,
     TemplateRef
 } from '@angular/core';
@@ -11,7 +10,7 @@ import {
     selector: '[rs-drop-zone-item-content]'
 })
 export class DropZoneItemContentDirective {
-    constructor(public templateRef: TemplateRef<unknown>, public elementRef: ElementRef) {
+    constructor(public templateRef: TemplateRef<unknown>) {
     }
 }
 

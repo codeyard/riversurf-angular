@@ -11,7 +11,7 @@ import {ErrorComponent} from "./error/error.component";
 import {SlugifyPipe} from "./pipes/slugify.pipe";
 import { DivisionColorPipe } from './pipes/division-color.pipe';
 import {HammerModule} from "@angular/platform-browser";
-import {DropItemDirective, DropPlaceholderDirective, DropZoneComponent} from './drop-zone/drop-zone.component';
+import {DropZoneComponent} from './drop-zone/drop-zone.component';
 import {DragDropModule} from "@angular/cdk/drag-drop";
 import {DropZoneItemComponent, DropZoneItemContentDirective} from './drop-zone/drop-zone-item/drop-zone-item.component';
 
@@ -27,8 +27,6 @@ import {DropZoneItemComponent, DropZoneItemContentDirective} from './drop-zone/d
         SlugifyPipe,
         DivisionColorPipe,
         DropZoneComponent,
-        DropPlaceholderDirective,
-        DropItemDirective,
         DropZoneItemComponent,
         DropZoneItemContentDirective
     ],
@@ -49,8 +47,6 @@ import {DropZoneItemComponent, DropZoneItemContentDirective} from './drop-zone/d
         SlugifyPipe,
         DivisionColorPipe,
         DropZoneComponent,
-        DropPlaceholderDirective,
-        DropItemDirective,
         DropZoneItemContentDirective
     ]
 })

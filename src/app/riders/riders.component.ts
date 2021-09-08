@@ -87,6 +87,8 @@ export class RidersComponent implements OnInit, AfterViewInit, OnDestroy {
                     console.log('ERROR loading riders data :-(', error)
                 }
             );
+
+        this.dataSource.filterPredicate = this.createFilterPredicate();
     }
 
     ngAfterViewInit() {
@@ -213,4 +215,21 @@ export class RidersComponent implements OnInit, AfterViewInit, OnDestroy {
         }
     }
 
+    private createFilterPredicate() {
+        const filterFunction = function(data: any, filter: string): boolean {
+            let text =
+                data.firstName.toLowerCase()
+                + data.lastName.toLowerCase()
+                + data.nickName.toLowerCase()
+                + data.division.toLowerCase();
+
+            text = text.split(' ').join('');
+            console.log(text)
+
+            const searchParts: string[] = filter.toLowerCase().split(' ');
+            return !searchParts.some(word => text.indexOf(word) === -1);
+        }
+
+        return filterFunction;
+    }
 }

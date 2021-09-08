@@ -11,8 +11,9 @@ import {ErrorComponent} from "./error/error.component";
 import {SlugifyPipe} from "./pipes/slugify.pipe";
 import { DivisionColorPipe } from './pipes/division-color.pipe';
 import {HammerModule} from "@angular/platform-browser";
-import { DropZoneComponent } from './drop-zone/drop-zone.component';
+import {DropItemDirective, DropPlaceholderDirective, DropZoneComponent} from './drop-zone/drop-zone.component';
 import {DragDropModule} from "@angular/cdk/drag-drop";
+import { DropZoneItemComponent } from './drop-zone/drop-zone-item/drop-zone-item.component';
 
 
 @NgModule({
@@ -25,7 +26,10 @@ import {DragDropModule} from "@angular/cdk/drag-drop";
         TimeLineLineComponent,
         SlugifyPipe,
         DivisionColorPipe,
-        DropZoneComponent
+        DropZoneComponent,
+        DropPlaceholderDirective,
+        DropItemDirective,
+        DropZoneItemComponent
     ],
     imports: [
         CommonModule,
@@ -43,7 +47,9 @@ import {DragDropModule} from "@angular/cdk/drag-drop";
         TimeLineComponent,
         SlugifyPipe,
         DivisionColorPipe,
-        DropZoneComponent
+        DropZoneComponent,
+        DropPlaceholderDirective,
+        DropItemDirective
     ]
 })
 export class SharedModule {

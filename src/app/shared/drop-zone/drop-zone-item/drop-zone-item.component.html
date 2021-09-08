@@ -1,0 +1,8 @@
+<mat-card>
+    <div class="placeholder" *ngIf="Placeholder">
+        I am a placeholder
+    </div>
+    <div #content>
+        <ng-content></ng-content>
+    </div>
+</mat-card>

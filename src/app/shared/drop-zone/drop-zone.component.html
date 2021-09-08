@@ -1,8 +1,14 @@
 <div class="dropzone">
     <div class="dropzone__item" *ngFor="let dropSlot of dropSlots">
-        <rs-drop-zone-item></rs-drop-zone-item>
+        <rs-drop-zone-item>
+            <ng-template rs-drop-zone-item-content></ng-template>
+        </rs-drop-zone-item>
     </div>
     <div class="dropzone__item">
-        <rs-drop-zone-item>Hello</rs-drop-zone-item>
+        <rs-drop-zone-item>
+            <ng-template rs-drop-zone-item-content>
+                I am content
+            </ng-template>
+        </rs-drop-zone-item>
     </div>
 </div>

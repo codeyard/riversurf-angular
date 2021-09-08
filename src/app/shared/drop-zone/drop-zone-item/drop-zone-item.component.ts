@@ -1,31 +1,33 @@
-import {AfterViewInit, Component, ElementRef, OnInit, ViewChild} from '@angular/core';
+import {
+    Component,
+    ContentChild,
+    Directive,
+    ElementRef,
+    OnInit,
+    TemplateRef
+} from '@angular/core';
+
+@Directive({
+    selector: '[rs-drop-zone-item-content]'
+})
+export class DropZoneItemContentDirective {
+    constructor(public templateRef: TemplateRef<unknown>, public elementRef: ElementRef) {
+    }
+}
 
 @Component({
     selector: 'rs-drop-zone-item',
     templateUrl: './drop-zone-item.component.html',
     styleUrls: ['./drop-zone-item.component.scss']
 })
-export class DropZoneItemComponent implements OnInit, AfterViewInit {
+export class DropZoneItemComponent implements OnInit {
 
-    private placeholder: boolean = true;
-
-    @ViewChild('content') content !: ElementRef;
+    @ContentChild(DropZoneItemContentDirective) content !: DropZoneItemContentDirective;
 
     constructor() {
     }
 
     ngOnInit(): void {
-    }
-
-    get Placeholder(): boolean {
-        return this.placeholder;
-    }
-
-    ngAfterViewInit(): void {
-        console.log(`content`, this.content);
-        if(this.content?.nativeElement?.childNodes?.length > 0){
-            this.placeholder = false;
-        }
     }
 
 }

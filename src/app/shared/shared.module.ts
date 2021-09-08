@@ -10,6 +10,8 @@ import {CarouselComponent, CarouselItemDirective} from "./carousel/carousel.comp
 import {ErrorComponent} from "./error/error.component";
 import {SlugifyPipe} from "./pipes/slugify.pipe";
 import {HammerModule} from "@angular/platform-browser";
+import { DropZoneComponent } from './drop-zone/drop-zone.component';
+import {DragDropModule} from "@angular/cdk/drag-drop";
 
 
 @NgModule({
@@ -20,14 +22,16 @@ import {HammerModule} from "@angular/platform-browser";
         RiderCardComponent,
         TimeLineComponent,
         TimeLineLineComponent,
-        SlugifyPipe
+        SlugifyPipe,
+        DropZoneComponent
     ],
     imports: [
         CommonModule,
         MatCardModule,
         MatIconModule,
         RouterModule,
-        HammerModule
+        HammerModule,
+        DragDropModule
     ],
     exports: [
         CarouselComponent,
@@ -35,7 +39,8 @@ import {HammerModule} from "@angular/platform-browser";
         ErrorComponent,
         RiderCardComponent,
         TimeLineComponent,
-        SlugifyPipe
+        SlugifyPipe,
+        DropZoneComponent
     ]
 })
 export class SharedModule {

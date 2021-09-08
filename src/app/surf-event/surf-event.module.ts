@@ -8,6 +8,7 @@ import {MatGridListModule} from "@angular/material/grid-list";
 import {MatIconModule} from "@angular/material/icon";
 import {SurfEventRoutingModule} from "./surf-event-routing.module";
 import {CompetitionComponent} from "./surf-event/competition/competition.component";
+import {SharedModule} from "../shared/shared.module";
 
 
 @NgModule({
@@ -22,7 +23,8 @@ import {CompetitionComponent} from "./surf-event/competition/competition.compone
         MatCardModule,
         MatProgressSpinnerModule,
         MatGridListModule,
-        MatIconModule
+        MatIconModule,
+        SharedModule
     ]
 })
 export class SurfEventModule {

@@ -1,5 +1,5 @@
 import {APP_INITIALIZER, NgModule} from '@angular/core';
-import {BrowserModule} from '@angular/platform-browser';
+import {BrowserModule, HammerModule} from '@angular/platform-browser';
 
 import {AppRoutingModule} from './app-routing.module';
 import {AppComponent} from './app.component';
@@ -21,7 +21,6 @@ import {MatProgressSpinnerModule} from "@angular/material/progress-spinner";
         AppComponent,
         HomeComponent,
         EventCardComponent
-
     ],
     imports: [
         AppRoutingModule,
@@ -33,7 +32,8 @@ import {MatProgressSpinnerModule} from "@angular/material/progress-spinner";
         MatCardModule,
         MatChipsModule,
         UserModule,
-        MatProgressSpinnerModule
+        MatProgressSpinnerModule,
+        HammerModule
     ],
     providers: [{
         provide: APP_INITIALIZER,

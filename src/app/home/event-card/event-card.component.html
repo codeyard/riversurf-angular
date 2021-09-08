@@ -18,10 +18,10 @@
     <mat-chip-list aria-label="Divisions">
         <mat-chip
             *ngFor="let competition of surfEvent.competitions"
-            [color]="getColorOfDivision(competition.division)"
+            [color]="competition.division | divisionColor"
+            routerLink="/event/{{surfEvent.id}}/competition/{{ competition.division }}"
             selected>
             {{competition.division}}
         </mat-chip>
-
     </mat-chip-list>
 </mat-card>

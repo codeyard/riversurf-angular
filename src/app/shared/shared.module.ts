@@ -9,6 +9,7 @@ import {RouterModule} from "@angular/router";
 import {CarouselComponent, CarouselItemDirective} from "./carousel/carousel.component";
 import {ErrorComponent} from "./error/error.component";
 import {SlugifyPipe} from "./pipes/slugify.pipe";
+import { DivisionColorPipe } from './pipes/division-color.pipe';
 import {HammerModule} from "@angular/platform-browser";
 import { DropZoneComponent } from './drop-zone/drop-zone.component';
 import {DragDropModule} from "@angular/cdk/drag-drop";
@@ -23,6 +24,7 @@ import {DragDropModule} from "@angular/cdk/drag-drop";
         TimeLineComponent,
         TimeLineLineComponent,
         SlugifyPipe,
+        DivisionColorPipe,
         DropZoneComponent
     ],
     imports: [
@@ -40,6 +42,7 @@ import {DragDropModule} from "@angular/cdk/drag-drop";
         RiderCardComponent,
         TimeLineComponent,
         SlugifyPipe,
+        DivisionColorPipe,
         DropZoneComponent
     ]
 })

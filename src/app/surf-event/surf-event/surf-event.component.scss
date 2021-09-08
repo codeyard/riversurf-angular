@@ -1,0 +1,110 @@
+@import "src/assets/scss/responsive";
+@import "src/assets/scss/mixins";
+@import "src/assets/scss/variables";
+
+.event {
+    display: flex;
+    flex-direction: row;
+    align-items: stretch;
+
+    @include respond(medium) {
+        flex-direction: column;
+    }
+
+    h1, h2 {
+        padding-bottom: 0.5rem;
+    }
+
+    &__details {
+        flex: 30%;
+        padding: 2rem;
+
+        mat-card {
+            background-color: $color-primary;
+            color: $color-white;
+        }
+
+        &-logo {
+            border: 1rem solid $color-white;
+            border-radius: 1rem;
+            width: 100%;
+        }
+
+        @include respond(medium) {
+            flex: 100%;
+        }
+
+        dl > dd {
+            padding: 1rem;
+        }
+
+        dt {
+            font-weight: bold;
+        }
+
+        a {
+            color: $color-white;
+        }
+    }
+
+    &__images {
+        flex: 40%;
+        padding: 2rem;
+
+        &__slideshow {
+            display: flex;
+            justify-content: center;
+            height: 100%;
+
+            &-image {
+                width: 100%;
+                align-self: center;
+            }
+        }
+
+        @include respond(medium) {
+            flex: 100%;
+        }
+    }
+
+    &__divisions {
+        flex: 30%;
+        padding: 2rem;
+
+        @include respond(medium) {
+            flex: 100%;
+        }
+
+        &__selection {
+            padding-bottom: 0.5rem;
+
+            mat-chip {
+                cursor: pointer;
+            }
+        }
+
+        &__riders {
+            padding-bottom: 0.5rem;
+
+            & rs-carousel {
+                width: 100%;
+                max-width: 100%;
+            }
+        }
+    }
+
+    &__map {
+        flex: 100%;
+        padding: 2rem;
+
+        @include respond(small) {
+            @include bottom-space;
+        }
+
+        iframe {
+            height: 500px;
+            width: 100%;
+            border: none;
+        }
+    }
+}

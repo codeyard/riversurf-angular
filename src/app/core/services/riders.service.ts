@@ -1,9 +1,9 @@
 import {Injectable} from '@angular/core';
 import {HttpClient} from "@angular/common/http";
 import {Rider} from "../models/rider.model";
-import {BehaviorSubject, Observable, of} from "rxjs";
+import {BehaviorSubject, from, Observable, of} from "rxjs";
 import {AppConfigService} from "./app-config.service";
-import {map} from "rxjs/operators";
+import {map, switchMap, toArray} from "rxjs/operators";
 import {SnackbarService} from "./snackbar.service";
 
 @Injectable({
@@ -37,6 +37,13 @@ export class RidersService {
             ? of(this.ridersData.value[index])
             : this.fetchRider(id);
 
+    }
+
+    getRidersByIds(ids: string[]): Observable<Rider[]> {
+        return from(ids).pipe(
+            switchMap(id => this.getRider(id)),
+            toArray()
+        );
     }
 
     getRandomRiders(amount?: number): Observable<Rider[]> {

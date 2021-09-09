@@ -1,13 +1,13 @@
 import {
-    DefaultTimeLineItemsLoosing,
+    DefaultTimeLineItemsLosing,
     DefaultTimeLineItemsOngoing,
     DefaultTimeLineItemsWinning,
     TimeLineItem
 } from "./timeline-item.model";
-import {Event, exampleEvent} from "./event.model";
+import {SurfEvent, exampleEvent} from "./surf-event.model";
 
 export interface EventTimeline {
-    event : Event;
+    event : SurfEvent;
     riderId : string;
     timeline : TimeLineItem[];
 }
@@ -22,7 +22,7 @@ export function GenerateEventTimeLine(year : number, riderId : string, ongoing :
         if (year === 2021) {
             timeline = [...DefaultTimeLineItemsWinning];
         } else {
-            timeline = [...DefaultTimeLineItemsLoosing];
+            timeline = [...DefaultTimeLineItemsLosing];
         }
     }
 

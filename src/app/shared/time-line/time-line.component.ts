@@ -32,7 +32,7 @@ export class TimeLineComponent implements OnInit {
             case "win":
                 return "flare";
 
-            case "loose":
+            case "lose":
                 return "flash_on";
         }
     }

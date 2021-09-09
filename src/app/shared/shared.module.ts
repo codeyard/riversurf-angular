@@ -12,6 +12,8 @@ import {SlugifyPipe} from "./pipes/slugify.pipe";
 import {DivisionColorPipe} from './pipes/division-color.pipe';
 import {HammerModule} from "@angular/platform-browser";
 import {RiderColorPipe} from "./pipes/rider-color.pipe";
+import {FavoriteRiderComponent} from './favorite-rider/favorite-rider.component';
+import {MatButtonModule} from "@angular/material/button";
 
 
 @NgModule({
@@ -24,14 +26,16 @@ import {RiderColorPipe} from "./pipes/rider-color.pipe";
         TimeLineLineComponent,
         SlugifyPipe,
         DivisionColorPipe,
-        RiderColorPipe
+        RiderColorPipe,
+        FavoriteRiderComponent
     ],
     imports: [
         CommonModule,
         MatCardModule,
         MatIconModule,
         RouterModule,
-        HammerModule
+        HammerModule,
+        MatButtonModule
     ],
     exports: [
         CarouselComponent,
@@ -41,7 +45,8 @@ import {RiderColorPipe} from "./pipes/rider-color.pipe";
         TimeLineComponent,
         SlugifyPipe,
         DivisionColorPipe,
-        RiderColorPipe
+        RiderColorPipe,
+        FavoriteRiderComponent
     ]
 })
 export class SharedModule {

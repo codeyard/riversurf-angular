@@ -1,7 +1,7 @@
-import {examplejudge, User} from "./user.model";
-import {Competition, exampleComp} from "./competition.model";
+import {examplejudge} from "./user.model";
+import {Division} from "./division.type";
 
-export interface Event {
+export interface SurfEvent {
     id: string;
     name: string;
     description: string;
@@ -13,24 +13,26 @@ export interface Event {
     locationLat: number;
     locationLong: number;
     hashTag: string;
-    competitions: Competition[];
-    judge: User;
-    organizer: User;
+    competitions: string[];
+    judge: string;
+    organizer: string;
+    divisions: Division[];
 }
 
-export const exampleEvent: Event = {
-    competitions: [exampleComp, {...exampleComp, division:"female"}],
+export const exampleEvent: SurfEvent = {
+    competitions: ["comp1"],
     description: "Das ist die Beschreibung vom Event",
     endDateTime: new Date(),
     hashTag: "riversurf-thun",
     id: "riversurf-jam-thun-2021",
-    judge: examplejudge,
+    judge: "examplejudge",
     location: "somewhere",
     locationLat: 46.761725,
     locationLong: 7.617745,
     name: "RiversurfJam",
-    organizer: examplejudge,
+    organizer: "examplejudge",
     mainPicture: "https://riversurfstorage.blob.core.windows.net/eventimages/event1.jpg",
     logo: "https://riversurfstorage.blob.core.windows.net/eventimages/logo_event1.jpg",
-    startDateTime: new Date()
+    startDateTime: new Date(),
+    divisions: ["male", "female"]
 }

@@ -1,5 +1,5 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
-import {Event, exampleEvent} from "../core/models/event.model";
+import {SurfEvent, exampleEvent} from "../core/models/surf-event.model";
 import {Rider} from "../core/models/rider.model";
 import {BreakpointObserver} from "@angular/cdk/layout";
 import {RidersService} from "../core/services/riders.service";
@@ -12,7 +12,7 @@ import {SnackbarService} from "../core/services/snackbar.service";
     styleUrls: ['./home.component.scss']
 })
 export class HomeComponent implements OnInit, OnDestroy {
-    events: Event[] = [exampleEvent, exampleEvent, exampleEvent, exampleEvent, exampleEvent, exampleEvent];
+    events: SurfEvent[] = [exampleEvent, exampleEvent, exampleEvent, exampleEvent, exampleEvent, exampleEvent];
     randomRiders: Rider[] = [];
     ridersSubscription?: Subscription;
     breakpointSubscription?: Subscription;

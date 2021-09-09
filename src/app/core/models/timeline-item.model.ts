@@ -1,4 +1,4 @@
-export type TimeLineItemIcon = 'default' | 'start' | 'finish' | 'loose' | 'win';
+export type TimeLineItemIcon = 'default' | 'start' | 'finish' | 'lose' | 'win';
 
 export interface TimeLineItem {
     title: string;
@@ -52,7 +52,7 @@ export const DefaultTimeLineItemsWinning: TimeLineItem[] = [{
 }
 ]
 
-export const DefaultTimeLineItemsLoosing: TimeLineItem[] = [{
+export const DefaultTimeLineItemsLosing: TimeLineItem[] = [{
     title: "Rides in heat 2 of round 1",
     content: "",
     time: new Date(2020, 9, 11, 12, 1),
@@ -81,7 +81,7 @@ export const DefaultTimeLineItemsLoosing: TimeLineItem[] = [{
     title: "Lost in heat 1 of round 3",
     content: "Scored 12 points",
     time: new Date(2020, 9, 11, 15, 59),
-    icon: "loose"
+    icon: "lose"
 }
 ]
 

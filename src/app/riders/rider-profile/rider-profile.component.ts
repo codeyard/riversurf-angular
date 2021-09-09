@@ -13,7 +13,7 @@ import {SnackbarService} from "../../core/services/snackbar.service";
 })
 export class RiderProfileComponent implements OnInit, OnDestroy {
     routeSubscription?: Subscription;
-    rider ?: Rider;
+    rider? : Rider;
     isLoading = true;
 
     constructor(private route: ActivatedRoute, private ridersService: RidersService, private snackBarService: SnackbarService) {
@@ -43,4 +43,6 @@ export class RiderProfileComponent implements OnInit, OnDestroy {
     ngOnDestroy(): void {
         this.routeSubscription?.unsubscribe();
     }
+
+
 }

@@ -1,5 +1,5 @@
 import {Component, OnInit} from '@angular/core';
-import {Event, exampleEvent} from "../../core/models/event.model";
+import {SurfEvent, exampleEvent} from "../../core/models/surf-event.model";
 
 @Component({
     selector: 'rs-surf-event',
@@ -8,7 +8,7 @@ import {Event, exampleEvent} from "../../core/models/event.model";
 })
 export class SurfEventComponent implements OnInit {
 
-    surfEvent: Event = {...exampleEvent};
+    surfEvent: SurfEvent = {...exampleEvent};
 
     constructor() {
     }

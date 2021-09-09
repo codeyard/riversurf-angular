@@ -32,11 +32,11 @@
             <h2>Competitions</h2>
             <mat-chip-list aria-label="Divisions">
                 <mat-chip
-                    *ngFor="let competition of surfEvent.competitions"
-                    [color]="competition.division | divisionColor"
-                    routerLink="/event/{{surfEvent.id}}/competition/{{ competition.division }}"
+                    *ngFor="let division of surfEvent.divisions"
+                    [color]="division | divisionColor"
+                    routerLink="/event/{{surfEvent.id}}/competition/{{ division }}"
                     selected>
-                    {{competition.division}}
+                    {{division}}
                 </mat-chip>
             </mat-chip-list>
         </div>

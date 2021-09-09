@@ -1,3 +1,4 @@
+import {SurfEvent} from "./surf-event.model";
 import {Division} from "./division.type";
 
 export interface Rider {
@@ -6,7 +7,7 @@ export interface Rider {
     lastName: string;
     nickName: string;
     birthdate: Date;
-    events: Event[];
+    surfEvents: SurfEvent[];
     division: Division;
     email: string;
     biography: string;

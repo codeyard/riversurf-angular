@@ -1,5 +1,5 @@
 import {Component, Input} from '@angular/core';
-import {Event} from "../../core/models/event.model";
+import {SurfEvent} from "../../core/models/surf-event.model";
 import {Division} from "../../core/models/division.type";
 
 @Component({
@@ -9,7 +9,7 @@ import {Division} from "../../core/models/division.type";
 })
 export class EventCardComponent {
     @Input()
-    surfEvent!: Event;
+    surfEvent!: SurfEvent;
 
     getColorOfDivision(division: Division) {
         switch (division) {

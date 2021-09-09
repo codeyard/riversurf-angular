@@ -1,39 +1,63 @@
-.container{
+@import "../../../../../assets/scss/_variables";
+
+.container {
     padding: 1rem;
     min-width: 25vw;
 }
 
-.round{
+.round {
     display: flex;
     flex-direction: column;
 
-    &__header{
+    &__header {
         align-self: center;
         padding: 1rem;
     }
 
-    &__container{
+    &__container {
         display: flex;
         flex-direction: row;
         padding: 1rem;
-        justify-content: space-between;
+        flex-wrap: nowrap;
 
-        &__element{
+
+        &__element {
             display: flex;
             flex-direction: column;
-            padding: 1rem;
-            width: 50%;
+            margin: 1rem;
+
+            h2 {
+                text-align: center;
+                color: $color-primary;
+            }
+
+            h4 {
+                margin-top: 1rem;
+                text-align: center;
+            }
         }
     }
 
-    &__riders{
-        padding: 0.5rem;
-        background: lightblue;
+    &__heat {
+        margin: .5rem;
+        border: 1px solid $color-primary
+    }
 
-        &__single-rider{
-            padding: 0.5rem;
-            background: deepskyblue;
+    &__riders {
+        padding: 1rem;
+
+        &__single-rider {
+            margin: 0.5rem 0;
             width: 100%;
+            cursor: pointer;
+
+            &--placeholder {
+                text-align: center;
+                padding: 1rem;
+                border: 1px dashed $color-primary;
+                border-radius: 10px;
+                min-width: 250px;
+            }
         }
     }
 }

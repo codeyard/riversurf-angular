@@ -1,7 +1,7 @@
 import {examplejudge, User} from "./user.model";
 import {Competition, exampleComp} from "./competition.model";
 
-export interface Event {
+export interface SurfEvent {
     id: string;
     name: string;
     description: string;
@@ -18,7 +18,7 @@ export interface Event {
     organizer: User;
 }
 
-export const exampleEvent: Event = {
+export const exampleEvent: SurfEvent = {
     competitions: [exampleComp],
     description: "Das ist die Beschreibung vom Event",
     endDateTime: new Date(),

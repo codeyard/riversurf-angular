@@ -1,8 +1,9 @@
 <h1>Competition</h1>
 <div class="dropzone">
     <div class="dropzone__registered">
+        <input type="number" min="0" max="32" [ngModel]="registered.itemLimit" />
         <h2>Registered</h2>
-        <rs-drop-zone>
+        <rs-drop-zone #registered>
             <mat-card>
                 I am a Rider
             </mat-card>

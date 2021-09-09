@@ -2,6 +2,7 @@
     <div class="dropzone__item" cdkDrag [cdkDragData]="dropSlot" *ngFor="let dropSlot of dropSlots; let i = index">
         <rs-drop-zone-item>
             <ng-template rs-drop-zone-item-content>
+                <mat-icon>waves</mat-icon>
                 <mat-card>
                     Index: {{i}} Value: {{dropSlot}}
                 </mat-card>
@@ -9,3 +10,8 @@
         </rs-drop-zone-item>
     </div>
 </div>
+<ng-template #placeholder>
+    <mat-card rs-drop-zone-item-content>
+        I am a placeholder
+    </mat-card>
+</ng-template>

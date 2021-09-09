@@ -1,10 +1,10 @@
 import {
     AfterContentInit,
     Component,
-    ContentChildren,
+    ContentChildren, ElementRef,
     Input, OnChanges,
     OnInit,
-    QueryList, SimpleChanges, ViewChildren
+    QueryList, SimpleChanges, TemplateRef, ViewChild, ViewChildren
 } from '@angular/core';
 import {CdkDragDrop, moveItemInArray} from "@angular/cdk/drag-drop";
 import {DropZoneItemComponent} from "./drop-zone-item/drop-zone-item.component";
@@ -14,16 +14,22 @@ import {DropZoneItemComponent} from "./drop-zone-item/drop-zone-item.component";
     templateUrl: './drop-zone.component.html',
     styleUrls: ['./drop-zone.component.scss']
 })
-export class DropZoneComponent implements OnInit, OnChanges {
+export class DropZoneComponent implements OnInit, OnChanges, AfterContentInit {
 
     @Input() itemLimit: number = 4;
 
     dropSlots: number[] = new Array(this.itemLimit);
 
+    @ViewChild('placeholder') placeholderItem !: ElementRef;
+
     constructor() {
         for(let i = 0; i < this.itemLimit; i++){
             this.dropSlots[i] = i;
         }
+    }
+
+    ngAfterContentInit(): void {
+        console.log(`placeholder`, this.placeholderItem);
     }
 
     ngOnInit(): void {

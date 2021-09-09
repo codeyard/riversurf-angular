@@ -10,6 +10,7 @@ import {SurfEventRoutingModule} from "./surf-event-routing.module";
 import {CompetitionComponent} from "./surf-event/competition/competition.component";
 import {SharedModule} from "../shared/shared.module";
 import {MatChipsModule} from "@angular/material/chips";
+import {FormsModule} from "@angular/forms";
 
 
 @NgModule({
@@ -26,7 +27,8 @@ import {MatChipsModule} from "@angular/material/chips";
         MatProgressSpinnerModule,
         MatGridListModule,
         MatIconModule,
-        MatChipsModule
+        MatChipsModule,
+        FormsModule
     ]
 })
 export class SurfEventModule {

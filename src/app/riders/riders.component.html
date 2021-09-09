@@ -85,12 +85,7 @@
                     <ng-container matColumnDef="action">
                         <th mat-header-cell *matHeaderCellDef>&nbsp;</th>
                         <td mat-cell *matCellDef="let rider">
-                            <button mat-icon-button title="Follow this rider" aria-label="Follow this rider"
-                                    (click)="toggleFavorites(rider, $event)" >
-                                <mat-icon *ngIf="isFavoriteRider(rider.id)" class="table__data__favorite">favorite
-                                </mat-icon>
-                                <mat-icon *ngIf="!isFavoriteRider(rider.id)">favorite_border</mat-icon>
-                            </button>
+                            <rs-favorite-rider [rider]="rider"></rs-favorite-rider>
                             <button mat-icon-button title="View rider profile" aria-label="View rider profile"
                                     routerLink="/riders/{{ rider.nickName + '-' + rider.id | slugify }}">
                                 <mat-icon>visibility</mat-icon>

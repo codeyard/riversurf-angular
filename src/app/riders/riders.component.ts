@@ -5,9 +5,10 @@ import {MatPaginator} from "@angular/material/paginator";
 import {MatSort, Sort, SortDirection} from "@angular/material/sort";
 import {ActivatedRoute, Router} from "@angular/router";
 import {RidersService} from "../core/services/riders.service";
-import {Subscription} from "rxjs";
+import {pipe, Subscription} from "rxjs";
 import {filter} from "rxjs/operators";
 import {SnackbarService} from "../core/services/snackbar.service";
+import {UserService} from "../core/services/user.service";
 
 @Component({
     selector: 'rs-riders',
@@ -20,6 +21,7 @@ export class RidersComponent implements OnInit, AfterViewInit, OnDestroy {
     ridersData: Rider[] = [];
     dataSource: MatTableDataSource<Rider> = new MatTableDataSource(this.ridersData);
     routeSubscription?: Subscription;
+    favoriteRidersSubscription?: Subscription;
     favoriteRiders: Rider[] = [];
     isLoading = true;
 
@@ -40,6 +42,7 @@ export class RidersComponent implements OnInit, AfterViewInit, OnDestroy {
     kidCount: number = 0;
 
     constructor(private ridersService: RidersService,
+                private userService: UserService,
                 private router: Router,
                 private route: ActivatedRoute,
                 private snackBarService: SnackbarService) {
@@ -87,6 +90,10 @@ export class RidersComponent implements OnInit, AfterViewInit, OnDestroy {
                     console.log('ERROR loading riders data :-(', error)
                 }
             );
+
+        this.favoriteRidersSubscription = this.userService.getFavoriteRiders().pipe().subscribe(
+            val => this.favoriteRiders = val
+        );
 
         this.dataSource.filterPredicate = this.createFilterPredicate();
     }
@@ -182,24 +189,6 @@ export class RidersComponent implements OnInit, AfterViewInit, OnDestroy {
             },
             queryParamsHandling: 'merge',
         }).then();
-    }
-
-    // TODO: add/read favorite riders to/from storage
-    toggleFavorites(rider: Rider, event: Event) {
-        event.stopPropagation();
-        const indexOfRider = this.favoriteRiders.findIndex(elementRider => elementRider.id === rider.id);
-
-        if (indexOfRider > -1) {
-            this.favoriteRiders.splice(indexOfRider, 1);
-            this.snackBarService.send(`You'll no longer get updated about ${rider.nickName}!`, "success");
-        } else {
-            this.favoriteRiders.push(rider);
-            this.snackBarService.send(`You'll get updated about ${rider.nickName}!`, "success");
-        }
-    }
-
-    isFavoriteRider(riderId: string): boolean {
-        return this.favoriteRiders.findIndex(elementRider => elementRider.id === riderId) > -1;
     }
 
     private updateTable(): void {

@@ -17,7 +17,7 @@ export class SnackbarService {
         this.snackbar.open(message, 'X', {
             duration: this.NOTIFICATION_SHOWTIME,
             verticalPosition: 'top',
-            horizontalPosition: 'end',
+            horizontalPosition: 'center',
             panelClass: [level]
         });
     }

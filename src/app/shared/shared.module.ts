@@ -11,6 +11,7 @@ import {ErrorComponent} from "./error/error.component";
 import {SlugifyPipe} from "./pipes/slugify.pipe";
 import {DivisionColorPipe} from './pipes/division-color.pipe';
 import {HammerModule} from "@angular/platform-browser";
+import {RiderColorPipe} from "./pipes/rider-color.pipe";
 
 
 @NgModule({
@@ -22,7 +23,8 @@ import {HammerModule} from "@angular/platform-browser";
         TimeLineComponent,
         TimeLineLineComponent,
         SlugifyPipe,
-        DivisionColorPipe
+        DivisionColorPipe,
+        RiderColorPipe
     ],
     imports: [
         CommonModule,
@@ -39,6 +41,7 @@ import {HammerModule} from "@angular/platform-browser";
         TimeLineComponent,
         SlugifyPipe,
         DivisionColorPipe,
+        RiderColorPipe
     ]
 })
 export class SharedModule {

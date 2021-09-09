@@ -13,6 +13,7 @@ import {MatChipsModule} from "@angular/material/chips";
 import {FormsModule} from "@angular/forms";
 import {DragDropModule} from "@angular/cdk/drag-drop";
 import { RoundComponent } from './surf-event/competition/round/round.component';
+import {RiderResultComponent} from "./surf-event/competition/round/rider-result/rider-result.component";
 
 
 @NgModule({
@@ -20,7 +21,8 @@ import { RoundComponent } from './surf-event/competition/round/round.component';
         SurfEventComponent,
         CompetitionComponent,
         WeatherComponent,
-        RoundComponent
+        RoundComponent,
+        RiderResultComponent
     ],
     imports: [
         SurfEventRoutingModule,

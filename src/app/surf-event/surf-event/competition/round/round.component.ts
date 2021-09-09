@@ -17,8 +17,6 @@ export class RoundComponent implements OnInit {
     @Input() riders !: string[];
     @Input() roundNumber !: number;
 
-
-
     heatSize = 4;
 
     heats : HeatModel[] = [];

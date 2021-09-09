@@ -1,15 +1,28 @@
-<div cdkDropListGroup class="round">
-    <h2 *ngIf="riders.length > 0">Unassigned riders</h2>
-    <div cdkDropList [cdkDropListData]="riders" class="round__riders"
-         (cdkDropListDropped)="drop($event)" id="unassignedRiders">
-        <div class="round__riders__single-rider" *ngFor="let rider of riders" cdkDrag>{{rider}}</div>
-    </div>
-    <h2>Heats</h2>
-    <div class="round__heats" *ngFor="let heat of heats">
-        <h3>Heat {{heat.id}}</h3>
-        <div cdkDropList [cdkDropListData]="heat.riders" class="round__riders"
-             (cdkDropListDropped)="drop($event)">
-            <div class="round__riders__single-rider" *ngFor="let rider of heat.riders" cdkDrag>{{rider}}</div>
+<div cdkDropListGroup class="container">
+    <mat-card class="round">
+        <div class="round__header">
+            <h1>Round {{roundNumber}}</h1>
         </div>
-    </div>
+        <div class="round__container">
+            <div class="round__container__element">
+                <h2 *ngIf="riders.length > 0">Unassigned riders</h2>
+                <div cdkDropList [cdkDropListData]="riders" class="round__riders"
+                     (cdkDropListDropped)="drop($event)" id="unassignedRiders">
+                    <div class="round__riders__single-rider" *ngFor="let rider of riders" cdkDrag>{{rider}}</div>
+                </div>
+            </div>
+            <div class="round__container__element">
+                <h2>Heats</h2>
+                <ng-container *ngFor="let heat of heats">
+<!--                    <h3>Heat {{heat.id}}</h3>-->
+                    <div cdkDropList [cdkDropListData]="heat.riders" class="round__riders"
+                         (cdkDropListDropped)="drop($event)">
+                        <div class="round__riders__single-rider" *ngFor="let rider of heat.riders"
+                             cdkDrag>{{rider}}</div>
+                        <div class="round__riders__single-rider" *ngIf="!heat.riders.length">Placeholder</div>
+                    </div>
+                </ng-container>
+            </div>
+        </div>
+    </mat-card>
 </div>

@@ -1,18 +1,6 @@
-.dropzone{
+.competition-container{
     display: flex;
-    flex-direction: row;
-
-    &__registered{
-        margin: 1rem;
-        padding: 1rem;
-        width: 300px;
-        background: lightgrey;
-    }
-
-    &__qualification{
-        margin: 1rem;
-        padding: 1rem;
-        width: 300px;
-        background: darkgrey;
-    }
+    padding: 2rem;
+    overflow-x: scroll;
+    height: calc(100vh - 64px);
 }

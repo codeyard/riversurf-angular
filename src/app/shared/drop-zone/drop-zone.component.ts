@@ -21,6 +21,9 @@ export class DropZoneComponent implements OnInit, OnChanges {
     dropSlots: number[] = new Array(this.itemLimit);
 
     constructor() {
+        for(let i = 0; i < this.itemLimit; i++){
+            this.dropSlots[i] = i;
+        }
     }
 
     ngOnInit(): void {
@@ -45,13 +48,13 @@ export class DropZoneComponent implements OnInit, OnChanges {
             // extending
             if (this.dropSlots.length < this.itemLimit) {
                 for (let i = this.dropSlots.length; i < this.itemLimit; i++) {
-                    this.dropSlots.push(0);
+                    this.dropSlots.push(i);
                 }
             }
         }
     }
 
-    drop(event: CdkDragDrop<DropZoneItemComponent[]>) {
+    drop(event: CdkDragDrop<number[], any>) {
         moveItemInArray(event.container.data, event.previousIndex, event.currentIndex);
     }
 }

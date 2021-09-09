@@ -1,9 +1,9 @@
-<div class="dropzone" cdkDropList (cdkDropListDropped)="drop($event)">
-    <div class="dropzone__item" cdkDrag *ngFor="let dropSlot of dropSlots; let i = index">
+<div class="dropzone" cdkDropList (cdkDropListDropped)="drop($event)" [cdkDropListData]="dropSlots">
+    <div class="dropzone__item" cdkDrag [cdkDragData]="dropSlot" *ngFor="let dropSlot of dropSlots; let i = index">
         <rs-drop-zone-item>
             <ng-template rs-drop-zone-item-content>
                 <mat-card>
-                    Index: {{i}}
+                    Index: {{i}} Value: {{dropSlot}}
                 </mat-card>
             </ng-template>
         </rs-drop-zone-item>

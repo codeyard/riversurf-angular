@@ -14,7 +14,7 @@
             <div class="round__container__element">
                 <h2>Heats</h2>
                 <ng-container *ngFor="let heat of heats">
-<!--                    <h3>Heat {{heat.id}}</h3>-->
+                    <h3>Heat {{heat.id}}</h3>
                     <div cdkDropList [cdkDropListData]="heat.riders" class="round__riders"
                          (cdkDropListDropped)="drop($event)">
                         <div class="round__riders__single-rider" *ngFor="let rider of heat.riders"

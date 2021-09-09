@@ -1,1 +1,15 @@
-<p>round works!</p>
+<div cdkDropListGroup class="round">
+    <h2 *ngIf="riders.length > 0">Unassigned riders</h2>
+    <div cdkDropList [cdkDropListData]="riders" class="round__riders"
+         (cdkDropListDropped)="drop($event)" id="unassignedRiders">
+        <div class="round__riders__single-rider" *ngFor="let rider of riders" cdkDrag>{{rider}}</div>
+    </div>
+    <h2>Heats</h2>
+    <div class="round__heats" *ngFor="let heat of heats">
+        <h3>Heat {{heat.id}}</h3>
+        <div cdkDropList [cdkDropListData]="heat.riders" class="round__riders"
+             (cdkDropListDropped)="drop($event)">
+            <div class="round__riders__single-rider" *ngFor="let rider of heat.riders" cdkDrag>{{rider}}</div>
+        </div>
+    </div>
+</div>

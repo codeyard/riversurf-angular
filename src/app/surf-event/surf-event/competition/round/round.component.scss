@@ -1,0 +1,23 @@
+.round{
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    padding: 0.2rem;
+
+    &__riders{
+        padding: 0.2rem;
+        background: lightblue;
+
+        &__single-rider{
+            padding: 0.2rem;
+            background: deepskyblue;
+        }
+
+    }
+
+    &__heats{
+
+        padding: 0.2rem;
+        background: lightcyan;
+    }
+}

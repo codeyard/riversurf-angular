@@ -4,6 +4,7 @@ import {Rider} from "../models/rider.model";
 import {BehaviorSubject, Observable, of} from "rxjs";
 import {AppConfigService} from "./app-config.service";
 import {map} from "rxjs/operators";
+import {SnackbarService} from "./snackbar.service";
 
 @Injectable({
     providedIn: 'root'
@@ -15,7 +16,7 @@ export class RidersService {
     private ridersData = new BehaviorSubject<Rider[]>([]);
     private riders$ = this.ridersData.asObservable();
 
-    constructor(private httpClient: HttpClient, private appConfigService: AppConfigService) {
+    constructor(private httpClient: HttpClient, private appConfigService: AppConfigService, private snackBarService: SnackbarService) {
     }
 
     getRiders(): Observable<Rider[]> {
@@ -26,7 +27,6 @@ export class RidersService {
                 console.log('ERROR loading riders data :-(', error)
             }
         )
-
         return this.riders$;
     }
 
@@ -37,6 +37,17 @@ export class RidersService {
             ? of(this.ridersData.value[index])
             : this.fetchRider(id);
 
+    }
+
+    getRandomRiders(amount?: number): Observable<Rider[]> {
+        amount = amount || 5;
+
+        let requestUrl = this.PROTOCOL_HTTPS
+            + this.appConfigService.getHostName()
+            + this.PATH_ENDPOINT_RANDOM
+            + '?amount=' + amount;
+
+        return this.httpClient.get<Rider[]>(requestUrl)
     }
 
     private fetchRider(id: string): Observable<Rider> {
@@ -54,41 +65,4 @@ export class RidersService {
                 map(riders => riders.filter(rider => rider.id === id)[0])
             )
     }
-
-    getRandomRiders(amount?: number): Observable<Rider[]> {
-        amount = amount || 5;
-
-        let requestUrl = this.PROTOCOL_HTTPS
-            + this.appConfigService.getHostName()
-            + this.PATH_ENDPOINT_RANDOM
-            + '?amount=' + amount;
-
-        return this.httpClient.get<Rider[]>(requestUrl)
-    }
-
-
 }
-
-
-// interface StateSyncer {
-//     state: {
-//         ridersData: Rider[],
-//     }
-// }
-//
-// export abstract class Syncer {
-//     state: any;
-//
-//     constructor(private httpClient: HttpClient) {
-//
-//     }
-//
-//     get() {
-//
-//     }
-//
-//     post() {
-//
-//     }
-//
-// }

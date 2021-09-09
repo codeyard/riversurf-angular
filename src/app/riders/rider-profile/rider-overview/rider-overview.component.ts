@@ -1,4 +1,4 @@
-import {Component, Input, OnInit} from '@angular/core';
+import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 import {Rider} from "../../../core/models/rider.model";
 
 @Component({
@@ -7,7 +7,6 @@ import {Rider} from "../../../core/models/rider.model";
     styleUrls: ['./rider-overview.component.scss']
 })
 export class RiderOverviewComponent implements OnInit {
-
     @Input() rider !: Rider;
 
     constructor() {

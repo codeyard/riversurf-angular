@@ -7,7 +7,7 @@ import {
     QueryList, SimpleChanges, TemplateRef, ViewChild, ViewChildren
 } from '@angular/core';
 import {CdkDragDrop, moveItemInArray} from "@angular/cdk/drag-drop";
-import {DropZoneItemComponent} from "./drop-zone-item/drop-zone-item.component";
+import {DropZoneContentComponent} from "./drop-zone-content/drop-zone-content.component";
 
 @Component({
     selector: 'rs-drop-zone',

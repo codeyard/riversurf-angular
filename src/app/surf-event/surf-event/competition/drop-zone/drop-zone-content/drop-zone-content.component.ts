@@ -9,24 +9,23 @@ import {
 @Directive({
     selector: '[rs-drop-zone-item-content]'
 })
-export class DropZoneItemContentDirective {
+export class DropZoneContentDirective {
     constructor(public templateRef: TemplateRef<unknown>) {
     }
 }
 
 @Component({
     selector: 'rs-drop-zone-item',
-    templateUrl: './drop-zone-item.component.html',
-    styleUrls: ['./drop-zone-item.component.scss']
+    templateUrl: './drop-zone-content.component.html',
+    styleUrls: ['./drop-zone-content.component.scss']
 })
-export class DropZoneItemComponent implements OnInit {
+export class DropZoneContentComponent implements OnInit {
 
-    @ContentChild(DropZoneItemContentDirective) content !: DropZoneItemContentDirective;
+    @ContentChild(DropZoneContentDirective) content !: DropZoneContentDirective;
 
     constructor() {
     }
 
     ngOnInit(): void {
     }
-
 }

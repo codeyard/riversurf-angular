@@ -1,5 +1,4 @@
 import {Role} from "./role.type";
-import {Rider} from "./rider.model";
 
 export interface User {
     id: string;
@@ -8,6 +7,7 @@ export interface User {
     email: string;
     role: Role;
     profile?: string;
+    favouriteRiders: string[];
 }
 
 export const examplejudge: User = {
@@ -15,5 +15,6 @@ export const examplejudge: User = {
     id: "example",
     password: "",
     role: 'judge',
-    userName: "mikimaus"
+    userName: "mikimaus",
+    favouriteRiders: []
 }

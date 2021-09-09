@@ -21,7 +21,7 @@ export class FavoriteRiderComponent implements OnInit, OnDestroy {
 
     ngOnInit(): void {
         this.favoriteRiderSubscription = this.userService.getFavoriteRiders().pipe(
-            map(riders => riders.filter(rider => rider.id === this.rider.id)[0]),
+            map(riders => riders.filter(riderId => riderId === this.rider.id)[0]),
             map(rider => !!rider)
         ).subscribe(
             val => this.isFavoriteRider = val

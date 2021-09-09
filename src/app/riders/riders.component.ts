@@ -5,8 +5,8 @@ import {MatPaginator} from "@angular/material/paginator";
 import {MatSort, Sort, SortDirection} from "@angular/material/sort";
 import {ActivatedRoute, Router} from "@angular/router";
 import {RidersService} from "../core/services/riders.service";
-import {pipe, Subscription} from "rxjs";
-import {filter} from "rxjs/operators";
+import {Subscription} from "rxjs";
+import {filter, switchMap} from "rxjs/operators";
 import {SnackbarService} from "../core/services/snackbar.service";
 import {UserService} from "../core/services/user.service";
 
@@ -91,7 +91,10 @@ export class RidersComponent implements OnInit, AfterViewInit, OnDestroy {
                 }
             );
 
-        this.favoriteRidersSubscription = this.userService.getFavoriteRiders().pipe().subscribe(
+        this.favoriteRidersSubscription = this.userService.getFavoriteRiders()
+            .pipe(
+            switchMap(riderId => this.ridersService.getRidersByIds(riderId))
+        ).subscribe(
             val => this.favoriteRiders = val
         );
 

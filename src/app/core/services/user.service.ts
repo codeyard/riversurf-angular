@@ -22,7 +22,7 @@ export class UserService {
             this.snackBarService.send(`You'll no longer get updated about "${rider.nickName}"!`, "success");
         } else {
             this.favoriteRiders.next([...this.favoriteRiders.value, rider]);
-            this.snackBarService.send(`You'll get updated about ${rider.nickName}!`, "success");
+            this.snackBarService.send(`You'll get updated about "${rider.nickName}"!`, "success");
         }
     }
 

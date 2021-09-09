@@ -12,11 +12,6 @@ import {SharedModule} from "../shared/shared.module";
 import {MatChipsModule} from "@angular/material/chips";
 import {FormsModule} from "@angular/forms";
 import {DragDropModule} from "@angular/cdk/drag-drop";
-import {DropZoneComponent} from "./surf-event/competition/drop-zone/drop-zone.component";
-import {
-    DropZoneContentComponent,
-    DropZoneContentDirective
-} from "./surf-event/competition/drop-zone/drop-zone-content/drop-zone-content.component";
 import { RoundComponent } from './surf-event/competition/round/round.component';
 
 
@@ -25,9 +20,6 @@ import { RoundComponent } from './surf-event/competition/round/round.component';
         SurfEventComponent,
         CompetitionComponent,
         WeatherComponent,
-        DropZoneComponent,
-        DropZoneContentComponent,
-        DropZoneContentDirective,
         RoundComponent
     ],
     imports: [

@@ -11,13 +11,22 @@ import {CompetitionComponent} from "./surf-event/competition/competition.compone
 import {SharedModule} from "../shared/shared.module";
 import {MatChipsModule} from "@angular/material/chips";
 import {FormsModule} from "@angular/forms";
+import {DragDropModule} from "@angular/cdk/drag-drop";
+import {DropZoneComponent} from "./surf-event/competition/drop-zone/drop-zone.component";
+import {
+    DropZoneItemComponent,
+    DropZoneItemContentDirective
+} from "./surf-event/competition/drop-zone/drop-zone-item/drop-zone-item.component";
 
 
 @NgModule({
     declarations: [
         SurfEventComponent,
         CompetitionComponent,
-        WeatherComponent
+        WeatherComponent,
+        DropZoneComponent,
+        DropZoneItemComponent,
+        DropZoneItemContentDirective
     ],
     imports: [
         SurfEventRoutingModule,
@@ -28,7 +37,8 @@ import {FormsModule} from "@angular/forms";
         MatGridListModule,
         MatIconModule,
         MatChipsModule,
-        FormsModule
+        FormsModule,
+        DragDropModule
     ]
 })
 export class SurfEventModule {

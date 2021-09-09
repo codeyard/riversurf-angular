@@ -1,6 +1,7 @@
 import {Component, Input, OnInit} from '@angular/core';
 import {Heat} from "../../../../core/models/competition.model";
 import {CdkDragDrop, moveItemInArray, transferArrayItem} from "@angular/cdk/drag-drop";
+import {SnackbarService} from "../../../../core/services/snackbar.service";
 
 export interface HeatModel{
     id: number;
@@ -21,7 +22,7 @@ export class RoundComponent implements OnInit {
 
     heats : HeatModel[] = [];
 
-    constructor() {
+    constructor(private snackbarService: SnackbarService) {
     }
 
     ngOnInit(): void {
@@ -39,14 +40,19 @@ export class RoundComponent implements OnInit {
         console.log(`event`, event);
         if (event.previousContainer === event.container) {
             moveItemInArray(event.container.data, event.previousIndex, event.currentIndex);
+            return
         } else {
             if(event.container.data.length !== this.heatSize || event.container.id === 'unassignedRiders') {
                 transferArrayItem(event.previousContainer.data,
                     event.container.data,
                     event.previousIndex,
                     event.currentIndex);
+                this.snackbarService.send(`Successfully Assigned!`, "success")
+                return
             }
         }
+        this.snackbarService.send(`Heat already full!`, "warning")
+
         console.log(`heats`, this.heats);
     }
 }

@@ -2,17 +2,17 @@ import {Role} from "./role.type";
 import {Rider} from "./rider.model";
 
 export interface User {
-    id: number;
+    id: string;
     userName: string;
     password: string;
     email: string;
     role: Role;
-    profile?: Rider;
+    profile?: string;
 }
 
 export const examplejudge: User = {
     email: "miki@miki.ch",
-    id: 0,
+    id: "example",
     password: "",
     role: 'judge',
     userName: "mikimaus"

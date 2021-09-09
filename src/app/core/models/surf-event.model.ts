@@ -13,13 +13,13 @@ export interface SurfEvent {
     locationLat: number;
     locationLong: number;
     hashTag: string;
-    competitions: Competition[];
-    judge: User;
-    organizer: User;
+    competitions: string[];
+    judge: string;
+    organizer: string;
 }
 
 export const exampleEvent: SurfEvent = {
-    competitions: [exampleComp],
+    competitions: ["comp1"],
     description: "Das ist die Beschreibung vom Event",
     endDateTime: new Date(),
     hashTag: "#riversurf, #thun",

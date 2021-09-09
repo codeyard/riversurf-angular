@@ -17,10 +17,10 @@
     </mat-card-content>
     <mat-chip-list aria-label="Divisions">
         <mat-chip
-            *ngFor="let competition of surfEvent.competitions"
-            [color]="getColorOfDivision(competition.division)"
+            *ngFor="let division of surfEvent.divisions"
+            [color]="getColorOfDivision(division)"
             selected>
-            {{competition.division}}
+            {{division}}
         </mat-chip>
 
     </mat-chip-list>

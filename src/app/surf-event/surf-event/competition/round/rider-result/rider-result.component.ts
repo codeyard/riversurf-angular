@@ -15,17 +15,17 @@ export class RiderResultComponent implements OnInit, OnDestroy {
     @Input() riderId!: string;
     @Input() riderColorIndex!: number;
 
-    @Input() resultType : RiderResultType = 'default';
+    @Input() resultType: RiderResultType = 'default';
 
     rider ?: Rider;
 
     private riderSubscription ?: Subscription;
 
-    constructor(private riderService : RidersService) {
+    constructor(private riderService: RidersService) {
     }
 
     ngOnInit(): void {
-        this.riderSubscription = this.riderService.getRider(this.riderId).subscribe(rider=>this.rider = rider);
+        this.riderSubscription = this.riderService.getRider(this.riderId).subscribe(rider => this.rider = rider);
     }
 
     ngOnDestroy(): void {

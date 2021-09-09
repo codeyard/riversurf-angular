@@ -1,22 +1,23 @@
-import { Pipe, PipeTransform } from '@angular/core';
+import {Pipe, PipeTransform} from '@angular/core';
 
 @Pipe({
-  name: 'riderColor'
+    name: 'riderColor'
 })
 export class RiderColorPipe implements PipeTransform {
 
-  transform(value: number): string {
-      switch (value){
-          default:
-          case 0:
-              return "yellow";
-          case 1:
-              return "red";
-          case 2:
-              return "blue";
-          case 3:
-              return "green";
-      }
-  }
+    transform(value: number): string {
+        switch (value) {
+            default:
+                return "#B0BEC5";
+            case 0:
+                return "#FDD835";
+            case 1:
+                return "#F4511E";
+            case 2:
+                return "#2196F3";
+            case 3:
+                return "#4CAF50";
+        }
+    }
 
 }

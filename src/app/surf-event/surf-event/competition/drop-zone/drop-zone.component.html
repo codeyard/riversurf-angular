@@ -1,10 +1,10 @@
-<div class="dropzone" cdkDropList (cdkDropListDropped)="drop($event)" [cdkDropListData]="dropSlots">
-    <div class="dropzone__item" cdkDrag [cdkDragData]="dropSlot" *ngFor="let dropSlot of dropSlots; let i = index">
+<div class="dropzone" cdkDropList (cdkDropListDropped)="drop($event)" [cdkDropListData]="dropZoneItems">
+    <div class="dropzone__item" cdkDrag [cdkDragData]="dropItem" *ngFor="let dropItem of dropZoneItems; let i = index">
         <rs-drop-zone-item>
             <ng-template rs-drop-zone-item-content>
-                <mat-icon>waves</mat-icon>
                 <mat-card>
-                    Index: {{i}} Value: {{dropSlot}}
+                    Id: {{dropItem.id}}
+                    Type: {{dropItem.type}}
                 </mat-card>
             </ng-template>
         </rs-drop-zone-item>

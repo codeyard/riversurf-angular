@@ -1,22 +1,4 @@
 <h1>Competition</h1>
 <div class="dropzone">
-    <div class="dropzone__registered">
-        <input type="number" min="0" max="32" [ngModel]="registered.itemLimit" />
-        <h2>Registered</h2>
-        <rs-drop-zone #registered>
-            <mat-card>
-                I am a Rider
-            </mat-card>
-            <mat-card>
-                I am a Rider too
-            </mat-card>
-            <mat-card>
-                I am also a Rider
-            </mat-card>
-        </rs-drop-zone>
-    </div>
-    <div class="dropzone__qualification">
-        <h2>Qualification</h2>
-        <rs-drop-zone [itemLimit]="8"></rs-drop-zone>
-    </div>
+    <rs-round *ngFor="let round of rounds" [riders]="round.riders" [roundNumber]="round.id"></rs-round>
 </div>

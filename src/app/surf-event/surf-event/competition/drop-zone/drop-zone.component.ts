@@ -8,28 +8,23 @@ import {
 } from '@angular/core';
 import {CdkDragDrop, moveItemInArray} from "@angular/cdk/drag-drop";
 import {DropZoneContentComponent} from "./drop-zone-content/drop-zone-content.component";
+import {DropZoneItemModel, placeholderDropZoneItem} from "./drop-zone-item.model";
 
 @Component({
     selector: 'rs-drop-zone',
     templateUrl: './drop-zone.component.html',
     styleUrls: ['./drop-zone.component.scss']
 })
-export class DropZoneComponent implements OnInit, OnChanges, AfterContentInit {
+export class DropZoneComponent implements OnInit, OnChanges {
 
     @Input() itemLimit: number = 4;
 
-    dropSlots: number[] = new Array(this.itemLimit);
-
-    @ViewChild('placeholder') placeholderItem !: ElementRef;
+    dropZoneItems : DropZoneItemModel[] = [];
 
     constructor() {
         for(let i = 0; i < this.itemLimit; i++){
-            this.dropSlots[i] = i;
+            this.dropZoneItems[i] = {...placeholderDropZoneItem};
         }
-    }
-
-    ngAfterContentInit(): void {
-        console.log(`placeholder`, this.placeholderItem);
     }
 
     ngOnInit(): void {
@@ -37,30 +32,32 @@ export class DropZoneComponent implements OnInit, OnChanges, AfterContentInit {
 
     ngOnChanges(changes: SimpleChanges): void {
         console.log(`Changes!`, changes);
-        if (changes.itemLimit.currentValue != changes.itemLimit.previousValue && changes.itemLimit.currentValue != undefined && this.dropSlots.length != this.itemLimit) {
+        if (changes.itemLimit.currentValue != changes.itemLimit.previousValue &&
+            changes.itemLimit.currentValue != undefined
+            && this.dropZoneItems.length != this.itemLimit) {
 
             // reduce
-            if (this.dropSlots.length > this.itemLimit) {
+            if (this.dropZoneItems.length > this.itemLimit) {
 
                 // remove all placeholders (will be added at extending)
-                //this.slots = this.slots.filter(x=>x.isPlaceholder());
+                this.dropZoneItems = this.dropZoneItems.filter(x=>x.id===-1);
 
                 // over limit even after removing the placeholders?
-                if (this.dropSlots.length > this.itemLimit) {
-                    this.dropSlots.length = this.itemLimit;
+                if (this.dropZoneItems.length > this.itemLimit) {
+                    this.dropZoneItems.length = this.itemLimit;
                 }
             }
 
             // extending
-            if (this.dropSlots.length < this.itemLimit) {
-                for (let i = this.dropSlots.length; i < this.itemLimit; i++) {
-                    this.dropSlots.push(i);
+            if (this.dropZoneItems.length < this.itemLimit) {
+                for (let i = this.dropZoneItems.length; i < this.itemLimit; i++) {
+                    this.dropZoneItems.push({...placeholderDropZoneItem});
                 }
             }
         }
     }
 
-    drop(event: CdkDragDrop<number[], any>) {
+    drop(event: CdkDragDrop<DropZoneItemModel[], any>) {
         moveItemInArray(event.container.data, event.previousIndex, event.currentIndex);
     }
 }

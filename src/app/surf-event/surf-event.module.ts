@@ -17,6 +17,7 @@ import {
     DropZoneContentComponent,
     DropZoneContentDirective
 } from "./surf-event/competition/drop-zone/drop-zone-content/drop-zone-content.component";
+import { RoundComponent } from './surf-event/competition/round/round.component';
 
 
 @NgModule({
@@ -26,7 +27,8 @@ import {
         WeatherComponent,
         DropZoneComponent,
         DropZoneContentComponent,
-        DropZoneContentDirective
+        DropZoneContentDirective,
+        RoundComponent
     ],
     imports: [
         SurfEventRoutingModule,

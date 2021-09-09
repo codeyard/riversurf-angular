@@ -10,6 +10,8 @@ import {CarouselComponent, CarouselItemDirective} from "./carousel/carousel.comp
 import {ErrorComponent} from "./error/error.component";
 import {SlugifyPipe} from "./pipes/slugify.pipe";
 import {HammerModule} from "@angular/platform-browser";
+import { FavoriteRiderComponent } from './favorite-rider/favorite-rider.component';
+import {MatButtonModule} from "@angular/material/button";
 
 
 @NgModule({
@@ -20,14 +22,16 @@ import {HammerModule} from "@angular/platform-browser";
         RiderCardComponent,
         TimeLineComponent,
         TimeLineLineComponent,
-        SlugifyPipe
+        SlugifyPipe,
+        FavoriteRiderComponent
     ],
     imports: [
         CommonModule,
         MatCardModule,
         MatIconModule,
         RouterModule,
-        HammerModule
+        HammerModule,
+        MatButtonModule
     ],
     exports: [
         CarouselComponent,
@@ -35,7 +39,8 @@ import {HammerModule} from "@angular/platform-browser";
         ErrorComponent,
         RiderCardComponent,
         TimeLineComponent,
-        SlugifyPipe
+        SlugifyPipe,
+        FavoriteRiderComponent
     ]
 })
 export class SharedModule {

@@ -5,9 +5,10 @@ import {MatPaginator} from "@angular/material/paginator";
 import {MatSort, Sort, SortDirection} from "@angular/material/sort";
 import {ActivatedRoute, Router} from "@angular/router";
 import {RidersService} from "../core/services/riders.service";
-import {Subscription} from "rxjs";
+import {pipe, Subscription} from "rxjs";
 import {filter} from "rxjs/operators";
 import {SnackbarService} from "../core/services/snackbar.service";
+import {UserService} from "../core/services/user.service";
 
 @Component({
     selector: 'rs-riders',
@@ -16,10 +17,11 @@ import {SnackbarService} from "../core/services/snackbar.service";
 })
 export class RidersComponent implements OnInit, AfterViewInit, OnDestroy {
     displayedColumns: string[] = ['avatar', 'name', 'nickName', 'division', 'action'];
-    dataSource: MatTableDataSource<Rider> = new MatTableDataSource<Rider>();
     ridersSubscription?: Subscription;
     ridersData: Rider[] = [];
+    dataSource: MatTableDataSource<Rider> = new MatTableDataSource(this.ridersData);
     routeSubscription?: Subscription;
+    favoriteRidersSubscription?: Subscription;
     favoriteRiders: Rider[] = [];
     isLoading = true;
 
@@ -29,8 +31,8 @@ export class RidersComponent implements OnInit, AfterViewInit, OnDestroy {
     division: string = '';
 
     filter: string = '';
-    pageIndex?: number;
-    pageSize!: number;
+    pageIndex: number = 0;
+    pageSize: number = 10;
     length!: number;
     sortBy = 'name';
     sortDir: SortDirection = 'asc';
@@ -40,6 +42,7 @@ export class RidersComponent implements OnInit, AfterViewInit, OnDestroy {
     kidCount: number = 0;
 
     constructor(private ridersService: RidersService,
+                private userService: UserService,
                 private router: Router,
                 private route: ActivatedRoute,
                 private snackBarService: SnackbarService) {
@@ -54,10 +57,10 @@ export class RidersComponent implements OnInit, AfterViewInit, OnDestroy {
                 this.division = params['division'];
             }
             if (params['page']) {
-                this.pageIndex = params['page'];
+                this.pageIndex = params['page'] as number;
             }
             if (params['pageSize']) {
-                this.pageSize = params['pageSize'];
+                this.pageSize = params['pageSize'] as number;
             }
             if (params['sortBy']) {
                 this.sortBy = params['sortBy'];
@@ -65,7 +68,9 @@ export class RidersComponent implements OnInit, AfterViewInit, OnDestroy {
             if (params['sortDir']) {
                 this.sortDir = params['sortDir'];
             }
-            this.initTableData();
+            if (Object.keys(params).length) {
+                this.initTableData();
+            }
         });
 
         this.ridersSubscription = this.ridersService.getRiders()
@@ -77,8 +82,6 @@ export class RidersComponent implements OnInit, AfterViewInit, OnDestroy {
                     this.isLoading = false;
                     this.ridersData = riders;
                     this.initTableData();
-                    this.length = this.dataSource.data.length;
-                    this.updateTable();
 
                 },
                 error => {
@@ -87,6 +90,16 @@ export class RidersComponent implements OnInit, AfterViewInit, OnDestroy {
                     console.log('ERROR loading riders data :-(', error)
                 }
             );
+
+        this.favoriteRidersSubscription = this.userService.getFavoriteRiders().pipe().subscribe(
+            val => this.favoriteRiders = val
+        );
+
+        this.dataSource.filterPredicate = this.createFilterPredicate();
+    }
+
+    ngAfterViewInit() {
+        this.updateTable();
     }
 
     ngOnDestroy(): void {
@@ -94,18 +107,16 @@ export class RidersComponent implements OnInit, AfterViewInit, OnDestroy {
         this.ridersSubscription?.unsubscribe();
     }
 
-    ngAfterViewInit() {
-        this.updateTable();
-    }
-
     initTableData() {
         this.division
             ? this.dataSource.data = this.ridersData.filter(rider => rider.division === this.division)
             : this.dataSource.data = this.ridersData
         ;
+        this.length = this.dataSource.data.length;
         this.maleCount = this.ridersData.filter(rider => rider.division === 'male').length;
         this.femaleCount = this.ridersData.filter(rider => rider.division === 'female').length;
         this.kidCount = this.ridersData.filter(rider => rider.division === 'kid').length;
+        this.updateTable();
     }
 
     applyFilter(event: Event) {
@@ -180,20 +191,11 @@ export class RidersComponent implements OnInit, AfterViewInit, OnDestroy {
         }).then();
     }
 
-    // TODO: add/read favorite riders to/from storage
-    toggleFavorites(rider: Rider) {
-        const indexOfRider = this.favoriteRiders.findIndex(elementRider => elementRider.id === rider.id);
-
-        indexOfRider > -1
-            ? this.favoriteRiders.splice(indexOfRider, 1)
-            : this.favoriteRiders.push(rider);
-    }
-
-    isFavoriteRider(riderId: string): boolean {
-        return this.favoriteRiders.findIndex(elementRider => elementRider.id === riderId) > -1;
-    }
-
     private updateTable(): void {
+        if (this.paginator) {
+            this.paginator.pageIndex = this.pageIndex;
+            this.paginator.pageSize = this.pageSize;
+        }
         this.dataSource.paginator = this.paginator;
         this.dataSource.sort = this.sort;
 
@@ -202,4 +204,21 @@ export class RidersComponent implements OnInit, AfterViewInit, OnDestroy {
         }
     }
 
+    private createFilterPredicate() {
+        const filterFunction = function(data: any, filter: string): boolean {
+            let text =
+                data.firstName.toLowerCase()
+                + data.lastName.toLowerCase()
+                + data.nickName.toLowerCase()
+                + data.division.toLowerCase();
+
+            text = text.split(' ').join('');
+            console.log(text)
+
+            const searchParts: string[] = filter.toLowerCase().split(' ');
+            return !searchParts.some(word => text.indexOf(word) === -1);
+        }
+
+        return filterFunction;
+    }
 }

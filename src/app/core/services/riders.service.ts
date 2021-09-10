@@ -3,39 +3,70 @@ import {HttpClient} from "@angular/common/http";
 import {Rider} from "../models/rider.model";
 import {BehaviorSubject, from, Observable, of} from "rxjs";
 import {AppConfigService} from "./app-config.service";
-import {map, switchMap, toArray} from "rxjs/operators";
-import {SnackbarService} from "./snackbar.service";
+import {filter, map, switchMap, toArray} from "rxjs/operators";
+import {DexieService} from "./dexie.service";
+import {NetworkStatusService, NetworkStatus} from "./network-status.service";
+import {GenericCollectionResponseModel} from "../models/generic-collection-response.model";
 
+/**
+ * Riders are versioned by collection, we track the version of the whole collection
+ * instead of one individual rider
+ * if a rider is added or updated in the packend, the version of the whole riders collection is increased
+ *
+ * Riders can at the moment (this is out of scope of this project) not be updated or added in the frontend
+ * so all changes come from the backend.
+ *
+ * If we want to add or update riders in the FE in the future, we allways first try to get the latest version of the
+ * Colleciton from the backend push oure changes back when updated...
+ */
 @Injectable({
     providedIn: 'root'
 })
 export class RidersService {
-    PROTOCOL_HTTPS = 'https://'
+    PROTOCOL_HTTPS = 'http://'
     PATH_ENDPOINT = '/api/riders';
-    PATH_ENDPOINT_RANDOM = this.PATH_ENDPOINT + '/random';
+
     private ridersData = new BehaviorSubject<Rider[]>([]);
     private riders$ = this.ridersData.asObservable();
 
-    constructor(private httpClient: HttpClient, private appConfigService: AppConfigService, private snackBarService: SnackbarService) {
+    private networkStatus = this.networkStatusService.getNetworkStatus();
+
+    dexieDB: any;
+
+    private ready = false;
+
+    constructor(
+        private httpClient: HttpClient,
+        private appConfigService: AppConfigService,
+        private dexieService: DexieService,
+        private networkStatusService: NetworkStatusService
+    ) {
+        this.dexieDB = dexieService.getDB();
+        this.dexieDB.riders.toArray().then((riders: Rider[]) => {
+            this.ready = true;
+            this.ridersData.next(riders);
+        });
+        this.networkStatus
+            .pipe(filter(status => status === 'ONLINE'))
+            .subscribe(status => {
+                console.log('We are back online, lets sync!');
+                //this.sync();
+            })
     }
 
     getRiders(): Observable<Rider[]> {
-        const requestUrl = this.PROTOCOL_HTTPS + this.appConfigService.getHostName() + this.PATH_ENDPOINT;
-        this.httpClient.get<Rider[]>(requestUrl).subscribe(
-            (responseData: Rider[]) => this.ridersData.next(responseData),
-            error => {
-                console.log('ERROR loading riders data :-(', error)
-            }
-        )
         return this.riders$;
     }
 
     getRider(id: string): Observable<Rider> {
         const index = this.ridersData.value.findIndex(rider => rider.id === id);
-
-        return index > -1
-            ? of(this.ridersData.value[index])
-            : this.fetchRider(id);
+        if(index === -1){
+            this.fetchAllRidersWithVersioning();
+        }
+        return this.riders$
+            .pipe(
+                map(riders => riders.filter(rider => rider.id === id)[0])
+            )
 
     }
 
@@ -49,27 +80,39 @@ export class RidersService {
     getRandomRiders(amount?: number): Observable<Rider[]> {
         amount = amount || 5;
 
-        let requestUrl = this.PROTOCOL_HTTPS
-            + this.appConfigService.getHostName()
-            + this.PATH_ENDPOINT_RANDOM
-            + '?amount=' + amount;
-
-        return this.httpClient.get<Rider[]>(requestUrl)
+        return this.riders$.pipe(
+            filter(() => this.ready),
+            map(riders => {
+                if (amount! >= riders.length) {
+                    return riders;
+                }
+                const randomRiders = new Set<Rider>();
+                for (let i = 0; i <= 200 && randomRiders.size < amount!; i++) {
+                    randomRiders.add(riders[Math.floor(Math.random() * riders.length)]);
+                }
+                return [...randomRiders];
+            }));
     }
 
-    private fetchRider(id: string): Observable<Rider> {
-        const requestUrl = this.PROTOCOL_HTTPS + this.appConfigService.getHostName() + this.PATH_ENDPOINT + '/' + id;
-        this.httpClient.get<Rider>(requestUrl)
-            .subscribe(
-                (responseData: Rider) => {
-                    this.ridersData.next([...this.ridersData.value, responseData])
+    private fetchAllRidersWithVersioning(): void {
+        const requestUrl = this.PROTOCOL_HTTPS + 'localhost:8080'/*this.appConfigService.getHostName()*/ + this.PATH_ENDPOINT;
+        this.httpClient.get<GenericCollectionResponseModel<Rider[]>>(requestUrl).subscribe(
+            (responseData: GenericCollectionResponseModel<Rider[]>) => {
+                if (responseData.version > 0) {
+                    responseData.payload.forEach(rider => {
+                        this.dexieDB.riders.put(rider).then(this.ridersData.next(this.dexieDB.riders.toArray()));
+                    })
+                    this.dexieDB.versions.put({
+                        topic: responseData.topic,
+                        version: responseData.version
+                    })
+                } else {
+                    console.log('our riders were up to date already')
                 }
-                ,
-                error => console.log('ERROR loading riders data :-(', error)
-            )
-        return this.riders$
-            .pipe(
-                map(riders => riders.filter(rider => rider.id === id)[0])
-            )
+            },
+            error => {
+                console.log('ERROR loading riders data :-(', error)
+            }
+        )
     }
 }

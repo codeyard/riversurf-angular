@@ -1,5 +1,5 @@
 import {Injectable} from '@angular/core';
-import {Subject} from "rxjs";
+import {BehaviorSubject, Subject} from "rxjs";
 
 export type NetworkStatus = 'ONLINE' | 'OFFLINE';
 
@@ -8,7 +8,7 @@ export type NetworkStatus = 'ONLINE' | 'OFFLINE';
 })
 export class NetworkStatusService {
 
-    private networkStatusSub = new Subject<NetworkStatus>();
+    private networkStatusSub = new BehaviorSubject<NetworkStatus>('OFFLINE');
     private networkStatus$ = this.networkStatusSub.asObservable();
 
     constructor() {

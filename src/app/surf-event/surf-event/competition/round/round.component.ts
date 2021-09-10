@@ -120,4 +120,14 @@ export class RoundComponent implements OnInit {
     moveToNextRound() {
         // TODO
     }
+
+    getHeatStatus(heat: HeatModel) {
+        if (heat.hasStopped) {
+            return "finished"
+        } else if (heat.hasStarted) {
+            return "surfing";
+        } else {
+            return "assigned"
+        }
+    }
 }

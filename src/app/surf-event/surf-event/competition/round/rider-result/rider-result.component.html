@@ -6,7 +6,8 @@
              [style.background-image]="'url(' + rider.profilePicture + ')'"
              [ngStyle]="{'border-color': riderColorIndex | riderColor}"
         ></div>
-        <mat-card-title class="rider__card__name"> {{rider.firstName}} {{rider.lastName}}</mat-card-title>
+        <mat-card-title class="rider__card__name"> {{rider.firstName}} {{rider.lastName}}
+        </mat-card-title>
     </mat-card-header>
     <mat-card-content class="rider__card__content">
         <div [ngSwitch]="resultType">
@@ -16,12 +17,14 @@
             <div *ngSwitchCase="'assigned'" class="rider__card__type">
                 <mat-icon aria-hidden="false" aria-label="assigned" class="rider__card__icon">thumb_up_alt</mat-icon>
             </div>
-            <div *ngSwitchCase="'locked'" class="rider__card__type">
-                <mat-icon aria-hidden="false" aria-label="locked" class="rider__card__icon">lock</mat-icon>
+            <div *ngSwitchCase="'surfing'" class="rider__card__type">
+                <mat-icon aria-hidden="false" aria-label="surfing" class="rider__card__icon">surfing</mat-icon>
             </div>
             <div *ngSwitchCase="'finished'" class="rider__card__type">
                 <mat-icon aria-hidden="false" aria-label="finished" class="rider__card__icon">verified</mat-icon>
+                <input type="number" />
             </div>
         </div>
     </mat-card-content>
+
 </mat-card>

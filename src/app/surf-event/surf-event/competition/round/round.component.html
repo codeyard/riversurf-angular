@@ -41,7 +41,7 @@
                          (cdkDropListDropped)="drop($event)">
                         <div class="round__riders__single-rider" *ngFor="let rider of heat.riders; let i = index"
                              cdkDrag>
-                            <rs-rider-result [riderId]="rider" resultType="assigned"
+                            <rs-rider-result [riderId]="rider" [resultType]="getHeatStatus(heat)"
                                              [riderColorIndex]=i></rs-rider-result>
                         </div>
                         <div class="round__riders__single-rider--placeholder" *ngIf="!heat.riders.length">

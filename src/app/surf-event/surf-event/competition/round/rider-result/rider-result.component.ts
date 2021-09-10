@@ -3,7 +3,7 @@ import {RidersService} from "../../../../../core/services/riders.service";
 import {Rider} from "../../../../../core/models/rider.model";
 import {Subscription} from "rxjs";
 
-export type RiderResultType = 'default' | 'assigned' | 'locked' | 'finished';
+export type RiderResultType = 'default' | 'assigned' | 'surfing' | 'finished';
 
 @Component({
     selector: 'rs-rider-result',

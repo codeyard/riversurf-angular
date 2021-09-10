@@ -50,7 +50,7 @@ export class RoundComponent implements OnInit {
                 return
             }
         }
-        this.snackbarService.send(`Sorry, this heat is already full!`, "warning")
+        this.snackbarService.send(`Sorry, this heat is already complete!`, "warning")
 
         console.log(`heats`, this.heats);
     }

@@ -4,6 +4,16 @@
              class="rider__card__header__image"
              [style.background-image]="'url(' + rider.profilePicture + ')'"></div>
         <mat-card-title>{{ rider.firstName }} {{ rider.lastName }}</mat-card-title>
-        <mat-card-subtitle>{{ rider.division | titlecase }}</mat-card-subtitle>
+        <mat-card-subtitle class="rider__card__header__subtitle">
+            <span title="{{ rider.division | titlecase }}">
+                <mat-icon *ngIf="rider.division === 'male'">male</mat-icon>
+                <mat-icon *ngIf="rider.division === 'female'">female</mat-icon>
+                <mat-icon *ngIf="rider.division === 'kid'">child_care</mat-icon>
+            </span>
+            {{ rider.nickName }}
+        </mat-card-subtitle>
     </mat-card-header>
+    <mat-card-content class="rider__card__content">
+        <rs-favorite-rider [rider]="rider"></rs-favorite-rider>
+    </mat-card-content>
 </mat-card>

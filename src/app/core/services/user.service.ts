@@ -49,7 +49,7 @@ export class UserService {
             this.snackBarService.send(`You'll no longer get updated about "${rider.nickName}"!`, "success");
         } else {
             this.user.next({...this.user.getValue(), favouriteRiders: [...this.user.getValue().favouriteRiders, rider.id]});
-            this.snackBarService.send(`You'll get updated about ${rider.nickName}!`, "success");
+            this.snackBarService.send(`You'll get updated about "${rider.nickName}"!`, "success");
         }
     }
 

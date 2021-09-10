@@ -3,7 +3,7 @@
         (panleft)="onPan($event)"
         (panright)="onPan($event)"
         (panend)="onPanEnd($event)"
-        (pancancel)="onPanEnd($event)"
+        (pancancel)="onPanCancel($event)"
         [style.touch-action]="'pan-y'"
     >
         <li *ngFor="let element of elements" #carouselListItem

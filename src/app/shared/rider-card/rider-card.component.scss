@@ -1,6 +1,7 @@
 .rider__card {
     cursor: pointer;
     margin-bottom: .5rem;
+    display: flex;
 
     &:hover {
         transform: scale(1.01);
@@ -12,10 +13,24 @@
     }
 
     &__header {
+        flex: 90%;
+
         &__image {
             background-position: center;
             background-size: contain;
             transition: .5s all;
         }
+
+        &__subtitle {
+            & mat-icon {
+                vertical-align: middle;
+                margin-right: 0.5rem;
+            }
+        }
+    }
+
+    &__content {
+        flex: 10%;
+        text-align: right;
     }
 }

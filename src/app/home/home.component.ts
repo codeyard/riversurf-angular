@@ -32,14 +32,9 @@ export class HomeComponent implements OnInit, OnDestroy {
 
         this.ridersSubscription = this.ridersService.getRandomRiders(6)
             .subscribe(
-                (responseData: Rider[]) => {
+                (riders: Rider[]) => {
                     this.isLoadingRandomRiders = false;
-                    this.randomRiders = responseData
-                },
-                error => {
-                    this.isLoadingRandomRiders = false;
-                    this.snackBarService.send("Unable to load Riders", "error");
-                    console.log('ERROR loading riders data :-(', error)
+                    this.randomRiders = riders
                 })
 
 

@@ -1,7 +1,7 @@
 import {Component, OnInit} from '@angular/core';
 import {Competition, exampleComp} from "../../../core/models/competition.model";
 
-export interface RoundModel{
+export interface RoundModel {
     id: number;
     riders: string[];
 }
@@ -13,21 +13,21 @@ export interface RoundModel{
 })
 export class CompetitionComponent implements OnInit {
 
-    competition : Competition = {...exampleComp};
+    competition: Competition = {...exampleComp};
 
-    rounds : RoundModel[] = [];
+    rounds: RoundModel[] = [];
 
     constructor() {
     }
 
     ngOnInit(): void {
-        let initialRound : RoundModel = {
+        let initialRound: RoundModel = {
             id: 0,
             riders: this.competition.riders
         }
         this.rounds.push(initialRound);
         const maxRounds = Math.ceil(this.competition.riders.length / 8);
-        for(let i = 0; i < maxRounds; i++){
+        for (let i = 0; i < maxRounds; i++) {
             this.rounds.push({
                 id: i + 1,
                 riders: []

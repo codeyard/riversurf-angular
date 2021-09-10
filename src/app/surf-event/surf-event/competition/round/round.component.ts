@@ -1,9 +1,8 @@
 import {Component, Input, OnInit} from '@angular/core';
-import {Heat} from "../../../../core/models/competition.model";
 import {CdkDragDrop, moveItemInArray, transferArrayItem} from "@angular/cdk/drag-drop";
 import {SnackbarService} from "../../../../core/services/snackbar.service";
 
-export interface HeatModel{
+export interface HeatModel {
     id: number;
     riders: string[];
 }
@@ -20,7 +19,7 @@ export class RoundComponent implements OnInit {
 
     heatSize = 4;
 
-    heats : HeatModel[] = [];
+    heats: HeatModel[] = [];
 
     constructor(private snackbarService: SnackbarService) {
     }
@@ -30,7 +29,7 @@ export class RoundComponent implements OnInit {
         for (let i = 0; i < numberOfHeats; i++) {
             this.heats.push({
                 id: i,
-                riders : []
+                riders: []
             })
         }
         // ToDo: Automate assignment of riders to heats
@@ -42,7 +41,7 @@ export class RoundComponent implements OnInit {
             moveItemInArray(event.container.data, event.previousIndex, event.currentIndex);
             return
         } else {
-            if(event.container.data.length !== this.heatSize || event.container.id === 'unassignedRiders') {
+            if (event.container.data.length !== this.heatSize || event.container.id === 'unassignedRiders') {
                 transferArrayItem(event.previousContainer.data,
                     event.container.data,
                     event.previousIndex,
@@ -51,7 +50,7 @@ export class RoundComponent implements OnInit {
                 return
             }
         }
-        this.snackbarService.send(`Heat already full!`, "warning")
+        this.snackbarService.send(`Sorry, this heat is already complete!`, "warning")
 
         console.log(`heats`, this.heats);
     }

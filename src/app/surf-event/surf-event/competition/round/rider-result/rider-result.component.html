@@ -1,13 +1,14 @@
 <mat-card class="rider__card">
     <mat-spinner *ngIf="!rider"></mat-spinner>
     <mat-card-header class="rider__card__header" *ngIf="rider">
-
         <div mat-card-avatar
              class="rider__card__header__image"
              [style.background-image]="'url(' + rider.profilePicture + ')'"
              [ngStyle]="{'border-color': riderColorIndex | riderColor}"
         ></div>
         <mat-card-title class="rider__card__name"> {{rider.firstName}} {{rider.lastName}}</mat-card-title>
+    </mat-card-header>
+    <mat-card-content class="rider__card__content">
         <div [ngSwitch]="resultType">
             <div *ngSwitchCase="'default'" class="rider__card__type">
                 <mat-icon aria-hidden="false" aria-label="default" class="rider__card__icon">hourglass_empty</mat-icon>
@@ -22,5 +23,5 @@
                 <mat-icon aria-hidden="false" aria-label="finished" class="rider__card__icon">verified</mat-icon>
             </div>
         </div>
-    </mat-card-header>
+    </mat-card-content>
 </mat-card>

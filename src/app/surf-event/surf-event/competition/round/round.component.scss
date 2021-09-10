@@ -1,3 +1,4 @@
+@import "../../../../../assets/scss/_mixins";
 @import "../../../../../assets/scss/_variables";
 
 .container {
@@ -30,17 +31,30 @@
                 text-align: center;
                 color: $color-primary;
             }
-
-            h4 {
-                margin-top: 1rem;
-                text-align: center;
-            }
         }
     }
 
     &__heat {
         margin: .5rem;
-        border: 1px solid $color-primary
+        border: 1px solid $color-primary;
+
+        &__header {
+            display: flex;
+            flex-direction: row;
+            margin: 1rem 1rem 0 1rem;
+
+            &-title {
+                flex: 50%;
+            }
+
+            &-counter {
+                flex: 50%;
+                text-align: right;
+                color: $color-grey-dark-1;
+                @include text-small;
+            }
+
+        }
     }
 
     &__riders {
@@ -53,6 +67,8 @@
 
             &--placeholder {
                 text-align: center;
+                font-style: italic;
+                color: $color-grey-dark-2;
                 padding: 1rem;
                 border: 1px dashed $color-primary;
                 border-radius: 10px;

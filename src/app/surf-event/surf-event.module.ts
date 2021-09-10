@@ -14,6 +14,7 @@ import {FormsModule} from "@angular/forms";
 import {DragDropModule} from "@angular/cdk/drag-drop";
 import { RoundComponent } from './surf-event/competition/round/round.component';
 import {RiderResultComponent} from "./surf-event/competition/round/rider-result/rider-result.component";
+import {MatButtonModule} from "@angular/material/button";
 
 
 @NgModule({
@@ -34,7 +35,8 @@ import {RiderResultComponent} from "./surf-event/competition/round/rider-result/
         MatIconModule,
         MatChipsModule,
         FormsModule,
-        DragDropModule
+        DragDropModule,
+        MatButtonModule
     ]
 })
 export class SurfEventModule {

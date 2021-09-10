@@ -2,9 +2,14 @@
     <mat-card class="round">
         <div class="round__header">
             <h1>Round {{roundNumber}}</h1>
+            <div class="round__header-buttons" *ngIf="roundNumber === 0">
+                <button mat-raised-button (click)="revert()" *ngIf="!oneHeatStarted">Revert</button>
+                <button mat-raised-button color="primary" *ngIf="!oneHeatStarted" (click)="automaticallyAssignRiders()">Assign Riders Randomly</button>
+                <button mat-raised-button color="primary" *ngIf="checkAllHeatsFinished()" (click)="moveToNextRound()">Move to next round</button>
+            </div>
         </div>
         <div class="round__container">
-            <div class="round__container__element" *ngIf="riders.length > 0">
+            <div class="round__container__element" *ngIf="riders.length">
                 <h2>Unassigned riders</h2>
                 <hr>
                 <div cdkDropList [cdkDropListData]="riders" class="round__riders"
@@ -17,9 +22,18 @@
             <div class="round__container__element">
                 <h2>Heats</h2>
                 <hr>
-                <div *ngFor="let heat of heats" class="round__heat">
+                <div *ngFor="let heat of heats; let i = index" class="round__heat">
                     <div class="round__heat__header">
                         <div class="round__heat__header-title">Heat {{heat.id}}</div>
+                        <button mat-raised-button color="primary"
+                                *ngIf="heat.riders.length > 2 && !heat.hasStarted && !heat.hasStopped"
+                                (click)="startHeat(i)">Start Heat</button>
+                        <button mat-raised-button color="primary"
+                                *ngIf="heat.hasStarted && !heat.hasStopped"
+                                (click)="stopHeat(i)">End Heat</button>
+                        <button mat-raised-button color="primary"
+                                *ngIf="heat.hasStopped && heat.hasAllResults"
+                                (click)="saveHeat(i)">Save Heat</button>
                         <div class="round__heat__header-counter">{{ heat.riders.length }} / {{ heatSize }}</div>
                     </div>
 

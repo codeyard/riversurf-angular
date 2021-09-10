@@ -59,10 +59,13 @@ export class RidersService {
     }
 
     getRider(id: string): Observable<Rider> {
+        // FIXME: indexed db and subject might not be ready yet, fetch missing rider in an other way...
+        /*
         const index = this.ridersData.value.findIndex(rider => rider.id === id);
         if(index === -1){
             this.fetchAllRidersWithVersioning();
         }
+         */
         return this.riders$
             .pipe(
                 map(riders => riders.filter(rider => rider.id === id)[0])
@@ -95,7 +98,7 @@ export class RidersService {
     }
 
     private fetchAllRidersWithVersioning(): void {
-        const requestUrl = this.PROTOCOL_HTTPS + this.appConfigService.getHostName() + this.PATH_ENDPOINT;
+        const requestUrl = this.PROTOCOL_HTTPS + 'localhost:8080' /*this.appConfigService.getHostName() */+ this.PATH_ENDPOINT;
         this.httpClient.get<GenericCollectionResponseModel<Rider[]>>(requestUrl).subscribe(
             (responseData: GenericCollectionResponseModel<Rider[]>) => {
                 if (responseData.version > 0) {

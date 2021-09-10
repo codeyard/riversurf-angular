@@ -1,9 +1,9 @@
 import {Injectable} from '@angular/core';
 import {HttpClient} from "@angular/common/http";
 import {Rider} from "../models/rider.model";
-import {BehaviorSubject, from, Observable, of} from "rxjs";
+import {BehaviorSubject, from, Observable} from "rxjs";
 import {AppConfigService} from "./app-config.service";
-import {filter, map, switchMap, toArray} from "rxjs/operators";
+import {filter, map, switchMap, take, toArray} from "rxjs/operators";
 import {DexieService} from "./dexie.service";
 import {NetworkStatusService, NetworkStatus} from "./network-status.service";
 import {GenericCollectionResponseModel} from "../models/generic-collection-response.model";
@@ -23,7 +23,7 @@ import {GenericCollectionResponseModel} from "../models/generic-collection-respo
     providedIn: 'root'
 })
 export class RidersService {
-    PROTOCOL_HTTPS = 'http://'
+    PROTOCOL_HTTPS = 'https://'
     PATH_ENDPOINT = '/api/riders';
 
     private ridersData = new BehaviorSubject<Rider[]>([]);
@@ -44,13 +44,13 @@ export class RidersService {
         this.dexieDB = dexieService.getDB();
         this.dexieDB.riders.toArray().then((riders: Rider[]) => {
             this.ready = true;
+            this.fetchAllRidersWithVersioning();
             this.ridersData.next(riders);
         });
         this.networkStatus
             .pipe(filter(status => status === 'ONLINE'))
             .subscribe(status => {
                 console.log('We are back online, lets sync!');
-                //this.sync();
             })
     }
 
@@ -68,6 +68,7 @@ export class RidersService {
          */
         return this.riders$
             .pipe(
+                filter(riders => riders.length > 0),
                 map(riders => riders.filter(rider => rider.id === id)[0])
             )
 
@@ -76,7 +77,8 @@ export class RidersService {
     getRidersByIds(ids: string[]): Observable<Rider[]> {
         return from(ids).pipe(
             switchMap(id => this.getRider(id)),
-            toArray()
+            toArray(),
+            filter(riders => riders.length > 0)
         );
     }
 
@@ -84,7 +86,7 @@ export class RidersService {
         amount = amount || 5;
 
         return this.riders$.pipe(
-            filter(() => this.ready),
+            filter(riders => riders.length > 0),
             map(riders => {
                 if (amount! >= riders.length) {
                     return riders;
@@ -94,7 +96,8 @@ export class RidersService {
                     randomRiders.add(riders[Math.floor(Math.random() * riders.length)]);
                 }
                 return [...randomRiders];
-            }));
+            }),
+            take(1));
     }
 
     private fetchAllRidersWithVersioning(): void {
@@ -102,9 +105,13 @@ export class RidersService {
         this.httpClient.get<GenericCollectionResponseModel<Rider[]>>(requestUrl).subscribe(
             (responseData: GenericCollectionResponseModel<Rider[]>) => {
                 if (responseData.version > 0) {
+                    const allPromises:Promise<any>[] = []
                     responseData.payload.forEach(rider => {
-                        this.dexieDB.riders.put(rider).then(this.ridersData.next(this.dexieDB.riders.toArray()));
-                    })
+                        allPromises.push(this.dexieDB.riders.put(rider));
+                    });
+                    Promise.all(allPromises)
+                        .then(() => this.dexieDB.riders.toArray())
+                        .then(riders => this.ridersData.next(riders));
                     this.dexieDB.versions.put({
                         topic: responseData.topic,
                         version: responseData.version

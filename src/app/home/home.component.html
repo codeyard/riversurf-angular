@@ -16,9 +16,9 @@
         </div>
     </main>
     <aside class="aside">
+        <h2>Some Awesome Riders</h2>
         <mat-spinner *ngIf="isLoadingRandomRiders" diameter="40"></mat-spinner>
         <div *ngIf="!isLoadingRandomRiders && randomRiders.length">
-            <h2>Some Awesome Riders</h2>
             <div class="rider__cards">
                 <rs-rider-card *ngFor="let rider of randomRiders" [rider]="rider"></rs-rider-card>
             </div>

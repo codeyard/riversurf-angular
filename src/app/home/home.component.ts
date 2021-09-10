@@ -5,6 +5,7 @@ import {BreakpointObserver} from "@angular/cdk/layout";
 import {RidersService} from "../core/services/riders.service";
 import {Subscription} from "rxjs";
 import {SnackbarService} from "../core/services/snackbar.service";
+import {filter} from "rxjs/operators";
 
 @Component({
     selector: 'rs-home',

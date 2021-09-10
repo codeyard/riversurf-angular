@@ -131,10 +131,6 @@ export class CarouselComponent implements OnInit, OnDestroy, OnChanges, AfterCon
 
     /* when User lifts finger after swiping */
     onPanEnd(event: any) {
-
-        if (event.additionalEvent === "panup" || event.additionalEvent === "pandown") {
-            return;
-        }
         let deltaX = event.deltaX;
 
         let direction = Math.sign(deltaX)
@@ -143,6 +139,10 @@ export class CarouselComponent implements OnInit, OnDestroy, OnChanges, AfterCon
             this.goToIndex(this.currentIndex - direction);
             return;
         }
+        this.goToIndex(this.currentIndex);
+    }
+
+    onPanCancel(event: any) {
         this.goToIndex(this.currentIndex);
     }
 

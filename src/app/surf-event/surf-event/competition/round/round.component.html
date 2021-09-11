@@ -52,7 +52,7 @@
                                              [resultType]="getHeatStatus(heat)"
                                              [riderColorIndex]=riderIndex
                                              [disableInput]="heatsFinished[heatIndex]"
-                                             (resultEntry)="onResultentry($event)"
+                                             (resultEntry)="onResultEntry($event)"
                             ></rs-rider-result>
                         </div>
                         <div class="round__riders__single-rider--placeholder" *ngIf="!heat.riders.length">

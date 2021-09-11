@@ -138,7 +138,7 @@ export class RoundComponent implements OnInit {
         }
     }
 
-    onResultentry(event: { riderId: string, points: number, colorIndex: number }) {
+    onResultEntry(event: { riderId: string, points: number, colorIndex: number }) {
         const resultObject = {
             riderId: event.riderId,
             color: event.colorIndex,

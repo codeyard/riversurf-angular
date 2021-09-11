@@ -14,7 +14,8 @@ export class RiderResultComponent implements OnInit, OnDestroy {
 
     @Input() riderId!: string;
     @Input() riderColorIndex!: number;
-    @Output() resultEntry = new EventEmitter<{riderId: string, points: number}>();
+    @Input() disableInput!: boolean;
+    @Output() resultEntry = new EventEmitter<{riderId: string, points: number, colorIndex: number}>();
 
     @Input() resultType: RiderResultType = 'default';
 
@@ -34,7 +35,7 @@ export class RiderResultComponent implements OnInit, OnDestroy {
     }
 
     onResultEntry(points: string) {
-        this.resultEntry.emit({riderId : this.riderId, points: +points});
+        this.resultEntry.emit({riderId : this.riderId, points: +points, colorIndex: this.riderColorIndex});
     }
 
 }

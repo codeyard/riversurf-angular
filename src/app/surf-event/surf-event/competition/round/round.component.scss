@@ -54,6 +54,10 @@
             flex-direction: column;
             margin: 1rem;
 
+            @include respond(small) {
+                margin: .3rem;
+            }
+
             h2 {
                 text-align: center;
                 color: $color-primary;
@@ -65,9 +69,7 @@
         margin: .5rem;
         border: 1px solid $color-primary;
 
-        @include respond(small) {
-            margin: 0;
-        }
+
 
         &__header {
             display: flex;

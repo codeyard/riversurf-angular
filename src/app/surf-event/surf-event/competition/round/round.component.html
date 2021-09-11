@@ -26,31 +26,32 @@
             <div class="round__container__element">
                 <h2>Heats</h2>
                 <hr>
-                <div *ngFor="let heat of heats; let i = index" class="round__heat">
+                <div *ngFor="let heat of heats; let heatIndex = index" class="round__heat">
                     <div class="round__heat__header">
                         <div class="round__heat__header-title">Heat {{heat.id}}</div>
                         <button mat-raised-button color="primary"
                                 *ngIf="heat.riders.length > 2 && !heat.hasStarted && !heat.hasStopped"
-                                (click)="startHeat(i)">Start Heat
+                                (click)="startHeat(heatIndex)">Start Heat
                         </button>
                         <button mat-raised-button color="primary"
                                 *ngIf="heat.hasStarted && !heat.hasStopped"
-                                (click)="stopHeat(i)">End Heat
+                                (click)="stopHeat(heatIndex)">End Heat
                         </button>
                         <button mat-raised-button color="primary"
                                 *ngIf="heat.hasStopped && heat.hasAllResults"
-                                (click)="saveHeat(i)">Save Heat
+                                (click)="saveHeat(heatIndex)" [disabled]="heatsFinished[heatIndex]">Save Heat
                         </button>
                         <div class="round__heat__header-counter">{{ heat.riders.length }} / {{ heatSize }}</div>
                     </div>
 
                     <div cdkDropList [cdkDropListData]="heat.riders" class="round__riders"
                          (cdkDropListDropped)="drop($event)">
-                        <div class="round__riders__single-rider" *ngFor="let rider of heat.riders; let i = index"
+                        <div class="round__riders__single-rider" *ngFor="let rider of heat.riders; let riderIndex = index"
                              cdkDrag>
                             <rs-rider-result [riderId]="rider"
                                              [resultType]="getHeatStatus(heat)"
-                                             [riderColorIndex]=i
+                                             [riderColorIndex]=riderIndex
+                                             [disableInput]="heatsFinished[heatIndex]"
                                              (resultEntry)="onResultentry($event)"
                             ></rs-rider-result>
                         </div>

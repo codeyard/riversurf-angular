@@ -22,11 +22,15 @@
             </div>
             <div *ngSwitchCase="'finished'" class="rider__card__type">
                 <p>Points:</p>
-                <input type="number"
-                       class="rider__card__input"
-                       min="0" max="10"
-                       #pointsInput
-                       (keyup)="onResultEntry(pointsInput.value)"/>
+                <div class="rider__card__input-container">
+                    <input type="number"
+                           class="rider__card__input"
+                           min="0" max="10"
+                           #pointsInput
+                           (keyup)="onResultEntry(pointsInput.value)"
+                           [disabled]="disableInput"/>
+                    <mat-icon aria-hidden="false" *ngIf="disableInput">locked</mat-icon>
+                </div>
             </div>
         </div>
     </mat-card-content>

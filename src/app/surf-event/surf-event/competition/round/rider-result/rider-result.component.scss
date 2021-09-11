@@ -1,8 +1,14 @@
 @import "../../../../../../assets/scss/_variables";
+@import "../../../../../../assets/scss/_responsive";
 
 .rider__card {
     display: flex;
     justify-content: space-between;
+
+    @include respond(small) {
+        margin: .3rem;
+    }
+
 
     &:hover {
         transform: scale(1.01);
@@ -35,6 +41,11 @@
 
     &__icon {
         margin: 0;
+    }
+
+    &__input-container {
+        display: flex;
+        align-items: center;
     }
 
     &__input {

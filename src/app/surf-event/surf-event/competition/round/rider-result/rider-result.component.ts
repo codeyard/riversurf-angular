@@ -1,4 +1,4 @@
-import {Component, Input, OnDestroy, OnInit} from '@angular/core';
+import {Component, EventEmitter, Input, OnDestroy, OnInit, Output} from '@angular/core';
 import {RidersService} from "../../../../../core/services/riders.service";
 import {Rider} from "../../../../../core/models/rider.model";
 import {Subscription} from "rxjs";
@@ -14,6 +14,7 @@ export class RiderResultComponent implements OnInit, OnDestroy {
 
     @Input() riderId!: string;
     @Input() riderColorIndex!: number;
+    @Output() resultEntry = new EventEmitter<{riderId: string, points: number}>();
 
     @Input() resultType: RiderResultType = 'default';
 
@@ -30,6 +31,10 @@ export class RiderResultComponent implements OnInit, OnDestroy {
 
     ngOnDestroy(): void {
         this.riderSubscription?.unsubscribe();
+    }
+
+    onResultEntry(points: string) {
+        this.resultEntry.emit({riderId : this.riderId, points: +points});
     }
 
 }

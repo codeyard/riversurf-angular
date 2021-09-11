@@ -4,8 +4,12 @@
             <h1>Round {{roundNumber}}</h1>
             <div class="round__header-buttons" *ngIf="roundNumber === 0">
                 <button mat-raised-button (click)="revert()" *ngIf="!oneHeatStarted">Revert</button>
-                <button mat-raised-button color="primary" *ngIf="!oneHeatStarted" (click)="automaticallyAssignRiders()">Assign Riders Randomly</button>
-                <button mat-raised-button color="primary" *ngIf="checkAllHeatsFinished()" (click)="moveToNextRound()">Move to next round</button>
+                <button mat-raised-button color="primary" *ngIf="!oneHeatStarted" (click)="automaticallyAssignRiders()">
+                    Assign Riders Randomly
+                </button>
+                <button mat-raised-button color="primary" *ngIf="checkAllHeatsFinished()" (click)="moveToNextRound()">
+                    Move to next round
+                </button>
             </div>
         </div>
         <div class="round__container">
@@ -27,13 +31,16 @@
                         <div class="round__heat__header-title">Heat {{heat.id}}</div>
                         <button mat-raised-button color="primary"
                                 *ngIf="heat.riders.length > 2 && !heat.hasStarted && !heat.hasStopped"
-                                (click)="startHeat(i)">Start Heat</button>
+                                (click)="startHeat(i)">Start Heat
+                        </button>
                         <button mat-raised-button color="primary"
                                 *ngIf="heat.hasStarted && !heat.hasStopped"
-                                (click)="stopHeat(i)">End Heat</button>
+                                (click)="stopHeat(i)">End Heat
+                        </button>
                         <button mat-raised-button color="primary"
                                 *ngIf="heat.hasStopped && heat.hasAllResults"
-                                (click)="saveHeat(i)">Save Heat</button>
+                                (click)="saveHeat(i)">Save Heat
+                        </button>
                         <div class="round__heat__header-counter">{{ heat.riders.length }} / {{ heatSize }}</div>
                     </div>
 
@@ -41,8 +48,11 @@
                          (cdkDropListDropped)="drop($event)">
                         <div class="round__riders__single-rider" *ngFor="let rider of heat.riders; let i = index"
                              cdkDrag>
-                            <rs-rider-result [riderId]="rider" [resultType]="getHeatStatus(heat)"
-                                             [riderColorIndex]=i></rs-rider-result>
+                            <rs-rider-result [riderId]="rider"
+                                             [resultType]="getHeatStatus(heat)"
+                                             [riderColorIndex]=i
+                                             (resultEntry)="onResultentry($event)"
+                            ></rs-rider-result>
                         </div>
                         <div class="round__riders__single-rider--placeholder" *ngIf="!heat.riders.length">
                             Drop riders here

@@ -107,7 +107,6 @@ export class RoundComponent implements OnInit {
     }
 
     saveHeat(heatNumber: number) {
-        this.heats[heatNumber].hasAllResults = true;
         this.heatsFinished[heatNumber] = true;
 
     }
@@ -115,6 +114,14 @@ export class RoundComponent implements OnInit {
     checkAllHeatsFinished(): boolean {
         this.heats.some(heat => heat.hasStarted);
         return !this.heatsFinished.includes(false);
+    }
+
+    checkAllHeatsResult(heatNumber: number): boolean {
+        this.heats[heatNumber].hasAllResults = true;
+        // where we store results now?
+        // are they in the heat on the rider?
+        // if so return something like: !this.heats[index].results.includes(false);
+        return true;
     }
 
     moveToNextRound() {
@@ -129,5 +136,11 @@ export class RoundComponent implements OnInit {
         } else {
             return "assigned"
         }
+    }
+
+    onResultentry(event: {riderId: string, points: number }) {
+        console.log(event)
+        // TODO FIND RIDER AND STORE HIS RESULT
+
     }
 }

@@ -22,7 +22,11 @@
             </div>
             <div *ngSwitchCase="'finished'" class="rider__card__type">
                 <p>Points:</p>
-                <input type="number" class="rider__card__input" [min]="0" max="10"/>
+                <input type="number"
+                       class="rider__card__input"
+                       min="0" max="10"
+                       #pointsInput
+                       (keyup)="onResultEntry(pointsInput.value)"/>
             </div>
         </div>
     </mat-card-content>

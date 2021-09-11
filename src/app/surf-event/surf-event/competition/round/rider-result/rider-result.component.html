@@ -21,8 +21,8 @@
                 <mat-icon aria-hidden="false" aria-label="surfing" class="rider__card__icon">surfing</mat-icon>
             </div>
             <div *ngSwitchCase="'finished'" class="rider__card__type">
-                <mat-icon aria-hidden="false" aria-label="finished" class="rider__card__icon">verified</mat-icon>
-                <input type="number" />
+                <p>Points:</p>
+                <input type="number" class="rider__card__input" [min]="0" max="10"/>
             </div>
         </div>
     </mat-card-content>

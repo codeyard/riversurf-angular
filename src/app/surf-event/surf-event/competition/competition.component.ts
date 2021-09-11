@@ -35,4 +35,13 @@ export class CompetitionComponent implements OnInit {
         }
     }
 
+    onFinishedRound(promotedRiders: string[]) {
+        console.log(promotedRiders)
+        for(let i = 0; i < this.rounds.length; i++) {
+            console.log(this.rounds[i].riders) // IDEA: PUSH IN NEXT ROUND WITHOUT RIDERS, NOT YET WORKING
+            if(!this.rounds[i].riders.length) {
+                this.rounds[i].riders = promotedRiders;
+            }
+        }
+    }
 }

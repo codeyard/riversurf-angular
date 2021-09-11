@@ -1,3 +1,3 @@
 <div class="competition-container">
-    <rs-round *ngFor="let round of rounds" [riders]="round.riders" [roundNumber]="round.id"></rs-round>
+    <rs-round *ngFor="let round of rounds" [riders]="round.riders" [roundNumber]="round.id" (finishedRound)="onFinishedRound($event)"></rs-round>
 </div>

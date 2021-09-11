@@ -1,4 +1,4 @@
-import {Component, Input, OnInit} from '@angular/core';
+import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 import {CdkDragDrop, moveItemInArray, transferArrayItem} from "@angular/cdk/drag-drop";
 import {SnackbarService} from "../../../../core/services/snackbar.service";
 import {Result} from "../../../../core/models/competition.model";
@@ -21,6 +21,8 @@ export class RoundComponent implements OnInit {
 
     @Input() riders !: string[];
     @Input() roundNumber !: number;
+
+    @Output() finishedRound = new EventEmitter<string[]>();
 
     heatSize = 4;
     heats: HeatModel[] = [];
@@ -125,7 +127,13 @@ export class RoundComponent implements OnInit {
     }
 
     moveToNextRound() {
-        // TODO
+        let promotedRiders = [];
+        for(const heat of this.heats) {
+            const sortedArray = heat.results.sort((a, b) => a.value > b.value ? 1 : -1)
+            promotedRiders.push(sortedArray.map(result => result.riderId).splice(0, 2));
+        }
+        promotedRiders = promotedRiders.reduce((acc, val) => acc.concat(val), []);
+        this.finishedRound.emit(promotedRiders);
     }
 
     getHeatStatus(heat: HeatModel) {
@@ -155,7 +163,7 @@ export class RoundComponent implements OnInit {
                         this.heats[i].results.splice(existinResultIndex, 1)
                     }
                 } else {
-                    if(event.points) {
+                    if (event.points) {
                         this.heats[i].results.push(resultObject);
                     }
                 }

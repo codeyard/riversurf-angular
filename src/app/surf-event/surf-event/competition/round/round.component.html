@@ -7,7 +7,7 @@
                 <button mat-raised-button color="primary" *ngIf="!oneHeatStarted" (click)="automaticallyAssignRiders()">
                     Assign Riders Randomly
                 </button>
-                <button mat-raised-button color="primary" *ngIf="checkAllHeatsFinished()" (click)="moveToNextRound()">
+                <button mat-raised-button color="primary" *ngIf="checkAllHeatsFinished()" (click)="moveToNextRound(roundNumber)">
                     Move to next round
                 </button>
             </div>

@@ -126,11 +126,15 @@ export class RoundComponent implements OnInit {
         return hasAllresults;
     }
 
-    moveToNextRound() {
+    moveToNextRound(roundNumber: number) {
         let promotedRiders = [];
         for(const heat of this.heats) {
             const sortedArray = heat.results.sort((a, b) => a.value > b.value ? 1 : -1)
-            promotedRiders.push(sortedArray.map(result => result.riderId).splice(0, 2));
+            if(roundNumber === 0) {
+                promotedRiders.push(sortedArray.map(result => result.riderId));
+            } else {
+                promotedRiders.push(sortedArray.map(result => result.riderId).splice(0, 2));
+            }
         }
         promotedRiders = promotedRiders.reduce((acc, val) => acc.concat(val), []);
         this.finishedRound.emit(promotedRiders);

@@ -25,6 +25,7 @@
         &-buttons {
             display: flex;
             justify-content: space-evenly;
+            margin-top: 1rem;
 
             @include respond(small) {
                 flex-direction: column;
@@ -40,7 +41,6 @@
     &__container {
         display: flex;
         flex-direction: row;
-        padding: 1rem;
         flex-wrap: nowrap;
 
         @include respond(small) {
@@ -52,7 +52,7 @@
         &__element {
             display: flex;
             flex-direction: column;
-            margin: 1rem;
+            margin: 1rem 1rem 0 1rem;
 
             @include respond(small) {
                 margin: .3rem;
@@ -62,14 +62,20 @@
                 text-align: center;
                 color: $color-primary;
             }
+
+            &__scrollable {
+                border-top: 1px solid $color-grey-dark;
+                height: calc(100vh - 350px);
+                overflow: auto;
+                padding-top: 0.5rem;
+                width: 100%;
+            }
         }
     }
 
     &__heat {
         margin: .5rem;
         border: 1px solid $color-primary;
-
-
 
         &__header {
             display: flex;
@@ -79,6 +85,7 @@
 
 
             &-title {
+                font-weight: bold;
             }
 
             &-counter {
@@ -86,12 +93,11 @@
                 color: $color-grey-dark-1;
                 @include text-small;
             }
-
         }
     }
 
     &__riders {
-        padding: 1rem;
+        padding: 0 1rem 1rem 1rem;
 
         @include respond(small) {
             padding: 0;

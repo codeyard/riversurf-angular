@@ -11,12 +11,10 @@ import {Rider} from "../../core/models/rider.model";
 })
 export class FavoriteRiderComponent implements OnInit, OnDestroy {
     @Input() rider!: Rider;
-    favoriteRiderSubscription!: Subscription;
+    favoriteRiderSubscription?: Subscription;
     isFavoriteRider!: boolean;
 
     constructor(private userService: UserService) {
-
-
     }
 
     ngOnInit(): void {
@@ -29,7 +27,7 @@ export class FavoriteRiderComponent implements OnInit, OnDestroy {
     }
 
     ngOnDestroy(): void {
-        this.favoriteRiderSubscription.unsubscribe();
+        this.favoriteRiderSubscription?.unsubscribe();
     }
 
     toggleFavorites(event: Event) {

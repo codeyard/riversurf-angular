@@ -1,4 +1,4 @@
-import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
+import {Component, EventEmitter, Input, OnChanges, OnInit, Output} from '@angular/core';
 import {CdkDragDrop, moveItemInArray, transferArrayItem} from "@angular/cdk/drag-drop";
 import {SnackbarService} from "../../../../core/services/snackbar.service";
 import {Result} from "../../../../core/models/competition.model";
@@ -17,13 +17,14 @@ export interface HeatModel {
     templateUrl: './round.component.html',
     styleUrls: ['./round.component.scss']
 })
-export class RoundComponent implements OnInit {
+export class RoundComponent implements OnInit, OnChanges {
 
     @Input() riders !: string[];
     @Input() roundNumber !: number;
 
     @Output() finishedRound = new EventEmitter<string[]>();
 
+    unassignedRiders!: string[];
     heatSize = 4;
     heats: HeatModel[] = [];
     oneHeatStarted = false;
@@ -33,7 +34,16 @@ export class RoundComponent implements OnInit {
     }
 
     ngOnInit(): void {
-        const numberOfHeats = Math.ceil(this.riders.length / this.heatSize);
+        //this.setupRound();
+    }
+
+    ngOnChanges(): void {
+        this.setupRound();
+    }
+
+    setupRound(): void {
+        this.unassignedRiders = [...this.riders];
+        const numberOfHeats = Math.ceil(this.unassignedRiders.length / this.heatSize);
         for (let i = 0; i < numberOfHeats; i++) {
             this.heats.push({
                 id: i,
@@ -45,7 +55,6 @@ export class RoundComponent implements OnInit {
             })
             this.heatsFinished.push(false);
         }
-        // ToDo: Automate assignment of riders to heats
     }
 
     drop(event: CdkDragDrop<string[], any>) {
@@ -70,8 +79,8 @@ export class RoundComponent implements OnInit {
 
     revert() {
         for (const heat of this.heats) {
-            const heatLenght = heat.riders.length;
-            for (let i = 0; i <= heatLenght; i++) {
+            const heatLength = heat.riders.length;
+            for (let i = 0; i <= heatLength; i++) {
                 const removedRider = heat.riders.pop()
                 if (removedRider)
 
@@ -84,8 +93,8 @@ export class RoundComponent implements OnInit {
     }
 
     automaticallyAssignRiders() {
-        for (var i = this.riders.length - 1; i >= 0; i--) {
-            const riderId = this.riders.splice(Math.floor(Math.random() * this.riders.length), 1);
+        for (let i = this.unassignedRiders.length - 1; i >= 0; i--) {
+            const riderId = this.unassignedRiders.splice(Math.floor(Math.random() * this.unassignedRiders.length), 1);
             this.assignRiderToHeat(riderId[0]);
         }
         this.snackbarService.send("Hope you like my heat assignment?", "success")
@@ -137,6 +146,7 @@ export class RoundComponent implements OnInit {
             }
         }
         promotedRiders = promotedRiders.reduce((acc, val) => acc.concat(val), []);
+        console.log('promotedRiders:', promotedRiders)
         this.finishedRound.emit(promotedRiders);
     }
 
@@ -156,6 +166,7 @@ export class RoundComponent implements OnInit {
             color: event.colorIndex,
             value: event.points
         }
+        console.log('resultObject', resultObject)
 
         for (let i = 0; i < this.heats.length; i++) {
             if (this.heats[i].riders.findIndex(rider => rider === event.riderId) > -1) {

@@ -3,36 +3,34 @@
         <div class="round__header">
             <h1 *ngIf="roundNumber === 0">Seeding round</h1>
             <h1 *ngIf="roundNumber !== 0">Round {{roundNumber}}</h1>
-            <div class="round__header-buttons" *ngIf="roundNumber === 0">
-                <button mat-raised-button (click)="revert()" *ngIf="!oneHeatStarted">Revert</button>
+            <div class="round__header-buttons">
                 <button mat-raised-button color="primary" *ngIf="!oneHeatStarted" (click)="automaticallyAssignRiders()">
                     Assign Riders Randomly
                 </button>
+                <button mat-raised-button (click)="revert()" *ngIf="!oneHeatStarted">Revert</button>
                 <button mat-raised-button color="primary" *ngIf="checkAllHeatsFinished()" (click)="moveToNextRound(roundNumber)">
                     Move to next round
                 </button>
             </div>
         </div>
         <div class="round__container">
-            <div class="round__container__element" *ngIf="riders.length">
+            <div class="round__container__element round__container__element--30" *ngIf="unassignedRiders.length">
                 <h2>Unassigned riders</h2>
-                <div class="round__container__element__scrollable">
-                    <div cdkDropList [cdkDropListData]="riders" class="round__riders"
-                         (cdkDropListDropped)="drop($event)" id="unassignedRiders">
-                        <div class="round__riders__single-rider" *ngFor="let rider of riders" cdkDrag>
-                            <rs-rider-result [riderId]="rider" resultType="default"></rs-rider-result>
-                        </div>
+                <div cdkDropList [cdkDropListData]="unassignedRiders" class="round__riders"
+                     (cdkDropListDropped)="drop($event)" id="unassignedRiders">
+                    <div class="round__riders__single-rider" *ngFor="let rider of unassignedRiders" cdkDrag>
+                        <rs-rider-result [riderId]="rider" resultType="default"></rs-rider-result>
                     </div>
                 </div>
             </div>
-            <div class="round__container__element">
+            <div class="round__container__element round__container__element--70">
                 <h2>Heats</h2>
-                <div class="round__container__element__scrollable">
+                <div class="round__heat__container">
                     <div *ngFor="let heat of heats; let heatIndex = index" class="round__heat">
                         <div class="round__heat__header">
                             <div class="round__heat__header-title">Heat {{heat.id + 1}}</div>
                             <button mat-raised-button color="primary"
-                                    *ngIf="!riders.length && !heat.hasStarted && !heat.hasStopped"
+                                    *ngIf="!unassignedRiders.length && !heat.hasStarted && !heat.hasStopped"
                                     (click)="startHeat(heatIndex)">Start Heat
                             </button>
                             <button mat-raised-button color="primary"
@@ -49,7 +47,7 @@
                         <div cdkDropList [cdkDropListData]="heat.riders" class="round__riders"
                              (cdkDropListDropped)="drop($event)">
                             <div class="round__riders__single-rider" *ngFor="let rider of heat.riders; let riderIndex = index"
-                                 cdkDrag [cdkDragLockAxis]="heat.hasStarted ? 'x' : 'y'">
+                                 cdkDrag [cdkDragDisabled]="heat.hasStarted">
                                 <rs-rider-result [riderId]="rider"
                                                  [resultType]="getHeatStatus(heat)"
                                                  [riderColorIndex]=riderIndex

@@ -1,3 +1,7 @@
-<div class="competition-container">
-    <rs-round *ngFor="let round of rounds" [riders]="round.riders" [roundNumber]="round.id" (finishedRound)="onFinishedRound($event)"></rs-round>
-</div>
+<mat-tab-group [selectedIndex]="selectedTabIndex">
+    <mat-tab *ngFor="let round of rounds; let roundIndex = index" [label]="getRoundLabel(roundIndex)">
+        <div class="competition-container">
+            <rs-round [riders]="round.riders" [roundNumber]="round.id" (finishedRound)="onFinishedRound($event)"></rs-round>
+        </div>
+    </mat-tab>
+</mat-tab-group>

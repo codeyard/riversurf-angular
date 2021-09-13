@@ -40,7 +40,6 @@ export class UserService {
         )
     }
 
-
     toggleFavoriteRider(rider: Rider) {
         const indexOfRider = this.user.getValue().favouriteRiders.findIndex(riderId => riderId === rider.id);
         if (indexOfRider > -1) {

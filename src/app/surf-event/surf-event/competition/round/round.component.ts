@@ -2,7 +2,7 @@ import {Component, EventEmitter, Input, OnChanges, OnInit, Output} from '@angula
 import {CdkDragDrop, moveItemInArray, transferArrayItem} from "@angular/cdk/drag-drop";
 import {SnackbarService} from "../../../../core/services/snackbar.service";
 import {Result} from "../../../../core/models/competition.model";
-
+//to trigger merge request
 export interface HeatModel {
     id: number;
     riders: string[];

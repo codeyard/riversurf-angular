@@ -1,0 +1,19 @@
+@import "src/assets/scss/responsive";
+
+.container {
+    display: flex;
+    flex-direction: row-reverse;
+
+    @include respond(small) {
+        display: none;
+    }
+
+    &__icon {
+        align-self: center;
+        padding: 0 1rem;
+
+        mat-icon{
+            vertical-align: middle;
+        }
+    }
+}

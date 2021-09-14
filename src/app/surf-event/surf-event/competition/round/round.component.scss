@@ -4,10 +4,10 @@
 
 .container {
     padding: 0.5rem;
-    min-width: 25vw;
 
     @include respond(small) {
         min-width: auto;
+        padding: .1rem;
     }
 }
 
@@ -17,31 +17,64 @@
     width: 100%;
 
     &__header {
+        display: flex;
         padding: 0.5rem;
         width: 100%;
-        text-align: center;
+
+        & h1 {
+            flex: 1;
+        }
 
         &-buttons {
             display: flex;
-            justify-content: space-evenly;
+            flex: 1;
+
+            & > * {
+                margin-right: 1rem;
+            }
+
+            @include respond(small) {
+                flex-direction: column;
+
+                & > * {
+                    margin-top: 1rem;
+                }
+            }
+
         }
     }
 
     &__container {
         display: flex;
         flex-direction: row;
-        padding: 1rem;
         flex-wrap: nowrap;
+
+        @include respond(small) {
+            flex-direction: column;
+            padding: 0;
+        }
 
 
         &__element {
             display: flex;
             flex-direction: column;
-            margin: 1rem;
+            margin: 1rem 1rem 0 1rem;
+
+            @include respond(small) {
+                margin: .3rem;
+            }
 
             h2 {
                 text-align: center;
                 color: $color-primary;
+            }
+
+            &--30 {
+                flex: 30%;
+            }
+
+            &--70 {
+                flex: 70%;
             }
         }
     }
@@ -49,6 +82,11 @@
     &__heat {
         margin: .5rem;
         border: 1px solid $color-primary;
+
+        &__container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+        }
 
         &__header {
             display: flex;
@@ -58,6 +96,7 @@
 
 
             &-title {
+                font-weight: bold;
             }
 
             &-counter {
@@ -65,18 +104,23 @@
                 color: $color-grey-dark-1;
                 @include text-small;
             }
-
         }
     }
 
     &__riders {
-        padding: 1rem;
+        padding: 0 1rem 1rem 1rem;
+
+        @include respond(small) {
+            padding: 0;
+        }
+
 
         &__single-rider {
             margin: 0.5rem 0;
             width: 100%;
             cursor: pointer;
             outline: none;
+
 
             &--placeholder {
                 text-align: center;
@@ -85,7 +129,13 @@
                 padding: 1rem;
                 border: 1px dashed $color-primary;
                 border-radius: 10px;
-                min-width: 250px;
+
+                @include respond(small) {
+                    margin: .5rem auto;
+                    min-width: 95%;
+                    max-width: 95%;
+
+                }
             }
         }
     }

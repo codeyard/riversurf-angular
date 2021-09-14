@@ -1,13 +1,15 @@
-import {Component, Input, OnInit, ViewChild} from '@angular/core';
+import {Component, EventEmitter, Input, OnChanges, OnInit, Output} from '@angular/core';
 import {CdkDragDrop, moveItemInArray, transferArrayItem} from "@angular/cdk/drag-drop";
 import {SnackbarService} from "../../../../core/services/snackbar.service";
-
+import {Result} from "../../../../core/models/competition.model";
+//to trigger merge request
 export interface HeatModel {
     id: number;
     riders: string[];
     hasStarted: boolean;
     hasStopped: boolean;
     hasAllResults: boolean
+    results: Result[]
 }
 
 @Component({
@@ -15,11 +17,14 @@ export interface HeatModel {
     templateUrl: './round.component.html',
     styleUrls: ['./round.component.scss']
 })
-export class RoundComponent implements OnInit {
+export class RoundComponent implements OnInit, OnChanges {
 
     @Input() riders !: string[];
     @Input() roundNumber !: number;
 
+    @Output() finishedRound = new EventEmitter<string[]>();
+
+    unassignedRiders!: string[];
     heatSize = 4;
     heats: HeatModel[] = [];
     oneHeatStarted = false;
@@ -29,18 +34,27 @@ export class RoundComponent implements OnInit {
     }
 
     ngOnInit(): void {
-        const numberOfHeats = Math.ceil(this.riders.length / this.heatSize);
+        //this.setupRound();
+    }
+
+    ngOnChanges(): void {
+        this.setupRound();
+    }
+
+    setupRound(): void {
+        this.unassignedRiders = [...this.riders];
+        const numberOfHeats = Math.ceil(this.unassignedRiders.length / this.heatSize);
         for (let i = 0; i < numberOfHeats; i++) {
             this.heats.push({
                 id: i,
                 riders: [],
                 hasStarted: false,
                 hasStopped: false,
-                hasAllResults: false
+                hasAllResults: false,
+                results: []
             })
             this.heatsFinished.push(false);
         }
-        // ToDo: Automate assignment of riders to heats
     }
 
     drop(event: CdkDragDrop<string[], any>) {
@@ -65,8 +79,8 @@ export class RoundComponent implements OnInit {
 
     revert() {
         for (const heat of this.heats) {
-            const heatLenght = heat.riders.length;
-            for (let i = 0; i <= heatLenght; i++) {
+            const heatLength = heat.riders.length;
+            for (let i = 0; i <= heatLength; i++) {
                 const removedRider = heat.riders.pop()
                 if (removedRider)
 
@@ -79,8 +93,8 @@ export class RoundComponent implements OnInit {
     }
 
     automaticallyAssignRiders() {
-        for (var i = this.riders.length - 1; i >= 0; i--) {
-            const riderId = this.riders.splice(Math.floor(Math.random() * this.riders.length), 1);
+        for (let i = this.unassignedRiders.length - 1; i >= 0; i--) {
+            const riderId = this.unassignedRiders.splice(Math.floor(Math.random() * this.unassignedRiders.length), 1);
             this.assignRiderToHeat(riderId[0]);
         }
         this.snackbarService.send("Hope you like my heat assignment?", "success")
@@ -99,7 +113,6 @@ export class RoundComponent implements OnInit {
     }
 
     stopHeat(heatNumber: number) {
-        this.heats[heatNumber].hasStarted = false;
         this.heats[heatNumber].hasStopped = true;
 
         // TODO ENABLE RESULTS ENTRANCE
@@ -107,18 +120,34 @@ export class RoundComponent implements OnInit {
     }
 
     saveHeat(heatNumber: number) {
-        this.heats[heatNumber].hasAllResults = true;
         this.heatsFinished[heatNumber] = true;
+        this.snackbarService.send("Results saved!", "success");
 
     }
 
     checkAllHeatsFinished(): boolean {
-        this.heats.some(heat => heat.hasStarted);
         return !this.heatsFinished.includes(false);
     }
 
-    moveToNextRound() {
-        // TODO
+    heatHasAllResults(heatNumber: number): boolean {
+        const hasAllresults = this.heats[heatNumber].results.length === this.heats[heatNumber].riders.length
+        this.heats[heatNumber].hasAllResults = hasAllresults;
+        return hasAllresults;
+    }
+
+    moveToNextRound(roundNumber: number) {
+        let promotedRiders = [];
+        for(const heat of this.heats) {
+            const sortedArray = heat.results.sort((a, b) => a.value > b.value ? 1 : -1)
+            if(roundNumber === 0) {
+                promotedRiders.push(sortedArray.map(result => result.riderId));
+            } else {
+                promotedRiders.push(sortedArray.map(result => result.riderId).splice(0, 2));
+            }
+        }
+        promotedRiders = promotedRiders.reduce((acc, val) => acc.concat(val), []);
+        console.log('promotedRiders:', promotedRiders)
+        this.finishedRound.emit(promotedRiders);
     }
 
     getHeatStatus(heat: HeatModel) {
@@ -128,6 +157,33 @@ export class RoundComponent implements OnInit {
             return "surfing";
         } else {
             return "assigned"
+        }
+    }
+
+    onResultEntry(event: { riderId: string, points: number, colorIndex: number }) {
+        const resultObject = {
+            riderId: event.riderId,
+            color: event.colorIndex,
+            value: event.points
+        }
+        console.log('resultObject', resultObject)
+
+        for (let i = 0; i < this.heats.length; i++) {
+            if (this.heats[i].riders.findIndex(rider => rider === event.riderId) > -1) {
+                const existinResultIndex = this.heats[i].results.findIndex(result => result.riderId === event.riderId)
+                if (existinResultIndex > -1) {
+                    if (event.points) {
+                        this.heats[i].results[existinResultIndex] = resultObject;
+                    } else {
+                        this.heats[i].results.splice(existinResultIndex, 1)
+                    }
+                } else {
+                    if (event.points) {
+                        this.heats[i].results.push(resultObject);
+                    }
+                }
+            }
+            this.heatHasAllResults(i);
         }
     }
 }

@@ -10,11 +10,12 @@ import {SurfEventRoutingModule} from "./surf-event-routing.module";
 import {CompetitionComponent} from "./surf-event/competition/competition.component";
 import {SharedModule} from "../shared/shared.module";
 import {MatChipsModule} from "@angular/material/chips";
-import {FormsModule} from "@angular/forms";
+import {FormsModule, ReactiveFormsModule} from "@angular/forms";
 import {DragDropModule} from "@angular/cdk/drag-drop";
 import { RoundComponent } from './surf-event/competition/round/round.component';
 import {RiderResultComponent} from "./surf-event/competition/round/rider-result/rider-result.component";
 import {MatButtonModule} from "@angular/material/button";
+import {MatTabsModule} from "@angular/material/tabs";
 
 
 @NgModule({
@@ -35,8 +36,10 @@ import {MatButtonModule} from "@angular/material/button";
         MatIconModule,
         MatChipsModule,
         FormsModule,
+        ReactiveFormsModule,
         DragDropModule,
-        MatButtonModule
+        MatButtonModule,
+        MatTabsModule
     ]
 })
 export class SurfEventModule {

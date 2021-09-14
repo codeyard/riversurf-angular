@@ -1,0 +1,31 @@
+<div class="round__heat__header">
+    <div class="round__heat__header-title">Heat {{heatNumber + 1}}</div>
+    <button mat-raised-button color="primary"
+            *ngIf="!hasUnassignedRiders && !hasStarted && !hasStopped"
+            (click)="onStatusChange('start')">Start Heat
+    </button>
+    <button mat-raised-button color="primary"
+            *ngIf="hasStarted && !hasStopped"
+            (click)="onStatusChange('stop')">End Heat
+    </button>
+    <button mat-raised-button color="primary"
+            *ngIf="hasStopped && hasAllResults "
+            (click)="onStatusChange('save')" [disabled]="isSaved">Save Heat
+    </button>
+    <div class="round__heat__header-counter">{{ riders.length }} / {{ maxHeatSize }}</div>
+</div>
+
+<div cdkDropList [cdkDropListData]="riders" class="round__riders"
+     (cdkDropListDropped)="drop($event)">
+    <div class="round__riders__single-rider" *ngFor="let rider of riders; let riderIndex = index"
+         cdkDrag [cdkDragDisabled]="hasStarted">
+        <rs-rider-result [riderId]="rider"
+                         [resultType]="getHeatStatus()"
+                         [riderColorIndex]=riderIndex
+                         [disableInput]="isSaved"
+        ></rs-rider-result>
+    </div>
+    <div class="round__riders__single-rider--placeholder" *ngIf="!riders.length">
+        Drop riders here
+    </div>
+</div>

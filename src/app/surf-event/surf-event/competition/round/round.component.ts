@@ -2,6 +2,7 @@ import {Component, EventEmitter, Input, OnChanges, OnInit, Output} from '@angula
 import {CdkDragDrop, moveItemInArray, transferArrayItem} from "@angular/cdk/drag-drop";
 import {SnackbarService} from "../../../../core/services/snackbar.service";
 import {Result} from "../../../../core/models/competition.model";
+
 export interface HeatModel {
     id: number;
     riders: string[];
@@ -136,9 +137,9 @@ export class RoundComponent implements OnInit, OnChanges {
 
     moveToNextRound(roundNumber: number) {
         let promotedRiders = [];
-        for(const heat of this.heats) {
+        for (const heat of this.heats) {
             const sortedArray = heat.results.sort((a, b) => a.value > b.value ? 1 : -1)
-            if(roundNumber === 0) {
+            if (roundNumber === 0) {
                 promotedRiders.push(sortedArray.map(result => result.riderId));
             } else {
                 promotedRiders.push(sortedArray.map(result => result.riderId).splice(0, 2));

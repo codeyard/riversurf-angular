@@ -16,6 +16,7 @@ import { RoundComponent } from './surf-event/competition/round/round.component';
 import {RiderResultComponent} from "./surf-event/competition/round/rider-result/rider-result.component";
 import {MatButtonModule} from "@angular/material/button";
 import {MatTabsModule} from "@angular/material/tabs";
+import { HeatComponent } from './surf-event/competition/round/heat/heat.component';
 
 
 @NgModule({
@@ -24,7 +25,8 @@ import {MatTabsModule} from "@angular/material/tabs";
         CompetitionComponent,
         WeatherComponent,
         RoundComponent,
-        RiderResultComponent
+        RiderResultComponent,
+        HeatComponent
     ],
     imports: [
         SurfEventRoutingModule,

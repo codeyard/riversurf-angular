@@ -22,9 +22,9 @@ export interface Heat {
 }
 
 export interface Result {
-    id: number;
+    id?: number;
     riderId: string;
-    color: Color;
+    color: number;
     value: number;
 }
 

@@ -1,13 +1,5 @@
 @import "../../../../assets/scss/_responsive";
 
 .competition-container {
-    display: flex;
     padding: 2rem;
-    overflow-x: scroll;
-    height: calc(100vh - 64px);
-
-    @include respond(small) {
-        flex-direction: column;
-        overflow-x: hidden;
-    }
 }

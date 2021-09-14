@@ -2,32 +2,33 @@
 <div class="round__heat__header">
     <div class="round__heat__header-title">Heat {{heatNumber + 1}}</div>
     <button mat-raised-button color="primary"
-            *ngIf="!hasUnassignedRiders && !hasStarted && !hasStopped"
+            *ngIf="!hasUnassignedRiders && !heat.hasStarted && !heat.hasStopped"
             (click)="onStatusChange('start')">Start Heat
     </button>
     <button mat-raised-button color="primary"
-            *ngIf="hasStarted && !hasStopped"
+            *ngIf="heat.hasStarted && !heat.hasStopped"
             (click)="onStatusChange('stop')">End Heat
     </button>
     <button mat-raised-button color="primary"
-            *ngIf="hasStopped && hasAllResults "
+            *ngIf="heat.hasStopped && heatForm.valid"
             (click)="onStatusChange('save')" [disabled]="isSaved">Save Heat
     </button>
-    <div class="round__heat__header-counter">{{ riders.length }} / {{ maxHeatSize }}</div>
+    <div class="round__heat__header-counter">{{ heat.riders.length }} / {{ maxHeatSize }}</div>
 </div>
 
-<div cdkDropList [cdkDropListData]="riders" class="round__riders"
+<div cdkDropList [cdkDropListData]="heat.riders" class="round__riders"
      (cdkDropListDropped)="onDrop($event)">
-    <div class="round__riders__single-rider" *ngFor="let rider of riders; let riderIndex = index"
-         cdkDrag [cdkDragDisabled]="hasStarted">
+    <div class="round__riders__single-rider" *ngFor="let rider of heat.riders; let riderIndex = index"
+         cdkDrag [cdkDragDisabled]="heat.hasStarted">
         <rs-rider-result [riderId]="rider"
                          [resultType]="getHeatStatus()"
                          [riderColorIndex]=riderIndex
                          [disableInput]="isSaved"
-                         [formControl]="getControl(riderIndex)"
+                         [control]="getControl(riderIndex)"
+
         ></rs-rider-result>
     </div>
-    <div class="round__riders__single-rider--placeholder" *ngIf="!riders.length">
+    <div class="round__riders__single-rider--placeholder" *ngIf="!heat.riders.length">
         Drop riders here
     </div>
 </div>

@@ -16,7 +16,7 @@ export class RiderResultComponent implements OnInit, OnDestroy {
     @Input() riderId!: string;
     @Input() riderColorIndex!: number;
     @Input() disableInput!: boolean;
-    @Input() formControl!: FormControl;
+    @Input() control!: FormControl;
     @Output() resultEntry = new EventEmitter<{riderId: string, points: number, colorIndex: number}>();
     @Input() resultType: RiderResultType = 'default';
 

@@ -17,6 +17,7 @@ import {RiderResultComponent} from "./surf-event/competition/round/rider-result/
 import {MatButtonModule} from "@angular/material/button";
 import {MatTabsModule} from "@angular/material/tabs";
 import { HeatComponent } from './surf-event/competition/round/heat/heat.component';
+import {MatFormFieldModule} from "@angular/material/form-field";
 
 
 @NgModule({
@@ -41,7 +42,8 @@ import { HeatComponent } from './surf-event/competition/round/heat/heat.componen
         ReactiveFormsModule,
         DragDropModule,
         MatButtonModule,
-        MatTabsModule
+        MatTabsModule,
+        MatFormFieldModule
     ]
 })
 export class SurfEventModule {

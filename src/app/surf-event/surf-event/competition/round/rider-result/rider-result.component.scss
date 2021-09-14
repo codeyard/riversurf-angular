@@ -81,5 +81,6 @@ input[type=number] {
 }
 
 .invalid {
-    border: 1px solid #f44336;
+    border: 2px solid #f44336;
+    border-radius: 4px;
 }

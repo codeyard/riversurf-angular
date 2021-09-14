@@ -27,17 +27,14 @@
             <div class="round__container__element round__container__element--70">
                 <h2>Heats</h2>
                 <div class="round__heat__container">
-                    <rs-heat *ngFor="let heat of heats; let heatIndex = index"
-                             [heatNumber]="heatIndex"
-                             [hasUnassignedRiders]="unassignedRiders.length > 0"
-                             [hasStarted]="heats[heatIndex].hasStarted"
-                             [hasStopped]="heats[heatIndex].hasStopped"
-                             [hasAllResults]="heats[heatIndex].hasAllResults"
-                             [status]="'assigned'"
-                             [isSaved]="false"
-                             [riders]="heats[heatIndex].riders"
-                             (drop)="drop($event)"
-                             (statusChange)="handleStatusChange($event)"
+                        <rs-heat *ngFor="let heat of heats; let heatIndex = index"
+                                 [heatNumber]="heatIndex"
+                                 [heat]=heat
+                                 [hasUnassignedRiders]="unassignedRiders.length > 0"
+                                 [status]="'assigned'"
+                                 [isSaved]="false"
+                                 (drop)="drop($event)"
+                                 (statusChange)="handleStatusChange($event)"
                              class="round__heat"
                     >
                     </rs-heat>

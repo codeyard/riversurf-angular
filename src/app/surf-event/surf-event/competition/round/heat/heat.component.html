@@ -24,6 +24,7 @@
                          [resultType]="getHeatStatus()"
                          [riderColorIndex]=riderIndex
                          [disableInput]="isSaved"
+                         [formControl]="getControl(riderIndex)"
         ></rs-rider-result>
     </div>
     <div class="round__riders__single-rider--placeholder" *ngIf="!riders.length">

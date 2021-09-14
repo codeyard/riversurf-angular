@@ -60,6 +60,9 @@ export class HeatComponent implements OnInit, OnChanges {
         //return (<FormArray>this.heatForm.get('heats')).controls[index];
     }
 
+    ngAfterViewChecked() {
+    }
+
     ngOnChanges(changes: SimpleChanges): void {
         this.heatForm?.get('heats')?.reset();
         this.heatForm = new FormGroup({
@@ -68,7 +71,7 @@ export class HeatComponent implements OnInit, OnChanges {
 
         for(let i = 0; i <this.riders.length; i++) {
             (<FormArray>this.heatForm.get('heats')).push(new FormControl(null, Validators.required))
-        }
+        };
     }
 
 }

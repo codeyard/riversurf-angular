@@ -7,6 +7,7 @@
     transition: all .3s;
     cursor: pointer;
     max-width: 100%;
+    outline: none;
 
     &:hover {
         transform: scale(1.01);
@@ -39,5 +40,6 @@
 
     mat-chip{
         cursor: pointer;
+        outline: none;
     }
 }

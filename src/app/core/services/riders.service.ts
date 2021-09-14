@@ -11,13 +11,13 @@ import {GenericCollectionResponseModel} from "../models/generic-collection-respo
 /**
  * Riders are versioned by collection, we track the version of the whole collection
  * instead of one individual rider
- * if a rider is added or updated in the packend, the version of the whole riders collection is increased
+ * if a rider is added or updated in the backend, the version of the whole riders collection is increased
  *
  * Riders can at the moment (this is out of scope of this project) not be updated or added in the frontend
  * so all changes come from the backend.
  *
- * If we want to add or update riders in the FE in the future, we allways first try to get the latest version of the
- * Colleciton from the backend push oure changes back when updated...
+ * If we want to add or update riders in the frontend in the future, we always first try to get the latest version of the
+ * Collection from the backend push or changes back when updated...
  */
 @Injectable({
     providedIn: 'root'
@@ -77,6 +77,7 @@ export class RidersService {
     getRidersByIds(ids: string[]): Observable<Rider[]> {
         return from(ids).pipe(
             switchMap(id => this.getRider(id)),
+            take(ids.length),
             toArray(),
             filter(riders => riders.length > 0)
         );

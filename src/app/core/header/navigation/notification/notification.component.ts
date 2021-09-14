@@ -1,15 +1,24 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, OnInit, TemplateRef, ViewChild} from '@angular/core';
+import {MatDialog} from "@angular/material/dialog";
 
 @Component({
-  selector: 'rs-notification',
-  templateUrl: './notification.component.html',
-  styleUrls: ['./notification.component.scss']
+    selector: 'rs-notification',
+    templateUrl: './notification.component.html',
+    styleUrls: ['./notification.component.scss']
 })
 export class NotificationComponent implements OnInit {
 
-  constructor() { }
+    @ViewChild('content') dialogContent !: TemplateRef<any>;
 
-  ngOnInit(): void {
-  }
+    unread:number = 99;
 
+    constructor(private dialog: MatDialog) {
+    }
+
+    ngOnInit(): void {
+    }
+
+    openDialog() {
+        this.dialog.open(this.dialogContent).afterClosed().subscribe(()=>this.unread = 0);
+    }
 }

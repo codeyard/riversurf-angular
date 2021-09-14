@@ -8,6 +8,8 @@ import {MatIconModule} from "@angular/material/icon";
 import {RouterModule} from "@angular/router";
 import { NotificationComponent } from './header/navigation/notification/notification.component';
 import {MatBadgeModule} from "@angular/material/badge";
+import {MatDialogModule} from "@angular/material/dialog";
+import {MatButtonModule} from "@angular/material/button";
 
 
 @NgModule({
@@ -22,7 +24,9 @@ import {MatBadgeModule} from "@angular/material/badge";
         MatToolbarModule,
         MatIconModule,
         RouterModule,
-        MatBadgeModule
+        MatBadgeModule,
+        MatDialogModule,
+        MatButtonModule
     ],
     exports: [
         HeaderComponent

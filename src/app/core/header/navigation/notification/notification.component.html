@@ -1,5 +1,14 @@
 <div class="container">
     <div class="container__icon">
-        <mat-icon matBadge="99" matBadgeColor="warn">notifications</mat-icon>
+        <mat-icon [matBadge]="unread" matBadgeColor="warn" (click)="openDialog()" [matBadgeHidden]="!unread">notifications</mat-icon>
     </div>
 </div>
+<ng-template #content>
+    <h2 mat-dialog-title>Hello Notification</h2>
+    <mat-dialog-content>
+        Hello World!
+    </mat-dialog-content>
+    <mat-dialog-actions>
+        <button mat-raised-button mat-dialog-close color="primary">Close</button>
+    </mat-dialog-actions>
+</ng-template>

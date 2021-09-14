@@ -23,12 +23,10 @@
             <div *ngSwitchCase="'finished'" class="rider__card__type">
                 <p>Points:</p>
                 <div class="rider__card__input-container">
-                    <form [formGroup]="points">
-                        <input formControlName="pointsInput" type="number"
+                        <input type="number"
                                class="rider__card__input"
-                               #pointsInput
-                               [ngClass]="{'invalid': points.touched && !points.valid}"/>
-                    </form>
+                               [formControlName]="formControlName"
+                        >
                     <mat-icon aria-hidden="false" *ngIf="disableInput">locked</mat-icon>
                 </div>
             </div>

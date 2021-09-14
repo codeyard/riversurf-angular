@@ -36,6 +36,8 @@
                              [status]="'assigned'"
                              [isSaved]="false"
                              [riders]="heats[heatIndex].riders"
+                             (drop)="drop($event)"
+                             (statusChange)="handleStatusChange($event)"
                              class="round__heat"
                     >
                     </rs-heat>

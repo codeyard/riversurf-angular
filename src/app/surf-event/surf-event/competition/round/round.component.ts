@@ -83,13 +83,10 @@ export class RoundComponent implements OnInit, OnChanges {
             for (let i = 0; i <= heatLength; i++) {
                 const removedRider = heat.riders.pop()
                 if (removedRider)
-
-                    setTimeout(() =>
-                        this.riders.push(removedRider), 200)
-
+                    this.unassignedRiders.push(removedRider);
             }
+            this.snackbarService.send("All riders are no longer assigned", "success");
         }
-        this.snackbarService.send("All riders are no longer assigned", "success");
     }
 
     automaticallyAssignRiders() {
@@ -186,4 +183,19 @@ export class RoundComponent implements OnInit, OnChanges {
             this.heatHasAllResults(i);
         }
     }
+
+    handleStatusChange(event: {action: string, heatNumber: number }) {
+        switch (event.action) {
+            case "start":
+                this.startHeat(event.heatNumber)
+                break;
+            case "stop":
+                this.stopHeat(event.heatNumber)
+                break;
+            case "save":
+                this.saveHeat(event.heatNumber);
+                break;
+        }
+    }
+
 }

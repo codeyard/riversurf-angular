@@ -27,9 +27,6 @@
                     <input type="number"
                            class="rider__card__input"
                            [formControl]="control"
-                           [name]="riderId"
-                           [disabled]="disableInput"
-                           #inputElement
                            [ngClass]="{'invalid': control.invalid && control.touched}"
                     >
                     <mat-icon aria-hidden="false" *ngIf="disableInput">locked</mat-icon>

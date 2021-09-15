@@ -1,3 +1,4 @@
+<form [formGroup]="roundForm">
 <div cdkDropListGroup class="container">
     <mat-card class="round">
         <div class="round__header">
@@ -8,7 +9,7 @@
                     Assign Riders Randomly
                 </button>
                 <button mat-raised-button (click)="revert()" *ngIf="!oneHeatStarted">Revert</button>
-                <button mat-raised-button color="primary" *ngIf="checkAllHeatsFinished()"
+                <button mat-raised-button color="primary"  [disabled]="!roundForm.invalid"
                         (click)="moveToNextRound(roundNumber)">
                     Move to next round
                 </button>
@@ -27,14 +28,13 @@
             <div class="round__container__element round__container__element--70">
                 <h2>Heats</h2>
                 <div class="round__heat__container">
-                        <rs-heat *ngFor="let heat of heats; let heatIndex = index"
-                                 [heatNumber]="heatIndex"
-                                 [heat]=heat
-                                 [hasUnassignedRiders]="unassignedRiders.length > 0"
-                                 [status]="'assigned'"
-                                 [isSaved]="false"
-                                 (drop)="drop($event)"
-                                 (statusChange)="handleStatusChange($event)"
+                    <rs-heat *ngFor="let heat of heats; let heatIndex = index"
+                             [heatNumber]="heatIndex"
+                             [formGroup]="roundForm"
+                             [heat]=heat
+                             [hasUnassignedRiders]="unassignedRiders.length > 0"
+                             (drop)="drop($event)"
+                             (statusChange)="handleStatusChange($event)"
                              class="round__heat"
                     >
                     </rs-heat>
@@ -44,3 +44,4 @@
         </div>
     </mat-card>
 </div>
+</form>

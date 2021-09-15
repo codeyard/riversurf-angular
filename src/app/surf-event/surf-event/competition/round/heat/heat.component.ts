@@ -1,38 +1,51 @@
 import {Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges} from '@angular/core';
 import {HeatModel} from "../round.component";
-import {CdkDragDrop, moveItemInArray, transferArrayItem} from "@angular/cdk/drag-drop";
+import {CdkDragDrop} from "@angular/cdk/drag-drop";
 import {SnackbarService} from "../../../../../core/services/snackbar.service";
-import {AbstractControl, FormArray, FormControl, FormGroup, Validators} from "@angular/forms";
+import {ControlContainer, FormArray, FormControl, FormGroup, FormGroupDirective, Validators} from "@angular/forms";
+import {Result} from "../../../../../core/models/competition.model";
 
 @Component({
     selector: 'rs-heat',
     templateUrl: './heat.component.html',
-    styleUrls: ['./heat.component.scss']
+    styleUrls: ['./heat.component.scss'],
+    viewProviders: [{provide: ControlContainer, useExisting: FormGroupDirective}]
 })
 export class HeatComponent implements OnInit, OnChanges {
     @Input() hasUnassignedRiders!: boolean;
     @Input() heat!: HeatModel;
     @Input() heatNumber!: number;
-    @Input() status!: string;
-    @Input() isSaved!: boolean;
-    @Output() statusChange = new EventEmitter<{ action: string, heatNumber: number }>();
+    @Output() statusChange = new EventEmitter<{ action: string, heatNumber: number, heat: HeatModel }>();
     @Output() drop = new EventEmitter<CdkDragDrop<string[], any>>();
     maxHeatSize = 4;
-
+    isSaved!: boolean;
+    status!: string;
     heatForm!: FormGroup;
 
-
-
-    constructor(private snackbarService: SnackbarService) {
+    constructor(private snackbarService: SnackbarService, private controlContainer: ControlContainer) {
     }
 
     ngOnInit(): void {
     }
 
-
-
     onStatusChange(action: string) {
-        this.statusChange.emit({action, heatNumber: this.heatNumber});
+        if (action === 'save') {
+            this.setResults()
+        }
+
+        this.statusChange.emit({action, heatNumber: this.heatNumber, heat: this.heat});
+    }
+
+    setResults() {
+        for (let i = 0; i < this.heat.riders.length; i++) {
+            const result: Result = {
+                riderId: this.heat.riders[i],
+                color: i,
+                value: this.heatForm.controls['heat'].value[i]
+            }
+            this.heat.results.push(result)
+        }
+
     }
 
     getHeatStatus() {
@@ -50,18 +63,28 @@ export class HeatComponent implements OnInit, OnChanges {
     }
 
     getControl(index: number): FormControl {
-        return <FormControl>(this.heatForm.get('heats') as FormArray).controls[index];
+        return <FormControl>(this.heatForm.get('heat') as FormArray).controls[index];
     }
 
     ngOnChanges(changes: SimpleChanges): void {
-        this.heatForm?.get('heats')?.reset();
+        this.heatForm = <FormGroup>this.controlContainer.control;
+        this.isSaved = this.heat.results.length > 0
+        this.status = this.heat.results.length > 0 ? 'finished' : 'assigned'
+
+        this.heatForm?.get('heat')?.reset();
         this.heatForm = new FormGroup({
-            'heats': new FormArray([])
+            'heat': new FormArray([])
         });
 
-        for(let i = 0; i < this.heat.riders.length; i++) {
-            (<FormArray>this.heatForm.get('heats')).push(new FormControl(null, [Validators.required, Validators.pattern("^([0-9]{1,2}){1}(\\.[0-9]{1})?$")]));
-        };
+
+        for (let i = 0; i < this.heat.riders.length; i++) {
+            const initValue = this.heat.results[i]?.value || null;
+            (<FormArray>this.heatForm.get('heat')).push(new FormControl({
+                value: initValue,
+                disabled: this.isSaved
+            }, [Validators.required, Validators.pattern("^([0-9]{1,2}){1}(\\.[0-9]{1})?$")]));
+        }
+        console.log(this.heatForm);
     }
 
 }

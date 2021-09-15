@@ -2,6 +2,7 @@ import {Component, EventEmitter, Input, OnChanges, OnInit, Output} from '@angula
 import {CdkDragDrop, moveItemInArray, transferArrayItem} from "@angular/cdk/drag-drop";
 import {SnackbarService} from "../../../../core/services/snackbar.service";
 import {Result} from "../../../../core/models/competition.model";
+import {AbstractControl, FormArray, FormControl, FormGroup} from "@angular/forms";
 
 export interface HeatModel {
     id: number;
@@ -29,6 +30,7 @@ export class RoundComponent implements OnInit, OnChanges {
     heats: HeatModel[] = [];
     oneHeatStarted = false;
     heatsFinished: boolean[] = [];
+    roundForm!: FormGroup;
 
     constructor(private snackbarService: SnackbarService) {
     }
@@ -38,6 +40,7 @@ export class RoundComponent implements OnInit, OnChanges {
     }
 
     ngOnChanges(): void {
+        this.roundForm = new FormGroup({});
         this.setupRound();
     }
 
@@ -104,24 +107,6 @@ export class RoundComponent implements OnInit, OnChanges {
             : this.assignRiderToHeat(riderId);
     }
 
-    startHeat(heatNumber: number) {
-        this.heats[heatNumber].hasStarted = true;
-        this.oneHeatStarted = true;
-    }
-
-    stopHeat(heatNumber: number) {
-        this.heats[heatNumber].hasStopped = true;
-
-        // TODO ENABLE RESULTS ENTRANCE
-
-    }
-
-    saveHeat(heatNumber: number) {
-        this.heatsFinished[heatNumber] = true;
-        this.snackbarService.send("Results saved!", "success");
-
-    }
-
     checkAllHeatsFinished(): boolean {
         return !this.heatsFinished.includes(false);
     }
@@ -157,45 +142,29 @@ export class RoundComponent implements OnInit, OnChanges {
         }
     }
 
-    onResultEntry(event: { riderId: string, points: number, colorIndex: number }) {
-        const resultObject = {
-            riderId: event.riderId,
-            color: event.colorIndex,
-            value: event.points
-        }
-        console.log('resultObject', resultObject)
-
-        for (let i = 0; i < this.heats.length; i++) {
-            if (this.heats[i].riders.findIndex(rider => rider === event.riderId) > -1) {
-                const existinResultIndex = this.heats[i].results.findIndex(result => result.riderId === event.riderId)
-                if (existinResultIndex > -1) {
-                    if (event.points) {
-                        this.heats[i].results[existinResultIndex] = resultObject;
-                    } else {
-                        this.heats[i].results.splice(existinResultIndex, 1)
-                    }
-                } else {
-                    if (event.points) {
-                        this.heats[i].results.push(resultObject);
-                    }
-                }
-            }
-            this.heatHasAllResults(i);
-        }
-    }
-
-    handleStatusChange(event: {action: string, heatNumber: number }) {
+    handleStatusChange(event: { action: string, heatNumber: number, heat: HeatModel }) {
+        console.log(this.roundForm)
         switch (event.action) {
             case "start":
-                this.startHeat(event.heatNumber)
+                this.heats[event.heatNumber] = {...event.heat, hasStarted: true}
+                this.oneHeatStarted = true;
                 break;
             case "stop":
-                this.stopHeat(event.heatNumber)
+                this.heats[event.heatNumber] = {...event.heat, hasStopped: true}
                 break;
             case "save":
-                this.saveHeat(event.heatNumber);
+                //TODO ADD RESULTS AND CHECK IF ALL RESULTS ARE AVIALBE
+                this.heats[event.heatNumber] = {...event.heat, hasAllResults: true}
+                //this.heatHasAllResults(event.heatNumber);
+                this.snackbarService.send("Results saved!", "success");
                 break;
         }
     }
+
+
+    getFormGroup(heatIndex: number): FormGroup {
+        return <FormGroup>this.roundForm.controls[heatIndex]
+    }
+
 
 }

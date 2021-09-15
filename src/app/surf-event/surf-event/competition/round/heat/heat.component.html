@@ -1,16 +1,16 @@
 <form [formGroup]="heatForm">
 <div class="round__heat__header">
     <div class="round__heat__header-title">Heat {{heatNumber + 1}}</div>
-    <button mat-raised-button color="primary"
+    <button mat-raised-button color="primary" type="button"
             *ngIf="!hasUnassignedRiders && !heat.hasStarted && !heat.hasStopped"
             (click)="onStatusChange('start')">Start Heat
     </button>
-    <button mat-raised-button color="primary"
+    <button mat-raised-button color="primary" type="button"
             *ngIf="heat.hasStarted && !heat.hasStopped"
             (click)="onStatusChange('stop')">End Heat
     </button>
     <button mat-raised-button color="primary"
-            *ngIf="heat.hasStopped && heatForm.valid"
+            *ngIf="heat.hasStopped  && heatForm.valid" type="button"
             (click)="onStatusChange('save')" [disabled]="isSaved">Save Heat
     </button>
     <div class="round__heat__header-counter">{{ heat.riders.length }} / {{ maxHeatSize }}</div>
@@ -23,7 +23,6 @@
         <rs-rider-result [riderId]="rider"
                          [resultType]="getHeatStatus()"
                          [riderColorIndex]=riderIndex
-                         [disableInput]="isSaved"
                          [control]="getControl(riderIndex)"
 
         ></rs-rider-result>

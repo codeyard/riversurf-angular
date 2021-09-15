@@ -19,6 +19,26 @@
     }
 }
 
+.notification{
+    display: flex;
+
+    &__timestamp{
+        font-style: italic;
+    }
+
+    &__content{
+
+    }
+
+    &__link{
+
+    }
+}
+
+.new{
+    color: lime;
+}
+
 mat-dialog-actions{
     justify-content: center;
 }

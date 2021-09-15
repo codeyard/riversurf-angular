@@ -1,12 +1,16 @@
 <div class="container">
     <div class="container__icon">
-        <mat-icon [matBadge]="unread" matBadgeColor="warn" (click)="openDialog()" [matBadgeHidden]="!unread">notifications</mat-icon>
+        <mat-icon [matBadge]="userNotifications | newUserNotifications" matBadgeColor="warn" (click)="openDialog()" [matBadgeHidden]="(userNotifications|newUserNotifications) === '0'">notifications</mat-icon>
     </div>
 </div>
 <ng-template #content>
-    <h2 mat-dialog-title>Hello Notification</h2>
+    <h2 mat-dialog-title>Notifications</h2>
     <mat-dialog-content>
-        Hello World!
+        <div class="notification" *ngFor="let userNotification of this.userNotifications">
+            <div class="notification__timestamp" [ngClass]="{'new' : !userNotification.read}">{{userNotification.timestamp | date:'HH:mm:ss, d MMMM YYYY'}}</div>
+            <div class="notification__content">{{userNotification.content}}</div>
+            <div class="notification__link" *ngIf="userNotification.link" [routerLink]="userNotification.link" matDialogClose>Go</div>
+        </div>
     </mat-dialog-content>
     <mat-dialog-actions>
         <button mat-raised-button mat-dialog-close color="primary">Close</button>

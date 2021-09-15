@@ -2,7 +2,6 @@ import {Component, EventEmitter, Input, OnChanges, OnInit, Output} from '@angula
 import {CdkDragDrop, moveItemInArray, transferArrayItem} from "@angular/cdk/drag-drop";
 import {SnackbarService} from "../../../../core/services/snackbar.service";
 import {Result} from "../../../../core/models/competition.model";
-import {FormArray, FormGroup} from "@angular/forms";
 
 export interface HeatModel {
     id: number;
@@ -30,7 +29,6 @@ export class RoundComponent implements OnInit, OnChanges {
     heats: HeatModel[] = [];
     oneHeatStarted = false;
     heatsFinished: boolean[] = [];
-    roundForm!: FormGroup;
 
     constructor(private snackbarService: SnackbarService) {
     }
@@ -44,7 +42,6 @@ export class RoundComponent implements OnInit, OnChanges {
     }
 
     setupRound(): void {
-        this.roundForm = new FormGroup({});
         this.unassignedRiders = [...this.riders];
         const numberOfHeats = Math.ceil(this.unassignedRiders.length / this.heatSize);
         for (let i = 0; i < numberOfHeats; i++) {
@@ -57,7 +54,6 @@ export class RoundComponent implements OnInit, OnChanges {
                 results: []
             })
             this.heatsFinished.push(false);
-            this.roundForm.addControl(i.toString(), new FormArray([]))
         }
     }
 
@@ -108,7 +104,7 @@ export class RoundComponent implements OnInit, OnChanges {
     }
 
     checkAllHeatsFinished(): boolean {
-        return !this.heatsFinished.includes(false);
+        return !this.heats.map(heat => heat.riders.length === heat.results.length).some(element => element)
     }
 
     heatHasAllResults(heatNumber: number): boolean {
@@ -158,13 +154,6 @@ export class RoundComponent implements OnInit, OnChanges {
                 this.snackbarService.send("Results saved!", "success");
                 break;
         }
-    }
-
-
-    getFormGroup(heatIndex: number): FormGroup {
-        const name = `heat${heatIndex}`
-        console.log("parent", this.roundForm)
-        return <FormGroup>this.roundForm.controls[name]
     }
 
 

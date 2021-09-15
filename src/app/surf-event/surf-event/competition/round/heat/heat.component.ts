@@ -15,7 +15,6 @@ export class HeatComponent implements OnInit, OnChanges {
     @Input() hasUnassignedRiders!: boolean;
     @Input() heat!: HeatModel;
     @Input() heatNumber!: number;
-    @Input() parent!: FormGroup;
     @Output() statusChange = new EventEmitter<{ action: string, heatNumber: number, heat: HeatModel, form: FormGroup }>();
     @Output() drop = new EventEmitter<CdkDragDrop<string[], any>>();
     maxHeatSize = 4;
@@ -85,7 +84,6 @@ export class HeatComponent implements OnInit, OnChanges {
                 disabled: this.isSaved
             }, [Validators.required, Validators.pattern("^([0-9]{1,2}){1}(\\.[0-9]{1})?$")]));
         }
-        this.parent.setControl(this.heatNumber.toString(), this.heatForm)
     }
 
 

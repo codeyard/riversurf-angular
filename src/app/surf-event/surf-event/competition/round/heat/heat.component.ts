@@ -18,12 +18,11 @@ export class HeatComponent implements OnInit, OnChanges {
     @Output() statusChange = new EventEmitter<{ action: string, heatNumber: number, heat: HeatModel, form: FormGroup }>();
     @Output() drop = new EventEmitter<CdkDragDrop<string[], any>>();
     maxHeatSize = 4;
-    isSaved!: boolean;
     status!: string;
     heatForm!: FormGroup;
 
 
-    constructor(private snackbarService: SnackbarService) {
+    constructor() {
     }
 
     ngOnInit(): void {
@@ -67,8 +66,6 @@ export class HeatComponent implements OnInit, OnChanges {
     }
 
     ngOnChanges(changes: SimpleChanges): void {
-
-        this.isSaved = this.heat.results.length > 0
         this.status = this.heat.results.length > 0 ? 'finished' : 'assigned'
 
         this.heatForm?.get('heat')?.reset();
@@ -81,7 +78,7 @@ export class HeatComponent implements OnInit, OnChanges {
             const initValue = this.heat.results[i]?.value || null;
             (<FormArray>this.heatForm.get('heat')).push(new FormControl({
                 value: initValue,
-                disabled: this.isSaved
+                disabled: this.heat.results.length > 0
             }, [Validators.required, Validators.pattern("^([0-9]{1,2}){1}(\\.[0-9]{1})?$")]));
         }
     }

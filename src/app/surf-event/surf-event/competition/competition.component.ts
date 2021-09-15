@@ -30,7 +30,7 @@ export class CompetitionComponent implements OnInit {
             results: []
         }
         this.rounds.push(initialRound);
-        const maxRounds = Math.ceil(this.competition.riders.length / 8);
+        const maxRounds = Math.floor(this.competition.riders.length / 4);
         for (let i = 0; i < maxRounds; i++) {
             this.rounds.push({
                 id: i + 1,
@@ -46,6 +46,7 @@ export class CompetitionComponent implements OnInit {
             console.log(this.rounds[i].riders) // IDEA: PUSH IN NEXT ROUND WITHOUT RIDERS, NOT YET WORKING
             if(!this.rounds[i].riders.length) {
                 this.rounds[i].riders = promotedRiders;
+                break
             }
         }
         this.selectedTabIndex = this.selectedTabIndex + 1;

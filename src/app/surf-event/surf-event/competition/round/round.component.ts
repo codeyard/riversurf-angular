@@ -124,18 +124,7 @@ export class RoundComponent implements OnInit, OnChanges {
             }
         }
         promotedRiders = promotedRiders.reduce((acc, val) => acc.concat(val), []);
-        console.log('promotedRiders:', promotedRiders)
         this.finishedRound.emit(promotedRiders);
-    }
-
-    getHeatStatus(heat: HeatModel) {
-        if (heat.hasStopped) {
-            return "finished"
-        } else if (heat.hasStarted) {
-            return "surfing";
-        } else {
-            return "assigned"
-        }
     }
 
     handleStatusChange(event: { action: string, heatNumber: number, heat: HeatModel }) {

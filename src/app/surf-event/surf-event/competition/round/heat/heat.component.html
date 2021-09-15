@@ -10,8 +10,10 @@
             (click)="onStatusChange('stop')">End Heat
     </button>
     <button mat-raised-button color="primary"
-            *ngIf="heat.hasStopped  && heatForm.valid" type="button"
-            (click)="onStatusChange('save')" [disabled]="isSaved">Save Heat
+            *ngIf="heat.hasStopped" type="button"
+            (click)="onStatusChange('save')" [disabled]="!heatForm.valid">
+        Save Heat
+        <mat-icon *ngIf="heat.results.length > 0">checkmark</mat-icon>
     </button>
     <div class="round__heat__header-counter">{{ heat.riders.length }} / {{ maxHeatSize }}</div>
 </div>

@@ -104,7 +104,7 @@ export class RoundComponent implements OnInit, OnChanges {
     }
 
     checkAllHeatsFinished(): boolean {
-        return !this.heats.map(heat => heat.riders.length === heat.results.length).some(element => element)
+        return !this.heats.map(heat => heat.riders.length === heat.results.length && heat.results.length > 0).every(element => element)
     }
 
     heatHasAllResults(heatNumber: number): boolean {

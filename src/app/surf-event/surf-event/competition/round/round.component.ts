@@ -2,7 +2,7 @@ import {Component, EventEmitter, Input, OnChanges, OnInit, Output} from '@angula
 import {CdkDragDrop, moveItemInArray, transferArrayItem} from "@angular/cdk/drag-drop";
 import {SnackbarService} from "../../../../core/services/snackbar.service";
 import {Result} from "../../../../core/models/competition.model";
-import {AbstractControl, FormArray, FormControl, FormGroup} from "@angular/forms";
+import {FormArray, FormGroup} from "@angular/forms";
 
 export interface HeatModel {
     id: number;
@@ -40,11 +40,11 @@ export class RoundComponent implements OnInit, OnChanges {
     }
 
     ngOnChanges(): void {
-        this.roundForm = new FormGroup({});
         this.setupRound();
     }
 
     setupRound(): void {
+        this.roundForm = new FormGroup({});
         this.unassignedRiders = [...this.riders];
         const numberOfHeats = Math.ceil(this.unassignedRiders.length / this.heatSize);
         for (let i = 0; i < numberOfHeats; i++) {
@@ -57,6 +57,7 @@ export class RoundComponent implements OnInit, OnChanges {
                 results: []
             })
             this.heatsFinished.push(false);
+            this.roundForm.addControl(i.toString(), new FormArray([]))
         }
     }
 
@@ -76,7 +77,6 @@ export class RoundComponent implements OnInit, OnChanges {
             }
         }
         this.snackbarService.send(`Sorry, this heat is already complete!`, "warning")
-
         console.log(`heats`, this.heats);
     }
 
@@ -143,7 +143,6 @@ export class RoundComponent implements OnInit, OnChanges {
     }
 
     handleStatusChange(event: { action: string, heatNumber: number, heat: HeatModel }) {
-        console.log(this.roundForm)
         switch (event.action) {
             case "start":
                 this.heats[event.heatNumber] = {...event.heat, hasStarted: true}
@@ -163,7 +162,9 @@ export class RoundComponent implements OnInit, OnChanges {
 
 
     getFormGroup(heatIndex: number): FormGroup {
-        return <FormGroup>this.roundForm.controls[heatIndex]
+        const name = `heat${heatIndex}`
+        console.log("parent", this.roundForm)
+        return <FormGroup>this.roundForm.controls[name]
     }
 
 

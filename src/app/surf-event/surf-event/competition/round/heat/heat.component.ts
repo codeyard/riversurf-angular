@@ -2,27 +2,29 @@ import {Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges
 import {HeatModel} from "../round.component";
 import {CdkDragDrop} from "@angular/cdk/drag-drop";
 import {SnackbarService} from "../../../../../core/services/snackbar.service";
-import {ControlContainer, FormArray, FormControl, FormGroup, FormGroupDirective, Validators} from "@angular/forms";
+import {FormArray, FormControl, FormGroup, Validators} from "@angular/forms";
 import {Result} from "../../../../../core/models/competition.model";
+
 
 @Component({
     selector: 'rs-heat',
     templateUrl: './heat.component.html',
     styleUrls: ['./heat.component.scss'],
-    viewProviders: [{provide: ControlContainer, useExisting: FormGroupDirective}]
 })
 export class HeatComponent implements OnInit, OnChanges {
     @Input() hasUnassignedRiders!: boolean;
     @Input() heat!: HeatModel;
     @Input() heatNumber!: number;
-    @Output() statusChange = new EventEmitter<{ action: string, heatNumber: number, heat: HeatModel }>();
+    @Input() parent!: FormGroup;
+    @Output() statusChange = new EventEmitter<{ action: string, heatNumber: number, heat: HeatModel, form: FormGroup }>();
     @Output() drop = new EventEmitter<CdkDragDrop<string[], any>>();
     maxHeatSize = 4;
     isSaved!: boolean;
     status!: string;
     heatForm!: FormGroup;
 
-    constructor(private snackbarService: SnackbarService, private controlContainer: ControlContainer) {
+
+    constructor(private snackbarService: SnackbarService) {
     }
 
     ngOnInit(): void {
@@ -32,8 +34,7 @@ export class HeatComponent implements OnInit, OnChanges {
         if (action === 'save') {
             this.setResults()
         }
-
-        this.statusChange.emit({action, heatNumber: this.heatNumber, heat: this.heat});
+        this.statusChange.emit({action, heatNumber: this.heatNumber, heat: this.heat, form: this.heatForm});
     }
 
     setResults() {
@@ -67,15 +68,15 @@ export class HeatComponent implements OnInit, OnChanges {
     }
 
     ngOnChanges(changes: SimpleChanges): void {
-        this.heatForm = <FormGroup>this.controlContainer.control;
+
         this.isSaved = this.heat.results.length > 0
         this.status = this.heat.results.length > 0 ? 'finished' : 'assigned'
 
         this.heatForm?.get('heat')?.reset();
+
         this.heatForm = new FormGroup({
             'heat': new FormArray([])
         });
-
 
         for (let i = 0; i < this.heat.riders.length; i++) {
             const initValue = this.heat.results[i]?.value || null;
@@ -84,7 +85,8 @@ export class HeatComponent implements OnInit, OnChanges {
                 disabled: this.isSaved
             }, [Validators.required, Validators.pattern("^([0-9]{1,2}){1}(\\.[0-9]{1})?$")]));
         }
-        console.log(this.heatForm);
+        this.parent.setControl(this.heatNumber.toString(), this.heatForm)
     }
+
 
 }

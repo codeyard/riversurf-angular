@@ -30,7 +30,7 @@
                 <div class="round__heat__container">
                     <rs-heat *ngFor="let heat of heats; let heatIndex = index"
                              [heatNumber]="heatIndex"
-                             [formGroup]="roundForm"
+                             [parent]="roundForm"
                              [heat]=heat
                              [hasUnassignedRiders]="unassignedRiders.length > 0"
                              (drop)="drop($event)"

@@ -1,43 +1,50 @@
-import {Component, OnInit} from '@angular/core';
-import {Competition, exampleComp, Result} from "../../../core/models/competition.model";
+import {Component, OnDestroy, OnInit} from '@angular/core';
+import {Competition, exampleComp, Round} from "../../../core/models/competition.model";
 import {SnackbarService} from "../../../core/services/snackbar.service";
-
-export interface RoundModel {
-    id: number;
-    riders: string[];
-    results: Result[];
-}
+import {CompetitionService} from "../../../core/services/competition.service";
+import {ActivatedRoute} from "@angular/router";
+import {switchMap} from "rxjs/operators";
+import {Subscription} from "rxjs";
 
 @Component({
     selector: 'rs-competition',
     templateUrl: './competition.component.html',
     styleUrls: ['./competition.component.scss']
 })
-export class CompetitionComponent implements OnInit {
+export class CompetitionComponent implements OnInit, OnDestroy {
 
-    competition: Competition = {...exampleComp};
+    routeSubscription?: Subscription;
 
-    rounds: RoundModel[] = [];
+    competition!: Competition;
+
     selectedTabIndex: number = 0;
 
-    constructor(private snackBarService: SnackbarService) {
+    constructor(private snackBarService: SnackbarService, private competitionService : CompetitionService, private route: ActivatedRoute) {
     }
 
-    ngOnInit(): void {
-        let initialRound: RoundModel = {
-            id: 0,
-            riders: this.competition.riders,
-            results: []
-        }
-        this.rounds.push(initialRound);
-        const maxRounds = Math.floor(this.competition.riders.length / 4);
-        for (let i = 0; i < maxRounds; i++) {
-            this.rounds.push({
-                id: i + 1,
-                riders: [],
-                results: []
-            });
-        }
+    ngOnInit(): void{
+        this.routeSubscription = this.route.params
+            .pipe(
+                switchMap(params => {
+                    const id = params['id'].split('-').pop();
+                    return this.competitionService.getCompetition(id)
+                })
+            )
+            .subscribe(
+                rider => {
+                    this.isLoading = false;
+                    this.rider = rider;
+                },
+                error => {
+                    this.isLoading = false;
+                    this.snackBarService.send("Unable to load Riders", "error");
+                    console.log('ERROR loading riders data :-(', error)
+                });
+        this.competition = ;
+    }
+
+    ngOnDestroy(): void {
+        this.routeSubscription?.unsubscribe();
     }
 
     onFinishedRound(promotedRiders: string[]) {

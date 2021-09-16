@@ -78,8 +78,7 @@ export class RidersService {
         return from(ids).pipe(
             switchMap(id => this.getRider(id)),
             take(ids.length),
-            toArray(),
-            filter(riders => riders.length > 0)
+            toArray()
         );
     }
 

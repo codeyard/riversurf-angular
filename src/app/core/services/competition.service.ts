@@ -1,0 +1,51 @@
+import {Injectable} from '@angular/core';
+import {Competition, exampleComp, Round} from "../models/competition.model";
+import {BehaviorSubject, Observable} from "rxjs";
+import {filter, map, tap} from "rxjs/operators";
+
+@Injectable({
+    providedIn: 'root'
+})
+export class CompetitionService {
+
+    private competitionData = new BehaviorSubject<Competition[]>([])
+    private competition$ = this.competitionData.asObservable();
+
+    constructor() {
+        this.fetchCompetitions();
+    }
+
+    private fetchCompetitions() {
+
+        let competitions = [{...exampleComp}];
+
+        competitions.forEach(competition => this.setupRounds(competition));
+
+        this.competitionData.next(competitions);
+    }
+
+    private setupRounds(competition: Competition) {
+        let initialRound: Round = {
+            id: 0,
+            riders: competition.riders,
+            heats: []
+        }
+        competition.rounds.push(initialRound);
+        const maxRounds = Math.floor(competition.riders.length / 4);
+        for (let i = 0; i < maxRounds; i++) {
+            competition.rounds.push({
+                id: i + 1,
+                riders: [],
+                heats: []
+            });
+        }
+    }
+
+    getCompetition(competitionId: string): Observable<Competition> {
+        return this.competition$
+            .pipe(
+                filter(competitions => competitions.length > 0),
+                map(competitions => competitions.filter(competition => competition.id === competitionId)[0])
+            )
+    }
+}

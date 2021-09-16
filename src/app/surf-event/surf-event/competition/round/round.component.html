@@ -1,19 +1,19 @@
 <div cdkDropListGroup class="container">
     <mat-card class="round">
         <div class="round__header">
-            <h1 *ngIf="roundNumber === 0">Seeding round</h1>
-            <h1 *ngIf="roundNumber !== 0">Round {{roundNumber}}</h1>
+            <h1 *ngIf="round.id === 0">Seeding round</h1>
+            <h1 *ngIf="round.id !== 0">Round {{round.id}}</h1>
             <div class="round__header-buttons">
                 <button mat-raised-button color="primary" *ngIf="!oneHeatStarted" (click)="automaticallyAssignRiders()">
                     Assign Riders Randomly
                 </button>
                 <button mat-raised-button (click)="revert()" *ngIf="!oneHeatStarted">Revert</button>
-                <button mat-raised-button color="primary"  [disabled]="checkAllHeatsFinished()" *ngIf="!(roundNumber === roundNumberFinal)"
-                        (click)="moveToNextRound(roundNumber)">
+                <button mat-raised-button color="primary"  [disabled]="checkAllHeatsFinished()" *ngIf="!isFinalRound"
+                        (click)="moveToNextRound(round.id)">
                     Move to next round
                 </button>
                 <button mat-raised-button color="primary"  [disabled]="checkAllHeatsFinished()"
-                        *ngIf="roundNumber ===roundNumberFinal"
+                        *ngIf="isFinalRound"
                         (click)="finishCompetition()">
                     Finish Competition
                 </button>
@@ -32,8 +32,7 @@
             <div class="round__container__element round__container__element--70">
                 <h2>Heats</h2>
                 <div class="round__heat__container">
-                    <rs-heat *ngFor="let heat of heats; let heatIndex = index"
-                             [heatNumber]="heatIndex"
+                    <rs-heat *ngFor="let heat of round.heats"
                              [heat]=heat
                              [hasUnassignedRiders]="unassignedRiders.length > 0"
                              (drop)="drop($event)"

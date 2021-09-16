@@ -1,9 +1,7 @@
 import {Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges} from '@angular/core';
-import {HeatModel} from "../round.component";
 import {CdkDragDrop} from "@angular/cdk/drag-drop";
 import {FormArray, FormControl, FormGroup, Validators} from "@angular/forms";
-import {Result} from "../../../../../core/models/competition.model";
-
+import {Heat, Result} from "../../../../../core/models/competition.model";
 
 @Component({
     selector: 'rs-heat',
@@ -12,14 +10,12 @@ import {Result} from "../../../../../core/models/competition.model";
 })
 export class HeatComponent implements OnInit, OnChanges {
     @Input() hasUnassignedRiders!: boolean;
-    @Input() heat!: HeatModel;
-    @Input() heatNumber!: number;
-    @Output() statusChange = new EventEmitter<{ action: string, heatNumber: number, heat: HeatModel, form: FormGroup }>();
+    @Input() heat!: Heat;
+    @Output() statusChange = new EventEmitter<{ action: string, heat: Heat, form: FormGroup }>();
     @Output() drop = new EventEmitter<CdkDragDrop<string[], any>>();
     maxHeatSize = 4;
     status!: string;
     heatForm!: FormGroup;
-
 
     constructor() {
     }
@@ -31,7 +27,7 @@ export class HeatComponent implements OnInit, OnChanges {
         if (action === 'save') {
             this.setResults()
         }
-        this.statusChange.emit({action, heatNumber: this.heatNumber, heat: this.heat, form: this.heatForm});
+        this.statusChange.emit({action, heat: this.heat, form: this.heatForm});
     }
 
     setResults() {
@@ -47,12 +43,16 @@ export class HeatComponent implements OnInit, OnChanges {
     }
 
     getHeatStatus() {
-        if (this.heat.hasStopped) {
-            return "finished"
-        } else if (this.heat.hasStarted) {
-            return "surfing";
-        } else {
-            return "assigned"
+        switch (this.heat.state) {
+            case 'finished':
+            case 'completed':
+                return 'finished';
+
+            case 'running':
+                return 'surfing';
+
+            default:
+                return 'assigned';
         }
     }
 

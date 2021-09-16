@@ -9,7 +9,6 @@
         margin: .3rem;
     }
 
-
     &:hover {
         transform: scale(1.01);
         box-shadow: 0 14px 28px rgba(0, 0, 0, 0.1), 0 10px 10px rgba(0, 0, 0, 0.1);
@@ -68,6 +67,16 @@
     }
 }
 
+.no-hover{
+    &:hover {
+        transform: none;
+        box-shadow: 0px 2px 1px -1px rgb(0 0 0 / 20%), 0px 1px 1px 0px rgb(0 0 0 / 14%), 0px 1px 3px 0px rgb(0 0 0 / 12%);
+    }
+
+    &:active {
+        transform: none;
+    }
+}
 
 /* Chrome, Safari, Edge, Opera */
 input::-webkit-outer-spin-button,

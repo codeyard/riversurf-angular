@@ -3,7 +3,10 @@ import {BehaviorSubject, Observable} from "rxjs";
 import {SurfEvent} from "../models/surf-event.model";
 import {HttpClient} from "@angular/common/http";
 import {AppConfigService} from "./app-config.service";
-import {map} from "rxjs/operators";
+import {map, switchMap} from "rxjs/operators";
+import {Division} from "../models/division.type";
+import {CompetitionService} from "./competition.service";
+import {Competition} from "../models/competition.model";
 
 @Injectable({
     providedIn: 'root'
@@ -16,7 +19,7 @@ export class SurfEventService {
     private surfEvents = new BehaviorSubject<SurfEvent[]>([]);
     private surfEvents$ = this.surfEvents.asObservable();
 
-    constructor(private httpClient: HttpClient, private appConfigService: AppConfigService) {
+    constructor(private httpClient: HttpClient, private appConfigService: AppConfigService, private competitionService: CompetitionService) {
     }
 
     getSurfEvent(id: string): Observable<SurfEvent> {
@@ -32,6 +35,12 @@ export class SurfEventService {
         return this.surfEvents$;
     }
 
+    getCompetitionByDivision(id: string, division : Division){
+        return this.getSurfEvent(id).pipe(
+            switchMap((surfEvent : SurfEvent) => this.competitionService.getCompetitionsByIds(surfEvent.competitions)),
+            map((competitions : Competition[])=>competitions.filter(competition=>competition.division === division)[0])
+        );
+    }
 
     private fetchAllSurfEvents() {
         const requestUrl = this.PROTOCOL_HTTPS + this.appConfigService.getHostName() + this.PATH_ENDPOINT;

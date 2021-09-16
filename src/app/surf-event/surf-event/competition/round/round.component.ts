@@ -1,16 +1,7 @@
 import {Component, EventEmitter, Input, OnChanges, OnInit, Output} from '@angular/core';
 import {CdkDragDrop, moveItemInArray, transferArrayItem} from "@angular/cdk/drag-drop";
 import {SnackbarService} from "../../../../core/services/snackbar.service";
-import {Result} from "../../../../core/models/competition.model";
-//to trigger merge request
-export interface HeatModel {
-    id: number;
-    riders: string[];
-    hasStarted: boolean;
-    hasStopped: boolean;
-    hasAllResults: boolean
-    results: Result[]
-}
+import {Heat, Round} from "../../../../core/models/competition.model";
 
 @Component({
     selector: 'rs-round',
@@ -19,14 +10,12 @@ export interface HeatModel {
 })
 export class RoundComponent implements OnInit, OnChanges {
 
-    @Input() riders !: string[];
-    @Input() roundNumber !: number;
-
+    @Input() round!: Round;
+    @Input() isFinalRound!: boolean;
     @Output() finishedRound = new EventEmitter<string[]>();
 
     unassignedRiders!: string[];
     heatSize = 4;
-    heats: HeatModel[] = [];
     oneHeatStarted = false;
     heatsFinished: boolean[] = [];
 
@@ -34,7 +23,6 @@ export class RoundComponent implements OnInit, OnChanges {
     }
 
     ngOnInit(): void {
-        //this.setupRound();
     }
 
     ngOnChanges(): void {
@@ -42,15 +30,14 @@ export class RoundComponent implements OnInit, OnChanges {
     }
 
     setupRound(): void {
-        this.unassignedRiders = [...this.riders];
+        // ToDo: search for unassigned riders
+        this.unassignedRiders = [...this.round.riders];
         const numberOfHeats = Math.ceil(this.unassignedRiders.length / this.heatSize);
         for (let i = 0; i < numberOfHeats; i++) {
-            this.heats.push({
+            this.round.heats.push({
                 id: i,
                 riders: [],
-                hasStarted: false,
-                hasStopped: false,
-                hasAllResults: false,
+                state: 'idle',
                 results: []
             })
             this.heatsFinished.push(false);
@@ -73,23 +60,19 @@ export class RoundComponent implements OnInit, OnChanges {
             }
         }
         this.snackbarService.send(`Sorry, this heat is already complete!`, "warning")
-
-        console.log(`heats`, this.heats);
+        console.log(`heats`, this.round.heats);
     }
 
     revert() {
-        for (const heat of this.heats) {
+        for (const heat of this.round.heats) {
             const heatLength = heat.riders.length;
             for (let i = 0; i <= heatLength; i++) {
                 const removedRider = heat.riders.pop()
                 if (removedRider)
-
-                    setTimeout(() =>
-                        this.riders.push(removedRider), 200)
-
+                    this.unassignedRiders.push(removedRider);
             }
+            this.snackbarService.send("All riders are no longer assigned", "success");
         }
-        this.snackbarService.send("All riders are no longer assigned", "success");
     }
 
     automaticallyAssignRiders() {
@@ -101,89 +84,65 @@ export class RoundComponent implements OnInit, OnChanges {
     }
 
     assignRiderToHeat(riderId: string) {
-        const randomGroupNumber = Math.floor(Math.random() * this.heats.length);
-        this.heats[randomGroupNumber].riders.length < this.heatSize
-            ? this.heats[randomGroupNumber].riders.push(riderId)
+        const randomGroupNumber = Math.floor(Math.random() * this.round.heats.length);
+        this.round.heats[randomGroupNumber].riders.length < this.heatSize
+            ? this.round.heats[randomGroupNumber].riders.push(riderId)
             : this.assignRiderToHeat(riderId);
     }
 
-    startHeat(heatNumber: number) {
-        this.heats[heatNumber].hasStarted = true;
-        this.oneHeatStarted = true;
-    }
-
-    stopHeat(heatNumber: number) {
-        this.heats[heatNumber].hasStopped = true;
-
-        // TODO ENABLE RESULTS ENTRANCE
-
-    }
-
-    saveHeat(heatNumber: number) {
-        this.heatsFinished[heatNumber] = true;
-        this.snackbarService.send("Results saved!", "success");
-
-    }
-
     checkAllHeatsFinished(): boolean {
-        return !this.heatsFinished.includes(false);
+        return !this.round.heats.map(heat => heat.riders.length === heat.results.length && heat.results.length > 0).every(element => element)
     }
 
     heatHasAllResults(heatNumber: number): boolean {
-        const hasAllresults = this.heats[heatNumber].results.length === this.heats[heatNumber].riders.length
-        this.heats[heatNumber].hasAllResults = hasAllresults;
-        return hasAllresults;
+        const hasAllResults = this.round.heats[heatNumber].results.length === this.round.heats[heatNumber].riders.length && this.round.heats[heatNumber].riders.length > 0;
+        if (hasAllResults) {
+            this.round.heats[heatNumber].state = 'finished';
+        }
+        return hasAllResults;
     }
 
     moveToNextRound(roundNumber: number) {
         let promotedRiders = [];
-        for(const heat of this.heats) {
+        for (const heat of this.round.heats) {
             const sortedArray = heat.results.sort((a, b) => a.value > b.value ? 1 : -1)
-            if(roundNumber === 0) {
+            if (roundNumber === 0) {
                 promotedRiders.push(sortedArray.map(result => result.riderId));
             } else {
                 promotedRiders.push(sortedArray.map(result => result.riderId).splice(0, 2));
             }
         }
         promotedRiders = promotedRiders.reduce((acc, val) => acc.concat(val), []);
-        console.log('promotedRiders:', promotedRiders)
         this.finishedRound.emit(promotedRiders);
     }
 
-    getHeatStatus(heat: HeatModel) {
-        if (heat.hasStopped) {
-            return "finished"
-        } else if (heat.hasStarted) {
-            return "surfing";
-        } else {
-            return "assigned"
+    handleStatusChange(event: { action: string, heat: Heat }) {
+        let msg = `Heat ${event.heat.id + 1} `
+        switch (event.action) {
+            case "start":
+                this.round.heats[event.heat.id] = {...event.heat, state: 'running'}
+                this.oneHeatStarted = true;
+                msg += "started!"
+                break;
+            case "stop":
+                this.round.heats[event.heat.id] = {...event.heat, state: 'finished'}
+                this.snackbarService.send(`Heat ${event.heat.id + 1} started!`, 'success')
+                msg += "stopped!"
+                break;
+            case "save":
+                //TODO ADD RESULTS AND CHECK IF ALL RESULTS ARE AVIALBE
+                this.round.heats[event.heat.id] = {...event.heat, state: 'completed'}
+                //this.heatHasAllResults(event.heatNumber);
+                msg += "saved!"
+                break;
         }
+        this.snackbarService.send(msg, "success");
     }
 
-    onResultEntry(event: { riderId: string, points: number, colorIndex: number }) {
-        const resultObject = {
-            riderId: event.riderId,
-            color: event.colorIndex,
-            value: event.points
-        }
-        console.log('resultObject', resultObject)
-
-        for (let i = 0; i < this.heats.length; i++) {
-            if (this.heats[i].riders.findIndex(rider => rider === event.riderId) > -1) {
-                const existinResultIndex = this.heats[i].results.findIndex(result => result.riderId === event.riderId)
-                if (existinResultIndex > -1) {
-                    if (event.points) {
-                        this.heats[i].results[existinResultIndex] = resultObject;
-                    } else {
-                        this.heats[i].results.splice(existinResultIndex, 1)
-                    }
-                } else {
-                    if (event.points) {
-                        this.heats[i].results.push(resultObject);
-                    }
-                }
-            }
-            this.heatHasAllResults(i);
-        }
+    finishCompetition() {
+        // TODO WHAT TO DO here?
+        this.snackbarService.send("Competition finished", "success");
     }
+
+
 }

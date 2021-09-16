@@ -1,0 +1,36 @@
+<form [formGroup]="heatForm">
+    <div class="round__heat__header">
+        <div class="round__heat__header-title">Heat {{heat.id + 1}}</div>
+        <button mat-raised-button color="primary" type="button"
+                *ngIf="!hasUnassignedRiders && heat.state === 'idle'"
+                (click)="onStatusChange('start')">Start Heat
+        </button>
+        <button mat-raised-button color="primary" type="button"
+                *ngIf="heat.state === 'running'"
+                (click)="onStatusChange('stop')">End Heat
+        </button>
+        <button mat-raised-button color="primary"
+                *ngIf="heat.state === 'finished' || heat.state === 'completed'" type="button"
+                (click)="onStatusChange('save')" [disabled]="!heatForm.valid || heat.state === 'completed'">
+            Save Heat
+            <mat-icon *ngIf="heat.state === 'completed'">checkmark</mat-icon>
+        </button>
+        <div class="round__heat__header-counter">{{ heat.riders.length }} / {{ maxRidersInHeat }}</div>
+    </div>
+
+    <div cdkDropList [cdkDropListData]="heat.riders" class="round__riders"
+         (cdkDropListDropped)="onDrop($event)">
+        <div class="round__riders__single-rider" *ngFor="let rider of heat.riders; let riderIndex = index"
+             cdkDrag [cdkDragDisabled]="heat.state !== 'idle'">
+            <rs-rider-result [riderId]="rider"
+                             [resultType]="getHeatStatus()"
+                             [riderColorIndex]=riderIndex
+                             [control]="getControl(riderIndex)"
+                             [disableInput]="heat.state === 'completed'"
+            ></rs-rider-result>
+        </div>
+        <div class="round__riders__single-rider--placeholder" *ngIf="!heat.riders.length">
+            Drop riders here
+        </div>
+    </div>
+</form>

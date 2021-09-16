@@ -1,57 +1,87 @@
 <form class="form" [formGroup]="signupForm" (ngSubmit)="onSubmit()">
-    <mat-form-field *ngIf="formMode === 'register'" appearance="outline">
-        <mat-label>Email</mat-label>
-        <input formControlName="email" matInput placeholder="Email" type="email" tabindex="1" autofocus>
-        <mat-icon matSuffix>mail</mat-icon>
-        <mat-error *ngIf="signupForm.controls.email.getError('required')">Please enter an email address</mat-error>
-        <mat-error *ngIf="signupForm.controls.email.getError('pattern')">Email address is not valid</mat-error>
-    </mat-form-field>
+    <ng-container *ngIf="formMode === 'login'">
+        <mat-form-field appearance="outline">
+            <mat-label>Username</mat-label>
+            <input formControlName="username" matInput placeholder="Username" type="text" tabindex="1" autofocus>
+            <mat-icon matSuffix>person</mat-icon>
+            <mat-error *ngIf="signupForm.controls.username.getError('required')">Please enter a username</mat-error>
+            <mat-error *ngIf="signupForm.controls.username.getError('minlength')">Username must be at least 5 characters
+                long
+            </mat-error>
+        </mat-form-field>
 
-    <mat-form-field appearance="outline">
-        <mat-label>Username</mat-label>
-        <input formControlName="username" matInput placeholder="Username" type="text"
-               [tabIndex]="formMode === 'register' ? 2 : 1" autofocus>
-        <mat-icon matSuffix>person</mat-icon>
-        <mat-error *ngIf="signupForm.controls.username.getError('required')">Please enter a username</mat-error>
-        <mat-error *ngIf="signupForm.controls.username.getError('minlength')">Username must be at least 5 characters
-            long
-        </mat-error>
-    </mat-form-field>
+        <mat-form-field appearance="outline">
+            <mat-label>Password</mat-label>
+            <input formControlName="password" matInput [type]="hidePassword ? 'password' : 'text'" tabindex="2">
+            <button type="button" mat-icon-button matSuffix (click)="hidePassword = !hidePassword"
+                    [attr.aria-label]="'Hide password'"
+                    [attr.aria-pressed]="hidePassword">
+                <mat-icon>{{hidePassword ? 'visibility_off' : 'visibility'}}</mat-icon>
+            </button>
+            <mat-error *ngIf="signupForm.controls.password.getError('required')">Please enter a password</mat-error>
+            <mat-error *ngIf="signupForm.controls.password.getError('minlength')">Password must be at least 5 characters
+                long
+            </mat-error>
+        </mat-form-field>
 
-    <mat-form-field appearance="outline">
-        <mat-label>Password</mat-label>
-        <input formControlName="password" matInput [type]="hidePassword ? 'password' : 'text'"
-               [tabIndex]="formMode === 'register' ? 3 : 2">
-        <button type="button" mat-icon-button matSuffix (click)="hidePassword = !hidePassword"
-                [attr.aria-label]="'Hide password'"
-                [attr.aria-pressed]="hidePassword">
-            <mat-icon>{{hidePassword ? 'visibility_off' : 'visibility'}}</mat-icon>
-        </button>
-        <mat-error *ngIf="signupForm.controls.password.getError('required')">Please enter a password</mat-error>
-        <mat-error *ngIf="signupForm.controls.password.getError('minlength')">Password must be at least 5 characters
-            long
-        </mat-error>
-    </mat-form-field>
+        <button mat-raised-button color="primary" type="submit" [disabled]="!signupForm.valid"
+                tabindex="3">{{formMode | uppercase}}</button>
+    </ng-container>
 
-    <mat-form-field *ngIf="formMode === 'register'" appearance="outline">
-        <mat-label>Password Confirmation</mat-label>
-        <input formControlName="passwordConfirmation" matInput [type]="hidePasswordConfirmation ? 'password' : 'text'"
-               tabindex="4">
-        <button type="button" mat-icon-button matSuffix (click)="hidePasswordConfirmation = !hidePasswordConfirmation"
-                [attr.aria-label]="'Hide password'"
-                [attr.aria-pressed]="hidePasswordConfirmation">
-            <mat-icon>{{hidePasswordConfirmation ? 'visibility_off' : 'visibility'}}</mat-icon>
-        </button>
-        <mat-error *ngIf="signupForm.controls.passwordConfirmation.getError('required')">Please confirm the password
-        </mat-error>
-        <mat-error *ngIf="signupForm.controls.passwordConfirmation.getError('minlength')">Password Confirmation must be
-            at least 5 characters long
-        </mat-error>
-        <mat-error *ngIf="signupForm.controls.passwordConfirmation.getError('confirmPasswordValidator')">Passwords do
-            not match
-        </mat-error>
-    </mat-form-field>
 
-    <button mat-raised-button color="primary" type="submit" [disabled]="!signupForm.valid"
-            [tabIndex]="formMode === 'register' ? 5 : 3">{{formMode | uppercase}}</button>
+    <ng-container *ngIf="formMode === 'register'">
+        <mat-form-field appearance="outline">
+            <mat-label>Email</mat-label>
+            <input formControlName="email" matInput placeholder="Email" type="email" tabindex="1" autofocus>
+            <mat-icon matSuffix>mail</mat-icon>
+            <mat-error *ngIf="signupForm.controls.email.getError('required')">Please enter an email address</mat-error>
+            <mat-error *ngIf="signupForm.controls.email.getError('pattern')">Email address is not valid</mat-error>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+            <mat-label>Username</mat-label>
+            <input formControlName="username" matInput placeholder="Username" type="text" tabindex="2">
+            <mat-icon matSuffix>person</mat-icon>
+            <mat-error *ngIf="signupForm.controls.username.getError('required')">Please enter a username</mat-error>
+            <mat-error *ngIf="signupForm.controls.username.getError('minlength')">Username must be at least 5 characters
+                long
+            </mat-error>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+            <mat-label>Password</mat-label>
+            <input formControlName="password" matInput [type]="hidePassword ? 'password' : 'text'" tabindex="3">
+            <button type="button" mat-icon-button matSuffix (click)="hidePassword = !hidePassword"
+                    [attr.aria-label]="'Hide password'"
+                    [attr.aria-pressed]="hidePassword">
+                <mat-icon>{{hidePassword ? 'visibility_off' : 'visibility'}}</mat-icon>
+            </button>
+            <mat-error *ngIf="signupForm.controls.password.getError('required')">Please enter a password</mat-error>
+            <mat-error *ngIf="signupForm.controls.password.getError('minlength')">Password must be at least 5 characters
+                long
+            </mat-error>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+            <mat-label>Password Confirmation</mat-label>
+            <input formControlName="passwordConfirmation" matInput [type]="hidePasswordConfirmation ? 'password' : 'text'"
+                   tabindex="4">
+            <button type="button" mat-icon-button matSuffix (click)="hidePasswordConfirmation = !hidePasswordConfirmation"
+                    [attr.aria-label]="'Hide password'"
+                    [attr.aria-pressed]="hidePasswordConfirmation">
+                <mat-icon>{{hidePasswordConfirmation ? 'visibility_off' : 'visibility'}}</mat-icon>
+            </button>
+            <mat-error *ngIf="signupForm.controls.passwordConfirmation.getError('required')">Please confirm the password
+            </mat-error>
+            <mat-error *ngIf="signupForm.controls.passwordConfirmation.getError('minlength')">Password Confirmation must be
+                at least 5 characters long
+            </mat-error>
+            <mat-error *ngIf="signupForm.controls.passwordConfirmation.getError('confirmPasswordValidator')">Passwords do
+                not match
+            </mat-error>
+        </mat-form-field>
+
+        <button mat-raised-button color="primary" type="submit" [disabled]="!signupForm.valid"
+                tabindex="5">{{formMode | uppercase}}</button>
+    </ng-container>
 </form>

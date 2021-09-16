@@ -1,12 +1,10 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
-import {Competition, exampleComp, Round} from "../../../core/models/competition.model";
+import {Competition} from "../../../core/models/competition.model";
 import {SnackbarService} from "../../../core/services/snackbar.service";
-import {CompetitionService} from "../../../core/services/competition.service";
 import {ActivatedRoute} from "@angular/router";
-import {filter, switchMap} from "rxjs/operators";
+import {switchMap} from "rxjs/operators";
 import {Subscription} from "rxjs";
 import {SurfEventService} from "../../../core/services/surf-event.service";
-import {SurfEvent} from "../../../core/models/surf-event.model";
 
 @Component({
     selector: 'rs-competition',
@@ -23,7 +21,7 @@ export class CompetitionComponent implements OnInit, OnDestroy {
 
     constructor(private snackBarService: SnackbarService,
                 private route: ActivatedRoute,
-                private surfEventService : SurfEventService) {
+                private surfEventService: SurfEventService) {
     }
 
     ngOnInit(): void {

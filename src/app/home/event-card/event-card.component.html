@@ -1,5 +1,5 @@
 <mat-card
-    routerLink="/event/{{surfEvent.id}}"
+    routerLink="/event/{{surfEvent.name | slugify}}-{{ surfEvent.id }}"
     class="event__card">
     <mat-card-header class="event__card__header">
         <div mat-card-avatar [style.background-image]="'url(' + surfEvent.logo + ')'"
@@ -19,7 +19,7 @@
         <mat-chip
             *ngFor="let division of surfEvent.divisions"
             [color]="division | divisionColor"
-            routerLink="/event/{{surfEvent.id}}/competition/{{ division }}"
+            routerLink="/event/{{surfEvent.name | slugify}}-{{surfEvent.id}}/competition/{{ division }}"
             selected>
             {{division}}
         </mat-chip>

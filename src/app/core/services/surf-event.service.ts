@@ -1,11 +1,9 @@
 import {Injectable} from '@angular/core';
 import {BehaviorSubject, Observable} from "rxjs";
 import {SurfEvent} from "../models/surf-event.model";
-import {SyncService} from "./sync.service";
 import {HttpClient} from "@angular/common/http";
 import {AppConfigService} from "./app-config.service";
-import {Rider} from "../models/rider.model";
-import {filter, map} from "rxjs/operators";
+import {map} from "rxjs/operators";
 
 @Injectable({
     providedIn: 'root'
@@ -35,7 +33,7 @@ export class SurfEventService {
     }
 
 
-    fetchAllSurfEvents() {
+    private fetchAllSurfEvents() {
         const requestUrl = this.PROTOCOL_HTTPS + this.appConfigService.getHostName() + this.PATH_ENDPOINT;
         this.httpClient.get<SurfEvent[]>(requestUrl).subscribe(
             (responseData: SurfEvent[]) => this.surfEvents.next(responseData),

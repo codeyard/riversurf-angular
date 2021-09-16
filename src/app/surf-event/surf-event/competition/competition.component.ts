@@ -3,8 +3,10 @@ import {Competition, exampleComp, Round} from "../../../core/models/competition.
 import {SnackbarService} from "../../../core/services/snackbar.service";
 import {CompetitionService} from "../../../core/services/competition.service";
 import {ActivatedRoute} from "@angular/router";
-import {switchMap} from "rxjs/operators";
+import {filter, switchMap} from "rxjs/operators";
 import {Subscription} from "rxjs";
+import {SurfEventService} from "../../../core/services/surf-event.service";
+import {SurfEvent} from "../../../core/models/surf-event.model";
 
 @Component({
     selector: 'rs-competition',
@@ -19,28 +21,29 @@ export class CompetitionComponent implements OnInit, OnDestroy {
 
     selectedTabIndex: number = 0;
 
-    constructor(private snackBarService: SnackbarService, private competitionService : CompetitionService, private route: ActivatedRoute) {
+    constructor(private snackBarService: SnackbarService,
+                private route: ActivatedRoute,
+                private surfEventService : SurfEventService) {
     }
 
-    ngOnInit(): void{
+    ngOnInit(): void {
         this.routeSubscription = this.route.params
             .pipe(
                 switchMap(params => {
-                    const id = params['id'].split('-').pop();
-                    return this.competitionService.getCompetition(id)
+                    const id = params['id'];
+                    const division = params['division'].toLowerCase();
+                    console.log(`Gathered id: ${id}, division: ${division}`);
+                    return this.surfEventService.getCompetitionByDivision(id, division);
                 })
             )
             .subscribe(
-                rider => {
-                    this.isLoading = false;
-                    this.rider = rider;
+                competition => {
+                    this.competition = competition;
                 },
                 error => {
-                    this.isLoading = false;
-                    this.snackBarService.send("Unable to load Riders", "error");
-                    console.log('ERROR loading riders data :-(', error)
+                    this.snackBarService.send("Unable to load Competition", "error");
+                    console.log('ERROR loading competition data :-(', error)
                 });
-        this.competition = ;
     }
 
     ngOnDestroy(): void {
@@ -48,9 +51,9 @@ export class CompetitionComponent implements OnInit, OnDestroy {
     }
 
     onFinishedRound(promotedRiders: string[]) {
-        for(let i = 0; i < this.rounds.length; i++) {
-            if(!this.rounds[i].riders.length) {
-                this.rounds[i].riders = promotedRiders;
+        for (let i = 0; i < this.competition.rounds.length; i++) {
+            if (!this.competition.rounds[i].riders.length) {
+                this.competition.rounds[i].riders = promotedRiders;
                 break
             }
         }
@@ -62,9 +65,9 @@ export class CompetitionComponent implements OnInit, OnDestroy {
         let label = 'Round ' + (+roundIndex);
         if (roundIndex === 0) {
             label = 'Seeding round';
-        } else if (roundIndex === this.rounds.length - 1) {
+        } else if (roundIndex === this.competition.rounds.length - 1) {
             label = 'Finals';
-        } else if (roundIndex === this.rounds.length - 2) {
+        } else if (roundIndex === this.competition.rounds.length - 2) {
             label = 'Semifinals';
         }
         return label;

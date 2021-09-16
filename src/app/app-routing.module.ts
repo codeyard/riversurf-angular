@@ -6,6 +6,7 @@ import {ErrorComponent} from "./shared/error/error.component";
 
 const routes: Routes = [
     {path: 'login', component: LoginComponent},
+    {path: 'register', component: LoginComponent},
     {
         path: 'event',
         loadChildren: () => import('./surf-event/surf-event.module').then(m => m.SurfEventModule)

@@ -1,7 +1,7 @@
 import {Injectable} from '@angular/core';
-import {Competition, exampleComp, Round} from "../models/competition.model";
+import {Competition, exampleComp} from "../models/competition.model";
 import {BehaviorSubject, Observable} from "rxjs";
-import {filter, map, tap} from "rxjs/operators";
+import {filter, map} from "rxjs/operators";
 
 @Injectable({
     providedIn: 'root'
@@ -19,26 +19,43 @@ export class CompetitionService {
 
         let competitions = [{...exampleComp}];
 
-        competitions.forEach(competition => this.setupRounds(competition));
+        competitions.forEach(competition => CompetitionService.setupRounds(competition));
 
         this.competitionData.next(competitions);
     }
 
-    private setupRounds(competition: Competition) {
-        let initialRound: Round = {
-            id: 0,
-            riders: competition.riders,
-            heats: []
+    private static setupRounds(competition: Competition) {
+
+        let calculatedRounds = CompetitionService.calculateMinimalRounds(competition.riders.length);
+
+        if(competition.rounds.length < calculatedRounds) {
+            for (let i = competition.rounds.length; i < calculatedRounds; i++) {
+                competition.rounds.push({
+                    id: i + 1,
+                    riders: i === 0 ? competition.riders : [],
+                    heats: []
+                });
+            }
         }
-        competition.rounds.push(initialRound);
-        const maxRounds = Math.floor(competition.riders.length / 4);
-        for (let i = 0; i < maxRounds; i++) {
-            competition.rounds.push({
-                id: i + 1,
-                riders: [],
-                heats: []
-            });
-        }
+    }
+
+    private static calculateMinimalRounds(riders : number, heatSize? : number, heatWinners? : number){
+        const ridersInHeat = heatSize ? heatSize > 0 ? heatSize : 4 : 4;
+        const regularWinnersInHeat = heatWinners ? heatWinners > 0 && heatWinners <= ridersInHeat ? heatWinners : 2 : 2;
+
+        let calculatedRounds = 0;
+        let winners = riders;
+
+        do {
+            let minimumHeatsInRound = Math.floor(winners / ridersInHeat);
+            if (winners % ridersInHeat != 0) {
+                minimumHeatsInRound++;
+            }
+
+            winners = minimumHeatsInRound * regularWinnersInHeat;
+            calculatedRounds++;
+        }while(winners >= ridersInHeat)
+        return calculatedRounds;
     }
 
     getCompetitionsByIds(ids: string[]): Observable<Competition[]> {

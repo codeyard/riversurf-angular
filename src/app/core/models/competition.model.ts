@@ -101,18 +101,6 @@ export const exampleComp: Competition = {
                     }]
                 }
             ]
-        },{
-            id: 1,
-            riders: [],
-            heats: []
-        },{
-            id: 2,
-            riders: [],
-            heats: []
-        },{
-            id: 3,
-            riders: [],
-            heats: []
         }
     ]
 }

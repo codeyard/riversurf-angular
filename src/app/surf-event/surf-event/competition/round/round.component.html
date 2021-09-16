@@ -8,9 +8,14 @@
                     Assign Riders Randomly
                 </button>
                 <button mat-raised-button (click)="revert()" *ngIf="!oneHeatStarted">Revert</button>
-                <button mat-raised-button color="primary"  [disabled]="checkAllHeatsFinished()"
+                <button mat-raised-button color="primary"  [disabled]="checkAllHeatsFinished()" *ngIf="!(roundNumber === roundNumberFinal)"
                         (click)="moveToNextRound(roundNumber)">
                     Move to next round
+                </button>
+                <button mat-raised-button color="primary"  [disabled]="checkAllHeatsFinished()"
+                        *ngIf="roundNumber ===roundNumberFinal"
+                        (click)="finishCompetition()">
+                    Finish Competition
                 </button>
             </div>
         </div>

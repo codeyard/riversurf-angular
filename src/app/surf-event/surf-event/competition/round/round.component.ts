@@ -19,11 +19,10 @@ export interface HeatModel {
 })
 export class RoundComponent implements OnInit, OnChanges {
 
-    @Input() riders !: string[];
+    @Input() riders!: string[];
     @Input() roundNumber !: number;
-
+    @Input() roundNumberFinal!: number;
     @Output() finishedRound = new EventEmitter<string[]>();
-
     unassignedRiders!: string[];
     heatSize = 4;
     heats: HeatModel[] = [];
@@ -34,7 +33,6 @@ export class RoundComponent implements OnInit, OnChanges {
     }
 
     ngOnInit(): void {
-        //this.setupRound();
     }
 
     ngOnChanges(): void {
@@ -128,21 +126,31 @@ export class RoundComponent implements OnInit, OnChanges {
     }
 
     handleStatusChange(event: { action: string, heatNumber: number, heat: HeatModel }) {
+        let msg = `Heat ${event.heatNumber+1} `
         switch (event.action) {
             case "start":
                 this.heats[event.heatNumber] = {...event.heat, hasStarted: true}
                 this.oneHeatStarted = true;
+                msg += "started!"
                 break;
             case "stop":
                 this.heats[event.heatNumber] = {...event.heat, hasStopped: true}
+                this.snackbarService.send(`Heat ${event.heatNumber+1} started!`, 'success')
+                msg += "stopped!"
                 break;
             case "save":
                 //TODO ADD RESULTS AND CHECK IF ALL RESULTS ARE AVIALBE
                 this.heats[event.heatNumber] = {...event.heat, hasAllResults: true}
                 //this.heatHasAllResults(event.heatNumber);
-                this.snackbarService.send("Results saved!", "success");
+                msg += "saved!"
                 break;
         }
+        this.snackbarService.send(msg, "success");
+    }
+
+    finishCompetition() {
+        // TODO WHAT TO DO here?
+        this.snackbarService.send("Competition finished", "success");
     }
 
 

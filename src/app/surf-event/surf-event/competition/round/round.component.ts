@@ -3,13 +3,13 @@ import {CdkDragDrop, moveItemInArray, transferArrayItem} from "@angular/cdk/drag
 import {SnackbarService} from "../../../../core/services/snackbar.service";
 import {Result} from "../../../../core/models/competition.model";
 
+export type HeatState = 'idle' | 'running' | 'finished' | 'completed';
+
 export interface HeatModel {
     id: number;
     riders: string[];
-    hasStarted: boolean;
-    hasStopped: boolean;
-    hasAllResults: boolean
-    results: Result[]
+    state: HeatState;
+    results: Result[];
 }
 
 @Component({

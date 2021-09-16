@@ -1,6 +1,5 @@
 import {Division} from "./division.type";
 import {Color} from "./color.type";
-import {Rider} from "./rider.model";
 
 export interface Competition {
     id: string;
@@ -13,6 +12,7 @@ export interface Competition {
 export interface Round {
     id: number;
     name?: string;
+    riders: string[];
     heats: Heat[];
 }
 
@@ -37,6 +37,7 @@ export const exampleComp: Competition = {
         {
             id: 0,
             name: 'Seeding Round',
+            riders: [''],
             heats: [
                 {
                     id: 1,

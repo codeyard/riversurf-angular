@@ -1,7 +1,6 @@
 import {Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges} from '@angular/core';
 import {HeatModel} from "../round.component";
 import {CdkDragDrop} from "@angular/cdk/drag-drop";
-import {SnackbarService} from "../../../../../core/services/snackbar.service";
 import {FormArray, FormControl, FormGroup, Validators} from "@angular/forms";
 import {Result} from "../../../../../core/models/competition.model";
 

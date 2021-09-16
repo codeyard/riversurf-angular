@@ -1,9 +1,9 @@
 import {Injectable} from '@angular/core';
 import {BehaviorSubject, Observable} from "rxjs";
-import {exampleEvent, SurfEvent} from "../models/surf-event.model";
+import {SurfEvent} from "../models/surf-event.model";
 import {HttpClient} from "@angular/common/http";
 import {AppConfigService} from "./app-config.service";
-import {filter, map, switchMap, tap} from "rxjs/operators";
+import {map, switchMap} from "rxjs/operators";
 import {Division} from "../models/division.type";
 import {CompetitionService} from "./competition.service";
 import {Competition} from "../models/competition.model";
@@ -19,10 +19,7 @@ export class SurfEventService {
     private surfEventsData = new BehaviorSubject<SurfEvent[]>([]);
     private surfEvents$ = this.surfEventsData.asObservable();
 
-    constructor(
-        private httpClient: HttpClient,
-        private appConfigService: AppConfigService,
-        private competitionService: CompetitionService) {
+    constructor(private httpClient: HttpClient, private appConfigService: AppConfigService, private competitionService: CompetitionService) {
     }
 
     getSurfEvent(id: string): Observable<SurfEvent> {
@@ -45,14 +42,13 @@ export class SurfEventService {
         );
     }
 
-    fetchAllSurfEvents() {
-        // const requestUrl = this.PROTOCOL_HTTPS + this.appConfigService.getHostName() + this.PATH_ENDPOINT;
-        // this.httpClient.get<SurfEvent[]>(requestUrl).subscribe(
-        //     (responseData: SurfEvent[]) => this.surfEvents.next(responseData),
-        //     error => {
-        //         console.log('ERROR loading surfEvent data :-(', error)
-        //     }
-        // )
-        this.surfEventsData.next([{...exampleEvent}]);
+    private fetchAllSurfEvents() {
+        const requestUrl = this.PROTOCOL_HTTPS + this.appConfigService.getHostName() + this.PATH_ENDPOINT;
+        this.httpClient.get<SurfEvent[]>(requestUrl).subscribe(
+            (responseData: SurfEvent[]) => this.surfEventsData.next(responseData),
+            error => {
+                console.log('ERROR loading surfEvent data :-(', error)
+            }
+        )
     }
 }

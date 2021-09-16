@@ -3,14 +3,19 @@
 
         <h2>Upcoming Events</h2>
         <div class="events">
-            <rs-carousel *ngIf="smallScreen" [index]="currentEvent" [auto]="false">
-                <ng-container *ngFor="let surfEvent of events">
-                    <rs-event-card [surfEvent]="surfEvent" *rs-carousel-item></rs-event-card>
-                </ng-container>
-            </rs-carousel>
-            <ng-container *ngIf="!smallScreen">
-                <ng-container *ngFor="let surfEvent of events">
-                    <rs-event-card [surfEvent]="surfEvent"></rs-event-card>
+            <ng-container *ngIf="surfEvents$ | async as surfEvents">
+                <mat-spinner *ngIf="surfEvents.length === 0" diameter="40"></mat-spinner>
+                <ng-container *ngIf="surfEvents.length > 0">
+                    <rs-carousel *ngIf="smallScreen" [index]="currentEvent" [auto]="false">
+                        <ng-container *ngFor="let surfEvent of surfEvents">
+                            <rs-event-card [surfEvent]="surfEvent" *rs-carousel-item></rs-event-card>
+                        </ng-container>
+                    </rs-carousel>
+                    <ng-container *ngIf="!smallScreen">
+                        <ng-container *ngFor="let surfEvent of surfEvents">
+                            <rs-event-card [surfEvent]="surfEvent"></rs-event-card>
+                        </ng-container>
+                    </ng-container>
                 </ng-container>
             </ng-container>
         </div>

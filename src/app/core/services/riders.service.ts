@@ -1,11 +1,11 @@
 import {Injectable} from '@angular/core';
 import {HttpClient} from "@angular/common/http";
 import {Rider} from "../models/rider.model";
-import {BehaviorSubject, from, Observable} from "rxjs";
+import {BehaviorSubject, Observable} from "rxjs";
 import {AppConfigService} from "./app-config.service";
-import {filter, map, switchMap, take, toArray} from "rxjs/operators";
+import {filter, map, take} from "rxjs/operators";
 import {DexieService} from "./dexie.service";
-import {NetworkStatusService, NetworkStatus} from "./network-status.service";
+import {NetworkStatusService} from "./network-status.service";
 import {GenericCollectionResponseModel} from "../models/generic-collection-response.model";
 
 /**
@@ -70,16 +70,16 @@ export class RidersService {
             .pipe(
                 filter(riders => riders.length > 0),
                 map(riders => riders.filter(rider => rider.id === id)[0])
-            )
+            );
 
     }
 
     getRidersByIds(ids: string[]): Observable<Rider[]> {
-        return from(ids).pipe(
-            switchMap(id => this.getRider(id)),
-            take(ids.length),
-            toArray()
-        );
+        return this.riders$
+            .pipe(
+                filter(riders => riders.length > 0),
+                map(riders => riders.filter(rider => ids.includes(rider.id)))
+            );
     }
 
     getRandomRiders(amount?: number): Observable<Rider[]> {
@@ -105,7 +105,7 @@ export class RidersService {
         this.httpClient.get<GenericCollectionResponseModel<Rider[]>>(requestUrl).subscribe(
             (responseData: GenericCollectionResponseModel<Rider[]>) => {
                 if (responseData.version > 0) {
-                    const allPromises:Promise<any>[] = []
+                    const allPromises: Promise<any>[] = []
                     responseData.payload.forEach(rider => {
                         allPromises.push(this.dexieDB.riders.put(rider));
                     });

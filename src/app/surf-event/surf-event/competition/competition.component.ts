@@ -32,7 +32,6 @@ export class CompetitionComponent implements OnInit, OnDestroy {
                 switchMap(params => {
                     const id = params['id'];
                     const division = params['division'].toLowerCase();
-                    console.log(`Gathered id: ${id}, division: ${division}`);
                     return this.surfEventService.getCompetitionByDivision(id, division);
                 })
             )

@@ -44,9 +44,7 @@ export class CompetitionService {
     getCompetitionsByIds(ids: string[]): Observable<Competition[]> {
         return this.competition$
             .pipe(
-                tap((e)=> console.log(`Competitions`, e)),
                 filter(competitions => competitions.length > 0),
-                tap((e)=> console.log(`Filtered`, e)),
                 map(competitions => competitions.filter(competition => ids.includes(competition.id)))
             )
     }

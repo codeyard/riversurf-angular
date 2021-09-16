@@ -37,7 +37,6 @@ export class SurfEventService {
 
     getCompetitionByDivision(id: string, division : Division){
         return this.getSurfEvent(id).pipe(
-            tap((e)=> console.log(`Gathered event`, e)),
             switchMap((surfEvent : SurfEvent) => this.competitionService.getCompetitionsByIds(surfEvent.competitions)),
             map((competitions : Competition[])=>competitions.filter(competition=>competition.division === division)[0])
         );

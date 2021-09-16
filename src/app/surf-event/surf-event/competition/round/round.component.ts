@@ -2,6 +2,7 @@ import {Component, EventEmitter, Input, OnChanges, OnInit, Output} from '@angula
 import {CdkDragDrop, moveItemInArray, transferArrayItem} from "@angular/cdk/drag-drop";
 import {SnackbarService} from "../../../../core/services/snackbar.service";
 import {Heat, Round} from "../../../../core/models/competition.model";
+import {CompetitionService} from "../../../../core/services/competition.service";
 
 @Component({
     selector: 'rs-round',
@@ -11,13 +12,12 @@ import {Heat, Round} from "../../../../core/models/competition.model";
 export class RoundComponent implements OnInit, OnChanges {
 
     @Input() round!: Round;
+    @Input() maxRidersInHeat!: number;
     @Input() isFinalRound!: boolean;
     @Output() finishedRound = new EventEmitter<string[]>();
 
     unassignedRiders!: string[];
-    heatSize = 4;
     oneHeatStarted = false;
-    heatsFinished: boolean[] = [];
 
     constructor(private snackbarService: SnackbarService) {
     }
@@ -30,17 +30,21 @@ export class RoundComponent implements OnInit, OnChanges {
     }
 
     setupRound(): void {
-        // ToDo: search for unassigned riders
-        this.unassignedRiders = [...this.round.riders];
-        const numberOfHeats = Math.ceil(this.unassignedRiders.length / this.heatSize);
-        for (let i = 0; i < numberOfHeats; i++) {
+
+        const numberOfHeats = CompetitionService.calculateMinimumHeats(this.round.riders.length, this.maxRidersInHeat);
+
+        for (let i = this.round.heats.length; i < numberOfHeats; i++) {
             this.round.heats.push({
                 id: i,
                 riders: [],
                 state: 'idle',
                 results: []
             })
-            this.heatsFinished.push(false);
+        }
+
+        this.unassignedRiders = [...this.round.riders];
+        for(let heat of this.round.heats) {
+            this.unassignedRiders = this.unassignedRiders.filter(riderId => !heat.riders.includes(riderId));
         }
     }
 
@@ -50,7 +54,7 @@ export class RoundComponent implements OnInit, OnChanges {
             moveItemInArray(event.container.data, event.previousIndex, event.currentIndex);
             return
         } else {
-            if (event.container.data.length !== this.heatSize || event.container.id === 'unassignedRiders') {
+            if (event.container.data.length !== this.maxRidersInHeat || event.container.id === 'unassignedRiders') {
                 transferArrayItem(event.previousContainer.data,
                     event.container.data,
                     event.previousIndex,
@@ -85,13 +89,17 @@ export class RoundComponent implements OnInit, OnChanges {
 
     assignRiderToHeat(riderId: string) {
         const randomGroupNumber = Math.floor(Math.random() * this.round.heats.length);
-        this.round.heats[randomGroupNumber].riders.length < this.heatSize
+        this.round.heats[randomGroupNumber].riders.length < this.maxRidersInHeat
             ? this.round.heats[randomGroupNumber].riders.push(riderId)
             : this.assignRiderToHeat(riderId);
     }
 
-    checkAllHeatsFinished(): boolean {
-        return !this.round.heats.map(heat => heat.riders.length === heat.results.length && heat.results.length > 0).every(element => element)
+    hasNoHeatStarted():boolean {
+        return !this.round.heats.some(heat => heat.state === 'idle');
+    }
+
+    areAllHeatsFinished(): boolean {
+        return this.round.heats.every(heat => heat.state === 'completed');
     }
 
     heatHasAllResults(heatNumber: number): boolean {

@@ -26,7 +26,7 @@ export class CompetitionService {
 
     private static setupRounds(competition: Competition) {
 
-        let calculatedRounds = CompetitionService.calculateMinimalRounds(competition.riders.length);
+        let calculatedRounds = CompetitionService.calculateMinimumRounds(competition.riders.length, competition.config.maxRidersInHeat, competition.config.winnersInHeat);
 
         if(competition.rounds.length < calculatedRounds) {
             for (let i = competition.rounds.length; i < calculatedRounds; i++) {
@@ -39,7 +39,7 @@ export class CompetitionService {
         }
     }
 
-    private static calculateMinimalRounds(riders : number, heatSize? : number, heatWinners? : number){
+    private static calculateMinimumRounds(riders : number, heatSize? : number, heatWinners? : number){
         const ridersInHeat = heatSize ? heatSize > 0 ? heatSize : 4 : 4;
         const regularWinnersInHeat = heatWinners ? heatWinners > 0 && heatWinners <= ridersInHeat ? heatWinners : 2 : 2;
 
@@ -47,15 +47,20 @@ export class CompetitionService {
         let winners = riders;
 
         do {
-            let minimumHeatsInRound = Math.floor(winners / ridersInHeat);
-            if (winners % ridersInHeat != 0) {
-                minimumHeatsInRound++;
-            }
-
+            let minimumHeatsInRound = this.calculateMinimumHeats(winners, ridersInHeat);
             winners = minimumHeatsInRound * regularWinnersInHeat;
             calculatedRounds++;
         }while(winners >= ridersInHeat)
         return calculatedRounds;
+    }
+
+    static calculateMinimumHeats(riders: number, heatSize ?: number){
+        const ridersInHeat = heatSize ? heatSize > 0 ? heatSize : 4 : 4;
+        let minimumHeats = Math.floor(riders / ridersInHeat);
+        if (riders % ridersInHeat != 0) {
+            minimumHeats++;
+        }
+        return minimumHeats;
     }
 
     getCompetitionsByIds(ids: string[]): Observable<Competition[]> {

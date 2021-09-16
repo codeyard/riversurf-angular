@@ -26,7 +26,7 @@
                          [resultType]="getHeatStatus()"
                          [riderColorIndex]=riderIndex
                          [control]="getControl(riderIndex)"
-
+                         [disableInput]="heat.state === 'completed'"
         ></rs-rider-result>
     </div>
     <div class="round__riders__single-rider--placeholder" *ngIf="!heat.riders.length">

@@ -4,6 +4,7 @@
             <div class="competition-container">
                 <rs-round
                     [round]="round"
+                    [maxRidersInHeat]="competition.config.maxRidersInHeat"
                     [isFinalRound]="round.id === competition.rounds.length-1"
                     (finishedRound)="onFinishedRound($event)"></rs-round>
             </div>

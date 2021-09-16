@@ -28,7 +28,7 @@ export class CompetitionComponent implements OnInit, OnDestroy {
         this.routeSubscription = this.route.params
             .pipe(
                 switchMap(params => {
-                    const id = params['id'];
+                    const id = params['id'].split('-').pop();
                     const division = params['division'].toLowerCase();
                     return this.surfEventService.getCompetitionByDivision(id, division);
                 })

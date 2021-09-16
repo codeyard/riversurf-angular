@@ -35,6 +35,7 @@
                     <rs-heat *ngFor="let heat of round.heats"
                              [heat]=heat
                              [hasUnassignedRiders]="unassignedRiders.length > 0"
+                             [maxRidersInHeat]="maxRidersInHeat"
                              (drop)="drop($event)"
                              (statusChange)="handleStatusChange($event)"
                              class="round__heat"

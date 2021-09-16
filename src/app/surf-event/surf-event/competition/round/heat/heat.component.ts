@@ -11,10 +11,10 @@ import {Heat, Result} from "../../../../../core/models/competition.model";
 export class HeatComponent implements OnInit, OnChanges {
     @Input() hasUnassignedRiders!: boolean;
     @Input() heat!: Heat;
+    @Input() maxRidersInHeat!: number;
     @Output() statusChange = new EventEmitter<{ action: string, heat: Heat, form: FormGroup }>();
     @Output() drop = new EventEmitter<CdkDragDrop<string[], any>>();
-    maxHeatSize = 4;
-    status!: string;
+
     heatForm!: FormGroup;
 
     constructor() {
@@ -37,9 +37,8 @@ export class HeatComponent implements OnInit, OnChanges {
                 color: i,
                 value: this.heatForm.controls['heat'].value[i]
             }
-            this.heat.results.push(result)
+            this.heat.results[i] = result;
         }
-
     }
 
     getHeatStatus() {
@@ -65,7 +64,7 @@ export class HeatComponent implements OnInit, OnChanges {
     }
 
     ngOnChanges(changes: SimpleChanges): void {
-        this.status = this.heat.results.length > 0 ? 'finished' : 'assigned'
+        //this.status = this.heat.results.length > 0 ? 'finished' : 'assigned'
 
         this.heatForm?.get('heat')?.reset();
 
@@ -77,7 +76,7 @@ export class HeatComponent implements OnInit, OnChanges {
             const initValue = this.heat.results[i]?.value || null;
             (<FormArray>this.heatForm.get('heat')).push(new FormControl({
                 value: initValue,
-                disabled: this.heat.results.length > 0
+                disabled: this.heat.state === 'completed'
             }, [Validators.required, Validators.pattern("^([0-9]{1,2}){1}(\\.[0-9]{1})?$")]));
         }
     }

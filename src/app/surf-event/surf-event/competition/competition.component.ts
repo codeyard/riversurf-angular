@@ -50,8 +50,8 @@ export class CompetitionComponent implements OnInit, OnDestroy {
     onFinishedRound(promotedRiders: string[]) {
         for (let i = 0; i < this.competition.rounds.length; i++) {
             if (!this.competition.rounds[i].riders.length) {
-                this.competition.rounds[i].riders = promotedRiders;
-                break
+                this.competition.rounds[i] = {...this.competition.rounds[i], riders : promotedRiders};
+                break;
             }
         }
         this.selectedTabIndex = this.selectedTabIndex + 1;

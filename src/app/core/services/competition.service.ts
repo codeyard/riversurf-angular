@@ -31,7 +31,7 @@ export class CompetitionService {
         if(competition.rounds.length < calculatedRounds) {
             for (let i = competition.rounds.length; i < calculatedRounds; i++) {
                 competition.rounds.push({
-                    id: i + 1,
+                    id: i,
                     riders: i === 0 ? competition.riders : [],
                     heats: []
                 });
@@ -43,7 +43,7 @@ export class CompetitionService {
         const ridersInHeat = heatSize ? heatSize > 0 ? heatSize : 4 : 4;
         const regularWinnersInHeat = heatWinners ? heatWinners > 0 && heatWinners <= ridersInHeat ? heatWinners : 2 : 2;
 
-        let calculatedRounds = 0;
+        let calculatedRounds = 1; // seeding-round
         let winners = riders;
 
         do {

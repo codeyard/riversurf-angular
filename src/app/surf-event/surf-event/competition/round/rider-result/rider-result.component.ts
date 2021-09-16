@@ -17,10 +17,7 @@ export class RiderResultComponent implements OnInit, OnDestroy {
     @Input() riderColorIndex!: number;
     @Input() disableInput!: boolean;
     @Input() control!: FormControl;
-    @Output() resultEntry = new EventEmitter<{riderId: string, points: number, colorIndex: number}>();
-    @Input() resultType: RiderResultType = 'default';
-
-    points!: FormGroup;
+    @Input() resultType!: RiderResultType;
 
     rider ?: Rider;
 
@@ -31,15 +28,6 @@ export class RiderResultComponent implements OnInit, OnDestroy {
 
     ngOnInit(): void {
         this.riderSubscription = this.riderService.getRider(this.riderId).subscribe(rider => this.rider = rider);
-        this.points = new FormGroup({
-            'pointsInput': new FormControl({value: '', disabled: this.disableInput}, [Validators.required, Validators.pattern("^([0-9]{1,2}){1}(\\.[0-9]{1})?$")])
-        });
-
-        this.points.valueChanges.subscribe(
-            (val) => {
-                this.resultEntry.emit({riderId : this.riderId, points: +val.pointsInput, colorIndex: this.riderColorIndex});
-            }
-        )
     }
 
     ngOnDestroy(): void {

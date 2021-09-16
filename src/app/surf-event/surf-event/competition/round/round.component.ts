@@ -17,7 +17,6 @@ export class RoundComponent implements OnInit, OnChanges {
     @Output() finishedRound = new EventEmitter<string[]>();
 
     unassignedRiders!: string[];
-    oneHeatStarted = false;
 
     constructor(private snackbarService: SnackbarService) {
     }
@@ -95,7 +94,7 @@ export class RoundComponent implements OnInit, OnChanges {
     }
 
     hasNoHeatStarted():boolean {
-        return !this.round.heats.some(heat => heat.state === 'idle');
+        return this.round.heats.every(heat => heat.state === 'idle');
     }
 
     areAllHeatsFinished(): boolean {
@@ -129,7 +128,6 @@ export class RoundComponent implements OnInit, OnChanges {
         switch (event.action) {
             case "start":
                 this.round.heats[event.heat.id] = {...event.heat, state: 'running'}
-                this.oneHeatStarted = true;
                 msg += "started!"
                 break;
             case "stop":

@@ -16,10 +16,13 @@ export class SurfEventService {
     PROTOCOL_HTTPS = 'https://';
     PATH_ENDPOINT = '/api/surfevents';
 
-    private surfEvents = new BehaviorSubject<SurfEvent[]>([]);
-    private surfEvents$ = this.surfEvents.asObservable();
+    private surfEventsData = new BehaviorSubject<SurfEvent[]>([]);
+    private surfEvents$ = this.surfEventsData.asObservable();
 
-    constructor(private httpClient: HttpClient, private appConfigService: AppConfigService, private competitionService: CompetitionService) {
+    constructor(
+        private httpClient: HttpClient,
+        private appConfigService: AppConfigService,
+        private competitionService: CompetitionService) {
     }
 
     getSurfEvent(id: string): Observable<SurfEvent> {
@@ -29,7 +32,7 @@ export class SurfEventService {
     }
 
     getSurfEvents(): Observable<SurfEvent[]> {
-        if(this.surfEvents.getValue().length <= 0) {
+        if(this.surfEventsData.getValue().length <= 0) {
             this.fetchAllSurfEvents();
         }
         return this.surfEvents$;
@@ -50,6 +53,6 @@ export class SurfEventService {
         //         console.log('ERROR loading surfEvent data :-(', error)
         //     }
         // )
-        this.surfEvents.next([{...exampleEvent}]);
+        this.surfEventsData.next([{...exampleEvent}]);
     }
 }

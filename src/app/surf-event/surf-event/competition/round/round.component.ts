@@ -18,7 +18,9 @@ export class RoundComponent implements OnInit, OnChanges {
 
     unassignedRiders!: string[];
 
-    constructor(private snackbarService: SnackbarService) {
+    constructor(
+        private snackbarService: SnackbarService,
+        private competitionService: CompetitionService) {
     }
 
     ngOnInit(): void {
@@ -30,7 +32,7 @@ export class RoundComponent implements OnInit, OnChanges {
 
     setupRound(): void {
 
-        const numberOfHeats = CompetitionService.calculateMinimumHeats(this.round.riders.length, this.maxRidersInHeat);
+        const numberOfHeats = this.competitionService.calculateMinimumHeats(this.round.riders.length, this.maxRidersInHeat);
 
         for (let i = this.round.heats.length; i < numberOfHeats; i++) {
             this.round.heats.push({

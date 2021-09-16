@@ -6,12 +6,11 @@ import {UserNotification} from "../../../models/user-notification.model";
 })
 export class NewUserNotificationsPipe implements PipeTransform {
 
-    transform(value: UserNotification[]): string {
-        const numberofNewMessages = value.filter(m => !m.read).length;
-        if(numberofNewMessages >= 100){
+    transform(value: number): string {
+        if(value >= 100){
             return '...';
         } else {
-            return numberofNewMessages.toString();
+            return value.toString();
         }
     }
 

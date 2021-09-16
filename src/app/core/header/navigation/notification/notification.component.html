@@ -1,6 +1,6 @@
 <div class="container">
     <div class="container__icon">
-        <mat-icon [matBadge]="userNotifications | newUserNotifications" matBadgeColor="warn" (click)="openDialog()" [matBadgeHidden]="(userNotifications|newUserNotifications) === '0'">notifications</mat-icon>
+        <mat-icon [matBadge]="newNotifications | newUserNotifications" matBadgeColor="warn" (click)="openDialog()" [matBadgeHidden]="!newNotifications">notifications</mat-icon>
     </div>
 </div>
 <ng-template #content>

@@ -7,7 +7,7 @@ import {
     QueryList,
     ViewChildren
 } from '@angular/core';
-import {Competition, Heat} from "../../core/models/competition.model";
+import {Competition, Heat, Result} from "../../core/models/competition.model";
 import {RiderResultComponent} from "../surf-event/competition/round/rider-result/rider-result.component";
 
 export interface Line {
@@ -33,6 +33,9 @@ export class ResultViewComponent implements OnInit, AfterViewInit, AfterViewChec
     @ViewChildren(RiderResultComponent) results!: QueryList<any>;
     loaded: any;
     lines: Line[] = [];
+
+    RIDER_WIDTH = 250;
+    RIDER_HEIGHT = 80;
 
 
     constructor(private cd: ChangeDetectorRef) {
@@ -66,23 +69,38 @@ export class ResultViewComponent implements OnInit, AfterViewInit, AfterViewChec
     }
 
     getLine() {
-        let tempArray1 = this.competition.rounds[0].heats.map(heat => heat.results.map(result => result));
-        let tempArray2 = this.competition.rounds[1].heats.map(heat => heat.results.map(result => result));
-        let resultsFirstRound = tempArray1.reduce((acc, val) => acc.concat(val), []);
-        let resultSecondRound = tempArray2.reduce((acc, val) => acc.concat(val), []);
-        let result = resultsFirstRound.filter(result1 => resultSecondRound.some((result2 => result1.riderId === result2.riderId)));
+        let relevantResultsForPoints: Result[][] = [];
+        for (let i = 0; (i < this.competition.rounds.length - 1); i++) {
+            const temp = this.competition.rounds[i].heats.map(heat => heat.results.map(result => result));
+            const resultsFirst = temp.reduce((acc, val) => acc.concat(val), []);
+            let resultSucceeding: any[] = []
+            for (let j = 1; j < this.competition.rounds.length; j++) {
+                const temp2 = this.competition.rounds[1].heats.map(heat => heat.results.map(result => result));
+                resultSucceeding = temp2.reduce((acc, val) => acc.concat(val), []);
+            }
+            const promotedRiders = resultsFirst.filter(result1 => resultSucceeding.some((result2 => result1.riderId === result2.riderId)));
+            relevantResultsForPoints.push(promotedRiders);
+        }
 
-        for (let riderResult of result) {
+
+        const resultsFound = relevantResultsForPoints.reduce((acc, val) => acc.concat(val), []);
+
+        for (let i = 0; i < resultsFound.length; i++) {
             let points: Point[] = [];
             this.results.forEach(result => {
-                console.log("ChildrenResult", result)
-                if (result.riderId === riderResult.riderId) {
-                    points.push({
-                        x: result.elementRef.nativeElement.offsetLeft,
-                        y: result.elementRef.nativeElement.offsetTop
-                    })
+                    if (result.riderId === resultsFound[i].riderId && i % 2 === 0) {
+                        points.push({
+                            x: result.elementRef.nativeElement.offsetLeft + this.RIDER_WIDTH,
+                            y: result.elementRef.nativeElement.offsetTop  + this.RIDER_HEIGHT
+                        });
+                    } else {
+                        points.push({
+                            x: result.elementRef.nativeElement.offsetLeft,
+                            y: result.elementRef.nativeElement.offsetTop
+                        });
+                    }
                 }
-            });
+            );
             this.lines.push({
                 x1: points[0].x,
                 y1: points[0].y,
@@ -90,7 +108,8 @@ export class ResultViewComponent implements OnInit, AfterViewInit, AfterViewChec
                 y2: points[1].y
             })
         }
-        console.log('lines', this.lines);
+
+
     }
 
 

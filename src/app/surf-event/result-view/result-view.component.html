@@ -1,11 +1,6 @@
 <div class="relative-container">
-
-    <rs-progress-line
-        [results]="results"
-        [lines]="lines"
-    ></rs-progress-line>
     <div class="result-container">
-        <div class="round" *ngFor="let round of competition.rounds">
+        <div class="round" *ngFor="let round of competition.rounds; let roundIndex = index">
             <h2 class="round__title">{{ "round " + round.id | uppercase}}</h2>
 
             <div class="heat" *ngFor="let heat of round.heats; let heatIndex = index">
@@ -19,6 +14,11 @@
 
                 </div>
             </div>
+            <rs-progress-line
+                [roundIndex]="roundIndex"
+                [results]="results"
+                [lines]="lines"
+            ></rs-progress-line>
 
         </div>
     </div>

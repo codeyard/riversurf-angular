@@ -1,20 +1,20 @@
 <svg>
-    <g *ngFor="let result of results">
+    <g *ngFor="let result of results, let resultIndex = index">
         <circle
-            [attr.cx]="result.elementRef.nativeElement.offsetLeft"
+            [attr.cx]="getXoffset(resultIndex)"
             [attr.cy]=result.elementRef.nativeElement.offsetTop
             r="5" stroke="black" stroke-width="1" fill="red"/>
     </g>
-    <g *ngFor="let line of lines">
-        <line
-            [attr.x1]=line.x1
-            [attr.y1]=line.y1
-            [attr.x2]=line.x2
-            [attr.y2]=line.y2
-            style="stroke:rgb(255,0,0);stroke-width:2"
-        >
-        </line>
-    </g>
+<!--    <g *ngFor="let line of lines">-->
+<!--        <line-->
+<!--            [attr.x1]=line.x1-->
+<!--            [attr.y1]=line.y1-->
+<!--            [attr.x2]=line.x2-->
+<!--            [attr.y2]=line.y2-->
+<!--            style="stroke:rgb(255,0,0);stroke-width:2"-->
+<!--        >-->
+<!--        </line>-->
+<!--    </g>-->
 </svg>
 
 

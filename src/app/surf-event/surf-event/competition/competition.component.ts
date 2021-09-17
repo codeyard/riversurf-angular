@@ -2,7 +2,7 @@ import {Component, OnDestroy, OnInit} from '@angular/core';
 import {Competition, Round} from "../../../core/models/competition.model";
 import {SnackbarService} from "../../../core/services/snackbar.service";
 import {ActivatedRoute} from "@angular/router";
-import {switchMap, tap} from "rxjs/operators";
+import {switchMap} from "rxjs/operators";
 import {Subscription} from "rxjs";
 import {SurfEventService} from "../../../core/services/surf-event.service";
 
@@ -36,6 +36,9 @@ export class CompetitionComponent implements OnInit, OnDestroy {
             .subscribe(
                 competition => {
                     this.competition = competition;
+                    this.selectedTabIndex = this.competition.rounds
+                        .map(round =>
+                            round.riders.length > 0 ? 'round-started': 'round-not-started').lastIndexOf("round-started")
                 },
                 error => {
                     this.snackBarService.send("Unable to load Competition", "error");
@@ -50,7 +53,8 @@ export class CompetitionComponent implements OnInit, OnDestroy {
     onFinishedRound(promotedRiders: string[]) {
         for (let i = 0; i < this.competition.rounds.length; i++) {
             if (!this.competition.rounds[i].riders.length) {
-                this.competition.rounds[i] = {...this.competition.rounds[i], riders : promotedRiders};
+                this.competition.rounds[i] = {...this.competition.rounds[i], riders: promotedRiders};
+                this.updateCompetition(this.competition.rounds[i])
                 break;
             }
         }
@@ -78,6 +82,6 @@ export class CompetitionComponent implements OnInit, OnDestroy {
         this.competition = competitionCopy;
 
         this.surfEventService.updateCompetition(this.competition)
-             .subscribe(val => console.log(val));
+            .subscribe(val => console.log(val));
     }
 }

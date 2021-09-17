@@ -1,0 +1,26 @@
+<div *ngIf="loaded" class="relative-container">
+    <rs-progress-line
+        [results]="results"
+    ></rs-progress-line>
+
+    <div class="result-container">
+        <div class="round" *ngFor="let round of competition.rounds">
+            <h2 class="round__title">{{ "round " + round.id | uppercase}}</h2>
+
+            <div class="heat" *ngFor="let heat of round.heats; let heatIndex = index">
+                <h4 class="heat__title">Heat {{heatIndex + 1}}</h4>
+                <div class="rider" *ngFor="let result of heat.results">
+                    <rs-rider-result [riderId]="result.riderId"
+                                     [riderColorIndex]="result.color"
+                                     [resultType]="getHeatStatus(heat)"
+                                     [points]="result.value"
+                    ></rs-rider-result>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+
+

@@ -1,4 +1,4 @@
-import {Component, EventEmitter, Input, OnDestroy, OnInit, Output} from '@angular/core';
+import {ChangeDetectorRef, Component, ElementRef, EventEmitter, Input, OnDestroy, OnInit, Output} from '@angular/core';
 import {RidersService} from "../../../../../core/services/riders.service";
 import {Rider} from "../../../../../core/models/rider.model";
 import {Subscription} from "rxjs";
@@ -15,15 +15,16 @@ export class RiderResultComponent implements OnInit, OnDestroy {
 
     @Input() riderId!: string;
     @Input() riderColorIndex!: number;
-    @Input() disableInput!: boolean;
-    @Input() control!: FormControl;
+    @Input() disableInput?: boolean;
+    @Input() control?: FormControl;
     @Input() resultType!: RiderResultType;
+    @Input() points?: number;
 
     rider ?: Rider;
 
     private riderSubscription ?: Subscription;
 
-    constructor(private riderService: RidersService) {
+    constructor(private riderService: RidersService, private elementRef: ElementRef) {
     }
 
     ngOnInit(): void {

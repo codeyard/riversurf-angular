@@ -37,7 +37,7 @@
 }
 
 .rider {
-    width: 90%;
+    width: 300px;
     margin-bottom: .2rem;
 
     &:last-of-type {
@@ -52,5 +52,15 @@
 .relativ-container {
     position: relative;
 }
+
+svg {
+    display: inline-block;
+    position: absolute;
+    top: 0;
+    left: 0;
+    overflow: visible;
+    z-index: 10;
+}
+
 
 

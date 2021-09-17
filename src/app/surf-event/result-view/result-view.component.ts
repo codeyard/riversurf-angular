@@ -56,13 +56,13 @@ export class ResultViewComponent implements OnInit, AfterViewInit, AfterViewChec
     }
 
     ngAfterViewInit(): void {
-
+        this.getLine()
+        this.cd.detectChanges();
+        this.loaded = true;
     }
 
     ngAfterViewChecked() {
-        //this.getLine()
-        this.cd.detectChanges();
-        this.loaded = true;
+
     }
 
     getLine() {

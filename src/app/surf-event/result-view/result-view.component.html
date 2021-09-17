@@ -1,8 +1,9 @@
-<div *ngIf="loaded" class="relative-container">
+<div class="relative-container">
+
     <rs-progress-line
         [results]="results"
+        [lines]="lines"
     ></rs-progress-line>
-
     <div class="result-container">
         <div class="round" *ngFor="let round of competition.rounds">
             <h2 class="round__title">{{ "round " + round.id | uppercase}}</h2>
@@ -15,6 +16,7 @@
                                      [resultType]="getHeatStatus(heat)"
                                      [points]="result.value"
                     ></rs-rider-result>
+
                 </div>
             </div>
 

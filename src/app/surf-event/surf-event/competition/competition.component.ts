@@ -1,8 +1,8 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
-import {Competition} from "../../../core/models/competition.model";
+import {Competition, Round} from "../../../core/models/competition.model";
 import {SnackbarService} from "../../../core/services/snackbar.service";
 import {ActivatedRoute} from "@angular/router";
-import {switchMap} from "rxjs/operators";
+import {switchMap, tap} from "rxjs/operators";
 import {Subscription} from "rxjs";
 import {SurfEventService} from "../../../core/services/surf-event.service";
 
@@ -68,5 +68,16 @@ export class CompetitionComponent implements OnInit, OnDestroy {
             label = 'Semifinals';
         }
         return label;
+    }
+
+    updateCompetition(updatedRound: Round) {
+        const roundId = updatedRound.id;
+        const competitionCopy = {...this.competition}
+        competitionCopy.rounds[roundId] = updatedRound
+
+        this.competition = competitionCopy;
+
+        this.surfEventService.updateCompetition(this.competition)
+             .subscribe(val => console.log(val));
     }
 }

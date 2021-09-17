@@ -30,6 +30,11 @@ export class CompetitionService {
             )
     }
 
+    updateCompetition(competition: Competition) {
+        const requestUrl = this.PROTOCOL_HTTPS + this.appConfigService.getHostName() + this.PATH_ENDPOINT + `/${competition.id}`;
+        return this.httpClient.put(requestUrl, competition)
+    }
+
     private fetchAllCompetitions() {
         const requestUrl = this.PROTOCOL_HTTPS + this.appConfigService.getHostName() + this.PATH_ENDPOINT;
         this.httpClient.get<Competition[]>(requestUrl).subscribe(

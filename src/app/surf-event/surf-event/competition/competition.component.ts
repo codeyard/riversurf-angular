@@ -5,6 +5,7 @@ import {ActivatedRoute} from "@angular/router";
 import {switchMap} from "rxjs/operators";
 import {Subscription} from "rxjs";
 import {SurfEventService} from "../../../core/services/surf-event.service";
+import {log} from "util";
 
 @Component({
     selector: 'rs-competition',
@@ -82,6 +83,11 @@ export class CompetitionComponent implements OnInit, OnDestroy {
         this.competition = competitionCopy;
 
         this.surfEventService.updateCompetition(this.competition)
-            .subscribe(val => console.log(val));
+            .subscribe(
+                val => () => {},
+                error => {
+                    console.log('ERROR unable to save data :-(', error)
+                    this.snackBarService.send("Unable to save changes to server", "error");
+                });
     }
 }

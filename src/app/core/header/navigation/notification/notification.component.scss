@@ -19,17 +19,6 @@
     }
 }
 
-.notification-dialog{
-    min-width: 878px;
-}
-
-.notification-table{
-    width: 100%;
-}
-
-.notification-icon{
-}
-
 .notification-timestamp{
     margin: 0 0.5rem;
     display: flex;
@@ -45,12 +34,14 @@
     }
 }
 
-.notification-content{
+.notification-message{
     margin: 0 0.5rem;
+    vertical-align: top;
+    text-align: left;
 }
 
 .notification-link{
-    padding: 1rem;
+    padding: 0 0.5rem;
 }
 
 mat-dialog-actions{

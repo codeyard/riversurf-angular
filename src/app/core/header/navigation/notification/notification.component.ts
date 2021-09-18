@@ -14,7 +14,7 @@ export class NotificationComponent implements OnInit, OnDestroy {
 
     userNotifications: UserNotification[] = [];
 
-    get newNotifications() : number{
+    get newNotifications(): number {
         return this.userNotifications.filter(m => !m.read).length;
     }
 
@@ -24,30 +24,17 @@ export class NotificationComponent implements OnInit, OnDestroy {
     }
 
     ngOnInit(): void {
-        this.intervalId = setInterval(()=>this.pushDemoMessage(), 2000);
+        // ToDo: Replace with subscribing to notification service for receiving messages
+        this.intervalId = setInterval(() => this.pushDemoMessage(), 2000);
     }
 
     ngOnDestroy(): void {
-        if(this.intervalId != 0) {
+        if (this.intervalId != 0) {
             clearInterval(this.intervalId);
         }
     }
 
-    openDialog() {
-        const dialog = this.dialog.open(this.dialogTemplateRef, {
-            closeOnNavigation: true,
-            autoFocus: false
-        });
-        dialog.afterOpened().subscribe(() => {
-            this.dialogContentRef.nativeElement.scrollTop = this.dialogContentRef.nativeElement.scrollHeight;
-        });
-    }
-
-    clearUnreadMessages() {
-        this.userNotifications.forEach(e=>e.read = true);
-    }
-
-    private pushDemoMessage(){
+    private pushDemoMessage() {
         this.userNotifications = [...this.userNotifications, {
             timestamp: new Date(),
             content: 'Hello World',
@@ -56,7 +43,36 @@ export class NotificationComponent implements OnInit, OnDestroy {
         }];
     }
 
-    markAsRead(element : UserNotification) {
+    openDialog() {
+        const dialog = this.dialog.open(this.dialogTemplateRef, {
+            closeOnNavigation: true,
+            autoFocus: false
+        });
+        dialog.afterOpened().subscribe(() => {
+            this.scrollToLatestMessage();
+        });
+    }
+
+
+
+    scrollToLatestMessage() {
+        if (this.dialogContentRef) {
+            try {
+                this.dialogContentRef.nativeElement.scroll({
+                    top: this.dialogContentRef.nativeElement.scrollHeight,
+                    behavior: 'smooth'
+                });
+            } catch (e) {
+                console.log(`Error while scrolling`, e);
+            }
+        }
+    }
+
+    markAsRead(element: UserNotification) {
         element.read = true;
+    }
+
+    markAllAsRead() {
+        this.userNotifications.forEach(e => e.read = true);
     }
 }

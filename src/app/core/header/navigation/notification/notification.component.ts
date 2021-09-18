@@ -57,4 +57,7 @@ export class NotificationComponent implements OnInit, OnDestroy {
         this.newNotifications = this.userNotifications.filter(m => !m.read).length;
     }
 
+    markAsRead(element : UserNotification) {
+        element.read = true;
+    }
 }

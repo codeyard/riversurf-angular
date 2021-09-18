@@ -11,6 +11,7 @@ import {MatBadgeModule} from "@angular/material/badge";
 import {MatDialogModule} from "@angular/material/dialog";
 import {MatButtonModule} from "@angular/material/button";
 import {NewUserNotificationsPipe} from './header/navigation/notification/new-user-notifications.pipe';
+import {MatTableModule} from "@angular/material/table";
 
 
 @NgModule({
@@ -28,7 +29,8 @@ import {NewUserNotificationsPipe} from './header/navigation/notification/new-use
         RouterModule,
         MatBadgeModule,
         MatDialogModule,
-        MatButtonModule
+        MatButtonModule,
+        MatTableModule
     ],
     exports: [
         HeaderComponent

@@ -6,11 +6,52 @@
 <ng-template #content>
     <h2 mat-dialog-title>Notifications</h2>
     <mat-dialog-content>
-        <div class="notification" *ngFor="let userNotification of this.userNotifications">
-            <div class="notification__timestamp" [ngClass]="{'new' : !userNotification.read}">{{userNotification.timestamp | date:'HH:mm:ss, d MMMM YYYY'}}</div>
-            <div class="notification__content">{{userNotification.content}}</div>
-            <div class="notification__link" *ngIf="userNotification.link" [routerLink]="userNotification.link" matDialogClose>Go</div>
-        </div>
+        <table mat-table [dataSource]="userNotifications">
+
+            <ng-container matColumnDef="icon">
+                <th mat-header-cell *matHeaderCellDef>New</th>
+                <td mat-cell *matCellDef="let element">
+                    <div class="notification-icon">
+                        <button mat-icon-button *ngIf="!element.read" (click)="markAsRead(element)">
+                            <mat-icon>message</mat-icon></button>
+                    </div>
+                </td>
+            </ng-container>
+
+            <ng-container matColumnDef="timestamp">
+                <th mat-header-cell *matHeaderCellDef>Time</th>
+                <td mat-cell *matCellDef="let element">
+                    <div class="notification-timestamp">
+                        <div class="notification-timestamp__time">
+                            {{element.timestamp | date:'HH:mm:ss'}}
+                        </div>
+                        <div class="notification-timestamp__date">
+                            {{element.timestamp | date:'d MMMM YYYY'}}
+                        </div>
+                    </div>
+                </td>
+            </ng-container>
+
+            <ng-container matColumnDef="content">
+                <th mat-header-cell *matHeaderCellDef>Notification</th>
+                <td mat-cell *matCellDef="let element">
+                    <div class="notification-content">
+                        <div class="notification-content__message">
+                            {{element.content}}
+                        </div>
+                        <div class="notification-content__link">
+                            <button mat-raised-button color="primary" *ngIf="element.link" [routerLink]="element.link" matDialogClose>
+                                <mat-icon>navigate_next</mat-icon>
+                            </button>
+                        </div>
+                    </div>
+                </td>
+            </ng-container>
+
+            <tr mat-header-row *matHeaderRowDef="['icon','timestamp', 'content']"></tr>
+            <tr mat-row *matRowDef="let row; columns: ['icon','timestamp', 'content'];"></tr>
+
+        </table>
     </mat-dialog-content>
     <mat-dialog-actions>
         <button mat-raised-button mat-dialog-close color="primary">Close</button>

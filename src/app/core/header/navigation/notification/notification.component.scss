@@ -19,24 +19,37 @@
     }
 }
 
-.notification{
+.notification-icon{
+    padding: 1rem;
+}
+
+.notification-timestamp{
+    padding: 1rem;
     display: flex;
+    flex-direction: column;
+    white-space: nowrap;
 
-    &__timestamp{
+    &__time{
+        font-size: larger;
+    }
+
+    &__date{
         font-style: italic;
-    }
-
-    &__content{
-
-    }
-
-    &__link{
-
     }
 }
 
-.new{
-    color: lime;
+.notification-content{
+    display: flex;
+    align-items: center;
+    min-width: 878px;
+
+    &__message{
+        padding: 1rem;
+    }
+
+    &__link{
+        padding: 1rem;
+    }
 }
 
 mat-dialog-actions{

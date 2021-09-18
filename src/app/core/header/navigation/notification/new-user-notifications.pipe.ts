@@ -1,5 +1,4 @@
 import {Pipe, PipeTransform} from '@angular/core';
-import {UserNotification} from "../../../models/user-notification.model";
 
 @Pipe({
     name: 'newUserNotifications'

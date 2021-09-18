@@ -81,7 +81,6 @@ export class ResultViewComponent implements OnInit, AfterViewInit, AfterViewChec
         }
 
         const resultsWithLine = relevantResultsForPoints.reduce((acc, val) => acc.concat(val), []);
-        console.log(resultsWithLine)
 
         for(const result of resultsWithLine) {
             let points: Point[] = [];
@@ -124,7 +123,7 @@ export class ResultViewComponent implements OnInit, AfterViewInit, AfterViewChec
                         }
                     })
                 } catch (notLineException) {
-                    console.log(notLineException)
+                    // EMPTY AS NO NEED TO ADD LINE
                 }
             }
 

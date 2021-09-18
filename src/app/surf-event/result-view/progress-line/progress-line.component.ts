@@ -14,15 +14,8 @@ export class ProgressLineComponent implements OnInit {
     @Input() lines!: Line[];
 
     constructor() {
-        console.log(this.lines)
     }
 
     ngOnInit(): void {
     }
-
-    ngAfterViewInit() {
-    }
-
-
-
 }

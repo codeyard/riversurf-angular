@@ -1,4 +1,4 @@
-import {Component, OnDestroy, OnInit, TemplateRef, ViewChild} from '@angular/core';
+import {Component, ElementRef, OnDestroy, OnInit, TemplateRef, ViewChild} from '@angular/core';
 import {MatDialog} from "@angular/material/dialog";
 import {UserNotification} from "../../../models/user-notification.model";
 
@@ -9,10 +9,14 @@ import {UserNotification} from "../../../models/user-notification.model";
 })
 export class NotificationComponent implements OnInit, OnDestroy {
 
-    @ViewChild('content') dialogContent !: TemplateRef<any>;
+    @ViewChild('dialogTemplate') dialogTemplateRef !: TemplateRef<any>;
+    @ViewChild('dialogContent') dialogContentRef !: ElementRef;
 
     userNotifications: UserNotification[] = [];
-    newNotifications : number = 0;
+
+    get newNotifications() : number{
+        return this.userNotifications.filter(m => !m.read).length;
+    }
 
     private intervalId: number = 0;
 
@@ -23,7 +27,6 @@ export class NotificationComponent implements OnInit, OnDestroy {
         this.intervalId = setInterval(()=>this.pushDemoMessage(), 2000);
     }
 
-
     ngOnDestroy(): void {
         if(this.intervalId != 0) {
             clearInterval(this.intervalId);
@@ -31,30 +34,26 @@ export class NotificationComponent implements OnInit, OnDestroy {
     }
 
     openDialog() {
-        this.dialog.open(this.dialogContent, {closeOnNavigation: true}).afterClosed().subscribe(()=>this.clearUnreadMessages());
+        const dialog = this.dialog.open(this.dialogTemplateRef, {
+            closeOnNavigation: true,
+            autoFocus: false
+        });
+        dialog.afterOpened().subscribe(() => {
+            this.dialogContentRef.nativeElement.scrollTop = this.dialogContentRef.nativeElement.scrollHeight;
+        });
     }
 
-    private clearUnreadMessages() {
-        // this.userNotifications.forEach((element, index) => {
-        //     element.read = true;
-        //     this.userNotifications[index] = element;
-        // });
+    clearUnreadMessages() {
         this.userNotifications.forEach(e=>e.read = true);
-        this.refreshNotificationCounter();
     }
 
     private pushDemoMessage(){
-        this.userNotifications.push({
+        this.userNotifications = [...this.userNotifications, {
             timestamp: new Date(),
             content: 'Hello World',
             read: false,
             link: this.userNotifications.length % 2 === 0 ? 'event/riversurf-jam-thun-2021' : undefined
-        });
-        this.refreshNotificationCounter();
-    }
-
-    private refreshNotificationCounter(){
-        this.newNotifications = this.userNotifications.filter(m => !m.read).length;
+        }];
     }
 
     markAsRead(element : UserNotification) {

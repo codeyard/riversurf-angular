@@ -6,14 +6,8 @@
             r="5" stroke="black" stroke-width="1" fill="red"/>
     </g>
     <g *ngFor="let line of lines">
-        <line *ngIf="line"
-            [attr.x1]=line.source.x
-            [attr.y1]=line.source.y
-            [attr.x2]=line.target.x
-            [attr.y2]=line.target.y
-            style="stroke:rgb(255,0,0);stroke-width:2"
-        >
-        </line>
+
+        <path [attr.d]="line.path" fill="transparent" stroke="red" stroke-width="2"></path>
     </g>
 </svg>
 

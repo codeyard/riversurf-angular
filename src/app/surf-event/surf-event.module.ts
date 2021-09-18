@@ -18,6 +18,7 @@ import {MatButtonModule} from "@angular/material/button";
 import {MatTabsModule} from "@angular/material/tabs";
 import { HeatComponent } from './surf-event/competition/round/heat/heat.component';
 import {MatFormFieldModule} from "@angular/material/form-field";
+import {GoogleMapsModule} from "@angular/google-maps";
 
 
 @NgModule({
@@ -43,7 +44,8 @@ import {MatFormFieldModule} from "@angular/material/form-field";
         DragDropModule,
         MatButtonModule,
         MatTabsModule,
-        MatFormFieldModule
+        MatFormFieldModule,
+        GoogleMapsModule
     ]
 })
 export class SurfEventModule {

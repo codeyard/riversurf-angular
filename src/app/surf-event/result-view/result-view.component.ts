@@ -11,10 +11,8 @@ import {Competition, Heat, Result} from "../../core/models/competition.model";
 import {RiderResultComponent} from "../surf-event/competition/round/rider-result/rider-result.component";
 
 export interface Line {
-    x1: number,
-    x2: number,
-    y1: number,
-    y2: number
+    source: Point,
+    target: Point
 }
 
 interface Point {
@@ -33,6 +31,7 @@ export class ResultViewComponent implements OnInit, AfterViewInit, AfterViewChec
     @ViewChildren(RiderResultComponent) results!: QueryList<any>;
     loaded: any;
     lines: Line[] = [];
+    points: Point[] = []
 
     RIDER_WIDTH = 250;
     RIDER_HEIGHT = 80;
@@ -70,7 +69,7 @@ export class ResultViewComponent implements OnInit, AfterViewInit, AfterViewChec
 
     getLine() {
         let relevantResultsForPoints: Result[][] = [];
-        for (let i = 0; (i < this.competition.rounds.length - 1); i++) {
+        for (let i = 0; i < this.competition.rounds.length; i++) {
             const temp = this.competition.rounds[i].heats.map(heat => heat.results.map(result => result));
             const resultsFirst = temp.reduce((acc, val) => acc.concat(val), []);
             let resultSucceeding: any[] = []
@@ -82,35 +81,51 @@ export class ResultViewComponent implements OnInit, AfterViewInit, AfterViewChec
             relevantResultsForPoints.push(promotedRiders);
         }
 
+        const resultsWithLine = relevantResultsForPoints.reduce((acc, val) => acc.concat(val), []);
 
-        const resultsFound = relevantResultsForPoints.reduce((acc, val) => acc.concat(val), []);
-
-        for (let i = 0; i < resultsFound.length; i++) {
+        for(const result of resultsWithLine) {
             let points: Point[] = [];
-            this.results.forEach(result => {
-                    if (result.riderId === resultsFound[i].riderId && i % 2 === 0) {
-                        points.push({
-                            x: result.elementRef.nativeElement.offsetLeft + this.RIDER_WIDTH,
-                            y: result.elementRef.nativeElement.offsetTop  + this.RIDER_HEIGHT
-                        });
+            this.results.forEach(resultElementRef => {
+                if(resultElementRef.riderId === result.riderId) {
+                    if(resultElementRef.roundNumber === 0) {
+                        const rightPoint = {x: resultElementRef.elementRef.nativeElement.offsetLeft + this.RIDER_WIDTH,
+                            y: resultElementRef.elementRef.nativeElement.offsetTop + this.RIDER_HEIGHT}
+                        points.push(rightPoint)
+                        this.points.push(rightPoint)
+                    } else if(resultElementRef.roundNumber === (this.competition.rounds.length - 1)) {
+                        const leftPoint = {x: resultElementRef.elementRef.nativeElement.offsetLeft,
+                            y: resultElementRef.elementRef.nativeElement.offsetTop + this.RIDER_HEIGHT}
+                        points.push(leftPoint)
+                        this.points.push(leftPoint)
                     } else {
-                        points.push({
-                            x: result.elementRef.nativeElement.offsetLeft,
-                            y: result.elementRef.nativeElement.offsetTop
-                        });
+                        const leftPoint = {x: resultElementRef.elementRef.nativeElement.offsetLeft,
+                            y: resultElementRef.elementRef.nativeElement.offsetTop + this.RIDER_HEIGHT};
+                        const rightPoint = {x: resultElementRef.elementRef.nativeElement.offsetLeft + this.RIDER_WIDTH,
+                            y: resultElementRef.elementRef.nativeElement.offsetTop + this.RIDER_HEIGHT}
+                        points.push(leftPoint)
+                        points.push(rightPoint)
+                        this.points.push(leftPoint)
+                        this.points.push(rightPoint)
                     }
                 }
-            );
+
+            })
             this.lines.push({
-                x1: points[0].x,
-                y1: points[0].y,
-                x2: points[1].x,
-                y2: points[1].y
+                source: {
+                    x: points[0].x,
+                    y: points[0].y,
+
+                },
+                target: {
+                    x: points[1].x,
+                    y: points[1].y
+                }
             })
         }
 
-
+        console.log(this.points)
     }
+
 
 
 }
@@ -172,25 +187,8 @@ const exampleComp: Competition = {
                         color: 3,
                         value: 0
                     }]
-                }, {
+                },  {
                     id: 2,
-                    riders: ["6132710cfc13ae15b3000009", "6132710cfc13ae15b300000a", "6132710cfc13ae15b300000b"],
-                    state: 'idle',
-                    results: [{
-                        riderId: "6132710cfc13ae15b3000009",
-                        color: 0,
-                        value: 0
-                    }, {
-                        riderId: "6132710cfc13ae15b300000a",
-                        color: 1,
-                        value: 0
-                    }, {
-                        riderId: "6132710cfc13ae15b300000b",
-                        color: 2,
-                        value: 0
-                    }]
-                }, {
-                    id: 3,
                     riders: ["6132710cfc13ae15b300000c", "6132710cfc13ae15b300000d", "6132710cfc13ae15b300000e", "6132710cfc13ae15b300000f"],
                     state: 'idle',
                     results: [{
@@ -208,6 +206,23 @@ const exampleComp: Competition = {
                     }, {
                         riderId: "6132710cfc13ae15b300000f",
                         color: 3,
+                        value: 0
+                    }]
+                }, {
+                    id: 3,
+                    riders: ["6132710cfc13ae15b3000009", "6132710cfc13ae15b300000a", "6132710cfc13ae15b300000b"],
+                    state: 'idle',
+                    results: [{
+                        riderId: "6132710cfc13ae15b3000009",
+                        color: 0,
+                        value: 0
+                    }, {
+                        riderId: "6132710cfc13ae15b300000a",
+                        color: 1,
+                        value: 0
+                    }, {
+                        riderId: "6132710cfc13ae15b300000b",
+                        color: 2,
                         value: 0
                     }]
                 }
@@ -361,27 +376,6 @@ const exampleComp: Competition = {
                     }, {
                         riderId: "6132710cfc13ae15b300000b",
                         color: 2,
-                        value: 0
-                    }]
-                }, {
-                    id: 3,
-                    riders: ["6132710cfc13ae15b300000c", "6132710cfc13ae15b300000d", "6132710cfc13ae15b300000e", "6132710cfc13ae15b300000f"],
-                    state: 'idle',
-                    results: [{
-                        riderId: "6132710cfc13ae15b300000c",
-                        color: 0,
-                        value: 0
-                    }, {
-                        riderId: "6132710cfc13ae15b300000d",
-                        color: 1,
-                        value: 0
-                    }, {
-                        riderId: "6132710cfc13ae15b300000e",
-                        color: 2,
-                        value: 0
-                    }, {
-                        riderId: "6132710cfc13ae15b300000f",
-                        color: 3,
                         value: 0
                     }]
                 }

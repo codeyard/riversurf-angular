@@ -1,5 +1,6 @@
 import {Component, Input, OnInit, QueryList} from '@angular/core';
 import {Line} from "../result-view.component";
+import {Point} from "@angular/cdk/drag-drop";
 
 @Component({
     selector: 'rs-progress-line',
@@ -9,10 +10,11 @@ import {Line} from "../result-view.component";
 export class ProgressLineComponent implements OnInit {
 
     @Input() roundIndex!: number;
-    @Input() results!: QueryList<any>;
+    @Input() points!: Point[];
     @Input() lines!: Line[];
 
     constructor() {
+        console.log(this.lines)
     }
 
     ngOnInit(): void {
@@ -21,11 +23,6 @@ export class ProgressLineComponent implements OnInit {
     ngAfterViewInit() {
     }
 
-    getXoffset(cardIndex: number) {
-        console.log(this.results.length)
-        return this.roundIndex % 2 === 0
-            ? this.results.get(cardIndex).elementRef.nativeElement.offsetLeft
-            : this.results.get(cardIndex).elementRef.nativeElement.offsetLeft + 250;
-    }
+
 
 }

@@ -19,6 +19,7 @@ export class RiderResultComponent implements OnInit, OnDestroy {
     @Input() control?: FormControl;
     @Input() resultType!: RiderResultType;
     @Input() points?: number;
+    @Input() roundNumber?: number;
 
     rider ?: Rider;
 

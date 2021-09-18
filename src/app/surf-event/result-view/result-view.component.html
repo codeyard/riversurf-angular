@@ -10,13 +10,13 @@
                                      [riderColorIndex]="result.color"
                                      [resultType]="getHeatStatus(heat)"
                                      [points]="result.value"
+                                     [roundNumber]="round.id"
                     ></rs-rider-result>
 
                 </div>
             </div>
-            <rs-progress-line
-                [roundIndex]="roundIndex"
-                [results]="results"
+            <rs-progress-line *ngIf="loaded"
+                [points]="points"
                 [lines]="lines"
             ></rs-progress-line>
 

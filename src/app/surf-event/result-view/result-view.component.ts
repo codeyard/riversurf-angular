@@ -7,9 +7,8 @@ import {
     QueryList,
     ViewChildren
 } from '@angular/core';
-import {Competition, Heat, Result} from "../../core/models/competition.model";
+import {Competition, Heat} from "../../core/models/competition.model";
 import {RiderResultComponent} from "../surf-event/competition/round/rider-result/rider-result.component";
-import {not} from "rxjs/internal-compatibility";
 
 export interface Line {
     source: Point,
@@ -62,7 +61,7 @@ export class ResultViewComponent implements OnInit, AfterViewInit, AfterViewChec
     }
 
     ngAfterViewInit(): void {
-        this.getLine()
+        this.getPointsAndLines()
         this.cd.detectChanges();
         this.loaded = true;
     }
@@ -71,53 +70,38 @@ export class ResultViewComponent implements OnInit, AfterViewInit, AfterViewChec
 
     }
 
-    getLine() {
-        let relevantResultsForPoints: Result[][] = [];
-        for (let i = 0; i < this.competition.rounds.length; i += 2) {
-            const temp = this.competition.rounds[i].heats.map(heat => heat.results.map(result => result));
-            const resultsFirst = temp.reduce((acc, val) => acc.concat(val), []);
-            let resultSucceeding: any[] = []
-            for (let j = 1; j < this.competition.rounds.length; j++) {
-                const temp2 = this.competition.rounds[1].heats.map(heat => heat.results.map(result => result));
-                resultSucceeding = temp2.reduce((acc, val) => acc.concat(val), []);
-            }
-            const promotedRiders = resultsFirst.filter(result1 => resultSucceeding.some((result2 => result1.riderId === result2.riderId)));
-            relevantResultsForPoints.push(promotedRiders);
-        }
+    getPointsAndLines() {
+        //DISCUSS: SHOULD THIS ALWAYS BE EQUAL TO THIS.COMPETITION.RIDERS? IF SO REMOVE FROM CODE, SO FAR UNUSED
+        const ridersWithResult: string[] = []
+        this.competition.rounds.forEach(round =>
+            round.heats.forEach(heat =>
+                heat.results.forEach(result => !ridersWithResult.includes(result.riderId) ? ridersWithResult.push(result.riderId) : '')
+            )
+        )
 
-        const resultsWithLine = relevantResultsForPoints.reduce((acc, val) => acc.concat(val), []);
 
-        for (const result of resultsWithLine) {
+        for (const rider of this.competition.riders) {
             let points: Point[] = [];
             this.results.forEach(resultElementRef => {
-                if (resultElementRef.riderId === result.riderId) {
+                if (resultElementRef.riderId === rider) {
+                    const leftPoint = {
+                        x: resultElementRef.elementRef.nativeElement.offsetLeft,
+                        y: resultElementRef.elementRef.nativeElement.offsetTop + this.RIDER_HEIGHT
+                    }
+                    const rightPoint = {
+                        ...leftPoint,
+                        x: resultElementRef.elementRef.nativeElement.offsetLeft + this.RIDER_WIDTH
+                    }
+
                     if (resultElementRef.roundNumber === 0) {
-                        const rightPoint = {
-                            x: resultElementRef.elementRef.nativeElement.offsetLeft + this.RIDER_WIDTH,
-                            y: resultElementRef.elementRef.nativeElement.offsetTop + this.RIDER_HEIGHT
-                        }
                         points.push(rightPoint)
                         this.points.push(rightPoint)
                     } else if (resultElementRef.roundNumber === (this.competition.rounds.length - 1)) {
-                        const leftPoint = {
-                            x: resultElementRef.elementRef.nativeElement.offsetLeft,
-                            y: resultElementRef.elementRef.nativeElement.offsetTop + this.RIDER_HEIGHT
-                        }
                         points.push(leftPoint)
                         this.points.push(leftPoint)
                     } else {
-                        const leftPoint = {
-                            x: resultElementRef.elementRef.nativeElement.offsetLeft,
-                            y: resultElementRef.elementRef.nativeElement.offsetTop + this.RIDER_HEIGHT
-                        };
-                        const rightPoint = {
-                            x: resultElementRef.elementRef.nativeElement.offsetLeft + this.RIDER_WIDTH,
-                            y: resultElementRef.elementRef.nativeElement.offsetTop + this.RIDER_HEIGHT
-                        }
-                        points.push(leftPoint)
-                        points.push(rightPoint)
-                        this.points.push(leftPoint)
-                        this.points.push(rightPoint)
+                        points.push(leftPoint, rightPoint)
+                        this.points.push(leftPoint, rightPoint)
                     }
                 }
             })
@@ -151,6 +135,8 @@ export class ResultViewComponent implements OnInit, AfterViewInit, AfterViewChec
             }
 
         }
+        console.log(this.lines)
+        console.log(this.points)
     }
 
 

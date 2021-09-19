@@ -18,6 +18,8 @@ import {MatButtonModule} from "@angular/material/button";
 import {MatTabsModule} from "@angular/material/tabs";
 import { HeatComponent } from './surf-event/competition/round/heat/heat.component';
 import {MatFormFieldModule} from "@angular/material/form-field";
+import { ResultViewComponent } from './result-view/result-view.component';
+import { ProgressLineComponent } from './result-view/progress-line/progress-line.component';
 
 
 @NgModule({
@@ -27,7 +29,9 @@ import {MatFormFieldModule} from "@angular/material/form-field";
         WeatherComponent,
         RoundComponent,
         RiderResultComponent,
-        HeatComponent
+        HeatComponent,
+        ResultViewComponent,
+        ProgressLineComponent
     ],
     imports: [
         SurfEventRoutingModule,

@@ -1,6 +1,12 @@
 @import "../../../assets/scss/_variables";
+@import "../../../assets/scss/_responsive";
 .result-container {
     display: flex;
+
+    @include respond(small) {
+        flex-direction: column;
+        flex: 100%;
+    }
 
 
 }
@@ -9,9 +15,17 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-
-
     padding: .5rem 1.5rem;
+
+    @include respond(small) {
+
+
+        &:last-of-type {
+            margin-bottom: 5rem;
+        }
+
+    }
+
 
     &__title {
         font-size: 1rem;

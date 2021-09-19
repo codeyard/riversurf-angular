@@ -13,6 +13,7 @@ import {MatButtonModule} from "@angular/material/button";
 import {NewUserNotificationsPipe} from './header/navigation/notification/new-user-notifications.pipe';
 import {MatTableModule} from "@angular/material/table";
 import {A11yModule} from "@angular/cdk/a11y";
+import {MatPaginatorModule} from "@angular/material/paginator";
 
 
 @NgModule({
@@ -32,7 +33,8 @@ import {A11yModule} from "@angular/cdk/a11y";
         MatDialogModule,
         MatButtonModule,
         MatTableModule,
-        A11yModule
+        A11yModule,
+        MatPaginatorModule
     ],
     exports: [
         HeaderComponent

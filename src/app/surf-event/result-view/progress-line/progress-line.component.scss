@@ -1,4 +1,5 @@
 @import "../../../../assets/scss/_variables";
+
 svg {
     display: inline-block;
     position: absolute;
@@ -26,6 +27,10 @@ path {
 .highlighted {
     stroke: $color-primary;
     z-index: 10;
+
+    & > * {
+        stroke: $color-primary;
+    }
 }
 
 .fade-out {

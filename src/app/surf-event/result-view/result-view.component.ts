@@ -1,10 +1,10 @@
 import {AfterViewInit, ChangeDetectorRef, Component, OnInit, QueryList, ViewChildren} from '@angular/core';
-import {Competition, Heat} from "../../core/models/competition.model";
+import {Competition, Heat, Result} from "../../core/models/competition.model";
 import {RiderResultComponent} from "../surf-event/competition/round/rider-result/rider-result.component";
 import {Subscription} from "rxjs";
 import {ActivatedRoute} from "@angular/router";
 import {SurfEventService} from "../../core/services/surf-event.service";
-import {switchMap} from "rxjs/operators";
+import {switchMap, tap} from "rxjs/operators";
 import {SnackbarService} from "../../core/services/snackbar.service";
 
 export interface Line {
@@ -31,11 +31,12 @@ interface RiderProgress {
 })
 export class ResultViewComponent implements OnInit, AfterViewInit {
 
-    competition: Competition = {...exampleComp};
+    competition!: Competition;
     @ViewChildren(RiderResultComponent) results!: QueryList<any>;
 
     lines: Line[] = [];
     points: Point[] = []
+    modifiedRounds: any;
 
     highlightedRider?: string;
     highlightActive = false;
@@ -49,6 +50,8 @@ export class ResultViewComponent implements OnInit, AfterViewInit {
 
     routeSubscription?: Subscription;
     isLoading = true;
+    init: any;
+    resultAndHeatData!: { riderId: string, result: Result }[];
 
 
     constructor(private cd: ChangeDetectorRef,
@@ -56,33 +59,28 @@ export class ResultViewComponent implements OnInit, AfterViewInit {
                 private route: ActivatedRoute,
                 private surfEventService: SurfEventService) {
     }
-    ngAfterViewInit(): void {
-        this.isLoading = false;
-        this.getPointsAndLines();
-        this.cd.detectChanges();
-    }
-    ngOnInit(): void {
-        // this.routeSubscription = this.route.params
-        //     .pipe(
-        //         switchMap(params => {
-        //             const id = params['id'].split('-').pop();
-        //             const division = params['division'].toLowerCase();
-        //             return this.surfEventService.getCompetitionByDivision(id, division);
-        //         })
-        //     )
-        //     .subscribe(
-        //         competition => {
-        //             this.competition = competition;
-        //             this.isLoading = false;
-        //             this.getPointsAndLines()
-        //             this.cd.detectChanges();
-        //         },
-        //         error => {
-        //             this.snackBarService.send("Unable to load Competition", "error");
-        //             console.log('ERROR loading competition data :-(', error)
-        //         });
-    }
 
+    ngOnInit(): void {
+        this.init = this.route.params
+            .pipe(
+                switchMap(params => {
+                    const id = params['id'].split('-').pop();
+                    const division = params['division'].toLowerCase();
+                    return this.surfEventService.getCompetitionByDivision(id, division);
+                }),
+                tap(competition => {
+                        this.competition = competition;
+                        this.isLoading = false;
+
+                    },
+                    error => {
+                        this.snackBarService.send("Unable to load Competition", "error");
+                        console.log('ERROR loading competition data :-(', error)
+                    })
+            )
+
+
+    }
     highlightRider(riderId?: string) {
         this.highlightedRider = riderId;
         this.highlightActive = !this.highlightActive;
@@ -174,6 +172,16 @@ export class ResultViewComponent implements OnInit, AfterViewInit {
         return Array.from(temp.values());
     }
 
+    ngAfterViewInit(): void {
+        this.init.subscribe(() => {
+                console.log("SUBSCRIBE")
+                this.isLoading = false;
+                this.cd.detectChanges();
+                this.getPointsAndLines();
+            }
+        )
+    }
+
     private extractPoints(points: Point[], i: number): { a: Point, b: Point } {
         return {
             a: {
@@ -186,10 +194,7 @@ export class ResultViewComponent implements OnInit, AfterViewInit {
             }
 
         }
-        console.log(this.lines)
-        console.log(this.points)
     }
-
 
     private calculatePath(a: Point, b: Point) {
 
@@ -205,324 +210,4 @@ export class ResultViewComponent implements OnInit, AfterViewInit {
         let path = `M ${a.x} ${a.y}, L ${middleX - this.CURVE_RADIUS} ${a.y}, Q ${middleX} ${a.y} ${middleX} ${a.y + signY * this.CURVE_RADIUS}, L ${middleX} ${middleY}, L ${middleX} ${b.y - signY * this.CURVE_RADIUS}, Q ${middleX} ${b.y} ${middleX + this.CURVE_RADIUS} ${b.y}, L ${b.x} ${b.y}`;
         return path;
     }
-}
-
-
-const exampleComp: Competition = {
-    division: 'male',
-    id: "comp1",
-    config: {
-        maxRiders: 20,
-        maxRidersInHeat: 4,
-        winnersInHeat: 2
-    },
-    riders: ["6132710cfc13ae15b3000001", "6132710cfc13ae15b3000002", "6132710cfc13ae15b3000003", "6132710cfc13ae15b3000004", "6132710cfc13ae15b3000005", "6132710cfc13ae15b3000006", "6132710cfc13ae15b3000007", "6132710cfc13ae15b3000008", "6132710cfc13ae15b3000009", "6132710cfc13ae15b300000a", "6132710cfc13ae15b300000b", "6132710cfc13ae15b300000c", "6132710cfc13ae15b300000d", "6132710cfc13ae15b300000e", "6132710cfc13ae15b300000f"],
-    rounds: [
-        {
-            id: 0,
-            riders: ["6132710cfc13ae15b3000001", "6132710cfc13ae15b3000002", "6132710cfc13ae15b3000003", "6132710cfc13ae15b3000004", "6132710cfc13ae15b3000005", "6132710cfc13ae15b3000006", "6132710cfc13ae15b3000007", "6132710cfc13ae15b3000008", "6132710cfc13ae15b3000009", "6132710cfc13ae15b300000a", "6132710cfc13ae15b300000b", "6132710cfc13ae15b300000c", "6132710cfc13ae15b300000d", "6132710cfc13ae15b300000e", "6132710cfc13ae15b300000f"],
-            heats: [
-                {
-                    id: 0,
-                    riders: ["6132710cfc13ae15b3000001", "6132710cfc13ae15b3000002", "6132710cfc13ae15b3000003", "6132710cfc13ae15b3000004"],
-                    state: 'finished',
-                    results: [{
-                        riderId: "6132710cfc13ae15b3000001",
-                        color: 0,
-                        value: 23
-                    }, {
-                        riderId: "6132710cfc13ae15b3000002",
-                        color: 1,
-                        value: 12
-                    }, {
-                        riderId: "6132710cfc13ae15b3000003",
-                        color: 2,
-                        value: 32
-                    }, {
-                        riderId: "6132710cfc13ae15b3000004",
-                        color: 3,
-                        value: 31
-                    }]
-                }, {
-                    id: 1,
-                    riders: ["6132710cfc13ae15b3000005", "6132710cfc13ae15b3000006", "6132710cfc13ae15b3000007", "6132710cfc13ae15b3000008"],
-                    state: 'running',
-                    results: [{
-                        riderId: "6132710cfc13ae15b3000005",
-                        color: 0,
-                        value: 0
-                    }, {
-                        riderId: "6132710cfc13ae15b3000006",
-                        color: 1,
-                        value: 0
-                    }, {
-                        riderId: "6132710cfc13ae15b3000007",
-                        color: 2,
-                        value: 0
-                    }, {
-                        riderId: "6132710cfc13ae15b3000008",
-                        color: 3,
-                        value: 0
-                    }]
-                }, {
-                    id: 2,
-                    riders: ["6132710cfc13ae15b300000c", "6132710cfc13ae15b300000d", "6132710cfc13ae15b300000e", "6132710cfc13ae15b300000f"],
-                    state: 'idle',
-                    results: [{
-                        riderId: "6132710cfc13ae15b300000c",
-                        color: 0,
-                        value: 0
-                    }, {
-                        riderId: "6132710cfc13ae15b300000d",
-                        color: 1,
-                        value: 0
-                    }, {
-                        riderId: "6132710cfc13ae15b300000e",
-                        color: 2,
-                        value: 0
-                    }, {
-                        riderId: "6132710cfc13ae15b300000f",
-                        color: 3,
-                        value: 0
-                    }]
-                }, {
-                    id: 3,
-                    riders: ["6132710cfc13ae15b3000009", "6132710cfc13ae15b300000a", "6132710cfc13ae15b300000b"],
-                    state: 'idle',
-                    results: [{
-                        riderId: "6132710cfc13ae15b3000009",
-                        color: 0,
-                        value: 0
-                    }, {
-                        riderId: "6132710cfc13ae15b300000a",
-                        color: 1,
-                        value: 0
-                    }, {
-                        riderId: "6132710cfc13ae15b300000b",
-                        color: 2,
-                        value: 0
-                    }]
-                }
-            ]
-        },
-        {
-            id: 1,
-            riders: ["6132710cfc13ae15b3000001", "6132710cfc13ae15b3000002", "6132710cfc13ae15b3000003", "6132710cfc13ae15b3000004", "6132710cfc13ae15b3000005", "6132710cfc13ae15b3000006", "6132710cfc13ae15b3000007", "6132710cfc13ae15b3000008", "6132710cfc13ae15b3000009", "6132710cfc13ae15b300000a", "6132710cfc13ae15b300000b", "6132710cfc13ae15b300000c", "6132710cfc13ae15b300000d", "6132710cfc13ae15b300000e", "6132710cfc13ae15b300000f"],
-            heats: [
-                {
-                    id: 0,
-                    riders: ["6132710cfc13ae15b3000001", "6132710cfc13ae15b3000002", "6132710cfc13ae15b3000003", "6132710cfc13ae15b3000004"],
-                    state: 'finished',
-                    results: [{
-                        riderId: "6132710cfc13ae15b3000001",
-                        color: 0,
-                        value: 23
-                    }, {
-                        riderId: "6132710cfc13ae15b3000002",
-                        color: 1,
-                        value: 12
-                    }, {
-                        riderId: "6132710cfc13ae15b3000003",
-                        color: 2,
-                        value: 32
-                    }, {
-                        riderId: "6132710cfc13ae15b3000004",
-                        color: 3,
-                        value: 31
-                    }]
-                }, {
-                    id: 1,
-                    riders: ["6132710cfc13ae15b3000005", "6132710cfc13ae15b3000006", "6132710cfc13ae15b3000007", "6132710cfc13ae15b3000008"],
-                    state: 'running',
-                    results: [{
-                        riderId: "6132710cfc13ae15b3000005",
-                        color: 0,
-                        value: 0
-                    }, {
-                        riderId: "6132710cfc13ae15b3000006",
-                        color: 1,
-                        value: 0
-                    }, {
-                        riderId: "6132710cfc13ae15b3000007",
-                        color: 2,
-                        value: 0
-                    }, {
-                        riderId: "6132710cfc13ae15b3000008",
-                        color: 3,
-                        value: 0
-                    }]
-                }, {
-                    id: 2,
-                    riders: ["6132710cfc13ae15b3000009", "6132710cfc13ae15b300000a", "6132710cfc13ae15b300000b"],
-                    state: 'idle',
-                    results: [{
-                        riderId: "6132710cfc13ae15b3000009",
-                        color: 0,
-                        value: 0
-                    }, {
-                        riderId: "6132710cfc13ae15b300000a",
-                        color: 1,
-                        value: 0
-                    }, {
-                        riderId: "6132710cfc13ae15b300000b",
-                        color: 2,
-                        value: 0
-                    }]
-                }, {
-                    id: 3,
-                    riders: ["6132710cfc13ae15b300000c", "6132710cfc13ae15b300000d", "6132710cfc13ae15b300000e", "6132710cfc13ae15b300000f"],
-                    state: 'idle',
-                    results: [{
-                        riderId: "6132710cfc13ae15b300000c",
-                        color: 0,
-                        value: 0
-                    }, {
-                        riderId: "6132710cfc13ae15b300000d",
-                        color: 1,
-                        value: 0
-                    }, {
-                        riderId: "6132710cfc13ae15b300000e",
-                        color: 2,
-                        value: 0
-                    }, {
-                        riderId: "6132710cfc13ae15b300000f",
-                        color: 3,
-                        value: 0
-                    }]
-                }
-            ]
-        },
-        {
-            id: 2,
-            riders: ["6132710cfc13ae15b3000001", "6132710cfc13ae15b3000002", "6132710cfc13ae15b3000003", "6132710cfc13ae15b3000004", "6132710cfc13ae15b3000005", "6132710cfc13ae15b3000006", "6132710cfc13ae15b3000007", "6132710cfc13ae15b3000008", "6132710cfc13ae15b3000009", "6132710cfc13ae15b300000a", "6132710cfc13ae15b300000b", "6132710cfc13ae15b300000c", "6132710cfc13ae15b300000d", "6132710cfc13ae15b300000e", "6132710cfc13ae15b300000f"],
-            heats: [
-                {
-                    id: 0,
-                    riders: ["6132710cfc13ae15b3000001", "6132710cfc13ae15b3000002", "6132710cfc13ae15b3000003", "6132710cfc13ae15b3000004"],
-                    state: 'finished',
-                    results: [{
-                        riderId: "6132710cfc13ae15b3000001",
-                        color: 0,
-                        value: 23
-                    }, {
-                        riderId: "6132710cfc13ae15b3000002",
-                        color: 1,
-                        value: 12
-                    }, {
-                        riderId: "6132710cfc13ae15b3000003",
-                        color: 2,
-                        value: 32
-                    }, {
-                        riderId: "6132710cfc13ae15b3000004",
-                        color: 3,
-                        value: 31
-                    }]
-                }, {
-                    id: 1,
-                    riders: ["6132710cfc13ae15b3000005", "6132710cfc13ae15b3000006", "6132710cfc13ae15b3000007", "6132710cfc13ae15b3000008"],
-                    state: 'running',
-                    results: [{
-                        riderId: "6132710cfc13ae15b3000005",
-                        color: 0,
-                        value: 0
-                    }, {
-                        riderId: "6132710cfc13ae15b3000006",
-                        color: 1,
-                        value: 0
-                    }, {
-                        riderId: "6132710cfc13ae15b3000007",
-                        color: 2,
-                        value: 0
-                    }, {
-                        riderId: "6132710cfc13ae15b3000008",
-                        color: 3,
-                        value: 0
-                    }]
-                }, {
-                    id: 2,
-                    riders: ["6132710cfc13ae15b3000009", "6132710cfc13ae15b300000a", "6132710cfc13ae15b300000b"],
-                    state: 'idle',
-                    results: [{
-                        riderId: "6132710cfc13ae15b3000009",
-                        color: 0,
-                        value: 0
-                    }, {
-                        riderId: "6132710cfc13ae15b300000a",
-                        color: 1,
-                        value: 0
-                    }, {
-                        riderId: "6132710cfc13ae15b300000b",
-                        color: 2,
-                        value: 0
-                    }]
-                }
-            ]
-        },
-        {
-            id: 3,
-            riders: ["6132710cfc13ae15b3000001", "6132710cfc13ae15b3000002", "6132710cfc13ae15b3000003", "6132710cfc13ae15b3000004", "6132710cfc13ae15b3000005", "6132710cfc13ae15b3000006", "6132710cfc13ae15b3000007", "6132710cfc13ae15b3000008", "6132710cfc13ae15b3000009", "6132710cfc13ae15b300000a", "6132710cfc13ae15b300000b", "6132710cfc13ae15b300000c", "6132710cfc13ae15b300000d", "6132710cfc13ae15b300000e", "6132710cfc13ae15b300000f"],
-            heats: [
-                {
-                    id: 0,
-                    riders: ["6132710cfc13ae15b3000001", "6132710cfc13ae15b3000002", "6132710cfc13ae15b3000003", "6132710cfc13ae15b3000004"],
-                    state: 'finished',
-                    results: [{
-                        riderId: "6132710cfc13ae15b3000001",
-                        color: 0,
-                        value: 23
-                    }, {
-                        riderId: "6132710cfc13ae15b3000002",
-                        color: 1,
-                        value: 12
-                    }, {
-                        riderId: "6132710cfc13ae15b3000003",
-                        color: 2,
-                        value: 32
-                    }, {
-                        riderId: "6132710cfc13ae15b3000004",
-                        color: 3,
-                        value: 31
-                    }]
-                }, {
-                    id: 1,
-                    riders: ["6132710cfc13ae15b3000005", "6132710cfc13ae15b3000006", "6132710cfc13ae15b3000007", "6132710cfc13ae15b3000008"],
-                    state: 'running',
-                    results: [{
-                        riderId: "6132710cfc13ae15b3000005",
-                        color: 0,
-                        value: 0
-                    }, {
-                        riderId: "6132710cfc13ae15b3000006",
-                        color: 1,
-                        value: 0
-                    }, {
-                        riderId: "6132710cfc13ae15b3000007",
-                        color: 2,
-                        value: 0
-                    }, {
-                        riderId: "6132710cfc13ae15b3000008",
-                        color: 3,
-                        value: 0
-                    }]
-                }, {
-                    id: 2,
-                    riders: ["6132710cfc13ae15b3000009", "6132710cfc13ae15b300000a", "6132710cfc13ae15b300000b"],
-                    state: 'idle',
-                    results: [{
-                        riderId: "6132710cfc13ae15b3000009",
-                        color: 0,
-                        value: 0
-                    }, {
-                        riderId: "6132710cfc13ae15b300000a",
-                        color: 1,
-                        value: 0
-                    }, {
-                        riderId: "6132710cfc13ae15b300000b",
-                        color: 2,
-                        value: 0
-                    }]
-                }
-            ]
-        }
-    ]
 }

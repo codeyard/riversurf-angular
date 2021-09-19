@@ -28,6 +28,31 @@
                 <rs-rider-card *ngFor="let rider of randomRiders" [rider]="rider"></rs-rider-card>
             </div>
         </div>
+
+        <ng-container *ngIf="upcomingSurfEvents$ | async as upcomingSurfEvents">
+            <h2>Upcoming</h2>
+            <ul>
+                <li *ngFor="let upcomingSurfEvent of upcomingSurfEvents">
+                    {{upcomingSurfEvent.name}}
+                </li>
+            </ul>
+        </ng-container>
+        <ng-container *ngIf="pastSurfEvents$ | async as pastSurfEvents">
+            <h2>Past</h2>
+            <ul>
+                <li *ngFor="let pastSurfEvent of pastSurfEvents">
+                    {{pastSurfEvent.name}}
+                </li>
+            </ul>
+        </ng-container>
+        <ng-container *ngIf="currentSurfEvents$ | async as currentSurfEvents">
+            <h2>Current</h2>
+            <ul>
+                <li *ngFor="let currentSurfEvent of currentSurfEvents">
+                    {{currentSurfEvent.name}}
+                </li>
+            </ul>
+        </ng-container>
     </aside>
 </div>
 <div class="map">

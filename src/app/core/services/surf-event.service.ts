@@ -3,7 +3,7 @@ import {BehaviorSubject, Observable} from "rxjs";
 import {SurfEvent} from "../models/surf-event.model";
 import {HttpClient} from "@angular/common/http";
 import {AppConfigService} from "./app-config.service";
-import {filter, map, switchMap, tap} from "rxjs/operators";
+import {filter, map, switchMap} from "rxjs/operators";
 import {Division} from "../models/division.type";
 import {CompetitionService} from "./competition.service";
 import {Competition} from "../models/competition.model";
@@ -28,19 +28,59 @@ export class SurfEventService {
         );
     }
 
+    getCurrentSurfEvents(): Observable<SurfEvent[]> {
+        return this.getSurfEvents().pipe(
+            map(surfEvents => surfEvents.filter(surfEvent => {
+                const today = new Date();
+                today.setHours(0, 0, 0, 0);
+                const startDate: Date = new Date(surfEvent.startDateTime);
+                startDate.setHours(0, 0, 0, 0);
+                startDate.setDate(startDate.getDate() - 1);
+                const endDate = new Date(surfEvent.endDateTime);
+                endDate.setHours(0, 0, 0, 0);
+                endDate.setDate(endDate.getDate() + 1);
+                return startDate <= today && today <= endDate;
+            }))
+        );
+    }
+
+    getUpcomingSurfEvents(): Observable<SurfEvent[]> {
+        return this.getSurfEvents().pipe(
+            map(surfEvents => surfEvents.filter(surfEvent => {
+                const today = new Date();
+                today.setHours(0, 0, 0, 0);
+                const startDate: Date = new Date(surfEvent.startDateTime);
+                startDate.setHours(0, 0, 0, 0);
+                return today < startDate;
+            }))
+        );
+    }
+
+    getPastSurfEvents(): Observable<SurfEvent[]> {
+        return this.getSurfEvents().pipe(
+            map(surfEvents => surfEvents.filter(surfEvent => {
+                const today = new Date();
+                today.setHours(0, 0, 0, 0);
+                const endDate = new Date(surfEvent.endDateTime);
+                endDate.setHours(0, 0, 0, 0);
+                return endDate < today;
+            }))
+        );
+    }
+
     getSurfEvents(): Observable<SurfEvent[]> {
-        if(this.surfEventsData.getValue().length <= 0) {
+        if (this.surfEventsData.getValue().length <= 0) {
             this.fetchAllSurfEvents();
         }
         return this.surfEvents$;
     }
 
-    getCompetitionByDivision(id: string, division : Division){
+    getCompetitionByDivision(id: string, division: Division) {
         return this.getSurfEvent(id).pipe(
             filter(surfEvent => surfEvent !== undefined),
-            switchMap((surfEvent : SurfEvent) => this.competitionService.getCompetitionsByIds(surfEvent.competitions)),
+            switchMap((surfEvent: SurfEvent) => this.competitionService.getCompetitionsByIds(surfEvent.competitions)),
             filter(competitions => competitions !== undefined && competitions.length > 0),
-            map((competitions : Competition[])=>competitions.filter(competition=>competition.division === division)[0])
+            map((competitions: Competition[]) => competitions.filter(competition => competition.division === division)[0])
         );
     }
 

@@ -14,6 +14,9 @@ import {SurfEventService} from "../core/services/surf-event.service";
 })
 export class HomeComponent implements OnInit, OnDestroy {
     surfEvents$?: Observable<SurfEvent[]>;
+    upcomingSurfEvents$?: Observable<SurfEvent[]>;
+    pastSurfEvents$?: Observable<SurfEvent[]>;
+    currentSurfEvents$?: Observable<SurfEvent[]>;
     randomRiders: Rider[] = [];
     isLoadingRandomRiders = true;
 
@@ -30,6 +33,7 @@ export class HomeComponent implements OnInit, OnDestroy {
 
     ngOnInit(): void {
         this.observer.observe('(max-width: 878px)')
+
             .pipe(takeUntil(this.destroy$))
             .subscribe(result => {
             this.smallScreen = result.matches;
@@ -44,6 +48,9 @@ export class HomeComponent implements OnInit, OnDestroy {
                 });
 
         this.surfEvents$ = this.surfEventService.getSurfEvents();
+        this.upcomingSurfEvents$ = this.surfEventService.getUpcomingSurfEvents();
+        this.pastSurfEvents$ = this.surfEventService.getPastSurfEvents();
+        this.currentSurfEvents$ = this.surfEventService.getCurrentSurfEvents();
     }
 
     ngOnDestroy(): void {

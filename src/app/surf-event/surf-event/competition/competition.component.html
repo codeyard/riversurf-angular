@@ -6,7 +6,9 @@
                     [round]="round"
                     [maxRidersInHeat]="competition.config.maxRidersInHeat"
                     [isFinalRound]="round.id === competition.rounds.length-1"
-                    (finishedRound)="onFinishedRound($event)"></rs-round>
+                    (finishedRound)="onFinishedRound($event)"
+                    (syncRound)="updateCompetition($event)"
+                ></rs-round>
             </div>
         </mat-tab>
     </ng-container>

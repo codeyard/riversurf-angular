@@ -44,6 +44,10 @@ export class SurfEventService {
         );
     }
 
+    updateCompetition(competition: Competition) {
+        return this.competitionService.updateCompetition(competition);
+    }
+
     private fetchAllSurfEvents() {
         const requestUrl = this.PROTOCOL_HTTPS + this.appConfigService.getHostName() + this.PATH_ENDPOINT;
         this.httpClient.get<SurfEvent[]>(requestUrl).subscribe(

@@ -15,6 +15,7 @@ export class RoundComponent implements OnInit, OnChanges {
     @Input() maxRidersInHeat!: number;
     @Input() isFinalRound!: boolean;
     @Output() finishedRound = new EventEmitter<string[]>();
+    @Output() syncRound = new EventEmitter<Round>();
 
     unassignedRiders!: string[];
 
@@ -31,7 +32,6 @@ export class RoundComponent implements OnInit, OnChanges {
     }
 
     setupRound(): void {
-
         const numberOfHeats = this.competitionService.calculateMinimumHeats(this.round.riders.length, this.maxRidersInHeat);
 
         for (let i = this.round.heats.length; i < numberOfHeats; i++) {
@@ -145,6 +145,7 @@ export class RoundComponent implements OnInit, OnChanges {
                 break;
         }
         this.snackbarService.send(msg, "success");
+        this.onSyncRound()
     }
 
     finishCompetition() {
@@ -152,5 +153,7 @@ export class RoundComponent implements OnInit, OnChanges {
         this.snackbarService.send("Competition finished", "success");
     }
 
-
+    onSyncRound() {
+        this.syncRound.emit(this.round);
+    }
 }

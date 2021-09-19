@@ -1,14 +1,11 @@
-import {
-    AfterViewChecked,
-    AfterViewInit,
-    ChangeDetectorRef,
-    Component,
-    OnInit,
-    QueryList,
-    ViewChildren
-} from '@angular/core';
+import {AfterViewInit, ChangeDetectorRef, Component, OnInit, QueryList, ViewChildren} from '@angular/core';
 import {Competition, Heat} from "../../core/models/competition.model";
 import {RiderResultComponent} from "../surf-event/competition/round/rider-result/rider-result.component";
+import {Subscription} from "rxjs";
+import {ActivatedRoute} from "@angular/router";
+import {SurfEventService} from "../../core/services/surf-event.service";
+import {switchMap} from "rxjs/operators";
+import {SnackbarService} from "../../core/services/snackbar.service";
 
 export interface Line {
     source: Point,
@@ -32,7 +29,7 @@ interface RiderProgress {
     templateUrl: './result-view.component.html',
     styleUrls: ['./result-view.component.scss']
 })
-export class ResultViewComponent implements OnInit, AfterViewInit, AfterViewChecked {
+export class ResultViewComponent implements OnInit, AfterViewInit {
 
     competition: Competition = {...exampleComp};
     @ViewChildren(RiderResultComponent) results!: QueryList<any>;
@@ -50,11 +47,40 @@ export class ResultViewComponent implements OnInit, AfterViewInit, AfterViewChec
     VARIANZ = 0;
     VARIANZ_OFFSET = 0;
 
+    routeSubscription?: Subscription;
+    isLoading = true;
 
-    constructor(private cd: ChangeDetectorRef) {
+
+    constructor(private cd: ChangeDetectorRef,
+                private snackBarService: SnackbarService,
+                private route: ActivatedRoute,
+                private surfEventService: SurfEventService) {
     }
-
+    ngAfterViewInit(): void {
+        this.isLoading = false;
+        this.getPointsAndLines();
+        this.cd.detectChanges();
+    }
     ngOnInit(): void {
+        // this.routeSubscription = this.route.params
+        //     .pipe(
+        //         switchMap(params => {
+        //             const id = params['id'].split('-').pop();
+        //             const division = params['division'].toLowerCase();
+        //             return this.surfEventService.getCompetitionByDivision(id, division);
+        //         })
+        //     )
+        //     .subscribe(
+        //         competition => {
+        //             this.competition = competition;
+        //             this.isLoading = false;
+        //             this.getPointsAndLines()
+        //             this.cd.detectChanges();
+        //         },
+        //         error => {
+        //             this.snackBarService.send("Unable to load Competition", "error");
+        //             console.log('ERROR loading competition data :-(', error)
+        //         });
     }
 
     highlightRider(riderId?: string) {
@@ -74,40 +100,18 @@ export class ResultViewComponent implements OnInit, AfterViewInit, AfterViewChec
         }
     }
 
-    ngAfterViewInit(): void {
-        this.getPointsAndLines()
-        this.cd.detectChanges();
-    }
-
-    ngAfterViewChecked() {
-
-    }
 
     getPointsAndLines() {
-        let ridersWithResult: RiderProgress[] = []
+        const ridersWithTheirMaxRound: RiderProgress[] = []
         this.competition.rounds.forEach((round, roundNumber) =>
             round.heats.forEach(heat =>
                 heat.results.forEach(result => {
-                        ridersWithResult.push({riderId: result.riderId, maxRound: roundNumber})
+                        ridersWithTheirMaxRound.push({riderId: result.riderId, maxRound: roundNumber})
                     }
                 )
             ));
 
-        const temp = new Map();
-
-        for (const item of ridersWithResult) {
-            const element = temp.get(item.riderId)
-            if (element) {
-                element.riderId = item.riderId
-                element.maxRound = Math.max(element.maxRound, item.maxRound);
-            } else {
-                temp.set(item.riderId,
-                    {riderId: item.riderId, maxRound: item.maxRound})
-            }
-        }
-
-        const result = Array.from(temp.values());
-
+        const result = this.getRidersWithRespectiveMaxRound(ridersWithTheirMaxRound);
 
         for (const rider of result) {
             let points: Point[] = [];
@@ -151,6 +155,23 @@ export class ResultViewComponent implements OnInit, AfterViewInit, AfterViewChec
             }
 
         }
+    }
+
+    getRidersWithRespectiveMaxRound(ridersWithResult: RiderProgress[]): RiderProgress[] {
+        const temp = new Map();
+
+        for (const item of ridersWithResult) {
+            const element = temp.get(item.riderId)
+            if (element) {
+                element.riderId = item.riderId
+                element.maxRound = Math.max(element.maxRound, item.maxRound);
+            } else {
+                temp.set(item.riderId,
+                    {riderId: item.riderId, maxRound: item.maxRound})
+            }
+        }
+
+        return Array.from(temp.values());
     }
 
     private extractPoints(points: Point[], i: number): { a: Point, b: Point } {

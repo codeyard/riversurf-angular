@@ -1,16 +1,19 @@
 <svg>
 
-    <g *ngFor="let line of lines">
+    <g *ngFor="let line of lines"
+       [ngClass]="{'highlighted': highlightedRider === line.riderId && activeHighlight, 'fade-out': highlightedRider !== line.riderId && activeHighlight}">
         <path [attr.d]="line.path"
-        [ngClass]="{'highlighted': highlightedRider === line.riderId && activeHighlight, 'fade-out': highlightedRider !== line.riderId && activeHighlight}"
         ></path>
-    </g>
-    <g *ngFor="let point of points">
         <circle
-            [attr.cx]=point.x
-            [attr.cy]=point.y
+            [attr.cx]=line.source.x
+            [attr.cy]=line.source.y
+            r="3" />
+        <circle
+            [attr.cx]=line.target.x
+            [attr.cy]=line.target.y
             r="3" />
     </g>
+
 </svg>
 
 

@@ -1,6 +1,6 @@
 <div class="relative-container">
     <div class="result-container">
-        <div class="round" *ngFor="let round of competition.rounds">
+        <div class="round" *ngFor="let round of competition.rounds" >
             <h2 class="round__title">{{ "round " + round.id | uppercase}}</h2>
 
             <div class="heat" *ngFor="let heat of round.heats; let heatIndex = index">
@@ -22,7 +22,6 @@
         <rs-progress-line
             [highlightedRider]="highlightedRider"
             [activeHighlight]="highlightActive"
-                          [points]="points"
                           [lines]="lines"
         ></rs-progress-line>
     </div>

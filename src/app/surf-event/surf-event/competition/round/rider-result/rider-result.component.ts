@@ -24,6 +24,7 @@ export class RiderResultComponent implements OnInit, OnDestroy {
     @Input() isFadedOut?: boolean
 
 
+
     rider ?: Rider;
 
     private riderSubscription ?: Subscription;

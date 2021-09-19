@@ -10,7 +10,6 @@ import {Point} from "@angular/cdk/drag-drop";
 export class ProgressLineComponent implements OnInit {
 
     @Input() roundIndex!: number;
-    @Input() points!: Point[];
     @Input() lines!: Line[];
     @Input() highlightedRider?: string;
     @Input() activeHighlight?: boolean;

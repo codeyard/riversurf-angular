@@ -1,6 +1,5 @@
 <div class="content">
     <main class="main">
-
         <h2>Upcoming Events</h2>
         <div class="events">
             <ng-container *ngIf="surfEvents$ | async as surfEvents">
@@ -55,7 +54,26 @@
         </ng-container>
     </aside>
 </div>
-<div class="map">
-    <h1>Some Awesome Locations</h1>
-    <img style="max-width: 100%" src="https://miro.medium.com/max/700/1*dUrRzzu4Mm4DMjH2jvmurQ.png" alt="">
-</div>
+
+
+<ng-container *ngIf="surfEvents$ | async as surfEvents">
+    <div class="map">
+        <h2>Some Awesome Locations</h2>
+        <div class="event__map">
+            <google-map
+                width="100%"
+                height="500px"
+                [center]="{lat: 46.9332651, lng: 7.497035}"
+                [zoom]="mapZoom"
+                [options]="mapOptions">
+                <map-marker *ngFor="let surfEvent of surfEvents"
+                            #marker="mapMarker"
+                            [position]="{lat: surfEvent.locationLat, lng: surfEvent.locationLong}"
+                            [title]="surfEvent.name"
+                            (mapClick)="openMapInfoWindow(marker, surfEvent.name)">
+                </map-marker>
+                <map-info-window>{{ mapInfoContent }}</map-info-window>
+            </google-map>
+        </div>
+    </div>
+</ng-container>

@@ -1,5 +1,5 @@
 import {Component, OnInit} from '@angular/core';
-import {SurfEvent, exampleEvent} from "../../core/models/surf-event.model";
+import {SurfEvent} from "../../core/models/surf-event.model";
 import {SurfEventService} from "../../core/services/surf-event.service";
 import {ActivatedRoute} from "@angular/router";
 import {Subscription} from "rxjs";
@@ -15,6 +15,17 @@ export class SurfEventComponent implements OnInit {
     routeSubscription?: Subscription;
     surfEvent!: SurfEvent;
     isLoading = true;
+
+    mapZoom = 17;
+    mapOptions: google.maps.MapOptions = {
+        mapTypeId: 'roadmap',
+        zoomControl: true,
+        scrollwheel: true,
+        disableDoubleClickZoom: false,
+        maxZoom: 20,
+        minZoom: 5
+    };
+
 
     constructor(
         private surfEventService: SurfEventService,
@@ -41,5 +52,4 @@ export class SurfEventComponent implements OnInit {
                     console.log('ERROR loading surf event data :-(', error)
                 });
     }
-
 }

@@ -1,11 +1,13 @@
-import {AfterViewInit, ChangeDetectorRef, Component, OnInit, QueryList, ViewChildren} from '@angular/core';
+import {AfterViewInit, ChangeDetectorRef, Component, OnDestroy, OnInit, QueryList, ViewChildren} from '@angular/core';
 import {Competition, Heat, Result} from "../../core/models/competition.model";
 import {RiderResultComponent} from "../surf-event/competition/round/rider-result/rider-result.component";
-import {Subscription} from "rxjs";
+import {Subject} from "rxjs";
 import {ActivatedRoute} from "@angular/router";
 import {SurfEventService} from "../../core/services/surf-event.service";
-import {switchMap, tap} from "rxjs/operators";
+import {switchMap, takeUntil, tap} from "rxjs/operators";
 import {SnackbarService} from "../../core/services/snackbar.service";
+import {BreakpointObserver} from "@angular/cdk/layout";
+import {CarouselComponent} from "../../shared/carousel/carousel.component";
 
 export interface Line {
     source: Point,
@@ -29,10 +31,11 @@ interface RiderProgress {
     templateUrl: './result-view.component.html',
     styleUrls: ['./result-view.component.scss']
 })
-export class ResultViewComponent implements OnInit, AfterViewInit {
+export class ResultViewComponent implements OnInit, AfterViewInit, OnDestroy {
 
     competition!: Competition;
     @ViewChildren(RiderResultComponent) results!: QueryList<any>;
+    @ViewChildren(CarouselComponent) carousel?: QueryList<any>
 
     lines: Line[] = [];
     points: Point[] = []
@@ -48,16 +51,17 @@ export class ResultViewComponent implements OnInit, AfterViewInit {
     VARIANZ = 0;
     VARIANZ_OFFSET = 0;
 
-    routeSubscription?: Subscription;
     isLoading = true;
     init: any;
     resultAndHeatData!: { riderId: string, result: Result }[];
-
+    smallScreen?: boolean;
+    private destroy$ = new Subject();
 
     constructor(private cd: ChangeDetectorRef,
                 private snackBarService: SnackbarService,
                 private route: ActivatedRoute,
-                private surfEventService: SurfEventService) {
+                private surfEventService: SurfEventService,
+                private observer: BreakpointObserver) {
     }
 
     ngOnInit(): void {
@@ -79,12 +83,49 @@ export class ResultViewComponent implements OnInit, AfterViewInit {
                     })
             )
 
-
+        this.observer.observe('(max-width: 878px)')
+            .pipe(takeUntil(this.destroy$))
+            .subscribe(result => {
+                this.smallScreen = result.matches;
+            });
     }
-    highlightRider(riderId?: string) {
+
+    highlightRider(riderId: string) {
         this.highlightedRider = riderId;
         this.highlightActive = !this.highlightActive;
+
+        if (this.smallScreen) {
+            this.carousel?.forEach((item, roundIndex) => {
+                const heatNumber = this.getHeatNumberOfRider(roundIndex, riderId)
+                if(heatNumber !== undefined) {
+                    item.setIndex(heatNumber)
+                }
+            });
+        }
     }
+
+    getHeatNumberOfRider(roundIndex: number, riderId: string): number | undefined {
+        let resultIndex: number | undefined = undefined;
+        let riderIndex: number | undefined = undefined;
+        const heats = this.competition.rounds[roundIndex].heats;
+
+        for (let i = 0; i < heats.length; i++) {
+             if(heats[i].results.map(result => result.riderId).indexOf(riderId) > -1)  {
+                 resultIndex = i;
+                 break;
+             }
+             if(heats[i].riders.indexOf(riderId) > -1) {
+                 riderIndex = i;
+             }
+        }
+        if(resultIndex !== undefined) {
+            return resultIndex;
+        } else if (riderIndex !== undefined) {
+            return  riderIndex;
+        }
+        return undefined;
+    }
+
 
     getHeatStatus(heat: Heat) {
         switch (heat.state) {
@@ -180,6 +221,11 @@ export class ResultViewComponent implements OnInit, AfterViewInit {
                 this.getPointsAndLines();
             }
         )
+    }
+
+    ngOnDestroy(): void {
+        this.destroy$.next(null);
+        this.destroy$.complete();
     }
 
     private extractPoints(points: Point[], i: number): { a: Point, b: Point } {

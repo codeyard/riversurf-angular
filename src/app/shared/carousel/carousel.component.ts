@@ -248,4 +248,7 @@ export class CarouselComponent implements OnInit, OnDestroy, OnChanges, AfterCon
         return (index >= 0) && (index < this.carouselListItems.length) ? true : false;
     }
 
+    public setIndex(index: number) {
+        this.goToIndex(index);
+    }
 }

@@ -1,8 +1,8 @@
-import {ChangeDetectorRef, Component, ElementRef, EventEmitter, Input, OnDestroy, OnInit, Output} from '@angular/core';
+import {Component, ElementRef, Input, OnDestroy, OnInit} from '@angular/core';
 import {RidersService} from "../../../../../core/services/riders.service";
 import {Rider} from "../../../../../core/models/rider.model";
 import {Subscription} from "rxjs";
-import {FormControl, FormGroup, Validators} from "@angular/forms";
+import {FormControl} from "@angular/forms";
 
 export type RiderResultType = 'default' | 'assigned' | 'surfing' | 'finished';
 
@@ -20,6 +20,9 @@ export class RiderResultComponent implements OnInit, OnDestroy {
     @Input() resultType!: RiderResultType;
     @Input() points?: number;
     @Input() roundNumber?: number;
+    @Input() isHighlighted?: boolean
+    @Input() isFadedOut?: boolean
+
 
     rider ?: Rider;
 
@@ -35,5 +38,6 @@ export class RiderResultComponent implements OnInit, OnDestroy {
     ngOnDestroy(): void {
         this.riderSubscription?.unsubscribe();
     }
+
 
 }

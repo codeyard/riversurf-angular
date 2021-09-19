@@ -14,11 +14,17 @@ export interface Line {
     source: Point,
     target: Point,
     path: string,
+    riderId: string
 }
 
 interface Point {
     x: number,
     y: number
+}
+
+interface RiderProgress {
+    riderId: string,
+    maxRound: number
 }
 
 @Component({
@@ -30,12 +36,15 @@ export class ResultViewComponent implements OnInit, AfterViewInit, AfterViewChec
 
     competition: Competition = {...exampleComp};
     @ViewChildren(RiderResultComponent) results!: QueryList<any>;
-    loaded: any;
+
     lines: Line[] = [];
     points: Point[] = []
 
+    highlightedRider?: string;
+    highlightActive = false;
+
     RIDER_WIDTH = 250;
-    RIDER_HEIGHT = 25;
+    RIDER_HALF_HEIGHT = 25;
 
     CURVE_RADIUS = 20;
     VARIANZ = 0;
@@ -46,6 +55,11 @@ export class ResultViewComponent implements OnInit, AfterViewInit, AfterViewChec
     }
 
     ngOnInit(): void {
+    }
+
+    highlightRider(riderId?: string) {
+        this.highlightedRider = riderId;
+        this.highlightActive = !this.highlightActive;
     }
 
     getHeatStatus(heat: Heat) {
@@ -63,7 +77,6 @@ export class ResultViewComponent implements OnInit, AfterViewInit, AfterViewChec
     ngAfterViewInit(): void {
         this.getPointsAndLines()
         this.cd.detectChanges();
-        this.loaded = true;
     }
 
     ngAfterViewChecked() {
@@ -71,32 +84,48 @@ export class ResultViewComponent implements OnInit, AfterViewInit, AfterViewChec
     }
 
     getPointsAndLines() {
-        //DISCUSS: SHOULD THIS ALWAYS BE EQUAL TO THIS.COMPETITION.RIDERS? IF SO REMOVE FROM CODE, SO FAR UNUSED
-        const ridersWithResult: string[] = []
-        this.competition.rounds.forEach(round =>
+        let ridersWithResult: RiderProgress[] = []
+        this.competition.rounds.forEach((round, roundNumber) =>
             round.heats.forEach(heat =>
-                heat.results.forEach(result => !ridersWithResult.includes(result.riderId) ? ridersWithResult.push(result.riderId) : '')
-            )
-        )
+                heat.results.forEach(result => {
+                        ridersWithResult.push({riderId: result.riderId, maxRound: roundNumber})
+                    }
+                )
+            ));
+
+        const temp = new Map();
+
+        for (const item of ridersWithResult) {
+            const element = temp.get(item.riderId)
+            if (element) {
+                element.riderId = item.riderId
+                element.maxRound = Math.max(element.maxRound, item.maxRound);
+            } else {
+                temp.set(item.riderId,
+                    {riderId: item.riderId, maxRound: item.maxRound})
+            }
+        }
+
+        const result = Array.from(temp.values());
 
 
-        for (const rider of this.competition.riders) {
+        for (const rider of result) {
             let points: Point[] = [];
             this.results.forEach(resultElementRef => {
-                if (resultElementRef.riderId === rider) {
+                if (resultElementRef.riderId === rider.riderId) {
                     const leftPoint = {
-                        x: resultElementRef.elementRef.nativeElement.offsetLeft,
-                        y: resultElementRef.elementRef.nativeElement.offsetTop + this.RIDER_HEIGHT
+                        x: resultElementRef.elementRef.nativeElement.offsetLeft - 3,
+                        y: resultElementRef.elementRef.nativeElement.offsetTop + this.RIDER_HALF_HEIGHT
                     }
                     const rightPoint = {
                         ...leftPoint,
-                        x: resultElementRef.elementRef.nativeElement.offsetLeft + this.RIDER_WIDTH
+                        x: resultElementRef.elementRef.nativeElement.offsetLeft + this.RIDER_WIDTH + 3
                     }
 
                     if (resultElementRef.roundNumber === 0) {
                         points.push(rightPoint)
                         this.points.push(rightPoint)
-                    } else if (resultElementRef.roundNumber === (this.competition.rounds.length - 1)) {
+                    } else if (resultElementRef.roundNumber === (this.competition.rounds.length - 1) || resultElementRef.roundNumber === rider.maxRound) {
                         points.push(leftPoint)
                         this.points.push(leftPoint)
                     } else {
@@ -113,7 +142,8 @@ export class ResultViewComponent implements OnInit, AfterViewInit, AfterViewChec
                     this.lines.push({
                         source: a,
                         target: b,
-                        path: path
+                        path: path,
+                        riderId: rider.riderId
                     })
                 } catch (notLineException) {
                     // EMPTY AS NO NEED TO ADD LINE

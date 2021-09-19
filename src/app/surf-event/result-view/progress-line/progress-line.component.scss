@@ -1,10 +1,33 @@
+@import "../../../../assets/scss/_variables";
 svg {
     display: inline-block;
     position: absolute;
     top: 0;
     left: 0;
     overflow: visible;
-    z-index: 10;
+    z-index: -1;
     width: 100%;
     height: 100%;
+}
+
+circle {
+    stroke-width: 1px;
+    stroke: $color-grey-light-1;
+    fill: $color-primary;
+}
+
+path {
+    fill: transparent;
+    stroke-width: 2px;
+    stroke: darken($color-grey-light-1, 10);
+}
+
+.highlighted {
+    stroke: $color-primary;
+    z-index: 10;
+}
+
+.fade-out {
+    stroke: $color-grey-light-1;
+    display: none;;
 }

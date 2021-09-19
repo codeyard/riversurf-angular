@@ -1,13 +1,15 @@
 <svg>
-    <g *ngFor="let point of points, let pointIndex = index">
+
+    <g *ngFor="let line of lines">
+        <path [attr.d]="line.path"
+        [ngClass]="{'highlighted': highlightedRider === line.riderId && activeHighlight, 'fade-out': highlightedRider !== line.riderId && activeHighlight}"
+        ></path>
+    </g>
+    <g *ngFor="let point of points">
         <circle
             [attr.cx]=point.x
             [attr.cy]=point.y
-            r="5" stroke="black" stroke-width="1" fill="red"/>
-    </g>
-    <g *ngFor="let line of lines">
-
-        <path [attr.d]="line.path" fill="transparent" stroke="red" stroke-width="2"></path>
+            r="3" />
     </g>
 </svg>
 

@@ -43,24 +43,8 @@
     &:last-of-type {
         margin-bottom: .5rem;
     }
-
-    mat-card {
-
-    }
 }
 
 .relative-container {
     position: relative;
 }
-
-svg {
-    display: inline-block;
-    position: absolute;
-    top: 0;
-    left: 0;
-    overflow: visible;
-    z-index: 10;
-}
-
-
-

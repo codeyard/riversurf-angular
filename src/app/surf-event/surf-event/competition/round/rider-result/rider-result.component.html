@@ -1,7 +1,7 @@
 <mat-card class="rider__card"
           [ngClass]="{
           'no-hover':resultType === 'surfing' || resultType === 'finished',
-          'result':  !control ?? true}">
+          'result':  !control ?? true, 'highlighted': isHighlighted, 'fade-out': isFadedOut}">
     <mat-spinner *ngIf="!rider"></mat-spinner>
     <mat-card-header class="rider__card__header" *ngIf="rider">
         <div mat-card-avatar

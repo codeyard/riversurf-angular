@@ -121,3 +121,11 @@ input[type=number] {
     padding: 2px;
     align-items: center;
 }
+
+.highlighted {
+    border: 2px solid $color-primary;
+}
+
+.fade-out {
+    opacity: .5;
+}

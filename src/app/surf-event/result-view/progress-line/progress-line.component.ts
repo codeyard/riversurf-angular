@@ -1,4 +1,4 @@
-import {Component, Input, OnInit, QueryList} from '@angular/core';
+import {Component, Input, OnInit} from '@angular/core';
 import {Line} from "../result-view.component";
 import {Point} from "@angular/cdk/drag-drop";
 
@@ -12,6 +12,8 @@ export class ProgressLineComponent implements OnInit {
     @Input() roundIndex!: number;
     @Input() points!: Point[];
     @Input() lines!: Line[];
+    @Input() highlightedRider?: string;
+    @Input() activeHighlight?: boolean;
 
     constructor() {
     }

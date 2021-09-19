@@ -82,7 +82,7 @@
     &__heat {
         margin: .5rem;
         border: 1px solid $color-primary;
-
+        border-radius: 4px;
         &__container {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));

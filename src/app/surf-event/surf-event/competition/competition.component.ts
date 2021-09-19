@@ -1,5 +1,5 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
-import {Competition} from "../../../core/models/competition.model";
+import {Competition, Round} from "../../../core/models/competition.model";
 import {SnackbarService} from "../../../core/services/snackbar.service";
 import {ActivatedRoute} from "@angular/router";
 import {switchMap} from "rxjs/operators";
@@ -36,6 +36,9 @@ export class CompetitionComponent implements OnInit, OnDestroy {
             .subscribe(
                 competition => {
                     this.competition = competition;
+                    this.selectedTabIndex = this.competition.rounds
+                        .map(round =>
+                            round.riders.length > 0 ? 'round-started': 'round-not-started').lastIndexOf("round-started")
                 },
                 error => {
                     this.snackBarService.send("Unable to load Competition", "error");
@@ -50,7 +53,8 @@ export class CompetitionComponent implements OnInit, OnDestroy {
     onFinishedRound(promotedRiders: string[]) {
         for (let i = 0; i < this.competition.rounds.length; i++) {
             if (!this.competition.rounds[i].riders.length) {
-                this.competition.rounds[i] = {...this.competition.rounds[i], riders : promotedRiders};
+                this.competition.rounds[i] = {...this.competition.rounds[i], riders: promotedRiders};
+                this.updateCompetition(this.competition.rounds[i])
                 break;
             }
         }
@@ -68,5 +72,21 @@ export class CompetitionComponent implements OnInit, OnDestroy {
             label = 'Semifinals';
         }
         return label;
+    }
+
+    updateCompetition(updatedRound: Round) {
+        const roundId = updatedRound.id;
+        const competitionCopy = {...this.competition}
+        competitionCopy.rounds[roundId] = updatedRound
+
+        this.competition = competitionCopy;
+
+        this.surfEventService.updateCompetition(this.competition)
+            .subscribe(
+                val => () => {},
+                error => {
+                    console.log('ERROR unable to save data :-(', error)
+                    this.snackBarService.send("Unable to save changes to server", "error");
+                });
     }
 }

@@ -3,7 +3,7 @@ import {BehaviorSubject, Observable} from "rxjs";
 import {SurfEvent} from "../models/surf-event.model";
 import {HttpClient} from "@angular/common/http";
 import {AppConfigService} from "./app-config.service";
-import {map, switchMap} from "rxjs/operators";
+import {filter, map, switchMap} from "rxjs/operators";
 import {Division} from "../models/division.type";
 import {CompetitionService} from "./competition.service";
 import {Competition} from "../models/competition.model";
@@ -29,17 +29,23 @@ export class SurfEventService {
     }
 
     getSurfEvents(): Observable<SurfEvent[]> {
-        if(this.surfEventsData.getValue().length <= 0) {
+        if (this.surfEventsData.getValue().length <= 0) {
             this.fetchAllSurfEvents();
         }
         return this.surfEvents$;
     }
 
-    getCompetitionByDivision(id: string, division : Division){
+    getCompetitionByDivision(id: string, division: Division) {
         return this.getSurfEvent(id).pipe(
-            switchMap((surfEvent : SurfEvent) => this.competitionService.getCompetitionsByIds(surfEvent.competitions)),
-            map((competitions : Competition[])=>competitions.filter(competition=>competition.division === division)[0])
+            filter(surfEvent => surfEvent !== undefined),
+            switchMap((surfEvent: SurfEvent) => this.competitionService.getCompetitionsByIds(surfEvent.competitions)),
+            filter(competitions => competitions !== undefined && competitions.length > 0),
+            map((competitions: Competition[]) => competitions.filter(competition => competition.division === division)[0])
         );
+    }
+
+    updateCompetition(competition: Competition) {
+        return this.competitionService.updateCompetition(competition);
     }
 
     private fetchAllSurfEvents() {

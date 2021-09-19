@@ -3,7 +3,7 @@ import {BehaviorSubject, Observable} from "rxjs";
 import {SurfEvent} from "../models/surf-event.model";
 import {HttpClient} from "@angular/common/http";
 import {AppConfigService} from "./app-config.service";
-import {filter, map, switchMap} from "rxjs/operators";
+import {filter, map, switchMap, tap} from "rxjs/operators";
 import {Division} from "../models/division.type";
 import {CompetitionService} from "./competition.service";
 import {Competition} from "../models/competition.model";
@@ -40,7 +40,10 @@ export class SurfEventService {
                 endDate.setHours(0, 0, 0, 0);
                 endDate.setDate(endDate.getDate() + 1);
                 return startDate <= today && today <= endDate;
-            }))
+            })),
+            tap(results => {
+                results.sort((a, b) => new Date(a.startDateTime).getTime() - new Date(b.startDateTime).getTime())
+            })
         );
     }
 
@@ -52,7 +55,10 @@ export class SurfEventService {
                 const startDate: Date = new Date(surfEvent.startDateTime);
                 startDate.setHours(0, 0, 0, 0);
                 return today < startDate;
-            }))
+            })),
+            tap(results => {
+                results.sort((a, b) => new Date(a.startDateTime).getTime() - new Date(b.startDateTime).getTime())
+            })
         );
     }
 
@@ -64,7 +70,10 @@ export class SurfEventService {
                 const endDate = new Date(surfEvent.endDateTime);
                 endDate.setHours(0, 0, 0, 0);
                 return endDate < today;
-            }))
+            })),
+            tap(results => {
+                results.sort((a, b) => new Date(b.startDateTime).getTime() - new Date(a.startDateTime).getTime())
+            })
         );
     }
 

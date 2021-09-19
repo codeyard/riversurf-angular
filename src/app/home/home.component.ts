@@ -16,10 +16,9 @@ import {MapInfoWindow, MapMarker} from "@angular/google-maps";
 export class HomeComponent implements OnInit, OnDestroy {
     @ViewChild(MapInfoWindow) mapInfoWindow!: MapInfoWindow;
 
-    surfEvents$?: Observable<SurfEvent[]>;
+    currentSurfEvents$?: Observable<SurfEvent[]>;
     upcomingSurfEvents$?: Observable<SurfEvent[]>;
     pastSurfEvents$?: Observable<SurfEvent[]>;
-    currentSurfEvents$?: Observable<SurfEvent[]>;
     randomRiders: Rider[] = [];
     isLoadingRandomRiders = true;
     currentEvent = 0;
@@ -59,10 +58,9 @@ export class HomeComponent implements OnInit, OnDestroy {
                     this.randomRiders = riders
                 });
 
-        this.surfEvents$ = this.surfEventService.getSurfEvents();
+        this.currentSurfEvents$ = this.surfEventService.getCurrentSurfEvents();
         this.upcomingSurfEvents$ = this.surfEventService.getUpcomingSurfEvents();
         this.pastSurfEvents$ = this.surfEventService.getPastSurfEvents();
-        this.currentSurfEvents$ = this.surfEventService.getCurrentSurfEvents();
     }
 
     ngOnDestroy(): void {

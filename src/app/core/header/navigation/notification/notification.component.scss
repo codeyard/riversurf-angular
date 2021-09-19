@@ -8,49 +8,49 @@
         align-self: center;
         padding: 0 1rem;
 
-        mat-icon{
+        mat-icon {
             vertical-align: middle;
             cursor: pointer;
         }
     }
 }
 
-.notification-timestamp{
+.notification-timestamp {
     margin: 0 0.5rem;
     display: flex;
     flex-direction: column;
     white-space: nowrap;
 
-    &__time{
+    &__time {
         font-size: larger;
     }
 
-    &__date{
+    &__date {
         font-style: italic;
         font-size: smaller;
         color: grey;
     }
 }
 
-.notification-message{
+.notification-message {
     margin: 0 0.5rem;
     vertical-align: top;
     text-align: left;
 }
 
-.mat-column-content{
+.mat-column-content {
     width: 100%;
 }
 
-mat-dialog-actions{
+mat-dialog-actions {
     justify-content: space-between;
     margin: 0;
 
-    button{
+    button {
         margin: 0.5rem 1rem;
     }
 
-    mat-icon{
+    mat-icon {
         margin: 0 0.5rem;
     }
 }

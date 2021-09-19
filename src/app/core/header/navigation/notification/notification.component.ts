@@ -42,7 +42,7 @@ export class NotificationComponent implements OnInit, OnDestroy, AfterViewInit {
     }
 
     private pushDemoMessage() {
-        this.userNotifications.data.splice(0, 0,{
+        this.userNotifications.data.splice(0, 0, {
             timestamp: new Date(),
             content: 'Hello World',
             read: false,
@@ -58,7 +58,7 @@ export class NotificationComponent implements OnInit, OnDestroy, AfterViewInit {
             autoFocus: false,
             width: '100vw'
         });
-        dialog.afterOpened().subscribe(()=>this.userNotifications.paginator=this.paginator);
+        dialog.afterOpened().subscribe(() => this.userNotifications.paginator = this.paginator);
     }
 
     markAsRead(element: UserNotification) {

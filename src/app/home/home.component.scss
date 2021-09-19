@@ -60,8 +60,14 @@
 
         }
     }
-
 }
 
+.map {
+    padding: 2rem;
+    @include bottom-space;
 
+    h2 {
+        margin-bottom: 0.5rem;
+    }
+}
 

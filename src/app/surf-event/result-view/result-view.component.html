@@ -56,7 +56,7 @@
                             </ng-container>
                             <ng-container *ngIf="heat.results.length === 0">
                                 <ng-container *ngFor="let rider of heat.riders; let riderIndex = index">
-                                    <div class="rider" *ngIf="heat.results.length === 0">
+                                    <div class="rider" *ngIf="heat.results.length === 0" >
                                         <rs-rider-result [riderId]="rider"
                                                          [riderColorIndex]="riderIndex"
                                                          [resultType]="getHeatStatus(heat)"

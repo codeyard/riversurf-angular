@@ -17,6 +17,7 @@ circle {
 }
 
 path {
+    transition: all .2s;
     fill: transparent;
     stroke-width: 2px;
     stroke: darken($color-grey-light-1, 10);

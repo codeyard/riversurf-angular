@@ -4,6 +4,7 @@
 .rider__card {
     display: flex;
     justify-content: space-between;
+    transition: all .2s;
 
     @include respond(small) {
         margin: .3rem;

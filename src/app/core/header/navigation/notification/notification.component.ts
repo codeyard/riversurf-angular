@@ -46,14 +46,13 @@ export class NotificationComponent implements OnInit, OnDestroy {
     openDialog() {
         const dialog = this.dialog.open(this.dialogTemplateRef, {
             closeOnNavigation: true,
-            autoFocus: false
+            autoFocus: false,
+            width: '100vw'
         });
         dialog.afterOpened().subscribe(() => {
             this.scrollToLatestMessage();
         });
     }
-
-
 
     scrollToLatestMessage() {
         if (this.dialogContentRef) {
@@ -74,5 +73,9 @@ export class NotificationComponent implements OnInit, OnDestroy {
 
     markAllAsRead() {
         this.userNotifications.forEach(e => e.read = true);
+    }
+
+    clearAllMessages() {
+        this.userNotifications = [];
     }
 }

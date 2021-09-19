@@ -58,7 +58,12 @@
             <button mat-icon-button aria-label="Scroll to bottom" (click)="scrollToLatestMessage()">
                 <mat-icon>arrow_downward</mat-icon>
             </button>
-            <button mat-raised-button (click)="markAllAsRead()">Mark all as read</button>
+            <button mat-raised-button (click)="clearAllMessages()">
+                <mat-icon>delete</mat-icon>Clear messages
+            </button>
+            <button mat-raised-button (click)="markAllAsRead()">
+                <mat-icon>message</mat-icon>Mark all as read
+            </button>
             <button mat-raised-button mat-dialog-close color="primary" cdkTrapFocus>Close</button>
         </mat-dialog-actions>
 </ng-template>

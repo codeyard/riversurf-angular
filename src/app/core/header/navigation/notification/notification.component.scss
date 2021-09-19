@@ -40,6 +40,10 @@
     padding: 0 0.5rem;
 }
 
+.mat-column-content{
+    width: 100%;
+}
+
 mat-dialog-actions{
     justify-content: center;
 
@@ -51,3 +55,4 @@ mat-dialog-actions{
         margin: 0 0.5rem;
     }
 }
+

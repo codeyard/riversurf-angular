@@ -35,12 +35,13 @@ export class NotificationComponent implements OnInit, OnDestroy {
     }
 
     private pushDemoMessage() {
-        this.userNotifications = [...this.userNotifications, {
+        this.userNotifications.splice(0, 0,{
             timestamp: new Date(),
             content: 'Hello World',
             read: false,
             link: this.userNotifications.length % 2 === 0 ? 'event/riversurf-jam-thun-2021' : undefined
-        }];
+        });
+        this.userNotifications = [...this.userNotifications];
     }
 
     openDialog() {

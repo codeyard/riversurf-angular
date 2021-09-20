@@ -3,6 +3,8 @@ import {MatDialog} from "@angular/material/dialog";
 import {UserNotification} from "../../../models/user-notification.model";
 import {MatPaginator} from "@angular/material/paginator";
 import {MatTableDataSource} from "@angular/material/table";
+import {UserNotificationService} from "../../../services/user-notification.service";
+import {Subscription} from "rxjs";
 
 @Component({
     selector: 'rs-notification',
@@ -15,40 +17,29 @@ export class NotificationComponent implements OnInit, OnDestroy, AfterViewInit {
     @ViewChild('dialogContent') dialogContentRef !: ElementRef;
     @ViewChild(MatPaginator) paginator!: MatPaginator;
 
+    notificationSubscription?: Subscription;
     userNotifications = new MatTableDataSource<UserNotification>([]);
 
     get newNotifications(): number {
         return this.userNotifications.data.filter(m => !m.read).length;
     }
 
-    private intervalId: number = 0;
-
-    constructor(private dialog: MatDialog) {
+    constructor(private dialog: MatDialog, private notificationService: UserNotificationService) {
     }
 
     ngOnInit(): void {
-        // ToDo: Replace with subscribing to notification service for receiving messages
-        this.intervalId = setInterval(() => this.pushDemoMessage(), 2000);
+        this.notificationSubscription = this.notificationService.getNotification().subscribe((notification) => {
+            this.userNotifications.data.splice(0, 0, notification);
+            this.userNotifications.data = [...this.userNotifications.data];
+            this.userNotifications.paginator = this.paginator;
+        });
     }
 
     ngOnDestroy(): void {
-        if (this.intervalId != 0) {
-            clearInterval(this.intervalId);
-        }
+        this.notificationSubscription?.unsubscribe();
     }
 
     ngAfterViewInit(): void {
-        this.userNotifications.paginator = this.paginator;
-    }
-
-    private pushDemoMessage() {
-        this.userNotifications.data.splice(0, 0, {
-            timestamp: new Date(),
-            content: 'Hello World',
-            read: false,
-            link: this.userNotifications.data.length % 2 === 0 ? 'event/riversurf-jam-thun-2021' : undefined
-        });
-        this.userNotifications.data = [...this.userNotifications.data];
         this.userNotifications.paginator = this.paginator;
     }
 

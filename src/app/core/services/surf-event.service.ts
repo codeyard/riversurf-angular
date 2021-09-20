@@ -41,8 +41,8 @@ export class SurfEventService {
                 endDate.setDate(endDate.getDate() + 1);
                 return startDate <= today && today <= endDate;
             })),
-            tap(results => {
-                results.sort((a, b) => new Date(a.startDateTime).getTime() - new Date(b.startDateTime).getTime())
+            map(results => {
+                return results.sort((a, b) => new Date(a.startDateTime).getTime() - new Date(b.startDateTime).getTime())
             })
         );
     }
@@ -56,8 +56,8 @@ export class SurfEventService {
                 startDate.setHours(0, 0, 0, 0);
                 return today < startDate;
             })),
-            tap(results => {
-                results.sort((a, b) => new Date(a.startDateTime).getTime() - new Date(b.startDateTime).getTime())
+            map(results => {
+                return results.sort((a, b) => new Date(a.startDateTime).getTime() - new Date(b.startDateTime).getTime())
             })
         );
     }
@@ -71,8 +71,8 @@ export class SurfEventService {
                 endDate.setHours(0, 0, 0, 0);
                 return endDate < today;
             })),
-            tap(results => {
-                results.sort((a, b) => new Date(b.startDateTime).getTime() - new Date(a.startDateTime).getTime())
+            map(results => {
+                return results.sort((a, b) => new Date(b.startDateTime).getTime() - new Date(a.startDateTime).getTime())
             })
         );
     }

@@ -7,6 +7,7 @@ import {
     WebSocketSubscriptionPayload
 } from "../models/web-socket-data.model";
 import {UserNotificationService} from "./user-notification.service";
+import {AppConfigService} from "./app-config.service";
 
 /*
     Example data for the websocket when sending a notification:
@@ -16,8 +17,8 @@ import {UserNotificationService} from "./user-notification.service";
         "payload" : {
             "notification" : {
                 "timestamp" : "2021-09-20T20:28:52.512Z",
-                "content" : "Hello from WebSocket",
-                "link" : "https://www.google.ch"
+                "content" : "The next river surf jam in thun will be in 2022! Click on the link to see more details.",
+                "link" : "/event/riversurfjam-thun-2022-613917dd771da527952a46a7"
             }
         }
     }
@@ -31,9 +32,10 @@ export class WebSocketService {
     private webSocketData?: WebSocketSubject<any>;
     private webSocketSubscription?: Subscription;
 
-    private WEBSOCKET_PORT_ON_LOCALHOST = 8080;
+    private MAP_TO_REMOTE_WEBSOCKET = true; // set to false, if you want to use your own websocket (on localhost)
+    private WEBSOCKET_PORT_ON_LOCALHOST = 8080; // set the port number of your websocket when hosting on localhost
 
-    constructor(private notificationService: UserNotificationService) {
+    constructor(private config: AppConfigService, private notificationService: UserNotificationService) {
         // ToDo: Add default credentials to get a session token
         this.connect();
     }
@@ -47,9 +49,16 @@ export class WebSocketService {
         const sessionToken = '123';
 
         const protocol = window.location.protocol === "https:" ? "wss://" : "ws://";
-        let host = window.location.host;
-        if (host.startsWith('localhost')) {
-            host = window.location.hostname + ':' + this.WEBSOCKET_PORT_ON_LOCALHOST.toString();
+        let host = '';
+
+        if(this.MAP_TO_REMOTE_WEBSOCKET){
+            host = this.config.getHostName();
+        } else {
+            if (host.startsWith('localhost')) {
+                host = window.location.hostname + ':' + this.WEBSOCKET_PORT_ON_LOCALHOST.toString();
+            } else {
+                host = window.location.host;
+            }
         }
 
         const webSocketUrl = protocol + host + '/name?sessionToken=' + sessionToken;

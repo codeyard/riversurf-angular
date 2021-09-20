@@ -53,5 +53,14 @@ mat-dialog-actions {
     mat-icon {
         margin: 0 0.5rem;
     }
+
+    span {
+        @include respond(medium) {
+            display: none;
+        }
+        @include respond(small) {
+            display: none;
+        }
+    }
 }
 

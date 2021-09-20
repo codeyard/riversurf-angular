@@ -1,7 +1,15 @@
 <mat-tab-group [selectedIndex]="selectedTabIndex">
-    <mat-tab *ngFor="let round of rounds; let roundIndex = index" [label]="getRoundLabel(roundIndex)">
-        <div class="competition-container">
-            <rs-round [riders]="round.riders" [roundNumber]="round.id" (finishedRound)="onFinishedRound($event)"></rs-round>
-        </div>
-    </mat-tab>
+    <ng-container *ngIf="competition">
+        <mat-tab *ngFor="let round of competition.rounds; let roundIndex = index" [label]="getRoundLabel(roundIndex)" [disabled]="round.riders.length === 0">
+            <div class="competition-container">
+                <rs-round
+                    [round]="round"
+                    [maxRidersInHeat]="competition.config.maxRidersInHeat"
+                    [isFinalRound]="round.id === competition.rounds.length-1"
+                    (finishedRound)="onFinishedRound($event)"
+                    (syncRound)="updateCompetition($event)"
+                ></rs-round>
+            </div>
+        </mat-tab>
+    </ng-container>
 </mat-tab-group>

@@ -1,5 +1,5 @@
 <div class="main">
-    <mat-tab-group mat-align-tabs="center">
+    <mat-tab-group mat-align-tabs="center" [selectedIndex]="selectedTabIndex">
         <mat-tab label="Login">
             <rs-signup-form [formMode]="'login'"></rs-signup-form>
         </mat-tab>

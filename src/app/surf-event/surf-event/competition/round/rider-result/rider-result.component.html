@@ -1,4 +1,7 @@
-<mat-card class="rider__card">
+<mat-card class="rider__card"
+          [ngClass]="{
+          'no-hover':resultType === 'surfing' || resultType === 'finished',
+          'result':  !control ?? true, 'highlighted': isHighlighted, 'fade-out': isFadedOut}">
     <mat-spinner *ngIf="!rider"></mat-spinner>
     <mat-card-header class="rider__card__header" *ngIf="rider">
         <div mat-card-avatar
@@ -6,8 +9,9 @@
              [style.background-image]="'url(' + rider.profilePicture + ')'"
              [ngStyle]="{'border-color': riderColorIndex | riderColor}"
         ></div>
-        <mat-card-title class="rider__card__name"> {{rider.firstName}} {{rider.lastName}}
+        <mat-card-title class="rider__card__name" *ngIf="control"> {{rider.firstName}} {{rider.lastName}}
         </mat-card-title>
+        <mat-card-title class="rider__card__nickname" *ngIf="!control"> {{rider.nickName}}</mat-card-title>
     </mat-card-header>
     <mat-card-content class="rider__card__content">
         <div [ngSwitch]="resultType">
@@ -21,14 +25,18 @@
                 <mat-icon aria-hidden="false" aria-label="surfing" class="rider__card__icon">surfing</mat-icon>
             </div>
             <div *ngSwitchCase="'finished'" class="rider__card__type">
-                <p>Points:</p>
+                <p *ngIf="control">Points:</p>
                 <div class="rider__card__input-container">
-                    <form [formGroup]="points">
-                        <input formControlName="pointsInput" type="number"
-                               class="rider__card__input"
-                               #pointsInput
-                               [ngClass]="{'invalid': points.touched && !points.valid}"/>
-                    </form>
+
+                    <input type="number"
+                           class="rider__card__input"
+                           [formControl]="control"
+                           *ngIf="control"
+                           [ngClass]="{'invalid': control.invalid && control.touched}"
+                    >
+                    <div class="rider__card__points-cointainer" *ngIf="points">
+                        <p class="rider__card__points">{{points}}</p>
+                    </div>
                     <mat-icon aria-hidden="false" *ngIf="disableInput">locked</mat-icon>
                 </div>
             </div>

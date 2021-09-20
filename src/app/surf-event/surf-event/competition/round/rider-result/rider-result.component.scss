@@ -4,11 +4,11 @@
 .rider__card {
     display: flex;
     justify-content: space-between;
+    transition: all .2s;
 
     @include respond(small) {
         margin: .3rem;
     }
-
 
     &:hover {
         transform: scale(1.01);
@@ -39,6 +39,12 @@
         margin: 0;
     }
 
+    &__nickname {
+        font-size: .8rem;
+        font-weight: normal;
+        margin: 0;
+    }
+
     &__icon {
         margin: 0;
     }
@@ -52,13 +58,29 @@
         width: 60px;
         height: 40px;
         border: none;
-        border-bottom: 1px solid $color-primary;
+        border-bottom: 2px solid $color-primary;
         text-align: center;
         font-size: 1.5rem;
         color: $color-primary;
+        transition: all .3s;
 
         &:disabled {
             cursor: not-allowed;
+        }
+    }
+
+    &__points {
+        color: $color-white;
+        font-weight: 800;
+
+        &-cointainer {
+            height: 2rem;
+            width: 2rem;
+            border-radius: 50%;
+            background-color: $color_primary;
+            display: flex;
+            justify-content: center;
+            align-items: center;
         }
     }
 
@@ -67,6 +89,16 @@
     }
 }
 
+.no-hover{
+    &:hover {
+        transform: none;
+        box-shadow: 0px 2px 1px -1px rgb(0 0 0 / 20%), 0px 1px 1px 0px rgb(0 0 0 / 14%), 0px 1px 3px 0px rgb(0 0 0 / 12%);
+    }
+
+    &:active {
+        transform: none;
+    }
+}
 
 /* Chrome, Safari, Edge, Opera */
 input::-webkit-outer-spin-button,
@@ -81,5 +113,20 @@ input[type=number] {
 }
 
 .invalid {
-    border: 1px solid #f44336;
+    border: 2px solid #f44336;
+    border-radius: 4px;
+}
+
+.result {
+    height: 50px;
+    padding: 2px;
+    align-items: center;
+}
+
+.highlighted {
+    border: 2px solid $color-primary;
+}
+
+.fade-out {
+    opacity: .5;
 }

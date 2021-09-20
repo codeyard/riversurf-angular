@@ -16,6 +16,8 @@ export function GenerateEventTimeLine(year : number, riderId : string, ongoing :
 
     let timeline : TimeLineItem[] = [];
 
+    // TODO: Change to real data
+
     if(ongoing){
         timeline = [...DefaultTimeLineItemsOngoing];
     } else {

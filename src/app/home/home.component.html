@@ -1,20 +1,60 @@
 <div class="content">
     <main class="main">
-
-        <h2>Upcoming Events</h2>
-        <div class="events">
-            <rs-carousel *ngIf="smallScreen" [index]="currentEvent" [auto]="false">
-                <ng-container *ngFor="let surfEvent of events">
-                    <rs-event-card [surfEvent]="surfEvent" *rs-carousel-item></rs-event-card>
-                </ng-container>
-            </rs-carousel>
-            <ng-container *ngIf="!smallScreen">
-                <ng-container *ngFor="let surfEvent of events">
-                    <rs-event-card [surfEvent]="surfEvent"></rs-event-card>
-                </ng-container>
+        <h2>River Surf Events</h2>
+        <mat-tab-group>
+            <ng-container *ngIf="currentSurfEvents$ | async as currentSurfEvents">
+                <mat-tab *ngIf="currentSurfEvents.length > 0" label="Current Events" class="main__tab-body">
+                    <div class="events">
+                        <rs-carousel *ngIf="smallScreen" [index]="currentEvent" [auto]="false">
+                            <ng-container *ngFor="let surfEvent of currentSurfEvents">
+                                <rs-event-card [surfEvent]="surfEvent" *rs-carousel-item></rs-event-card>
+                            </ng-container>
+                        </rs-carousel>
+                        <ng-container *ngIf="!smallScreen">
+                            <ng-container *ngFor="let surfEvent of currentSurfEvents">
+                                <rs-event-card [surfEvent]="surfEvent"></rs-event-card>
+                            </ng-container>
+                        </ng-container>
+                    </div>
+                </mat-tab>
             </ng-container>
-        </div>
+
+            <ng-container *ngIf="upcomingSurfEvents$ | async as upcomingSurfEvents">
+                <mat-tab *ngIf="upcomingSurfEvents.length > 0" label="Upcoming Events">
+                    <div class="events">
+                        <rs-carousel *ngIf="smallScreen" [index]="currentEvent" [auto]="false">
+                            <ng-container *ngFor="let surfEvent of upcomingSurfEvents">
+                                <rs-event-card [surfEvent]="surfEvent" *rs-carousel-item></rs-event-card>
+                            </ng-container>
+                        </rs-carousel>
+                        <ng-container *ngIf="!smallScreen">
+                            <ng-container *ngFor="let surfEvent of upcomingSurfEvents">
+                                <rs-event-card [surfEvent]="surfEvent"></rs-event-card>
+                            </ng-container>
+                        </ng-container>
+                    </div>
+                </mat-tab>
+            </ng-container>
+
+            <ng-container *ngIf="pastSurfEvents$ | async as pastSurfEvents">
+                <mat-tab *ngIf="pastSurfEvents.length > 0" label="Past Events">
+                    <div class="events">
+                        <rs-carousel *ngIf="smallScreen" [index]="currentEvent" [auto]="false">
+                            <ng-container *ngFor="let surfEvent of pastSurfEvents">
+                                <rs-event-card [surfEvent]="surfEvent" *rs-carousel-item></rs-event-card>
+                            </ng-container>
+                        </rs-carousel>
+                        <ng-container *ngIf="!smallScreen">
+                            <ng-container *ngFor="let surfEvent of pastSurfEvents">
+                                <rs-event-card [surfEvent]="surfEvent"></rs-event-card>
+                            </ng-container>
+                        </ng-container>
+                    </div>
+                </mat-tab>
+            </ng-container>
+        </mat-tab-group>
     </main>
+
     <aside class="aside">
         <h2>Some Awesome Riders</h2>
         <mat-spinner *ngIf="isLoadingRandomRiders" diameter="40"></mat-spinner>
@@ -25,7 +65,34 @@
         </div>
     </aside>
 </div>
-<div class="map">
-    <h1>Some Awesome Locations</h1>
-    <img style="max-width: 100%" src="https://miro.medium.com/max/700/1*dUrRzzu4Mm4DMjH2jvmurQ.png" alt="">
-</div>
+
+
+<ng-container *ngIf="upcomingSurfEvents$ | async as upcomingSurfEvents">
+    <div class="map">
+        <h2>Awesome Event Locations</h2>
+        <div class="event__map">
+            <google-map
+                width="100%"
+                height="500px"
+                [center]="{lat: 46.9332651, lng: 7.497035}"
+                [zoom]="mapZoom"
+                [options]="mapOptions">
+                <map-marker *ngFor="let upcomingSurfEvent of upcomingSurfEvents"
+                            #marker="mapMarker"
+                            [position]="{lat: upcomingSurfEvent.locationLat, lng: upcomingSurfEvent.locationLong}"
+                            [title]="upcomingSurfEvent.name"
+                            (mapClick)="openMapInfoWindow(marker, upcomingSurfEvent.name)">
+                </map-marker>
+                <ng-container *ngIf="currentSurfEvents$ | async as currentSurfEvents">
+                    <map-marker *ngFor="let currentSurfEvent of currentSurfEvents"
+                                #marker="mapMarker"
+                                [position]="{lat: currentSurfEvent.locationLat, lng: currentSurfEvent.locationLong}"
+                                [title]="currentSurfEvent.name"
+                                (mapClick)="openMapInfoWindow(marker, currentSurfEvent.name)">
+                    </map-marker>
+                </ng-container>
+                <map-info-window>{{ mapInfoContent }}</map-info-window>
+            </google-map>
+        </div>
+    </div>
+</ng-container>

@@ -216,7 +216,6 @@ export class RidersComponent implements OnInit, AfterViewInit, OnDestroy {
                 + data.division.toLowerCase();
 
             text = text.split(' ').join('');
-            console.log(text)
 
             const searchParts: string[] = filter.toLowerCase().split(' ');
             return !searchParts.some(word => text.indexOf(word) === -1);

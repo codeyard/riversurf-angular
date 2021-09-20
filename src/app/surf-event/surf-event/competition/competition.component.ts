@@ -1,51 +1,61 @@
-import {Component, OnInit} from '@angular/core';
-import {Competition, exampleComp, Result} from "../../../core/models/competition.model";
+import {Component, OnDestroy, OnInit} from '@angular/core';
+import {Competition, Round} from "../../../core/models/competition.model";
 import {SnackbarService} from "../../../core/services/snackbar.service";
-
-export interface RoundModel {
-    id: number;
-    riders: string[];
-    results: Result[];
-}
+import {ActivatedRoute} from "@angular/router";
+import {switchMap} from "rxjs/operators";
+import {Subscription} from "rxjs";
+import {SurfEventService} from "../../../core/services/surf-event.service";
 
 @Component({
     selector: 'rs-competition',
     templateUrl: './competition.component.html',
     styleUrls: ['./competition.component.scss']
 })
-export class CompetitionComponent implements OnInit {
+export class CompetitionComponent implements OnInit, OnDestroy {
 
-    competition: Competition = {...exampleComp};
+    routeSubscription?: Subscription;
 
-    rounds: RoundModel[] = [];
+    competition!: Competition;
+
     selectedTabIndex: number = 0;
 
-    constructor(private snackBarService: SnackbarService) {
+    constructor(private snackBarService: SnackbarService,
+                private route: ActivatedRoute,
+                private surfEventService: SurfEventService) {
     }
 
     ngOnInit(): void {
-        let initialRound: RoundModel = {
-            id: 0,
-            riders: this.competition.riders,
-            results: []
-        }
-        this.rounds.push(initialRound);
-        const maxRounds = Math.ceil(this.competition.riders.length / 8);
-        for (let i = 0; i < maxRounds; i++) {
-            this.rounds.push({
-                id: i + 1,
-                riders: [],
-                results: []
-            });
-        }
+        this.routeSubscription = this.route.params
+            .pipe(
+                switchMap(params => {
+                    const id = params['id'].split('-').pop();
+                    const division = params['division'].toLowerCase();
+                    return this.surfEventService.getCompetitionByDivision(id, division);
+                })
+            )
+            .subscribe(
+                competition => {
+                    this.competition = competition;
+                    this.selectedTabIndex = this.competition.rounds
+                        .map(round =>
+                            round.riders.length > 0 ? 'round-started': 'round-not-started').lastIndexOf("round-started")
+                },
+                error => {
+                    this.snackBarService.send("Unable to load Competition", "error");
+                    console.log('ERROR loading competition data :-(', error)
+                });
+    }
+
+    ngOnDestroy(): void {
+        this.routeSubscription?.unsubscribe();
     }
 
     onFinishedRound(promotedRiders: string[]) {
-        console.log(promotedRiders)
-        for(let i = 0; i < this.rounds.length; i++) {
-            console.log(this.rounds[i].riders) // IDEA: PUSH IN NEXT ROUND WITHOUT RIDERS, NOT YET WORKING
-            if(!this.rounds[i].riders.length) {
-                this.rounds[i].riders = promotedRiders;
+        for (let i = 0; i < this.competition.rounds.length; i++) {
+            if (!this.competition.rounds[i].riders.length) {
+                this.competition.rounds[i] = {...this.competition.rounds[i], riders: promotedRiders};
+                this.updateCompetition(this.competition.rounds[i])
+                break;
             }
         }
         this.selectedTabIndex = this.selectedTabIndex + 1;
@@ -56,11 +66,27 @@ export class CompetitionComponent implements OnInit {
         let label = 'Round ' + (+roundIndex);
         if (roundIndex === 0) {
             label = 'Seeding round';
-        } else if (roundIndex === this.rounds.length - 1) {
+        } else if (roundIndex === this.competition.rounds.length - 1) {
             label = 'Finals';
-        } else if (roundIndex === this.rounds.length - 2) {
+        } else if (roundIndex === this.competition.rounds.length - 2) {
             label = 'Semifinals';
         }
         return label;
+    }
+
+    updateCompetition(updatedRound: Round) {
+        const roundId = updatedRound.id;
+        const competitionCopy = {...this.competition}
+        competitionCopy.rounds[roundId] = updatedRound
+
+        this.competition = competitionCopy;
+
+        this.surfEventService.updateCompetition(this.competition)
+            .subscribe(
+                val => () => {},
+                error => {
+                    console.log('ERROR unable to save data :-(', error)
+                    this.snackBarService.send("Unable to save changes to server", "error");
+                });
     }
 }

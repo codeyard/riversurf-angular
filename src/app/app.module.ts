@@ -15,6 +15,8 @@ import {HttpClientModule} from "@angular/common/http";
 import {loadInitialData} from "./init";
 import {AppConfigService} from "./core/services/app-config.service";
 import {MatProgressSpinnerModule} from "@angular/material/progress-spinner";
+import {GoogleMapsModule} from "@angular/google-maps";
+import {MatTabsModule} from "@angular/material/tabs";
 
 @NgModule({
     declarations: [
@@ -33,7 +35,9 @@ import {MatProgressSpinnerModule} from "@angular/material/progress-spinner";
         MatChipsModule,
         UserModule,
         MatProgressSpinnerModule,
-        HammerModule
+        HammerModule,
+        GoogleMapsModule,
+        MatTabsModule
     ],
     providers: [{
         provide: APP_INITIALIZER,

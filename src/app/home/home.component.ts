@@ -1,11 +1,12 @@
-import {Component, OnDestroy, OnInit} from '@angular/core';
-import {SurfEvent, exampleEvent} from "../core/models/surf-event.model";
+import {Component, OnDestroy, OnInit, ViewChild} from '@angular/core';
+import {SurfEvent} from "../core/models/surf-event.model";
 import {Rider} from "../core/models/rider.model";
 import {BreakpointObserver} from "@angular/cdk/layout";
 import {RidersService} from "../core/services/riders.service";
-import {Subscription} from "rxjs";
-import {SnackbarService} from "../core/services/snackbar.service";
-import {filter} from "rxjs/operators";
+import {Observable, Subject} from "rxjs";
+import {takeUntil} from "rxjs/operators";
+import {SurfEventService} from "../core/services/surf-event.service";
+import {MapInfoWindow, MapMarker} from "@angular/google-maps";
 
 @Component({
     selector: 'rs-home',
@@ -13,36 +14,62 @@ import {filter} from "rxjs/operators";
     styleUrls: ['./home.component.scss']
 })
 export class HomeComponent implements OnInit, OnDestroy {
-    events: SurfEvent[] = [exampleEvent, exampleEvent, exampleEvent, exampleEvent, exampleEvent, exampleEvent];
+    @ViewChild(MapInfoWindow) mapInfoWindow!: MapInfoWindow;
+
+    currentSurfEvents$?: Observable<SurfEvent[]>;
+    upcomingSurfEvents$?: Observable<SurfEvent[]>;
+    pastSurfEvents$?: Observable<SurfEvent[]>;
     randomRiders: Rider[] = [];
-    ridersSubscription?: Subscription;
-    breakpointSubscription?: Subscription;
     isLoadingRandomRiders = true;
-
     currentEvent = 0;
-
     smallScreen?: boolean;
 
-    constructor(private observer: BreakpointObserver, private ridersService: RidersService, private snackBarService: SnackbarService) {
+    mapZoom = 9;
+    mapOptions: google.maps.MapOptions = {
+        mapTypeId: 'roadmap',
+        zoomControl: true,
+        scrollwheel: true,
+        disableDoubleClickZoom: false,
+        maxZoom: 20,
+        minZoom: 5
+    };
+    mapInfoContent = '';
+
+    private destroy$ = new Subject();
+
+    constructor(private observer: BreakpointObserver,
+                private ridersService: RidersService,
+                private surfEventService: SurfEventService) {
     }
 
     ngOnInit(): void {
-        this.breakpointSubscription = this.observer.observe('(max-width: 878px)').subscribe(result => {
-            this.smallScreen = result.matches;
-        });
+        this.observer.observe('(max-width: 878px)')
 
-        this.ridersSubscription = this.ridersService.getRandomRiders(6)
+            .pipe(takeUntil(this.destroy$))
+            .subscribe(result => {
+                this.smallScreen = result.matches;
+            });
+
+        this.ridersService.getRandomRiders(6)
+            .pipe(takeUntil(this.destroy$))
             .subscribe(
                 (riders: Rider[]) => {
                     this.isLoadingRandomRiders = false;
                     this.randomRiders = riders
-                })
+                });
 
-
+        this.currentSurfEvents$ = this.surfEventService.getCurrentSurfEvents();
+        this.upcomingSurfEvents$ = this.surfEventService.getUpcomingSurfEvents();
+        this.pastSurfEvents$ = this.surfEventService.getPastSurfEvents();
     }
 
     ngOnDestroy(): void {
-        this.ridersSubscription?.unsubscribe();
-        this.breakpointSubscription?.unsubscribe();
+        this.destroy$.next(null);
+        this.destroy$.complete();
+    }
+
+    openMapInfoWindow(marker: MapMarker, content: string) {
+        this.mapInfoContent = content;
+        this.mapInfoWindow.open(marker);
     }
 }

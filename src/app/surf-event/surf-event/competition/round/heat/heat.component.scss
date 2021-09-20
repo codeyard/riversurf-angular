@@ -1,0 +1,63 @@
+@import "../../../../../../assets/scss/_mixins";
+@import "../../../../../../assets/scss/_variables";
+@import "../../../../../../assets/scss/_responsive";
+
+.round {
+
+    &__heat {
+        margin: .5rem;
+        border: 1px solid $color-primary;
+        border-radius: 4px;
+
+        &__header {
+            display: flex;
+            flex-direction: row;
+            justify-content: space-between;
+            margin: 1rem .5rem;
+
+            &-title {
+                font-weight: bold;
+            }
+
+            &-counter {
+                text-align: right;
+                color: $color-grey-dark-1;
+                @include text-small;
+            }
+        }
+    }
+
+    &__riders {
+        padding: 0 1rem 1rem 1rem;
+
+        @include respond(small) {
+            padding: 0;
+        }
+
+
+        &__single-rider {
+            margin: 0.5rem 0;
+            width: 100%;
+            cursor: pointer;
+            outline: none;
+
+
+            &--placeholder {
+                text-align: center;
+                font-style: italic;
+                color: $color-grey-dark-2;
+                padding: 1rem;
+                border: 1px dashed $color-primary;
+                border-radius: 10px;
+
+                @include respond(small) {
+                    margin: .5rem auto;
+                    min-width: 95%;
+                    max-width: 95%;
+
+                }
+            }
+
+        }
+    }
+}

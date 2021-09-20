@@ -1,0 +1,68 @@
+@import "../../../assets/scss/_variables";
+@import "../../../assets/scss/_responsive";
+.result-container {
+    display: flex;
+
+    @include respond(small) {
+        flex-direction: column;
+        flex: 100%;
+    }
+
+
+}
+
+.round {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: .5rem 1.5rem;
+
+    @include respond(small) {
+        overflow: hidden;
+
+        &:last-of-type {
+            margin-bottom: 3rem;
+        }
+    }
+
+    & rs-carousel {
+        width: 100%;
+        max-width: 100%;
+    }
+
+    &__title {
+        font-size: 1rem;
+    }
+}
+
+.heat {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 1rem;
+    border: 1px solid $color-grey-light-2;
+    border-radius: 4px;
+    font-size: .8rem;
+
+    &__title {
+        padding: .2rem 0.5rem;
+        border-radius: 4px;
+        background-color: $color-primary;
+        color: $color-white;
+        transform: translateY(-50%);
+    }
+}
+
+.rider {
+    width: 250px;
+    margin-bottom: .2rem;
+    cursor: pointer;
+
+    &:last-of-type {
+        margin-bottom: .5rem;
+    }
+}
+
+.relative-container {
+    position: relative;
+}

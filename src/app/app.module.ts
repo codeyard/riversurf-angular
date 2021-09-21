@@ -11,12 +11,13 @@ import {MatCardModule} from "@angular/material/card";
 import {MatChipsModule} from "@angular/material/chips";
 import {UserModule} from "./user/user.module";
 import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
-import {HttpClientModule} from "@angular/common/http";
+import {HTTP_INTERCEPTORS, HttpClientModule} from "@angular/common/http";
 import {loadInitialData} from "./init";
 import {AppConfigService} from "./core/services/app-config.service";
 import {MatProgressSpinnerModule} from "@angular/material/progress-spinner";
 import {GoogleMapsModule} from "@angular/google-maps";
 import {MatTabsModule} from "@angular/material/tabs";
+import {AuthInterceptorService} from "./core/services/auth-interceptor.service";
 
 @NgModule({
     declarations: [
@@ -44,6 +45,10 @@ import {MatTabsModule} from "@angular/material/tabs";
         multi: true,
         useFactory: loadInitialData,
         deps: [AppConfigService]
+    }, {
+        provide: HTTP_INTERCEPTORS,
+        useClass: AuthInterceptorService,
+        multi: true
     }],
     exports: [],
     bootstrap: [AppComponent]

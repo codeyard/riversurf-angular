@@ -78,7 +78,6 @@ export class CompetitionComponent implements OnInit, OnDestroy {
             .subscribe(
                 val => () => {},
                 error => {
-                    console.log('ERROR unable to save data :-(', error)
                     this.snackBarService.send("Unable to save changes to server", "error");
                 });
     }

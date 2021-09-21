@@ -22,13 +22,13 @@ export class UserNotificationService {
         return this.notification$;
     }
 
-    sendNotification(notification: UserNotification) {
+    showNotification(notification: UserNotification) {
         this.notificationData.next(notification);
     }
 
     // ToDo: Remove after introduction of websocket service
     private sendDemoMessage() {
-        this.sendNotification({
+        this.showNotification({
             timestamp: new Date(),
             content: 'Hello World',
             read: false,

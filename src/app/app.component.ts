@@ -1,4 +1,4 @@
-import {Component} from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {WebSocketService} from "./core/services/web-socket.service";
 import {UserService} from "./core/services/user.service";
 
@@ -7,7 +7,7 @@ import {UserService} from "./core/services/user.service";
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss']
 })
-export class AppComponent implements OnInit{
+export class AppComponent implements OnInit {
 
     constructor(private webSocketService: WebSocketService, private userService: UserService) {
     }

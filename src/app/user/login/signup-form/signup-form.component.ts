@@ -1,8 +1,9 @@
-import {Component, Input, OnInit} from '@angular/core';
+import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 import {FormBuilder, FormGroup, Validators} from "@angular/forms";
 import {Router} from "@angular/router";
 import {SnackbarService} from "../../../core/services/snackbar.service";
 import {ConfirmPasswordValidator} from "./confirm-password.validator";
+import {UserService} from "../../../core/services/user.service";
 
 @Component({
     selector: 'rs-signup-form',
@@ -11,6 +12,7 @@ import {ConfirmPasswordValidator} from "./confirm-password.validator";
 })
 export class SignupFormComponent implements OnInit {
     @Input() formMode!: string;
+    isLoading = false;
     hidePassword = true;
     hidePasswordConfirmation = true;
     signupForm: FormGroup = new FormGroup({});
@@ -18,7 +20,8 @@ export class SignupFormComponent implements OnInit {
     constructor(
         private formBuilder: FormBuilder,
         private router: Router,
-        private snackBar: SnackbarService) {
+        private snackBar: SnackbarService,
+        private userService: UserService) {
     }
 
     ngOnInit(): void {
@@ -40,12 +43,29 @@ export class SignupFormComponent implements OnInit {
     }
 
     onSubmit() {
-        // TODO: Send to backend
-        this.snackBar.send(this.formMode === 'login'
-                ? 'Login successful'
-                : 'Successfully registered',
-            'success'
-        )
-        this.router.navigate(["/"]).then();
+        this.isLoading = true;
+        this.formMode === 'login'
+            ? this.loginUser()
+            : this.registerUser()
+    }
+
+    loginUser() {
+        const username = this.signupForm.get('username')?.value;
+        const password = this.signupForm.get('password')?.value;
+        this.userService.loginUser(username, password).subscribe((responseData) => {
+                this.snackBar.send("Login successful", "success");
+                this.isLoading = false;
+                this.router.navigate(["/"])
+            },
+            errorMessage => {
+                this.snackBar.send(errorMessage, "error");
+                this.isLoading = false;
+            }
+        );
+    }
+
+
+    registerUser() {
+
     }
 }

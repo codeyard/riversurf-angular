@@ -1,7 +1,7 @@
 <div class="content">
     <main class="main">
         <h2>River Surf Events</h2>
-        <mat-tab-group>
+        <mat-tab-group [selectedIndex]="selectedTabIndex" (selectedTabChange)="onTabChange($event)">
             <ng-container *ngIf="currentSurfEvents$ | async as currentSurfEvents">
                 <mat-tab *ngIf="currentSurfEvents.length > 0" label="Current Events" class="main__tab-body">
                     <div class="events">

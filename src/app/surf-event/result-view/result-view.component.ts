@@ -206,7 +206,6 @@ export class ResultViewComponent implements OnInit, AfterViewInit, OnDestroy {
 
     ngAfterViewInit(): void {
         this.init.subscribe(() => {
-                console.log("SUBSCRIBE")
                 this.isLoading = false;
                 this.cd.detectChanges();
                 this.getPointsAndLines();

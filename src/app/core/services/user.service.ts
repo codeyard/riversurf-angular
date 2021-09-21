@@ -81,11 +81,12 @@ export class UserService {
     logout() {
         localStorage.removeItem("userData");
         this.user.next(null);
+        this.snackBarService.send("We logged you out mate!", "success")
         if(this.tokenExpirationTimer) {
             clearTimeout(this.tokenExpirationTimer)
         }
         this.tokenExpirationTimer = null;
-        this.router.navigate(["/auth"]);
+        this.router.navigate(["/"]);
     }
 
     autoLogin() {
@@ -112,7 +113,7 @@ export class UserService {
 
     }
 
-    private handleError(errorResponse: HttpErrorResponse) {
+    handleError(errorResponse: HttpErrorResponse) {
         let errorMessage = "This didn't work mate... Try Again!";
         if (!errorResponse.error) {
             return throwError(errorMessage);

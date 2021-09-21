@@ -1,19 +1,19 @@
-import { Injectable } from '@angular/core';
-import {HttpEvent, HttpHandler, HttpInterceptor, HttpParams, HttpRequest} from "@angular/common/http";
-import {SnackbarService} from "./snackbar.service";
-import {EMPTY, Observable, throwError} from "rxjs";
+import {Injectable} from '@angular/core';
+import {HttpEvent, HttpHandler, HttpInterceptor, HttpRequest} from "@angular/common/http";
+import {Observable, throwError} from "rxjs";
 import {UserService} from "./user.service";
 import {exhaustMap, take} from "rxjs/operators";
 
 @Injectable({
-  providedIn: 'root'
+    providedIn: 'root'
 })
-export class AuthInterceptorService implements HttpInterceptor{
+export class AuthInterceptorService implements HttpInterceptor {
 
-  constructor(private userService: UserService) { }
+    constructor(private userService: UserService) {
+    }
 
     intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
-        if(req.method === 'GET'
+        if (req.method === 'GET'
             || req.url.split("/").includes("login")
             || req.url.split("/").includes("register")) {
             return next.handle(req);
@@ -21,7 +21,7 @@ export class AuthInterceptorService implements HttpInterceptor{
             return this.userService.user.pipe(
                 take(1),
                 exhaustMap(user => {
-                    if(!user) {
+                    if (!user) {
                         return throwError("No Auth included");
                     } else {
                         let modifiedRequest = req.clone({

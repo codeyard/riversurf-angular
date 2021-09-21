@@ -105,25 +105,16 @@ export class ResultViewComponent implements OnInit, AfterViewInit, OnDestroy {
     }
 
     getHeatNumberOfRider(roundIndex: number, riderId: string): number | undefined {
-        let resultIndex: number | undefined = undefined;
         let riderIndex: number | undefined = undefined;
         const heats = this.competition.rounds[roundIndex].heats;
 
         for (let i = 0; i < heats.length; i++) {
-             if(heats[i].results.map(result => result.riderId).indexOf(riderId) > -1)  {
-                 resultIndex = i;
-                 break;
-             }
              if(heats[i].riders.indexOf(riderId) > -1) {
                  riderIndex = i;
              }
         }
-        if(resultIndex !== undefined) {
-            return resultIndex;
-        } else if (riderIndex !== undefined) {
-            return  riderIndex;
-        }
-        return undefined;
+
+        return riderIndex;
     }
 
 
@@ -215,7 +206,6 @@ export class ResultViewComponent implements OnInit, AfterViewInit, OnDestroy {
 
     ngAfterViewInit(): void {
         this.init.subscribe(() => {
-                console.log("SUBSCRIBE")
                 this.isLoading = false;
                 this.cd.detectChanges();
                 this.getPointsAndLines();

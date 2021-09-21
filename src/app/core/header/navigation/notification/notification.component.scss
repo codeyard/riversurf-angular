@@ -1,0 +1,66 @@
+@import "src/assets/scss/responsive";
+
+.container {
+    display: flex;
+    flex-direction: row-reverse;
+
+    &__icon {
+        align-self: center;
+        padding: 0 1rem;
+
+        mat-icon {
+            vertical-align: middle;
+            cursor: pointer;
+        }
+    }
+}
+
+.notification-timestamp {
+    margin: 0 0.5rem;
+    display: flex;
+    flex-direction: column;
+    white-space: nowrap;
+
+    &__time {
+        font-size: larger;
+    }
+
+    &__date {
+        font-style: italic;
+        font-size: smaller;
+        color: grey;
+    }
+}
+
+.notification-message {
+    margin: 0 0.5rem;
+    vertical-align: top;
+    text-align: left;
+}
+
+.mat-column-content {
+    width: 100%;
+}
+
+mat-dialog-actions {
+    justify-content: space-between;
+    margin: 0;
+
+    button {
+        margin: 0.5rem 1rem;
+    }
+
+    mat-icon {
+        margin: 0 0.5rem;
+    }
+
+    span {
+        @include respond(medium) {
+            display: none;
+        }
+        @include respond(small) {
+            display: none;
+        }
+    }
+}
+

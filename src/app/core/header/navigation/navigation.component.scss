@@ -2,16 +2,23 @@
 @import "src/assets/scss/mixins";
 @import "src/assets/scss/responsive";
 
-
 .navigation {
+
+    display: flex;
+    justify-content: flex-end;
+
+    &__notification{
+        margin-right: 1rem;
+        @include respond(small) {
+            display: none;
+        }
+    }
 
     &__checkbox {
         display: none;
     }
 
     &__button {
-        height: 7rem;
-        width: 7rem;
         border-radius: 50%;
         position: relative;
         top: .4rem;
@@ -129,6 +136,13 @@
         }
     }
 
+    &__notification-menu{
+        display: none;
+        @include respond(small) {
+            display: inherit;
+        }
+    }
+
     &__checkbox:checked ~ &__background {
         height: 100vh;
     }
@@ -138,7 +152,6 @@
         opacity: 1;
         left: 0;
     }
-
     &__checkbox:checked + &__button {
         background-color: transparent;
     }

@@ -142,7 +142,7 @@ export class WebSocketService {
             notificationMessage.payload.notification.content = message.payload.notification.content;
             notificationMessage.payload.notification.link = message.payload.notification.link;
 
-            this.notificationService.sendNotification(notificationMessage.payload.notification);
+            this.notificationService.showNotification(notificationMessage.payload.notification);
         }
     }
 }

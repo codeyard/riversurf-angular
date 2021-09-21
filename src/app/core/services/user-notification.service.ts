@@ -1,7 +1,6 @@
 import {Injectable} from '@angular/core';
 import {Observable, Subject} from "rxjs";
 import {UserNotification} from "../models/user-notification.model";
-import {WebSocketService} from "./web-socket.service";
 
 @Injectable({
     providedIn: 'root'

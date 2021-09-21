@@ -18,7 +18,7 @@ export class UserNotificationService {
         return this.notification$;
     }
 
-    sendNotification(notification: UserNotification) {
+    showNotification(notification: UserNotification) {
         this.notificationData.next(notification);
     }
 }

@@ -1,0 +1,71 @@
+<div class="container">
+    <div class="container__icon">
+        <mat-icon [matBadge]="newNotifications | newUserNotifications" matBadgeColor="warn" (click)="openDialog()"
+                  [matBadgeHidden]="!newNotifications">notifications
+        </mat-icon>
+    </div>
+</div>
+<ng-template #dialogTemplate>
+    <h2 mat-dialog-title>Notifications</h2>
+    <mat-dialog-content #dialogContent>
+        <p *ngIf="userNotifications.data.length === 0">No notifications yet.</p>
+        <table *ngIf="userNotifications.data.length > 0" mat-table [dataSource]="userNotifications">
+            <ng-container matColumnDef="icon">
+                <th mat-header-cell *matHeaderCellDef>New</th>
+                <td mat-cell *matCellDef="let element">
+                    <button mat-icon-button *ngIf="!element.read" (click)="markAsRead(element)">
+                        <mat-icon>message</mat-icon>
+                    </button>
+                </td>
+            </ng-container>
+            <ng-container matColumnDef="timestamp">
+                <th mat-header-cell *matHeaderCellDef>Time</th>
+                <td mat-cell *matCellDef="let element">
+                    <div class="notification-timestamp">
+                        <div class="notification-timestamp__time">
+                            {{element.timestamp | date:'HH:mm:ss'}}
+                        </div>
+                        <div class="notification-timestamp__date">
+                            {{element.timestamp | date:'d MMMM YYYY'}}
+                        </div>
+                    </div>
+                </td>
+            </ng-container>
+            <ng-container matColumnDef="content">
+                <th mat-header-cell *matHeaderCellDef>Notification</th>
+                <td mat-cell *matCellDef="let element">
+                    <div class="notification-message">
+                        {{element.content}}
+                    </div>
+                </td>
+            </ng-container>
+            <ng-container matColumnDef="link">
+                <th mat-header-cell *matHeaderCellDef>Link</th>
+                <td mat-cell *matCellDef="let element">
+                    <button mat-icon-button *ngIf="element.link" [routerLink]="element.link"
+                            tabindex="-1" (click)="markAsRead(element)" matDialogClose>
+                        <mat-icon>arrow_forward</mat-icon>
+                    </button>
+                </td>
+            </ng-container>
+            <tr mat-header-row *matHeaderRowDef="['icon','timestamp','content','link']; sticky: true"></tr>
+            <tr mat-row *matRowDef="let row; columns: ['icon','timestamp','content','link'];"></tr>
+        </table>
+    </mat-dialog-content>
+    <mat-dialog-actions>
+        <mat-paginator [pageSizeOptions]="[10, 20, 50, 100]"
+                       showFirstLastButtons>
+        </mat-paginator>
+        <button mat-raised-button mat-dialog-close (click)="clearAllMessages()">
+            <mat-icon>delete</mat-icon>
+            <span>Clear messages</span>
+        </button>
+        <button mat-raised-button mat-dialog-close (click)="markAllAsRead()">
+            <mat-icon>message</mat-icon>
+            <span>Mark all as read</span>
+        </button>
+        <button mat-raised-button mat-dialog-close color="primary" cdkTrapFocus>
+            Close
+        </button>
+    </mat-dialog-actions>
+</ng-template>

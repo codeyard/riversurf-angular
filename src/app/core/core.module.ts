@@ -6,19 +6,35 @@ import {MatSnackBarModule} from "@angular/material/snack-bar";
 import {MatToolbarModule} from "@angular/material/toolbar";
 import {MatIconModule} from "@angular/material/icon";
 import {RouterModule} from "@angular/router";
+import {NotificationComponent} from './header/navigation/notification/notification.component';
+import {MatBadgeModule} from "@angular/material/badge";
+import {MatDialogModule} from "@angular/material/dialog";
+import {MatButtonModule} from "@angular/material/button";
+import {NewUserNotificationsPipe} from './header/navigation/notification/new-user-notifications.pipe';
+import {MatTableModule} from "@angular/material/table";
+import {A11yModule} from "@angular/cdk/a11y";
+import {MatPaginatorModule} from "@angular/material/paginator";
 
 
 @NgModule({
     declarations: [
         HeaderComponent,
-        NavigationComponent
+        NavigationComponent,
+        NotificationComponent,
+        NewUserNotificationsPipe
     ],
     imports: [
         CommonModule,
         MatSnackBarModule,
         MatToolbarModule,
         MatIconModule,
-        RouterModule
+        RouterModule,
+        MatBadgeModule,
+        MatDialogModule,
+        MatButtonModule,
+        MatTableModule,
+        A11yModule,
+        MatPaginatorModule
     ],
     exports: [
         HeaderComponent

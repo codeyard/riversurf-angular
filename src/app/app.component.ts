@@ -1,4 +1,5 @@
-import {Component, OnInit} from '@angular/core';
+import {Component} from '@angular/core';
+import {WebSocketService} from "./core/services/web-socket.service";
 import {UserService} from "./core/services/user.service";
 
 @Component({
@@ -8,7 +9,7 @@ import {UserService} from "./core/services/user.service";
 })
 export class AppComponent implements OnInit{
 
-    constructor(private userService: UserService) {
+    constructor(private webSocketService: WebSocketService, private userService: UserService) {
     }
 
     ngOnInit(): void {

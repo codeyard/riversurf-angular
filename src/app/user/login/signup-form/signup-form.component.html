@@ -1,4 +1,7 @@
-<form class="form" [formGroup]="signupForm" (ngSubmit)="onSubmit()">
+<div class="container" *ngIf="isLoading">
+    <mat-spinner diameter="40"></mat-spinner>
+</div>
+<form class="form" [formGroup]="signupForm" (ngSubmit)="onSubmit()" *ngIf="!isLoading">
     <ng-container *ngIf="formMode === 'login'">
         <mat-form-field appearance="outline">
             <mat-label>Username</mat-label>
@@ -27,8 +30,6 @@
         <button mat-raised-button color="primary" type="submit" [disabled]="!signupForm.valid"
                 tabindex="3">{{formMode | uppercase}}</button>
     </ng-container>
-
-
     <ng-container *ngIf="formMode === 'register'">
         <mat-form-field appearance="outline">
             <mat-label>Email</mat-label>
@@ -64,19 +65,23 @@
 
         <mat-form-field appearance="outline">
             <mat-label>Password Confirmation</mat-label>
-            <input formControlName="passwordConfirmation" matInput [type]="hidePasswordConfirmation ? 'password' : 'text'"
+            <input formControlName="passwordConfirmation" matInput
+                   [type]="hidePasswordConfirmation ? 'password' : 'text'"
                    tabindex="4">
-            <button type="button" mat-icon-button matSuffix (click)="hidePasswordConfirmation = !hidePasswordConfirmation"
+            <button type="button" mat-icon-button matSuffix
+                    (click)="hidePasswordConfirmation = !hidePasswordConfirmation"
                     [attr.aria-label]="'Hide password'"
                     [attr.aria-pressed]="hidePasswordConfirmation">
                 <mat-icon>{{hidePasswordConfirmation ? 'visibility_off' : 'visibility'}}</mat-icon>
             </button>
             <mat-error *ngIf="signupForm.controls.passwordConfirmation.getError('required')">Please confirm the password
             </mat-error>
-            <mat-error *ngIf="signupForm.controls.passwordConfirmation.getError('minlength')">Password Confirmation must be
+            <mat-error *ngIf="signupForm.controls.passwordConfirmation.getError('minlength')">Password Confirmation must
+                be
                 at least 5 characters long
             </mat-error>
-            <mat-error *ngIf="signupForm.controls.passwordConfirmation.getError('confirmPasswordValidator')">Passwords do
+            <mat-error *ngIf="signupForm.controls.passwordConfirmation.getError('confirmPasswordValidator')">Passwords
+                do
                 not match
             </mat-error>
         </mat-form-field>

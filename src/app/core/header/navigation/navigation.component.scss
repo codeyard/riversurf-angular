@@ -14,11 +14,12 @@
         }
     }
 
+
     &__checkbox {
         display: none;
     }
 
-    &__button {
+    &__button, &__logout {
         border-radius: 50%;
         position: relative;
         top: .4rem;
@@ -29,6 +30,18 @@
         cursor: pointer;
         outline: none;
 
+
+    }
+
+    &__logout {
+        margin-right: 1rem;
+
+        @include respond(small) {
+            display: none;
+        }
+    }
+
+    &__button {
         @include respond(small) {
             display: none;
         }

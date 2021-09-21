@@ -1,4 +1,7 @@
-import {Component, ElementRef, ViewChild} from '@angular/core';
+import {Component, ElementRef, OnDestroy, OnInit, ViewChild} from '@angular/core';
+import {UserService} from "../../services/user.service";
+import {Subscription} from "rxjs";
+import {Router} from "@angular/router";
 
 @Component({
     selector: 'rs-navigation',
@@ -6,9 +9,20 @@ import {Component, ElementRef, ViewChild} from '@angular/core';
     styleUrls: ['./navigation.component.scss']
 })
 
-export class NavigationComponent {
+export class NavigationComponent implements OnInit, OnDestroy{
     @ViewChild('navigationToggler', {static: false}) navigationToggler!: ElementRef;
     isChecked = false;
+    authSubscription!: Subscription;
+    loggedIn = false;
+
+    constructor(private userService: UserService) {
+    }
+
+    ngOnInit(): void {
+        this.authSubscription = this.userService.user.subscribe(user => {
+            this.loggedIn = !!user;
+        })
+    }
 
     toggleScrolling(isFromMenu: boolean): void {
 
@@ -25,6 +39,14 @@ export class NavigationComponent {
         if (!isFromMenu && this.isChecked) {
             document.body.style.overflow = 'visible';
         }
+    }
+
+    logout() {
+        this.userService.logout();
+    }
+
+    ngOnDestroy(): void {
+        this.authSubscription.unsubscribe();
     }
 
 }

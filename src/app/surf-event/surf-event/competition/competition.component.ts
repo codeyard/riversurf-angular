@@ -14,9 +14,7 @@ import {SurfEventService} from "../../../core/services/surf-event.service";
 export class CompetitionComponent implements OnInit, OnDestroy {
 
     routeSubscription?: Subscription;
-
     competition!: Competition;
-
     selectedTabIndex: number = 0;
 
     constructor(private snackBarService: SnackbarService,
@@ -50,14 +48,9 @@ export class CompetitionComponent implements OnInit, OnDestroy {
         this.routeSubscription?.unsubscribe();
     }
 
-    onFinishedRound(promotedRiders: string[]) {
-        for (let i = 0; i < this.competition.rounds.length; i++) {
-            if (!this.competition.rounds[i].riders.length) {
-                this.competition.rounds[i] = {...this.competition.rounds[i], riders: promotedRiders};
-                this.updateCompetition(this.competition.rounds[i])
-                break;
-            }
-        }
+    onFinishedRound(event: {currentRound: number, promotedRiders: string[]}) {
+        this.competition.rounds[event.currentRound + 1] = {...this.competition.rounds[event.currentRound + 1], riders: event.promotedRiders};
+        this.updateCompetition(this.competition.rounds[event.currentRound + 1])
         this.selectedTabIndex = this.selectedTabIndex + 1;
         this.snackBarService.send('Round successfully finished!', 'success');
     }
@@ -85,8 +78,13 @@ export class CompetitionComponent implements OnInit, OnDestroy {
             .subscribe(
                 val => () => {},
                 error => {
-                    console.log('ERROR unable to save data :-(', error)
                     this.snackBarService.send("Unable to save changes to server", "error");
                 });
+    }
+
+    hasNextRoundReady(currentRound: number) {
+        return currentRound < this.competition.rounds.length - 1
+            ? this.competition.rounds[currentRound+1].riders.length > 0
+            : false;
     }
 }

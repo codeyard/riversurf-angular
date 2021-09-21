@@ -1,11 +1,13 @@
 import {Injectable} from '@angular/core';
-import {BehaviorSubject, Observable} from "rxjs";
+import {BehaviorSubject, Observable, throwError} from "rxjs";
 import {Rider} from "../models/rider.model";
 import {SnackbarService} from "./snackbar.service";
-import {HttpClient} from "@angular/common/http";
-import {User} from "../models/user.model";
+import {HttpClient, HttpErrorResponse} from "@angular/common/http";
+import {AuthResponseData, AuthUser, User} from "../models/user.model";
 import {AppConfigService} from "./app-config.service";
-import {map} from "rxjs/operators";
+import {catchError, map, tap} from "rxjs/operators";
+import {Role} from "../models/role.type";
+import {Router} from "@angular/router";
 
 @Injectable({
     providedIn: 'root'
@@ -13,46 +15,118 @@ import {map} from "rxjs/operators";
 export class UserService {
 
     PROTOCOL = 'https://'
-    PATH_ENDPOINT = '/api/users/';
+    PATH_ENDPOINT = '/api/user/login';
+    private favoriteRiders = new BehaviorSubject<User>({favouriteRiders: []} as any);
+    private favoriteRiders$ = this.favoriteRiders.asObservable();
+    private tokenExpirationTimer: any;
+    user = new BehaviorSubject<AuthUser | null>(null)
 
-    private user = new BehaviorSubject<User>({favouriteRiders: []} as any);
-    private user$ = this.user.asObservable();
-
-    private userid = "userid";
 
     constructor(
         private httpClient: HttpClient,
         private appConfigService: AppConfigService,
-        private snackBarService: SnackbarService) {
+        private snackBarService: SnackbarService,
+        private router: Router) {
     }
 
-    getUser():Observable<User> {
-        return this.user$;
+    //TODO THIS METHOD NEEDED?
+    getUser(): Observable<User> {
+        return this.favoriteRiders$;
     }
 
-    fetchUser():void {
-        const requestUrl = this.PROTOCOL + this.appConfigService.getHostName() + this.PATH_ENDPOINT + this.userid;
-        this.httpClient.get<User>(requestUrl).subscribe(
-            (responseData: User) => this.user.next(responseData),
-            error => {
-                console.log('ERROR loading User data :-(', error)
-            }
-        )
+    loginUser(username: string, password: string) {
+        const requestUrl = this.PROTOCOL + this.appConfigService.getHostName() + this.PATH_ENDPOINT;
+        const body = {userName: username, password: password}
+        return this.httpClient.post<AuthResponseData>(requestUrl, body)
+            .pipe(
+                catchError(err => this.handleError(err)),
+                tap(resData => {
+                    this.handleAuthentication(resData.email, resData.userName, resData.id, resData.userRole, resData.token)
+                }))
+
     }
 
     toggleFavoriteRider(rider: Rider) {
-        const indexOfRider = this.user.getValue().favouriteRiders.findIndex(riderId => riderId === rider.id);
+        const indexOfRider = this.favoriteRiders.getValue().favouriteRiders.findIndex(riderId => riderId === rider.id);
         if (indexOfRider > -1) {
-            this.user.getValue().favouriteRiders.splice(indexOfRider, 1)
-            this.user.next(this.user.getValue());
+            this.favoriteRiders.getValue().favouriteRiders.splice(indexOfRider, 1)
+            this.favoriteRiders.next(this.favoriteRiders.getValue());
             this.snackBarService.send(`You'll no longer get updated about "${rider.nickName}"!`, "success");
         } else {
-            this.user.next({...this.user.getValue(), favouriteRiders: [...this.user.getValue().favouriteRiders, rider.id]});
+            this.favoriteRiders.next({
+                ...this.favoriteRiders.getValue(),
+                favouriteRiders: [...this.favoriteRiders.getValue().favouriteRiders, rider.id]
+            });
             this.snackBarService.send(`You'll get updated about "${rider.nickName}"!`, "success");
         }
     }
 
     getFavoriteRiders() {
-        return this.user$.pipe(map(user => user.favouriteRiders));
+        return this.favoriteRiders$.pipe(map(user => user.favouriteRiders));
+    }
+
+    private handleAuthentication(email: string, userName: string, userId: string, role: Role, token: string) {
+        // TODO CALCULATE EXPIRED IN FOR AUTOLOGOUT
+        //const experationDate = new Date(new Date().getTime() + +expiresIn * 1000);
+        // this.autoLogout(expiresIn*1000);
+        const user = new AuthUser(userId, userName, email, role, token)
+        this.user.next(user);
+        localStorage.setItem("userData", JSON.stringify(user));
+    }
+
+    autoLogout(expirationDuration: number) {
+        this.tokenExpirationTimer = setTimeout(() => this.logout(), expirationDuration);
+    }
+
+    logout() {
+        localStorage.removeItem("userData");
+        this.user.next(null);
+        this.snackBarService.send("We logged you out mate!", "success")
+        if(this.tokenExpirationTimer) {
+            clearTimeout(this.tokenExpirationTimer)
+        }
+        this.tokenExpirationTimer = null;
+        this.router.navigate(["/"]);
+    }
+
+    autoLogin() {
+        const userData: {
+            email: string,
+            id: string,
+            tokenId: string,
+            userName: string,
+            userRole: string
+        } = JSON.parse(<string>localStorage.getItem("userData"))
+        if(!userData) {
+            return
+        }
+        const user = new AuthUser(userData.id, userData.userName, userData.email, <"organizer" | "judge" | "rider"> userData.userRole, userData.tokenId);
+
+        if (user.token) {
+            this.user.next(user);
+
+            // TODO SET UP AUTO LOGOUT
+            //const expirationDuration = new Date(userData._tokenExpirationDate).getTime() - new Date().getTime();
+            // this.autoLogout(expirationDuration);
+        }
+
+
+    }
+
+    handleError(errorResponse: HttpErrorResponse) {
+        let errorMessage = "This didn't work mate... Try Again!";
+        if (!errorResponse.error) {
+            return throwError(errorMessage);
+        }
+        switch (errorResponse.error) {
+            case "Forbidden":
+                errorMessage = "Your Credentials seem not be correct"
+                break;
+            case "No User found":
+                errorMessage = "r u sure about the username?"
+                // TODO IMPLEMENT IN BACKEND?
+                break;
+        }
+        return throwError(errorMessage);
     }
 }

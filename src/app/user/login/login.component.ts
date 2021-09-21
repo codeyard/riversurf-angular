@@ -8,6 +8,7 @@ import {Router} from "@angular/router";
 })
 export class LoginComponent implements OnInit {
     selectedTabIndex: number = 0;
+    isLoading = false;
 
     constructor(private router: Router) {
     }
@@ -16,6 +17,11 @@ export class LoginComponent implements OnInit {
         if (this.router.url.includes('/register')) {
             this.selectedTabIndex = 1;
         }
+    }
+
+    onChangeLoading(loadingState: boolean) {
+        console.log(loadingState)
+        this.isLoading = loadingState;
     }
 
 }

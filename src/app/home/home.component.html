@@ -78,17 +78,15 @@
                 [zoom]="mapZoom"
                 [options]="mapOptions">
                 <map-marker *ngFor="let upcomingSurfEvent of upcomingSurfEvents"
-                            #marker="mapMarker"
                             [position]="{lat: upcomingSurfEvent.locationLat, lng: upcomingSurfEvent.locationLong}"
                             [title]="upcomingSurfEvent.name"
-                            (mapClick)="openMapInfoWindow(marker, upcomingSurfEvent.name)">
+                            (mapClick)="goToSurfEvent(upcomingSurfEvent)">
                 </map-marker>
                 <ng-container *ngIf="currentSurfEvents$ | async as currentSurfEvents">
                     <map-marker *ngFor="let currentSurfEvent of currentSurfEvents"
-                                #marker="mapMarker"
                                 [position]="{lat: currentSurfEvent.locationLat, lng: currentSurfEvent.locationLong}"
                                 [title]="currentSurfEvent.name"
-                                (mapClick)="openMapInfoWindow(marker, currentSurfEvent.name)">
+                                (mapClick)="goToSurfEvent(currentSurfEvent)">
                     </map-marker>
                 </ng-container>
                 <map-info-window>{{ mapInfoContent }}</map-info-window>

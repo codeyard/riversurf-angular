@@ -6,7 +6,9 @@ import {RidersService} from "../core/services/riders.service";
 import {Observable, Subject} from "rxjs";
 import {takeUntil} from "rxjs/operators";
 import {SurfEventService} from "../core/services/surf-event.service";
-import {MapInfoWindow, MapMarker} from "@angular/google-maps";
+import {MapInfoWindow} from "@angular/google-maps";
+import {ActivatedRoute, Router} from "@angular/router";
+import {SlugifyPipe} from "../shared/pipes/slugify.pipe";
 
 @Component({
     selector: 'rs-home',
@@ -39,7 +41,10 @@ export class HomeComponent implements OnInit, OnDestroy {
 
     constructor(private observer: BreakpointObserver,
                 private ridersService: RidersService,
-                private surfEventService: SurfEventService) {
+                private surfEventService: SurfEventService,
+                private router: Router,
+                private route: ActivatedRoute,
+                private slugify: SlugifyPipe) {
     }
 
     ngOnInit(): void {
@@ -68,8 +73,8 @@ export class HomeComponent implements OnInit, OnDestroy {
         this.destroy$.complete();
     }
 
-    openMapInfoWindow(marker: MapMarker, content: string) {
-        this.mapInfoContent = content;
-        this.mapInfoWindow.open(marker);
+    goToSurfEvent(surfEvent: SurfEvent) {
+        const slugifiedName = this.slugify.transform(surfEvent.name);
+        this.router.navigate([`/event/${slugifiedName}-${surfEvent.id}`], {relativeTo: this.route}).then();
     }
 }

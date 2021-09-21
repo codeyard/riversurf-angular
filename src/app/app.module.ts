@@ -17,6 +17,7 @@ import {AppConfigService} from "./core/services/app-config.service";
 import {MatProgressSpinnerModule} from "@angular/material/progress-spinner";
 import {GoogleMapsModule} from "@angular/google-maps";
 import {MatTabsModule} from "@angular/material/tabs";
+import {SlugifyPipe} from "./shared/pipes/slugify.pipe";
 
 @NgModule({
     declarations: [
@@ -44,7 +45,7 @@ import {MatTabsModule} from "@angular/material/tabs";
         multi: true,
         useFactory: loadInitialData,
         deps: [AppConfigService]
-    }],
+    }, SlugifyPipe],
     exports: [],
     bootstrap: [AppComponent]
 })

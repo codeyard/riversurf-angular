@@ -33,7 +33,7 @@
                     <mat-icon>lock</mat-icon>
                     <span>Login</span></div>
             </li>
-            <li class="navigation__item" routerLink="/login" (click)="toggleScrolling(true); logout()">
+            <li class="navigation__item" routerLink="/login" (click)="toggleScrolling(true); logout()" *ngIf="loggedIn">
                 <div class="navigation__link" [routerLinkActiveOptions]="{exact: true}" routerLinkActive="active-route">
                     <mat-icon>logout</mat-icon>
                     <span>Logout</span></div>

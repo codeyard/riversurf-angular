@@ -19,6 +19,10 @@
     height: 100%;
     flex-direction: column;
 
+    &__content{
+        flex-shrink: 5;
+    }
+
     &__icon {
         @include respond(small) {
             .mat-icon-button {

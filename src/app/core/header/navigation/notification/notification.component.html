@@ -8,7 +8,7 @@
 <ng-template #dialogTemplate>
     <div class="dialog-container">
         <h2 mat-dialog-title>Notifications</h2>
-        <mat-dialog-content #dialogContent>
+        <mat-dialog-content #dialogContent class="dialog-container__content">
             <p *ngIf="userNotifications.data.length === 0">No notifications yet.</p>
             <table *ngIf="userNotifications.data.length > 0" mat-table [dataSource]="userNotifications">
                 <ng-container matColumnDef="icon">

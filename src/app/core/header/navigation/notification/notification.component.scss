@@ -1,4 +1,5 @@
 @import "src/assets/scss/responsive";
+@import "src/assets/scss/mixins";
 
 .container {
     display: flex;
@@ -12,6 +13,16 @@
             vertical-align: middle;
             cursor: pointer;
         }
+    }
+}
+
+.dialog-container{
+    display: flex;
+    height: 100%;
+    flex-direction: column;
+
+    &__spacer{
+        flex-grow: 1;
     }
 }
 
@@ -45,6 +56,10 @@
 mat-dialog-actions {
     justify-content: space-between;
     margin: 0;
+
+    @include respond(small) {
+        justify-content: center;
+    }
 
     button {
         margin: 0.5rem 1rem;

@@ -38,6 +38,11 @@
         background-size: cover;
     }
 
+    &__subinfo {
+        display: flex;
+        justify-content: space-around;
+    }
+
     mat-chip{
         cursor: pointer;
         outline: none;

@@ -2,12 +2,13 @@ import {AfterViewInit, ChangeDetectorRef, Component, OnDestroy, OnInit, QueryLis
 import {Competition, Heat, Result} from "../../core/models/competition.model";
 import {RiderResultComponent} from "../surf-event/competition/round/rider-result/rider-result.component";
 import {Subject} from "rxjs";
-import {ActivatedRoute} from "@angular/router";
+import {ActivatedRoute, Router} from "@angular/router";
 import {SurfEventService} from "../../core/services/surf-event.service";
 import {switchMap, takeUntil, tap} from "rxjs/operators";
 import {SnackbarService} from "../../core/services/snackbar.service";
 import {BreakpointObserver} from "@angular/cdk/layout";
 import {CarouselComponent} from "../../shared/carousel/carousel.component";
+import {UserService} from "../../core/services/user.service";
 
 export interface Line {
     source: Point,
@@ -39,8 +40,7 @@ export class ResultViewComponent implements OnInit, AfterViewInit, OnDestroy {
 
     lines: Line[] = [];
     points: Point[] = []
-    modifiedRounds: any;
-
+    isAdministrator = false;
     highlightedRider?: string;
     highlightActive = false;
 
@@ -60,6 +60,8 @@ export class ResultViewComponent implements OnInit, AfterViewInit, OnDestroy {
     constructor(private cd: ChangeDetectorRef,
                 private snackBarService: SnackbarService,
                 private route: ActivatedRoute,
+                private router: Router,
+                private userService: UserService,
                 private surfEventService: SurfEventService,
                 private observer: BreakpointObserver) {
     }
@@ -88,6 +90,14 @@ export class ResultViewComponent implements OnInit, AfterViewInit, OnDestroy {
             .subscribe(result => {
                 this.smallScreen = result.matches;
             });
+
+        this.userService.user.subscribe(
+            user => {
+                (user?.userRole === 'organizer' || user?.userRole === 'judge')
+                    ? this.isAdministrator = true
+                    : this.isAdministrator = false;
+            }
+        )
     }
 
     highlightRider(riderId: string) {
@@ -257,5 +267,9 @@ export class ResultViewComponent implements OnInit, AfterViewInit, OnDestroy {
             label = 'Semifinals';
         }
         return label;
+    }
+
+    editHeat() {
+        this.router.navigate(["edit"], {relativeTo: this.route});
     }
 }

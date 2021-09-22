@@ -1,38 +1,47 @@
+@import "variables";
+
 .carousel {
     display: flex;
     position: relative;
-    flex-direction: row;
     overflow: hidden;
     max-width: 100%;
 
-    & > button {
-        position: absolute;
-        background: transparent;
-        cursor: pointer;
-        outline: none;
-        border: none;
+    & .button__container {
         height: 100%;
         width: 20%;
-        transition: all 0.3s ease;
+        position: absolute;
+        display: flex;
+        align-items: center;
 
         &:first-of-type {
             left: 0px;
+            top: 0px;
         }
 
         &:last-of-type {
             right: 0px;
+            top: 0px;
         }
 
-        & mat-icon {
-            color: darkgray;
-            text-shadow: rgba(255,255,255,0.6) 3px 3px;
-            height: 60px;
-            width: 60px;
-            font-size: 60px;
-        }
+        & button {
+            position: absolute;
+            background: transparent;
+            cursor: pointer;
+            outline: none;
+            border: none;
+            transition: all 0.3s ease;
 
-        &:disabled {
-            opacity: 0.2;
+            & mat-icon {
+                height: 60px;
+                width: 60px;
+                font-size: 60px;
+                color: $color-primary;
+
+            }
+
+            &:disabled {
+                opacity: 0.2;
+            }
         }
     }
 

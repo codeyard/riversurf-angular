@@ -3,6 +3,7 @@ import {CdkDragDrop, moveItemInArray, transferArrayItem} from "@angular/cdk/drag
 import {SnackbarService} from "../../../../core/services/snackbar.service";
 import {Heat, Round} from "../../../../core/models/competition.model";
 import {CompetitionService} from "../../../../core/services/competition.service";
+import {ActivatedRoute, Router} from "@angular/router";
 
 @Component({
     selector: 'rs-round',
@@ -10,21 +11,24 @@ import {CompetitionService} from "../../../../core/services/competition.service"
     styleUrls: ['./round.component.scss']
 })
 export class RoundComponent implements OnInit, OnChanges {
-
+    @Input() hasNextRound!: boolean;
     @Input() round!: Round;
     @Input() maxRidersInHeat!: number;
     @Input() isFinalRound!: boolean;
-    @Output() finishedRound = new EventEmitter<string[]>();
+    @Output() finishedRound = new EventEmitter<{currentRound: number, promotedRiders: string[]}>();
     @Output() syncRound = new EventEmitter<Round>();
-
+    areAllHeatsFinished!: boolean;
     unassignedRiders!: string[];
 
     constructor(
         private snackbarService: SnackbarService,
-        private competitionService: CompetitionService) {
+        private competitionService: CompetitionService,
+        private router: Router,
+        private route: ActivatedRoute) {
     }
 
     ngOnInit(): void {
+        this.allHeatsFinished();
     }
 
     ngOnChanges(): void {
@@ -33,7 +37,6 @@ export class RoundComponent implements OnInit, OnChanges {
 
     setupRound(): void {
         const numberOfHeats = this.competitionService.calculateMinimumHeats(this.round.riders.length, this.maxRidersInHeat);
-
         for (let i = this.round.heats.length; i < numberOfHeats; i++) {
             this.round.heats.push({
                 id: i,
@@ -99,22 +102,14 @@ export class RoundComponent implements OnInit, OnChanges {
         return this.round.heats.every(heat => heat.state === 'idle');
     }
 
-    areAllHeatsFinished(): boolean {
-        return this.round.heats.every(heat => heat.state === 'completed');
-    }
-
-    heatHasAllResults(heatNumber: number): boolean {
-        const hasAllResults = this.round.heats[heatNumber].results.length === this.round.heats[heatNumber].riders.length && this.round.heats[heatNumber].riders.length > 0;
-        if (hasAllResults) {
-            this.round.heats[heatNumber].state = 'finished';
-        }
-        return hasAllResults;
+    allHeatsFinished(): void {
+        this.areAllHeatsFinished = this.round.heats.every(heat => heat.state === 'completed');
     }
 
     moveToNextRound(roundNumber: number) {
         let promotedRiders = [];
         for (const heat of this.round.heats) {
-            const sortedArray = heat.results.sort((a, b) => a.value > b.value ? 1 : -1)
+            const sortedArray = heat.results.sort((a, b) => a.value < b.value ? 1 : -1)
             if (roundNumber === 0) {
                 promotedRiders.push(sortedArray.map(result => result.riderId));
             } else {
@@ -122,7 +117,7 @@ export class RoundComponent implements OnInit, OnChanges {
             }
         }
         promotedRiders = promotedRiders.reduce((acc, val) => acc.concat(val), []);
-        this.finishedRound.emit(promotedRiders);
+        this.finishedRound.emit({currentRound: roundNumber, promotedRiders: promotedRiders});
     }
 
     handleStatusChange(event: { action: string, heat: Heat }) {
@@ -138,9 +133,8 @@ export class RoundComponent implements OnInit, OnChanges {
                 msg += "stopped!"
                 break;
             case "save":
-                //TODO ADD RESULTS AND CHECK IF ALL RESULTS ARE AVIALBE
                 this.round.heats[event.heat.id] = {...event.heat, state: 'completed'}
-                //this.heatHasAllResults(event.heatNumber);
+                this.allHeatsFinished()
                 msg += "saved!"
                 break;
         }
@@ -149,8 +143,8 @@ export class RoundComponent implements OnInit, OnChanges {
     }
 
     finishCompetition() {
-        // TODO WHAT TO DO here?
         this.snackbarService.send("Competition finished", "success");
+        this.router.navigate(['../'], { relativeTo: this.route });
     }
 
     onSyncRound() {

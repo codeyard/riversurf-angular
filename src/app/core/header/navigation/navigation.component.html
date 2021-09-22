@@ -4,6 +4,10 @@
         <rs-notification></rs-notification>
     </div>
 
+    <div class="navigation__logout" (click)="logout()" *ngIf="loggedIn">
+        <mat-icon>logout</mat-icon>
+    </div>
+
     <input type="checkbox" class="navigation__checkbox" id="navi-toggle" #navigationToggler [checked]="isChecked"
            (change)="toggleScrolling(false)">
     <label for="navi-toggle" class="navigation__button">
@@ -24,10 +28,15 @@
                     <mat-icon>surfing</mat-icon>
                     <span>Riders</span></div>
             </li>
-            <li class="navigation__item" routerLink="/login" (click)="toggleScrolling(true)">
+            <li class="navigation__item" routerLink="/login" (click)="toggleScrolling(true)" *ngIf="!loggedIn">
                 <div class="navigation__link" [routerLinkActiveOptions]="{exact: true}" routerLinkActive="active-route">
                     <mat-icon>lock</mat-icon>
                     <span>Login</span></div>
+            </li>
+            <li class="navigation__item" routerLink="/login" (click)="toggleScrolling(true); logout()" *ngIf="loggedIn">
+                <div class="navigation__link" [routerLinkActiveOptions]="{exact: true}" routerLinkActive="active-route">
+                    <mat-icon>logout</mat-icon>
+                    <span>Logout</span></div>
             </li>
             <li class="navigation__item">
                 <div class="navigation__notification-menu">

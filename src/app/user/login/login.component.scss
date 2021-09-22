@@ -1,5 +1,5 @@
-@import "src/assets/scss/mixins";
-@import "src/assets/scss/responsive";
+@import "mixins";
+@import "responsive";
 
 .main {
     padding: 1rem;
@@ -11,3 +11,5 @@
         width: 90%;
     }
 }
+
+

@@ -1,6 +1,6 @@
-@import "src/assets/scss/variables";
-@import "src/assets/scss/mixins";
-@import "src/assets/scss/responsive";
+@import "mixins";
+@import "responsive";
+@import "variables";
 
 .event__card {
     width: 400px;
@@ -36,6 +36,11 @@
 
     &__headerimage {
         background-size: cover;
+    }
+
+    &__subinfo {
+        display: flex;
+        justify-content: space-around;
     }
 
     mat-chip{

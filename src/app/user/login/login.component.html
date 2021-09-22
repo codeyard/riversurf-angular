@@ -1,7 +1,11 @@
+<div class="container" *ngIf="isLoading">
+    <mat-spinner diameter="40"></mat-spinner>
+</div>
 <div class="main">
-    <mat-tab-group mat-align-tabs="center" [selectedIndex]="selectedTabIndex">
+    <mat-tab-group mat-align-tabs="center" [selectedIndex]="selectedTabIndex" *ngIf="!isLoading">
         <mat-tab label="Login">
-            <rs-signup-form [formMode]="'login'"></rs-signup-form>
+            <rs-signup-form [formMode]="'login'"
+            ></rs-signup-form>
         </mat-tab>
         <mat-tab label="Register">
             <rs-signup-form [formMode]="'register'"></rs-signup-form>

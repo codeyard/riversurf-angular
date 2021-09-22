@@ -2,12 +2,13 @@ import {AfterViewInit, ChangeDetectorRef, Component, OnDestroy, OnInit, QueryLis
 import {Competition, Heat, Result} from "../../core/models/competition.model";
 import {RiderResultComponent} from "../surf-event/competition/round/rider-result/rider-result.component";
 import {Subject} from "rxjs";
-import {ActivatedRoute} from "@angular/router";
+import {ActivatedRoute, Router} from "@angular/router";
 import {SurfEventService} from "../../core/services/surf-event.service";
 import {switchMap, takeUntil, tap} from "rxjs/operators";
 import {SnackbarService} from "../../core/services/snackbar.service";
 import {BreakpointObserver} from "@angular/cdk/layout";
 import {CarouselComponent} from "../../shared/carousel/carousel.component";
+import {UserService} from "../../core/services/user.service";
 
 export interface Line {
     source: Point,
@@ -39,8 +40,7 @@ export class ResultViewComponent implements OnInit, AfterViewInit, OnDestroy {
 
     lines: Line[] = [];
     points: Point[] = []
-    modifiedRounds: any;
-
+    isAdministrator = false;
     highlightedRider?: string;
     highlightActive = false;
 
@@ -60,6 +60,8 @@ export class ResultViewComponent implements OnInit, AfterViewInit, OnDestroy {
     constructor(private cd: ChangeDetectorRef,
                 private snackBarService: SnackbarService,
                 private route: ActivatedRoute,
+                private router: Router,
+                private userService: UserService,
                 private surfEventService: SurfEventService,
                 private observer: BreakpointObserver) {
     }
@@ -88,6 +90,14 @@ export class ResultViewComponent implements OnInit, AfterViewInit, OnDestroy {
             .subscribe(result => {
                 this.smallScreen = result.matches;
             });
+
+        this.userService.user.subscribe(
+            user => {
+                (user?.userRole === 'organizer' || user?.userRole === 'judge')
+                    ? this.isAdministrator = true
+                    : this.isAdministrator = false;
+            }
+        )
     }
 
     highlightRider(riderId: string) {
@@ -105,25 +115,16 @@ export class ResultViewComponent implements OnInit, AfterViewInit, OnDestroy {
     }
 
     getHeatNumberOfRider(roundIndex: number, riderId: string): number | undefined {
-        let resultIndex: number | undefined = undefined;
         let riderIndex: number | undefined = undefined;
         const heats = this.competition.rounds[roundIndex].heats;
 
         for (let i = 0; i < heats.length; i++) {
-             if(heats[i].results.map(result => result.riderId).indexOf(riderId) > -1)  {
-                 resultIndex = i;
-                 break;
-             }
              if(heats[i].riders.indexOf(riderId) > -1) {
                  riderIndex = i;
              }
         }
-        if(resultIndex !== undefined) {
-            return resultIndex;
-        } else if (riderIndex !== undefined) {
-            return  riderIndex;
-        }
-        return undefined;
+
+        return riderIndex;
     }
 
 
@@ -144,8 +145,8 @@ export class ResultViewComponent implements OnInit, AfterViewInit, OnDestroy {
         const ridersWithTheirMaxRound: RiderProgress[] = []
         this.competition.rounds.forEach((round, roundNumber) =>
             round.heats.forEach(heat =>
-                heat.results.forEach(result => {
-                        ridersWithTheirMaxRound.push({riderId: result.riderId, maxRound: roundNumber})
+                heat.riders.forEach(rider => {
+                        ridersWithTheirMaxRound.push({riderId: rider, maxRound: roundNumber})
                     }
                 )
             ));
@@ -215,7 +216,6 @@ export class ResultViewComponent implements OnInit, AfterViewInit, OnDestroy {
 
     ngAfterViewInit(): void {
         this.init.subscribe(() => {
-                console.log("SUBSCRIBE")
                 this.isLoading = false;
                 this.cd.detectChanges();
                 this.getPointsAndLines();
@@ -255,5 +255,21 @@ export class ResultViewComponent implements OnInit, AfterViewInit, OnDestroy {
         // M 0 0 L 1 0 Q 2 0 2 1 L 2 2 L 2 3 Q 2 4 3 4 L 4 4
         let path = `M ${a.x} ${a.y}, L ${middleX - this.CURVE_RADIUS} ${a.y}, Q ${middleX} ${a.y} ${middleX} ${a.y + signY * this.CURVE_RADIUS}, L ${middleX} ${middleY}, L ${middleX} ${b.y - signY * this.CURVE_RADIUS}, Q ${middleX} ${b.y} ${middleX + this.CURVE_RADIUS} ${b.y}, L ${b.x} ${b.y}`;
         return path;
+    }
+
+    getRoundLabel(roundIndex: number): string {
+        let label = 'Round ' + (+roundIndex);
+        if (roundIndex === 0) {
+            label = 'Seeding round';
+        } else if (roundIndex === this.competition.rounds.length - 1) {
+            label = 'Finals';
+        } else if (roundIndex === this.competition.rounds.length - 2) {
+            label = 'Semifinals';
+        }
+        return label;
+    }
+
+    editHeat() {
+        this.router.navigate(["edit"], {relativeTo: this.route});
     }
 }

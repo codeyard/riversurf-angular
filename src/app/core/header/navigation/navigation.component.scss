@@ -1,6 +1,6 @@
-@import "src/assets/scss/variables";
-@import "src/assets/scss/mixins";
-@import "src/assets/scss/responsive";
+@import "mixins";
+@import "responsive";
+@import "variables";
 
 .navigation {
 
@@ -14,11 +14,12 @@
         }
     }
 
+
     &__checkbox {
         display: none;
     }
 
-    &__button {
+    &__button, &__logout {
         border-radius: 50%;
         position: relative;
         top: .4rem;
@@ -29,6 +30,18 @@
         cursor: pointer;
         outline: none;
 
+
+    }
+
+    &__logout {
+        margin-right: 1rem;
+
+        @include respond(small) {
+            display: none;
+        }
+    }
+
+    &__button {
         @include respond(small) {
             display: none;
         }
@@ -86,7 +99,7 @@
 
         @include respond(small) {
             margin: 0;
-            padding: 1rem;
+            padding: 1rem .5rem;
 
             &:hover {
                 transform: none;
@@ -111,7 +124,7 @@
         }
 
         @include respond(small) {
-            padding: 0 2rem;
+            padding: 0 1.3rem;
 
             & span {
                 display: none;

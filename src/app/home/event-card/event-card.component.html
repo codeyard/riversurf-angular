@@ -6,7 +6,7 @@
              class="event__card__headerimage"></div>
         <mat-card-title>{{surfEvent.name}}</mat-card-title>
         <mat-card-subtitle>{{surfEvent.location}}</mat-card-subtitle>
-        <p class="event__card__header__date">{{surfEvent.startDateTime | date:'dd.MM.YYYY'}}</p>
+        <mat-card-subtitle>{{surfEvent.startDateTime | date:'dd.MM.YYYY'}}</mat-card-subtitle>
     </mat-card-header>
     <img draggable="false" mat-card-image src="{{surfEvent.mainPicture}}"
          alt="{{surfEvent.name}}">

@@ -18,3 +18,30 @@ export const examplejudge: User = {
     userName: "mikimaus",
     favouriteRiders: []
 }
+
+export interface AuthResponseData {
+    id: string,
+    userName: string,
+    email: string,
+    userRole: Role,
+    token: string
+}
+
+export class AuthUser {
+    constructor(
+        public id: string,
+        public userName: string,
+        public email: string,
+        public userRole: Role,
+        private tokenId: string,
+    ) {}
+
+    get token() {
+        // TODO ADD LOGIK FOR VALIDATION OF TODO
+        return this.tokenId;
+    }
+
+
+}
+
+

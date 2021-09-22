@@ -1,3 +1,8 @@
+<div class="edit-button" *ngIf="isAdministrator">
+    <button mat-raised-button color="primary" type="button"
+            (click)="editHeat()">Edit Heat
+    </button>
+</div>
 <div class="relative-container">
     <div class="result-container" *ngIf="!isLoading">
         <div class="round" *ngFor="let round of competition.rounds">

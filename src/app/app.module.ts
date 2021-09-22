@@ -18,7 +18,7 @@ import {MatProgressSpinnerModule} from "@angular/material/progress-spinner";
 import {GoogleMapsModule} from "@angular/google-maps";
 import {MatTabsModule} from "@angular/material/tabs";
 import {SlugifyPipe} from "./shared/pipes/slugify.pipe";
-import {AuthInterceptorService} from "./core/services/auth-interceptor.service";
+import {AuthInterceptorService} from "./core/services/auth/auth-interceptor.service";
 
 @NgModule({
     declarations: [

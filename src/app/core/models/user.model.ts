@@ -29,10 +29,10 @@ export interface AuthResponseData {
 
 export class AuthUser {
     constructor(
-        private id: string,
-        private userName: string,
-        private email: string,
-        private userRole: Role,
+        public id: string,
+        public userName: string,
+        public email: string,
+        public userRole: Role,
         private tokenId: string,
     ) {}
 
@@ -40,6 +40,8 @@ export class AuthUser {
         // TODO ADD LOGIK FOR VALIDATION OF TODO
         return this.tokenId;
     }
+
+
 }
 
 

@@ -27,7 +27,7 @@ export class HomeComponent implements OnInit, OnDestroy {
     currentEvent = 0;
     smallScreen?: boolean;
 
-    selectedTabIndex: number = 0;
+    selectedTabIndex!: number;
     routeSubscription?: Subscription;
 
     mapZoom = 9;
@@ -71,8 +71,10 @@ export class HomeComponent implements OnInit, OnDestroy {
         this.pastSurfEvents$ = this.surfEventService.getPastSurfEvents();
 
         this.routeSubscription = this.route.queryParams.subscribe(params => {
-            if (params['tab']) {
+            if (params['tab'] !== undefined) {
                 this.selectedTabIndex = params['tab'];
+            } else {
+                this.selectedTabIndex = 0;
             }
         });
     }
@@ -88,7 +90,7 @@ export class HomeComponent implements OnInit, OnDestroy {
     }
 
     onTabChange(event: MatTabChangeEvent) {
-        this.router.navigate([], {
+        this.router.navigate([""], {
             queryParams: {tab: event.index},
             queryParamsHandling: 'merge',
         }).then();

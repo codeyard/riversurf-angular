@@ -16,7 +16,7 @@ export class AuthGuard implements CanActivate {
     canActivate(
         route: ActivatedRouteSnapshot,
         state: RouterStateSnapshot): Observable<boolean | UrlTree> | Promise<boolean | UrlTree> | boolean | UrlTree {
-        const isAdministratorRoute = route.url.toString().split("/").includes("/edit")
+        const isAdministratorRoute = route.url.toString().split("/").includes("edit")
         return this.userService.user.pipe(
             take(1),
             map(user => {

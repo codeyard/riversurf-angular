@@ -1,5 +1,6 @@
-@import "../../../assets/scss/_variables";
-@import "../../../assets/scss/_responsive";
+@import "responsive";
+@import "variables";
+
 .result-container {
     display: flex;
     justify-content: space-around;

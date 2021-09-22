@@ -17,6 +17,7 @@ import {AppConfigService} from "./core/services/app-config.service";
 import {MatProgressSpinnerModule} from "@angular/material/progress-spinner";
 import {GoogleMapsModule} from "@angular/google-maps";
 import {MatTabsModule} from "@angular/material/tabs";
+import {SlugifyPipe} from "./shared/pipes/slugify.pipe";
 import {AuthInterceptorService} from "./core/services/auth-interceptor.service";
 
 @NgModule({
@@ -49,7 +50,7 @@ import {AuthInterceptorService} from "./core/services/auth-interceptor.service";
         provide: HTTP_INTERCEPTORS,
         useClass: AuthInterceptorService,
         multi: true
-    }],
+    }, SlugifyPipe],
     exports: [],
     bootstrap: [AppComponent]
 })

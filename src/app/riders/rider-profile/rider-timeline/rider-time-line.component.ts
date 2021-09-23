@@ -35,6 +35,7 @@ export class RiderTimeLineComponent implements OnDestroy, OnChanges {
                 this.loading = true;
 
                 this.riderTimeLineSubscription = this.riderHistoryService.getRiderTimeLines(this.riderId).subscribe((timelines) => {
+
                     const currentTimeLines = timelines.filter(timeline => timeline.ongoing).sort((a, b) => this.timeLineSorter(a, b));
                     this.currentTimeLines = currentTimeLines.length > 0 ? currentTimeLines : undefined;
 

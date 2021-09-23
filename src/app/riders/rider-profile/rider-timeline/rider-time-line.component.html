@@ -28,11 +28,11 @@
             <mat-tab *ngFor="let historicalTimeLines of historyTimeLineCollection"
                      label="{{historicalTimeLines.year}}"
             >
-                <div class="timeline__description" *ngFor="let timeLine of historicalTimeLines.timeLines">
-                    <h1 class="timeline__description__title">{{timeLine.event.name}}</h1>
-                    <h2 class="timeline__description__location">{{timeLine.event.location}}</h2>
+                <div class="container__timeline__description" *ngFor="let timeLine of historicalTimeLines.timeLines">
+                    <h1 class="container__timeline__description-title">{{timeLine.event.name}}</h1>
+                    <h2 class="container__timeline__description-location">{{timeLine.event.location}}</h2>
                     <hr>
-                    <p class="timeline__description__description">{{timeLine.event.description}}</p>
+                    <p class="container__timeline__description-text">{{timeLine.event.description}}</p>
                     <rs-time-line *ngIf="timeLine.timeline" [timeline]="timeLine.timeline"></rs-time-line>
                 </div>
             </mat-tab>

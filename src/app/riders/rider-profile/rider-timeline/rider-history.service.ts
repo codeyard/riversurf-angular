@@ -2,7 +2,11 @@ import {Injectable} from '@angular/core';
 import {BehaviorSubject, Observable} from "rxjs";
 import {EventTimeLine} from "./time-line/event-timeline.model";
 import {map} from "rxjs/operators";
-import {DefaultTimeLineItemsOngoing} from "./time-line/timeline-item.model";
+import {
+    DefaultTimeLineItemsLosing,
+    DefaultTimeLineItemsOngoing,
+    DefaultTimeLineItemsWinning
+} from "./time-line/timeline-item.model";
 import {exampleEvent} from "../../../core/models/surf-event.model";
 
 @Injectable({
@@ -68,8 +72,31 @@ export class RiderHistoryService {
                 riderId: rider,
                 timeline: [...DefaultTimeLineItemsOngoing]
             });
+            eventTimeLines.push({
+                id: Math.random().toString(),
+                event: {
+                    ...exampleEvent,
+                    startDateTime: new Date(2020, 1, 12,0,0,0,0),
+                    id: 'riversurf-jam-thun-2020',
+                    location: 'Thun'
+                },
+                ongoing: false,
+                riderId: rider,
+                timeline: [...DefaultTimeLineItemsLosing]
+            });
+            eventTimeLines.push({
+                id: Math.random().toString(),
+                event: {
+                    ...exampleEvent,
+                    startDateTime: new Date(2020, 9, 31,0,0,0,0),
+                    id: 'riversurf-jam-halloween-2020',
+                    location: 'Schwarzenburg'
+                },
+                ongoing: false,
+                riderId: rider,
+                timeline: [...DefaultTimeLineItemsWinning]
+            });
         }
-
         return eventTimeLines;
     }
 }

@@ -1,13 +1,20 @@
 import {Injectable} from '@angular/core';
-import {Subscription} from "rxjs";
+import {combineLatest, Subscription} from "rxjs";
 import {webSocket, WebSocketSubject} from "rxjs/webSocket";
 import {
+    AuthSessionResponse,
     WebSocketDataPayload,
     WebSocketNotificationPayload,
     WebSocketSubscriptionPayload
-} from "../models/web-socket-data.model";
+} from "../models/websocket/web-socket-data.model";
 import {UserNotificationService} from "./user-notification.service";
 import {AppConfigService} from "./app-config.service";
+import {UserService} from "./user.service";
+import {NetworkStatusService} from "./network-status.service";
+import {map} from "rxjs/operators";
+import {HttpClient} from "@angular/common/http";
+import {OutgoingMessageModel} from "../models/websocket/outgoing-message.model";
+import {OutgoingSubscriptionPayload} from "../models/websocket/outgoing-subscription-payload.model";
 
 /*
     Example data for the websocket when sending a notification:
@@ -29,57 +36,56 @@ import {AppConfigService} from "./app-config.service";
 })
 export class WebSocketService {
 
+    PROTOCOL = 'https://'
+    PATH_ENDPOINT = '/api/ws/sessions';
+
     private webSocketData?: WebSocketSubject<any>;
-    private webSocketSubscription?: Subscription;
 
     private MAP_TO_REMOTE_WEBSOCKET = true; // set to false, if you want to use your own websocket (on localhost)
     private WEBSOCKET_PORT_ON_LOCALHOST = 8080; // set the port number of your websocket when hosting on localhost
 
-    constructor(private config: AppConfigService, private notificationService: UserNotificationService) {
-        // ToDo: Add default credentials to get a session token
-        this.connect();
+    constructor(private config: AppConfigService,
+                private notificationService: UserNotificationService,
+                private userService: UserService,
+                private networkStatusService: NetworkStatusService,
+                private httpClient: HttpClient,
+                private appConfigService: AppConfigService
+    ) {
+        // ToDo: check if User is logged in, check if we are online
+        const networkState$ = networkStatusService.getNetworkStatus();
+        const authState$ = userService.getUser().pipe(map(user => user.isAuthenticated));
+
+        combineLatest([networkState$, authState$])
+            .subscribe(([networkState, authState]) => {
+                if (networkState) {
+                    if (authState) {
+                        this.connectAuth();
+                    } else {
+                        this.connect();
+                    }
+                }
+            });
+
+        this.userService.getUser()
+            .pipe(map(user => user.favouriteRiders))
+            .subscribe(favouriteRiders => {
+                const outgoingSubscriptionPayload: OutgoingSubscriptionPayload = {
+                    riderIds: favouriteRiders
+                }
+                const outgoingMessage: OutgoingMessageModel = {
+                    messageType: "subscription",
+                    payload: outgoingSubscriptionPayload
+                }
+                this.webSocketData?.next(outgoingMessage);
+            });
     }
 
-    // ToDo: Add user-credentials to get a session token from the server
-    connect() {
-        this.webSocketSubscription?.unsubscribe();
-        this.webSocketData?.unsubscribe();
-
-        // ToDo: connect to the websocket server to gather a session token
-        const sessionToken = '123';
-
-        const protocol = window.location.protocol === "https:" ? "wss://" : "ws://";
-        let host = '';
-
-        if(this.MAP_TO_REMOTE_WEBSOCKET){
-            host = this.config.getHostName();
-        } else {
-            if (host.startsWith('localhost')) {
-                host = window.location.hostname + ':' + this.WEBSOCKET_PORT_ON_LOCALHOST.toString();
-            } else {
-                host = window.location.host;
-            }
-        }
-
-        const webSocketUrl = protocol + host + '/name?sessionToken=' + sessionToken;
-
-        this.webSocketData = webSocket(webSocketUrl);
-        this.webSocketSubscription = this.webSocketData.subscribe(
-            msg => this.receiveMessage(msg),
-            err => console.log(`WebSocket Error`, err),
-            () => console.log(`WebSocket Complete`)
-        );
-    }
 
     private receiveMessage(message: any) {
         if (message.id && message.type && message.payload) {
             switch (message.type) {
                 case "data":
                     this.parseDataMessage(message);
-                    break;
-
-                case "subscription":
-                    this.parseSubscriptionMessage(message);
                     break;
 
                 case "notification":
@@ -129,20 +135,56 @@ export class WebSocketService {
         const notificationMessage: WebSocketNotificationPayload = {
             id: message.id,
             payload: {
-                notification: {
-                    timestamp: new Date(),
-                    content: '',
-                    read: false
-                }
+                surfEventName: '',
+                timestamp: new Date(),
+                content: '',
+                read: false
             }
         };
 
-        if (message.payload.notification.timestamp && message.payload.notification.content) {
-            notificationMessage.payload.notification.timestamp = message.payload.notification.timestamp;
-            notificationMessage.payload.notification.content = message.payload.notification.content;
-            notificationMessage.payload.notification.link = message.payload.notification.link;
+        if (message.payload.timestamp && message.payload.content) {
+            notificationMessage.payload.surfEventName = message.payload.surfeventName;
+            notificationMessage.payload.timestamp = message.payload.timestamp;
+            notificationMessage.payload.content = message.payload.content;
+            notificationMessage.payload.link = message.payload.link;
 
-            this.notificationService.showNotification(notificationMessage.payload.notification);
+            this.notificationService.showNotification(notificationMessage.payload);
         }
+    }
+
+    private connectAuth() {
+        const requestUrl = this.PROTOCOL + this.appConfigService.getHostName() + this.PATH_ENDPOINT;
+        const body = {}
+        return this.httpClient.post<AuthSessionResponse>(requestUrl, body)
+            .subscribe(response => this.connect(response.sessionToken));
+    }
+
+    private connect(sessionToken?: string): void {
+        this.webSocketData?.complete();
+
+        sessionToken = sessionToken ?? "";
+
+        let protocol = window.location.protocol === "https:" ? "wss://" : "ws://";
+        let host = '';
+
+        if (this.MAP_TO_REMOTE_WEBSOCKET) {
+            host = this.config.getHostName();
+            protocol = "wss://";
+        } else {
+            if (host.startsWith('localhost')) {
+                host = window.location.hostname + ':' + this.WEBSOCKET_PORT_ON_LOCALHOST.toString();
+            } else {
+                host = window.location.host;
+            }
+        }
+
+        const webSocketUrl = protocol + host + '/ws?sessionToken=' + sessionToken;
+
+        this.webSocketData = webSocket(webSocketUrl);
+        this.webSocketData.subscribe(
+            msg => this.receiveMessage(msg),
+            err => console.log(`WebSocket Error`, err),
+            () => console.log(`WebSocket Complete`)
+        );
     }
 }

@@ -1,6 +1,6 @@
 import {AfterViewInit, Component, ElementRef, OnDestroy, OnInit, TemplateRef, ViewChild} from '@angular/core';
 import {MatDialog} from "@angular/material/dialog";
-import {UserNotification} from "../../../models/user-notification.model";
+import {IncomingNotification} from "../../../models/websocket/incoming-notification.model";
 import {MatPaginator} from "@angular/material/paginator";
 import {MatTableDataSource} from "@angular/material/table";
 import {UserNotificationService} from "../../../services/user-notification.service";
@@ -18,7 +18,7 @@ export class NotificationComponent implements OnInit, OnDestroy, AfterViewInit {
     @ViewChild(MatPaginator) paginator!: MatPaginator;
 
     notificationSubscription?: Subscription;
-    userNotifications = new MatTableDataSource<UserNotification>([]);
+    userNotifications = new MatTableDataSource<IncomingNotification>([]);
 
     get newNotifications(): number {
         return this.userNotifications.data.filter(m => !m.read).length;
@@ -52,7 +52,7 @@ export class NotificationComponent implements OnInit, OnDestroy, AfterViewInit {
         dialog.afterOpened().subscribe(() => this.userNotifications.paginator = this.paginator);
     }
 
-    markAsRead(element: UserNotification) {
+    markAsRead(element: IncomingNotification) {
         element.read = true;
     }
 

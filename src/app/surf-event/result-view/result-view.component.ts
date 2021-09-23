@@ -91,9 +91,11 @@ export class ResultViewComponent implements OnInit, AfterViewInit, OnDestroy {
                 this.smallScreen = result.matches;
             });
 
-        this.userService.user.subscribe(
+        this.userService.getUser()
+            .pipe(takeUntil(this.destroy$))
+            .subscribe(
             user => {
-                (user?.userRole === 'organizer' || user?.userRole === 'judge')
+                (user.userRole === 'organizer' || user.userRole === 'judge')
                     ? this.isAdministrator = true
                     : this.isAdministrator = false;
             }

@@ -6,13 +6,13 @@ import {
 } from "./timeline-item.model";
 import {SurfEvent, exampleEvent} from "../../../../core/models/surf-event.model";
 
-export interface EventTimeline {
+export interface EventTimeLine {
     event : SurfEvent;
     riderId : string;
     timeline : TimeLineItem[];
 }
 
-export function GenerateEventTimeLine(year : number, riderId : string, ongoing : boolean) : EventTimeline {
+export function GenerateEventTimeLine(year : number, riderId : string, ongoing : boolean) : EventTimeLine {
 
     let timeline : TimeLineItem[] = [];
 
@@ -38,8 +38,8 @@ export function GenerateEventTimeLine(year : number, riderId : string, ongoing :
     }
 }
 
-export function GenerateHistoryEventTimeLine(startingYear : number, years : number, riderId : string) : EventTimeline[] {
-    let timeline : EventTimeline[] = [];
+export function GenerateHistoryEventTimeLine(startingYear : number, years : number, riderId : string) : EventTimeLine[] {
+    let timeline : EventTimeLine[] = [];
 
     for(let history = startingYear; history > (startingYear - years); history--){
         timeline.push(GenerateEventTimeLine(history, riderId, false));

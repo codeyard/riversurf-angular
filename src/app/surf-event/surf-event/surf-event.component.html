@@ -46,16 +46,23 @@
         </div>
         <div class="event__divisions__riders">
             <h2>Riders</h2>
-            <!--            <div *ngFor="let division of surfEvent.competitions">-->
-            <!--                <rs-rider-card *ngFor="let rider of division.riders | slice:0:1" [rider]="rider"></rs-rider-card>-->
-            <!--            </div>-->
-            <!--            <div *ngFor="let division of surfEvent.competitions" class="event__divisions__riders">-->
-            <!--                <rs-carousel [index]="0" [auto]="false">-->
-            <!--                    <ng-container *ngFor="let rider of division.riders">-->
-            <!--                        <rs-rider-card [rider]="rider" *rs-carousel-item></rs-rider-card>-->
-            <!--                    </ng-container>-->
-            <!--                </rs-carousel>-->
-            <!--            </div>-->
+            <!--<div *ngFor="let division of surfEvent.divisions">
+                <rs-rider-card *ngFor="let rider of division.riders | slice:0:1" [rider]="rider"></rs-rider-card>
+            </div>
+            <div *ngFor="let division of surfEvent.competitions" class="event__divisions__riders">
+                <rs-carousel [index]="0" [auto]="false">
+                    <ng-container *ngFor="let rider of division.riders">
+                        <rs-rider-card [rider]="rider" *rs-carousel-item></rs-rider-card>
+                    </ng-container>
+                </rs-carousel>
+            </div>-->
+            <ng-container *ngIf="enrolledRiders$ | async as enrolledRiders">
+                <div *ngFor="let rider of enrolledRiders"
+                     title="{{rider.firstName}} {{rider.lastName}}"
+                     class="event__divisions__riders__image"
+                     [style.background-image]="'url(' + rider.profilePicture + ')'">&nbsp;
+                </div>
+            </ng-container>
         </div>
     </div>
 </div>

@@ -3,10 +3,12 @@ import {BehaviorSubject, Observable} from "rxjs";
 import {SurfEvent} from "../models/surf-event.model";
 import {HttpClient} from "@angular/common/http";
 import {AppConfigService} from "./app-config.service";
-import {filter, map, switchMap, tap} from "rxjs/operators";
+import {filter, map, switchMap} from "rxjs/operators";
 import {Division} from "../models/division.type";
 import {CompetitionService} from "./competition.service";
 import {Competition} from "../models/competition.model";
+import {RidersService} from "./riders.service";
+import {Rider} from "../models/rider.model";
 
 @Injectable({
     providedIn: 'root'
@@ -19,7 +21,11 @@ export class SurfEventService {
     private surfEventsData = new BehaviorSubject<SurfEvent[]>([]);
     private surfEvents$ = this.surfEventsData.asObservable();
 
-    constructor(private httpClient: HttpClient, private appConfigService: AppConfigService, private competitionService: CompetitionService) {
+    constructor(
+        private httpClient: HttpClient,
+        private appConfigService: AppConfigService,
+        private competitionService: CompetitionService,
+        private ridersService: RidersService) {
     }
 
     getSurfEvent(id: string): Observable<SurfEvent> {
@@ -82,6 +88,22 @@ export class SurfEventService {
             this.fetchAllSurfEvents();
         }
         return this.surfEvents$;
+    }
+
+    getEnrolledRiders(id: string): Observable<Rider[]> {
+        return this.getSurfEvent(id).pipe(
+            filter(surfEvent => surfEvent !== undefined),
+            switchMap((surfEvent: SurfEvent) => this.competitionService.getCompetitionsByIds(surfEvent.competitions)),
+            filter(competitions => competitions !== undefined && competitions.length > 0),
+            switchMap((competitions: Competition[]) => {
+                    const riderIds: string[] = [];
+                    competitions.forEach(competition => {
+                        riderIds.push(...competition.riders)
+                    });
+                    return this.ridersService.getRidersByIds(riderIds)
+                }
+            )
+        )
     }
 
     getCompetitionByDivision(id: string, division: Division) {

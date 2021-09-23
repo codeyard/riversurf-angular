@@ -77,6 +77,7 @@
 
         &__selection {
             padding-bottom: 0.5rem;
+            @include bottom-space;
 
             mat-chip {
                 cursor: pointer;
@@ -87,9 +88,10 @@
         &__riders {
             padding-bottom: 0.5rem;
 
-            & rs-carousel {
-                width: 100%;
-                max-width: 100%;
+            &__image {
+                background-position: center;
+                background-size: contain;
+                transition: .5s all;
             }
         }
     }

@@ -1,8 +1,6 @@
 import {NgModule} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {RiderCardComponent} from "./rider-card/rider-card.component";
-import {TimeLineComponent} from "../riders/rider-profile/rider-timeline/time-line/time-line.component";
-import {TimeLineLineComponent} from "../riders/rider-profile/rider-timeline/time-line/time-line-line/time-line-line.component";
 import {MatCardModule} from "@angular/material/card";
 import {MatIconModule} from "@angular/material/icon";
 import {RouterModule} from "@angular/router";
@@ -22,8 +20,6 @@ import {MatButtonModule} from "@angular/material/button";
         CarouselItemDirective,
         ErrorComponent,
         RiderCardComponent,
-        TimeLineComponent,
-        TimeLineLineComponent,
         SlugifyPipe,
         DivisionColorPipe,
         RiderColorPipe,
@@ -42,7 +38,6 @@ import {MatButtonModule} from "@angular/material/button";
         CarouselItemDirective,
         ErrorComponent,
         RiderCardComponent,
-        TimeLineComponent,
         SlugifyPipe,
         DivisionColorPipe,
         RiderColorPipe,

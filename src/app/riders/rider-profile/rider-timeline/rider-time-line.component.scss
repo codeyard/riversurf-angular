@@ -2,7 +2,7 @@
 @import "variables";
 
 
-.container {
+.timeline-container {
     width: 100%;
     height: 100%;
     display: flex;
@@ -33,8 +33,7 @@
 
         &__description {
             margin-top: 1rem;
-            margin-left: 1rem;
-            padding: 0 3rem;
+            flex: 100%;
 
             &-title {
                 display: inline-block;
@@ -65,16 +64,16 @@
         }
     }
 
+    .mat-expansion-panel-header{
+        height: auto;
+        padding-left: 0;
+    }
+
     .mat-expansion-panel{
-        padding: 0;
         box-shadow: none;
     }
-
-    .mat-expansion-panel-header{
-        padding: 0;
-    }
-
-    .mat-expansion-panel-body{
-        padding: 0;
-    }
 }
+
+
+
+

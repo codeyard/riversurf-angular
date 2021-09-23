@@ -1,53 +1,58 @@
-<div class="container">
-    <div *ngIf="loading" class="container__loading">
+<div class="timeline-container">
+    <div *ngIf="loading" class="timeline-container__loading">
         <mat-spinner></mat-spinner>
     </div>
     <div *ngIf="!loading && !currentTimeLines && !historyTimeLineCollection" class="container__no-data">
         <mat-icon>feedback</mat-icon>
-        <div class="container__no-data__text">
+        <div class="timeline-container__no-data__text">
             <p>No event data of the selected rider found!</p>
             <p>Come back later when the rider has participated on a surf event.</p>
         </div>
     </div>
     <mat-tab-group *ngIf="!loading && (currentTimeLines || historyTimeLineCollection)">
         <ng-container *ngIf="currentTimeLines">
-            <mat-tab *ngFor="let timeLine of currentTimeLines" label="Ongoing" class="container__timeline">
-                <div class="container__timeline__description" >
-                    <h1 class="container__timeline__description-title">{{timeLine.event.name}}</h1>
-                    <h2 class="container__timeline__description-location">{{timeLine.event.location}}</h2>
+            <!-- One or more currently ongoing timelines of the rider -->
+            <mat-tab label="Ongoing" class="timeline-container__timeline">
+                <div class="timeline-container__timeline__description" *ngFor="let timeLine of currentTimeLines">
+                    <h1 class="timeline-container__timeline__description-title">{{timeLine.event.name}}</h1>
+                    <h2 class="timeline-container__timeline__description-location">{{timeLine.event.location}}</h2>
                     <hr>
-                    <p class="container__timeline__description-text">{{timeLine.event.description}}</p>
-                    <rs-time-line *ngIf="timeLine.timeline" [timeline]="timeLine.timeline" [ongoing]="true"></rs-time-line>
+                    <p class="timeline-container__timeline__description-text">{{timeLine.event.description}}</p>
+                        <rs-time-line *ngIf="timeLine.timeline" [timeline]="timeLine.timeline"
+                                      [ongoing]="true"></rs-time-line>
                 </div>
             </mat-tab>
         </ng-container>
-        <!-- SCROLLBAR APPEARS!!!!-->
         <ng-container *ngIf="historyTimeLineCollection">
-            <mat-tab *ngFor="let yearBasedTimeLines of historyTimeLineCollection" label="{{yearBasedTimeLines.year}}" class="container__timeline">
+            <!-- Historical timelines of the rider -->
+            <mat-tab *ngFor="let yearBasedTimeLines of historyTimeLineCollection" label="{{yearBasedTimeLines.year}}"
+                     class="timeline-container__timeline">
                 <ng-container *ngIf="yearBasedTimeLines.timeLines.length === 1">
-                    <div class="container__timeline__description"
+                    <!-- Only one timeline in this year = don't use accordion, show full history -->
+                    <div class="timeline-container__timeline__description"
                          *ngFor="let timeLine of yearBasedTimeLines.timeLines">
-                        <h1 class="container__timeline__description-title">{{timeLine.event.name}}</h1>
-                        <h2 class="container__timeline__description-location">{{timeLine.event.location}}</h2>
+                        <h1 class="timeline-container__timeline__description-title">{{timeLine.event.name}}</h1>
+                        <h2 class="timeline-container__timeline__description-location">{{timeLine.event.location}}</h2>
                         <hr>
-                        <p class="container__timeline__description-text">{{timeLine.event.description}}</p>
-                        <rs-time-line *ngIf="timeLine.timeline" [timeline]="timeLine.timeline"></rs-time-line>
+                        <p class="timeline-container__timeline__description-text">{{timeLine.event.description}}</p>
+                            <rs-time-line *ngIf="timeLine.timeline" [timeline]="timeLine.timeline"></rs-time-line>
                     </div>
                 </ng-container>
                 <ng-container *ngIf="yearBasedTimeLines.timeLines.length > 1">
-                    <mat-accordion *ngFor="let timeLine of yearBasedTimeLines.timeLines" class="container__timeline__description">
-                        <mat-expansion-panel>
+                    <!-- More than one timeline in this year = use accordion for expandable details -->
+                    <mat-accordion multi>
+                        <mat-expansion-panel *ngFor="let timeLine of yearBasedTimeLines.timeLines">
                             <mat-expansion-panel-header>
                                 <mat-panel-title>
-                                    <div class="container__timeline__description">
-                                        <h1 class="container__timeline__description-title">{{timeLine.event.name}}</h1>
-                                        <h2 class="container__timeline__description-location">{{timeLine.event.location}}</h2>
+                                    <div class="timeline-container__timeline__description">
+                                        <h1 class="timeline-container__timeline__description-title">{{timeLine.event.name}}</h1>
+                                        <h2 class="timeline-container__timeline__description-location">{{timeLine.event.location}}</h2>
+                                        <hr>
+                                        <p class="timeline-container__timeline__description-text">{{timeLine.event.description}}</p>
                                     </div>
                                 </mat-panel-title>
                             </mat-expansion-panel-header>
-                            <div class="container__timeline__description">
-                                <hr>
-                                <p class="container__timeline__description-text">{{timeLine.event.description}}</p>
+                            <div class="timeline-container__timeline__description">
                                 <rs-time-line *ngIf="timeLine.timeline"
                                               [timeline]="timeLine.timeline"></rs-time-line>
                             </div>

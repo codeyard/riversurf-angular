@@ -21,6 +21,7 @@ import {MatInputModule} from "@angular/material/input";
 import {MatButtonModule} from "@angular/material/button";
 import {MatProgressSpinnerModule} from "@angular/material/progress-spinner";
 import {MatExpansionModule} from "@angular/material/expansion";
+import {TimeLineComponent} from "./rider-profile/rider-timeline/time-line/time-line.component";
 
 
 @NgModule({
@@ -29,7 +30,8 @@ import {MatExpansionModule} from "@angular/material/expansion";
         RiderProfileComponent,
         RiderOverviewComponent,
         RiderTimeLineComponent,
-        AgePipe
+        AgePipe,
+        TimeLineComponent
     ],
     imports: [
         RidersRoutingModule,

@@ -1,19 +1,17 @@
 import {NgModule} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {RiderCardComponent} from "./rider-card/rider-card.component";
-import {TimeLineComponent} from "../riders/rider-profile/rider-timeline/time-line/time-line.component";
-import {TimeLineLineComponent} from "../riders/rider-profile/rider-timeline/time-line/time-line-line/time-line-line.component";
 import {MatCardModule} from "@angular/material/card";
 import {MatIconModule} from "@angular/material/icon";
 import {RouterModule} from "@angular/router";
 import {CarouselComponent, CarouselItemDirective} from "./carousel/carousel.component";
 import {ErrorComponent} from "./error/error.component";
 import {SlugifyPipe} from "./pipes/slugify.pipe";
-import {DivisionColorPipe} from './pipes/division-color.pipe';
 import {HammerModule} from "@angular/platform-browser";
 import {RiderColorPipe} from "./pipes/rider-color.pipe";
 import {FavoriteRiderComponent} from './favorite-rider/favorite-rider.component';
 import {MatButtonModule} from "@angular/material/button";
+import {DivisionColorPipe} from './pipes/division-color.pipe';
 
 
 @NgModule({
@@ -22,12 +20,10 @@ import {MatButtonModule} from "@angular/material/button";
         CarouselItemDirective,
         ErrorComponent,
         RiderCardComponent,
-        TimeLineComponent,
-        TimeLineLineComponent,
         SlugifyPipe,
-        DivisionColorPipe,
         RiderColorPipe,
-        FavoriteRiderComponent
+        FavoriteRiderComponent,
+        DivisionColorPipe
     ],
     imports: [
         CommonModule,
@@ -42,11 +38,10 @@ import {MatButtonModule} from "@angular/material/button";
         CarouselItemDirective,
         ErrorComponent,
         RiderCardComponent,
-        TimeLineComponent,
         SlugifyPipe,
-        DivisionColorPipe,
         RiderColorPipe,
-        FavoriteRiderComponent
+        FavoriteRiderComponent,
+        DivisionColorPipe
     ]
 })
 export class SharedModule {

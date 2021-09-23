@@ -8,6 +8,8 @@ import {AppConfigService} from "./app-config.service";
 import {catchError, map, tap} from "rxjs/operators";
 import {Role} from "../models/role.type";
 import {Router} from "@angular/router";
+import { JwtHelperService } from '@auth0/angular-jwt';
+
 
 @Injectable({
     providedIn: 'root'
@@ -26,6 +28,7 @@ export class UserService {
         private httpClient: HttpClient,
         private appConfigService: AppConfigService,
         private snackBarService: SnackbarService,
+
         private router: Router) {
     }
 
@@ -51,13 +54,13 @@ export class UserService {
         if (indexOfRider > -1) {
             this.favoriteRiders.getValue().favouriteRiders.splice(indexOfRider, 1)
             this.favoriteRiders.next(this.favoriteRiders.getValue());
-            this.snackBarService.send(`You'll no longer get updated about "${rider.nickName}"!`, "success");
+            this.snackBarService.send(`You'll no longer get updated about "${rider.firstName} ${rider.lastName}"!`, "success");
         } else {
             this.favoriteRiders.next({
                 ...this.favoriteRiders.getValue(),
                 favouriteRiders: [...this.favoriteRiders.getValue().favouriteRiders, rider.id]
             });
-            this.snackBarService.send(`You'll get updated about "${rider.nickName}"!`, "success");
+            this.snackBarService.send(`You'll get updated about "${rider.firstName} ${rider.lastName}"!`, "success");
         }
     }
 
@@ -66,9 +69,7 @@ export class UserService {
     }
 
     private handleAuthentication(email: string, userName: string, userId: string, role: Role, token: string) {
-        // TODO CALCULATE EXPIRED IN FOR AUTOLOGOUT
-        //const experationDate = new Date(new Date().getTime() + +expiresIn * 1000);
-        // this.autoLogout(expiresIn*1000);
+        this.startAutologout(token);
         const user = new AuthUser(userId, userName, email, role, token)
         this.user.next(user);
         localStorage.setItem("userData", JSON.stringify(user));
@@ -104,13 +105,20 @@ export class UserService {
 
         if (user.token) {
             this.user.next(user);
-
-            // TODO SET UP AUTO LOGOUT
-            //const expirationDuration = new Date(userData._tokenExpirationDate).getTime() - new Date().getTime();
-            // this.autoLogout(expirationDuration);
+            this.startAutologout(userData.tokenId)
         }
 
 
+    }
+
+    startAutologout(token: string) {
+        const helper = new JwtHelperService();
+        const expirationDate = helper.getTokenExpirationDate(token);
+        let expirationTime = 1000;
+        if (expirationDate != null) {
+            expirationTime = expirationDate.getTime() - new Date().getTime();
+        }
+        this.autoLogout(expirationTime);
     }
 
     handleError(errorResponse: HttpErrorResponse) {

@@ -37,7 +37,7 @@ export class AuthUser {
     ) {}
 
     get token() {
-        // TODO ADD LOGIK FOR VALIDATION OF TODO
+        // TODO ADD LOGIC FOR VALIDATION OF TOKEN
         return this.tokenId;
     }
 

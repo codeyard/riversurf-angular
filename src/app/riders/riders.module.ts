@@ -3,7 +3,7 @@ import {CommonModule} from '@angular/common';
 import {RidersComponent} from "./riders.component";
 import {RiderProfileComponent} from "./rider-profile/rider-profile.component";
 import {RiderOverviewComponent} from "./rider-profile/rider-overview/rider-overview.component";
-import {RiderTimelineComponent} from "./rider-profile/rider-timeline/rider-timeline.component";
+import {RiderTimeLineComponent} from "./rider-profile/rider-timeline/rider-time-line.component";
 import {MatButtonToggleModule} from "@angular/material/button-toggle";
 import {MatIconModule} from "@angular/material/icon";
 import {MatFormFieldModule} from "@angular/material/form-field";
@@ -27,7 +27,7 @@ import {MatProgressSpinnerModule} from "@angular/material/progress-spinner";
         RidersComponent,
         RiderProfileComponent,
         RiderOverviewComponent,
-        RiderTimelineComponent,
+        RiderTimeLineComponent,
         AgePipe
     ],
     imports: [

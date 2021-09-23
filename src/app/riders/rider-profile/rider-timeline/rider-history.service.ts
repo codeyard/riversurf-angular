@@ -1,5 +1,4 @@
 import {Injectable} from '@angular/core';
-import {RidersModule} from "../../riders.module";
 import {BehaviorSubject, Observable} from "rxjs";
 import {EventTimeLine} from "./time-line/event-timeline.model";
 import {map} from "rxjs/operators";
@@ -7,22 +6,20 @@ import {DefaultTimeLineItemsOngoing} from "./time-line/timeline-item.model";
 import {exampleEvent} from "../../../core/models/surf-event.model";
 
 @Injectable({
-    providedIn: RidersModule
+    providedIn: 'root'
 })
 export class RiderHistoryService {
-
-    // ToDo: Load initial data from rest and subscribe to websocket for updates (currently running events)
 
     private eventTimeLines = new BehaviorSubject<EventTimeLine[]>([]);
 
     constructor() {
-        // ToDo: load initial data for currentRiderEvents
+        // ToDo: load initial data for currentRiderEvents and subscribe to websocket for updates
         this.updateTimeLines(this.generateCurrentEventTimeLines());
     }
 
     getRiderTimeLines(id: string): Observable<EventTimeLine[]> {
         if (this.eventTimeLines.value.every(eventTimeLine => eventTimeLine.riderId !== id)) {
-            // ToDo: get eventtimeline of rider and call updateTimeLines() with the returned array
+            // ToDo: get eventtimelines of rider and call updateTimeLines() with the returned array
         }
 
         return this.eventTimeLines.asObservable().pipe(

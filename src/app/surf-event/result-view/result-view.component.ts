@@ -269,7 +269,7 @@ export class ResultViewComponent implements OnInit, AfterViewInit, OnDestroy {
         return label;
     }
 
-    editHeat() {
+    editCompetition() {
         this.router.navigate(["edit"], {relativeTo: this.route});
     }
 }

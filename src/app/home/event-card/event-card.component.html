@@ -15,14 +15,10 @@
             {{surfEvent.description}}
         </p>
     </mat-card-content>
-    <mat-chip-list aria-label="Divisions">
-        <mat-chip
-            *ngFor="let division of surfEvent.divisions"
-            [color]="division | divisionColor"
-            routerLink="/event/{{surfEvent.name | slugify}}-{{surfEvent.id}}/competition/{{ division }}"
-            selected>
-            {{division}}
-        </mat-chip>
-
-    </mat-chip-list>
+    <a mat-raised-button
+        *ngFor="let division of surfEvent.divisions"
+        class="division-{{division}}"
+        routerLink="/event/{{surfEvent.name | slugify}}-{{surfEvent.id}}/competition/{{ division }}">
+        {{division | titlecase}}
+    </a>
 </mat-card>

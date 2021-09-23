@@ -19,6 +19,7 @@ import {GoogleMapsModule} from "@angular/google-maps";
 import {MatTabsModule} from "@angular/material/tabs";
 import {SlugifyPipe} from "./shared/pipes/slugify.pipe";
 import {AuthInterceptorService} from "./core/services/auth/auth-interceptor.service";
+import {MatButtonModule} from "@angular/material/button";
 
 @NgModule({
     declarations: [
@@ -33,8 +34,8 @@ import {AuthInterceptorService} from "./core/services/auth/auth-interceptor.serv
         CoreModule,
         HttpClientModule,
         SharedModule,
+        MatButtonModule,
         MatCardModule,
-        MatChipsModule,
         UserModule,
         MatProgressSpinnerModule,
         HammerModule,

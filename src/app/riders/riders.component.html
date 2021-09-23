@@ -80,10 +80,10 @@
                         <th mat-header-cell *matHeaderCellDef>&nbsp;</th>
                         <td mat-cell *matCellDef="let rider">
                             <rs-favorite-rider [rider]="rider"></rs-favorite-rider>
-                            <button mat-icon-button title="View rider profile" aria-label="View rider profile"
+                            <a mat-icon-button title="View rider profile" aria-label="View rider profile"
                                     routerLink="/riders/{{ rider.nickName + '-' + rider.id | slugify }}">
                                 <mat-icon>visibility</mat-icon>
-                            </button>
+                            </a>
                         </td>
                     </ng-container>
 

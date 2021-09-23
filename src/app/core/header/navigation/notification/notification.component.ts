@@ -47,7 +47,7 @@ export class NotificationComponent implements OnInit, OnDestroy, AfterViewInit {
         const dialog = this.dialog.open(this.dialogTemplateRef, {
             closeOnNavigation: true,
             autoFocus: false,
-            width: '100vw'
+            panelClass: 'notification-dialog'
         });
         dialog.afterOpened().subscribe(() => this.userNotifications.paginator = this.paginator);
     }

@@ -34,34 +34,24 @@
     <div class="event__divisions">
         <div class="event__divisions__selection">
             <h2>Competitions</h2>
-            <mat-chip-list aria-label="Divisions">
-                <mat-chip
-                    *ngFor="let division of surfEvent.divisions"
-                    [color]="division | divisionColor"
-                    routerLink="/event/{{surfEvent.name | slugify}}-{{surfEvent.id}}/competition/{{ division }}"
-                    selected>
-                    {{division}}
-                </mat-chip>
-            </mat-chip-list>
+            <a mat-raised-button
+                *ngFor="let division of surfEvent.divisions"
+                class="division-{{division}}"
+                routerLink="/event/{{surfEvent.name | slugify}}-{{surfEvent.id}}/competition/{{ division }}">
+                {{division | titlecase}}
+            </a>
         </div>
         <div class="event__divisions__riders">
             <h2>Riders</h2>
-            <!--<div *ngFor="let division of surfEvent.divisions">
-                <rs-rider-card *ngFor="let rider of division.riders | slice:0:1" [rider]="rider"></rs-rider-card>
-            </div>
-            <div *ngFor="let division of surfEvent.competitions" class="event__divisions__riders">
-                <rs-carousel [index]="0" [auto]="false">
-                    <ng-container *ngFor="let rider of division.riders">
-                        <rs-rider-card [rider]="rider" *rs-carousel-item></rs-rider-card>
-                    </ng-container>
-                </rs-carousel>
-            </div>-->
             <ng-container *ngIf="enrolledRiders$ | async as enrolledRiders">
-                <div *ngFor="let rider of enrolledRiders"
-                     title="{{rider.firstName}} {{rider.lastName}}"
-                     class="event__divisions__riders__image"
-                     [style.background-image]="'url(' + rider.profilePicture + ')'">&nbsp;
-                </div>
+                <a *ngFor="let rider of enrolledRiders"
+                    routerLink="/riders/{{ rider.nickName + '-' + rider.id | slugify }}">
+                    <div title="{{rider.firstName}} {{rider.lastName}} ({{rider.division | titlecase}})"
+                         class="event__divisions__riders__avatar"
+                         [style.background-image]="'url(' + rider.profilePicture + ')'"
+                         [ngStyle]="{'border-color': rider.division | divisionColor}">
+                    </div>
+                </a>
             </ng-container>
         </div>
     </div>

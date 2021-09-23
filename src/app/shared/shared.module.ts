@@ -9,11 +9,11 @@ import {RouterModule} from "@angular/router";
 import {CarouselComponent, CarouselItemDirective} from "./carousel/carousel.component";
 import {ErrorComponent} from "./error/error.component";
 import {SlugifyPipe} from "./pipes/slugify.pipe";
-import {DivisionColorPipe} from './pipes/division-color.pipe';
 import {HammerModule} from "@angular/platform-browser";
 import {RiderColorPipe} from "./pipes/rider-color.pipe";
 import {FavoriteRiderComponent} from './favorite-rider/favorite-rider.component';
 import {MatButtonModule} from "@angular/material/button";
+import {DivisionColorPipe} from './pipes/division-color.pipe';
 
 
 @NgModule({
@@ -25,9 +25,9 @@ import {MatButtonModule} from "@angular/material/button";
         TimeLineComponent,
         TimeLineLineComponent,
         SlugifyPipe,
-        DivisionColorPipe,
         RiderColorPipe,
-        FavoriteRiderComponent
+        FavoriteRiderComponent,
+        DivisionColorPipe
     ],
     imports: [
         CommonModule,
@@ -44,9 +44,9 @@ import {MatButtonModule} from "@angular/material/button";
         RiderCardComponent,
         TimeLineComponent,
         SlugifyPipe,
-        DivisionColorPipe,
         RiderColorPipe,
-        FavoriteRiderComponent
+        FavoriteRiderComponent,
+        DivisionColorPipe
     ]
 })
 export class SharedModule {

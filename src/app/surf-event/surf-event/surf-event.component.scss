@@ -79,18 +79,24 @@
             padding-bottom: 0.5rem;
             @include bottom-space;
 
-            mat-chip {
-                cursor: pointer;
-                outline: none;
+            a {
+                margin-right: 1rem;
             }
         }
 
         &__riders {
             padding-bottom: 0.5rem;
 
-            &__image {
+            &__avatar {
                 background-position: center;
                 background-size: contain;
+                border: 3px solid;
+                border-radius: 50%;
+                cursor: pointer;
+                display: inline-block;
+                margin: 0.25rem;
+                height: 60px;
+                width: 60px;
                 transition: .5s all;
             }
         }

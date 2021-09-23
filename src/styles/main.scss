@@ -38,7 +38,6 @@ h2 {
 }
 
 snack-bar-container {
-
     &.success,
     &.warning,
     &.error {
@@ -80,7 +79,22 @@ snack-bar-container {
     }
 }
 
-.notification-dialog{
+.division-male {
+    background-color: $color-male;
+    color: $color-white;
+}
+
+.division-female {
+    background-color: $color-female;
+    color: $color-white;
+}
+.division-kid {
+    background-color: $color-kids;
+    color: $color-white;
+}
+
+
+.notification-dialog {
     max-width: 80vw;
     max-height: 80vh;
     width: 100%;

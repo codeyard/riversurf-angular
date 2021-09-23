@@ -1,20 +1,21 @@
 import {Pipe, PipeTransform} from '@angular/core';
-import {Division} from "../../core/models/division.type";
-import {ThemePalette} from "@angular/material/core";
 
 @Pipe({
-    name: 'divisionColor'
+  name: 'divisionColor'
 })
 export class DivisionColorPipe implements PipeTransform {
 
-    transform(value: Division): ThemePalette {
+    transform(value: string): string {
         switch (value) {
-            case "male":
-                return "primary";
-            case "female":
-                return "accent";
-            case "kid":
-                return "warn";
+            default:
+                return "#999";
+            case 'male':
+                return "#01bcd4";
+            case 'female':
+                return "#cf8cbe";
+            case 'kid':
+                return "#9cda53";
         }
     }
+
 }

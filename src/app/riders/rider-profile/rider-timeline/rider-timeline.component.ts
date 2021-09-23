@@ -3,7 +3,7 @@ import {
     EventTimeline,
     GenerateEventTimeLine,
     GenerateHistoryEventTimeLine
-} from "../../../core/models/event-timeline.model";
+} from "./time-line/event-timeline.model";
 
 @Component({
     selector: 'rs-rider-timeline',

@@ -4,7 +4,7 @@ import {
     DefaultTimeLineItemsWinning,
     TimeLineItem
 } from "./timeline-item.model";
-import {SurfEvent, exampleEvent} from "./surf-event.model";
+import {SurfEvent, exampleEvent} from "../../../../core/models/surf-event.model";
 
 export interface EventTimeline {
     event : SurfEvent;

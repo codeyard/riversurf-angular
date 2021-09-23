@@ -1,6 +1,6 @@
 @use "sass:math";
-@import "responsive";
-@import "variables";
+@import "src/styles/responsive";
+@import "src/styles/variables";
 
 $event-color: #3f51b5;
 $ongoing-color: #bb4444;

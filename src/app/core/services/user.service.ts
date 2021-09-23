@@ -54,13 +54,13 @@ export class UserService {
         if (indexOfRider > -1) {
             this.favoriteRiders.getValue().favouriteRiders.splice(indexOfRider, 1)
             this.favoriteRiders.next(this.favoriteRiders.getValue());
-            this.snackBarService.send(`You'll no longer get updated about "${rider.nickName}"!`, "success");
+            this.snackBarService.send(`You'll no longer get updated about "${rider.firstName} ${rider.lastName}"!`, "success");
         } else {
             this.favoriteRiders.next({
                 ...this.favoriteRiders.getValue(),
                 favouriteRiders: [...this.favoriteRiders.getValue().favouriteRiders, rider.id]
             });
-            this.snackBarService.send(`You'll get updated about "${rider.nickName}"!`, "success");
+            this.snackBarService.send(`You'll get updated about "${rider.firstName} ${rider.lastName}"!`, "success");
         }
     }
 

@@ -10,7 +10,7 @@ export interface Competition {
 
 export interface CompetitionConfig {
     maxRiders: number;
-    maxRidersInHeat: number; // ToDo: add also minimum
+    maxRidersInHeat: number;
     winnersInHeat: number;
 }
 

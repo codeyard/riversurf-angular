@@ -29,10 +29,13 @@
 
     &__timeline{
         flex: 100%;
+        margin: 3rem;
 
         &__description {
             margin-top: 1rem;
             margin-left: 1rem;
+            padding: 0 3rem;
+            width: 100%;
 
             &-title {
                 display: inline-block;
@@ -61,5 +64,18 @@
                 margin-bottom: 1.5rem;
             }
         }
+    }
+
+    .mat-expansion-panel{
+        padding: 0;
+        box-shadow: none;
+    }
+
+    .mat-expansion-panel-header{
+        padding: 0;
+    }
+
+    .mat-expansion-panel-body{
+        padding: 0;
     }
 }

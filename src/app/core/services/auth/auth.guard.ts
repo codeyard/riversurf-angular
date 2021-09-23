@@ -23,7 +23,7 @@ export class AuthGuard implements CanActivate {
                 const isAuth = !!user;
                 if (isAdministratorRoute && user) {
                     if (user.userRole === 'organizer' || user.userRole === 'judge') {
-                        this.snackBarService.send("Hold on a second, we just grab the data for you!", "success");
+                        this.snackBarService.send("Hold on a second while we grab the data for you!", "success");
                         return true;
                     } else {
                         this.snackBarService.send("You are logged in, but you don't have the right permission to do that!", "error");
@@ -32,7 +32,7 @@ export class AuthGuard implements CanActivate {
                     }
                 } else {
                     if (isAuth && user) {
-                        this.snackBarService.send("Hold on a second, we just grab the data for you!", "success");
+                        this.snackBarService.send("Hold on a second while we grab the data for you!", "success");
                         return true;
                     } else {
                         this.snackBarService.send("Fella, you need to be logged in to do this!", "error");

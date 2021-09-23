@@ -13,32 +13,34 @@ export class RiderHistoryService {
 
     // ToDo: Load initial data from rest and subscribe to websocket for updates (currently running events)
 
-    private currentRiderEvents = new BehaviorSubject<EventTimeLine[]>([]);
-
-    private historicalRiderEventsData: EventTimeLine[] = [];
-    private historicalRiderEvents = new BehaviorSubject<EventTimeLine[]>(this.historicalRiderEventsData);
+    private eventTimeLines = new BehaviorSubject<EventTimeLine[]>([]);
 
     constructor() {
         // ToDo: load initial data for currentRiderEvents
-        this.currentRiderEvents.next(this.generateCurrentEventTimeLines())
+        this.updateTimeLines(this.generateCurrentEventTimeLines());
     }
 
-    getCurrentRiderEvents(id: string): Observable<EventTimeLine[]> {
-        return this.currentRiderEvents.asObservable().pipe(
-            map(eventTimeLines => eventTimeLines.filter(eventTimeLine => eventTimeLine.riderId === id))
-        );
-    }
-
-    getHistoricalRiderEvents(id: string): Observable<EventTimeLine[]> {
-        if (this.historicalRiderEventsData.every(eventTimeLine => eventTimeLine.riderId !== id)) {
-            // asked riderid is not in already fetched data
-
-            // ToDo: load historical rider events of rider
+    getRiderTimeLines(id: string): Observable<EventTimeLine[]> {
+        if (this.eventTimeLines.value.every(eventTimeLine => eventTimeLine.riderId !== id)) {
+            // ToDo: get eventtimeline of rider and call updateTimeLines() with the returned array
         }
 
-        return this.historicalRiderEvents.asObservable().pipe(
+        return this.eventTimeLines.asObservable().pipe(
             map(eventTimeLines => eventTimeLines.filter(eventTimeLine => eventTimeLine.riderId === id))
         );
+    }
+
+    private updateTimeLines(updatedTimeLines: EventTimeLine[]) {
+        const currentEventTimeLines = this.eventTimeLines.value;
+        for (const updatedTimeLine of updatedTimeLines) {
+            const index = currentEventTimeLines.findIndex(item => item.id === updatedTimeLine.id);
+            if (index != -1) {
+                currentEventTimeLines[index] = updatedTimeLine;
+            } else {
+                currentEventTimeLines.push(updatedTimeLine);
+            }
+        }
+        this.eventTimeLines.next(currentEventTimeLines);
     }
 
     private generateCurrentEventTimeLines(): EventTimeLine[] {
@@ -63,7 +65,9 @@ export class RiderHistoryService {
 
         for (const rider of riders) {
             eventTimeLines.push({
+                id: Math.random().toString(),
                 event: {...exampleEvent},
+                ongoing: true,
                 riderId: rider,
                 timeline: [...DefaultTimeLineItemsOngoing]
             });

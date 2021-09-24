@@ -2,7 +2,7 @@
     <div *ngIf="loading" class="timeline-container__loading">
         <mat-spinner></mat-spinner>
     </div>
-    <div *ngIf="!loading && !currentTimeLines && !historyTimeLineCollection" class="container__no-data">
+    <div *ngIf="!loading && !currentTimeLines && !historyTimeLineCollection" class="timeline-container__no-data">
         <mat-icon>feedback</mat-icon>
         <div class="timeline-container__no-data__text">
             <p>No event data found for the selected rider!</p>
@@ -18,8 +18,8 @@
                     <h2 class="timeline-container__timeline__description-location">{{timeLine.event.location}}</h2>
                     <hr>
                     <p class="timeline-container__timeline__description-text">{{timeLine.event.description}}</p>
-                        <rs-time-line *ngIf="timeLine.timeline" [timeline]="timeLine.timeline"
-                                      [ongoing]="true"></rs-time-line>
+                    <rs-time-line *ngIf="timeLine.timeline" [timeline]="timeLine.timeline"
+                                  [ongoing]="true"></rs-time-line>
                 </div>
             </mat-tab>
         </ng-container>
@@ -35,7 +35,7 @@
                         <h2 class="timeline-container__timeline__description-location">{{timeLine.event.location}}</h2>
                         <hr>
                         <p class="timeline-container__timeline__description-text">{{timeLine.event.description}}</p>
-                            <rs-time-line *ngIf="timeLine.timeline" [timeline]="timeLine.timeline"></rs-time-line>
+                        <rs-time-line *ngIf="timeLine.timeline" [timeline]="timeLine.timeline"></rs-time-line>
                     </div>
                 </ng-container>
                 <ng-container *ngIf="yearBasedTimeLines.timeLines.length > 1">

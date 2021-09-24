@@ -11,7 +11,7 @@ import {UserNotificationService} from "./user-notification.service";
 import {AppConfigService} from "./app-config.service";
 import {UserService} from "./user.service";
 import {NetworkStatusService} from "./network-status.service";
-import {map} from "rxjs/operators";
+import {distinctUntilChanged, map} from "rxjs/operators";
 import {HttpClient} from "@angular/common/http";
 import {OutgoingMessageModel} from "../models/websocket/outgoing-message.model";
 import {OutgoingSubscriptionPayload} from "../models/websocket/outgoing-subscription-payload.model";
@@ -56,8 +56,11 @@ export class WebSocketService {
         const authState$ = userService.getUser().pipe(map(user => user.isAuthenticated));
 
         combineLatest([networkState$, authState$])
+            .pipe(distinctUntilChanged(([netprev, authprev], [netcurr, authcurr]) => {
+                return netprev === netcurr && authprev === authcurr;
+            }))
             .subscribe(([networkState, authState]) => {
-                if (networkState) {
+                if (networkState === "ONLINE") {
                     if (authState) {
                         this.connectAuth();
                     } else {
@@ -82,8 +85,8 @@ export class WebSocketService {
 
 
     private receiveMessage(message: any) {
-        if (message.id && message.type && message.payload) {
-            switch (message.type) {
+        if (message.id && message.messageType && message.payload) {
+            switch (message.messageType) {
                 case "data":
                     this.parseDataMessage(message);
                     break;

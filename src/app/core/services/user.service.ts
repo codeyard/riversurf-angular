@@ -53,20 +53,20 @@ export class UserService {
 
     toggleFavoriteRider(rider: Rider) {
         const indexOfRider = this.user.getValue().favouriteRiders.findIndex(riderId => riderId === rider.id);
+        const riders = this.user.getValue().favouriteRiders;
         if (indexOfRider > -1) {
+            riders.splice(indexOfRider, 1);
             const user = {
                 ...this.user.getValue(),
-                favouriteRiders: this.user.getValue().favouriteRiders.splice(indexOfRider, 1)
+                favouriteRiders: riders
             };
             this.user.next(user);
             this.snackBarService.send(`You'll no longer get updated about "${rider.firstName} ${rider.lastName}"!`, "success");
         } else {
+            riders.push(rider.id)
             const user = {
                 ...this.user.getValue(),
-                favouriteRiders: [
-                    ...this.user.getValue().favouriteRiders,
-                    rider.id
-                ]
+                favouriteRiders: riders
             };
             this.user.next(user);
             this.snackBarService.send(`You'll get updated about "${rider.firstName} ${rider.lastName}"!`, "success");

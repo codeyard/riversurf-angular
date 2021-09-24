@@ -1,4 +1,4 @@
-import {UserNotification} from "./user-notification.model";
+import {IncomingNotification} from "./incoming-notification.model";
 
 export interface WebSocketDataPayload{
     id: string;
@@ -16,7 +16,9 @@ export interface WebSocketSubscriptionPayload{
 
 export interface WebSocketNotificationPayload{
     id: string;
-    payload: {
-        notification : UserNotification;
-    };
+    payload: IncomingNotification;
+}
+
+export interface AuthSessionResponse {
+    sessionToken: string;
 }

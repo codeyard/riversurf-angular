@@ -93,10 +93,8 @@ export class ResultViewComponent implements OnInit, AfterViewInit, OnDestroy {
             });
 
         zip(this.getUser(), this.getSurfEvent()).subscribe(
-            surfEventConcat => {
-                const user = surfEventConcat[0];
-                const surfEvent = surfEventConcat[1];
-                if (user) {
+            ([user, surfEvent]) => {
+                if (user.isAuthenticated) {
                     if (surfEvent.judge === user.id || surfEvent.organizer === user.id) {
                         this.isAdministrator = true;
                     }
@@ -121,8 +119,7 @@ export class ResultViewComponent implements OnInit, AfterViewInit, OnDestroy {
         }
     }
 
-    getHeatNumberOfRider(roundIndex: number, riderId: string):
-        number | undefined {
+    getHeatNumberOfRider(roundIndex: number, riderId: string): number | undefined {
         let riderIndex: number | undefined = undefined;
         const heats = this.competition.rounds[roundIndex].heats;
 
@@ -135,10 +132,8 @@ export class ResultViewComponent implements OnInit, AfterViewInit, OnDestroy {
         return riderIndex;
     }
 
-    getHeatStatus(heat
-                      :
-                      Heat
-    ) {
+
+    getHeatStatus(heat: Heat) {
         switch (heat.state) {
             case 'finished':
             case 'completed':
@@ -207,7 +202,7 @@ export class ResultViewComponent implements OnInit, AfterViewInit, OnDestroy {
     }
 
     getUser() {
-        return this.userService.user.pipe(
+        return this.userService.getUser().pipe(
             take(1))
     }
 
@@ -221,11 +216,7 @@ export class ResultViewComponent implements OnInit, AfterViewInit, OnDestroy {
             )
     }
 
-    getRidersWithRespectiveMaxRound(ridersWithResult
-                                        :
-                                        RiderProgress[]
-    ):
-        RiderProgress[] {
+    getRidersWithRespectiveMaxRound(ridersWithResult: RiderProgress[]): RiderProgress[] {
         const temp = new Map();
 
         for (const item of ridersWithResult) {
@@ -242,9 +233,7 @@ export class ResultViewComponent implements OnInit, AfterViewInit, OnDestroy {
         return Array.from(temp.values());
     }
 
-    ngAfterViewInit()
-        :
-        void {
+    ngAfterViewInit(): void {
         this.init.subscribe(() => {
                 this.isLoading = false;
                 this.cd.detectChanges();
@@ -253,9 +242,7 @@ export class ResultViewComponent implements OnInit, AfterViewInit, OnDestroy {
         )
     }
 
-    ngOnDestroy()
-        :
-        void {
+    ngOnDestroy(): void {
         this.destroy$.next(null);
         this.destroy$.complete();
     }
@@ -289,11 +276,7 @@ export class ResultViewComponent implements OnInit, AfterViewInit, OnDestroy {
         return path;
     }
 
-    getRoundLabel(roundIndex
-                      :
-                      number
-    ):
-        string {
+    getRoundLabel(roundIndex: number): string {
         let label = 'Round ' + (+roundIndex);
         if (roundIndex === 0) {
             label = 'Seeding round';

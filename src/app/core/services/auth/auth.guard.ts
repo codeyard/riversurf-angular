@@ -15,7 +15,7 @@ export class AuthGuard implements CanActivate {
     }
 
     getUser() {
-        return this.userService.user;
+        return this.userService.getUser();
     }
 
     getSurfEvent(id: string) {
@@ -30,10 +30,8 @@ export class AuthGuard implements CanActivate {
         const id = route.params['id'].split('-').pop();
         console.log(id)
         return zip(this.getUser(), this.getSurfEvent(id)).pipe(
-            map((concatedUserAndSurfEvent) => {
-                const user = concatedUserAndSurfEvent[0];
-                const surfEvent = concatedUserAndSurfEvent[1];
-                if (user !== null) {
+            map(([user, surfEvent]) => {
+                if (user.isAuthenticated) {
                     if (isAdministratorRoute && user) {
                         if (surfEvent?.judge === user.id || surfEvent?.organizer === user.id) {
                             this.snackBarService.send("Hold on a second while we grab the data for you!", "success");

@@ -8,7 +8,8 @@ import {AppConfigService} from "./app-config.service";
 import {catchError, map, tap} from "rxjs/operators";
 import {Role} from "../models/role.type";
 import {Router} from "@angular/router";
-import { JwtHelperService } from '@auth0/angular-jwt';
+import {JwtHelperService} from '@auth0/angular-jwt';
+import * as uuid from 'uuid';
 
 
 @Injectable({
@@ -18,59 +19,66 @@ export class UserService {
 
     PROTOCOL = 'https://'
     PATH_ENDPOINT = '/api/user/login';
-    private favoriteRiders = new BehaviorSubject<User>({favouriteRiders: []} as any);
-    private favoriteRiders$ = this.favoriteRiders.asObservable();
     private tokenExpirationTimer: any;
-    user = new BehaviorSubject<AuthUser | null>(null)
+
+    // initial user will be persisted in indexed DB if not logged in
+    private initialUser = {id: uuid.v4(), favouriteRiders: [], isAuthenticated: false}
+    private user = new BehaviorSubject<User>(this.initialUser);
+    private user$ = this.user.asObservable();
 
 
     constructor(
         private httpClient: HttpClient,
         private appConfigService: AppConfigService,
         private snackBarService: SnackbarService,
-
         private router: Router) {
     }
 
-    //TODO THIS METHOD NEEDED?
     getUser(): Observable<User> {
-        return this.favoriteRiders$;
+        return this.user$;
     }
 
     loginUser(username: string, password: string) {
         const requestUrl = this.PROTOCOL + this.appConfigService.getHostName() + this.PATH_ENDPOINT;
         const body = {userName: username, password: password}
-        return this.httpClient.post<AuthResponseData>(requestUrl, body)
+        return this.httpClient.post<User>(requestUrl, body)
             .pipe(
                 catchError(err => this.handleError(err)),
                 tap(resData => {
-                    this.handleAuthentication(resData.email, resData.userName, resData.id, resData.userRole, resData.token)
+                    const user: User = {id: resData.id, userName: resData.userName, email: resData.email, userRole: resData.userRole, token: resData.token, favouriteRiders: resData.favouriteRiders, isAuthenticated: true}
+                    this.handleAuthentication(user)
                 }))
 
     }
 
     toggleFavoriteRider(rider: Rider) {
-        const indexOfRider = this.favoriteRiders.getValue().favouriteRiders.findIndex(riderId => riderId === rider.id);
+        const indexOfRider = this.user.getValue().favouriteRiders.findIndex(riderId => riderId === rider.id);
+        const riders = this.user.getValue().favouriteRiders;
         if (indexOfRider > -1) {
-            this.favoriteRiders.getValue().favouriteRiders.splice(indexOfRider, 1)
-            this.favoriteRiders.next(this.favoriteRiders.getValue());
+            riders.splice(indexOfRider, 1);
+            const user = {
+                ...this.user.getValue(),
+                favouriteRiders: riders
+            };
+            this.user.next(user);
             this.snackBarService.send(`You'll no longer get updated about "${rider.firstName} ${rider.lastName}"!`, "success");
         } else {
-            this.favoriteRiders.next({
-                ...this.favoriteRiders.getValue(),
-                favouriteRiders: [...this.favoriteRiders.getValue().favouriteRiders, rider.id]
-            });
+            riders.push(rider.id)
+            const user = {
+                ...this.user.getValue(),
+                favouriteRiders: riders
+            };
+            this.user.next(user);
             this.snackBarService.send(`You'll get updated about "${rider.firstName} ${rider.lastName}"!`, "success");
         }
     }
 
     getFavoriteRiders() {
-        return this.favoriteRiders$.pipe(map(user => user.favouriteRiders));
+        return this.user$.pipe(map(user => user.favouriteRiders));
     }
 
-    private handleAuthentication(email: string, userName: string, userId: string, role: Role, token: string) {
-        this.startAutologout(token);
-        const user = new AuthUser(userId, userName, email, role, token)
+    private handleAuthentication(user: User) {
+        this.startAutologout(user.token!);
         this.user.next(user);
         localStorage.setItem("userData", JSON.stringify(user));
     }
@@ -81,9 +89,9 @@ export class UserService {
 
     logout() {
         localStorage.removeItem("userData");
-        this.user.next(null);
+        this.user.next(this.initialUser);
         this.snackBarService.send("We logged you out mate!", "success")
-        if(this.tokenExpirationTimer) {
+        if (this.tokenExpirationTimer) {
             clearTimeout(this.tokenExpirationTimer)
         }
         this.tokenExpirationTimer = null;
@@ -98,10 +106,18 @@ export class UserService {
             userName: string,
             userRole: string
         } = JSON.parse(<string>localStorage.getItem("userData"))
-        if(!userData) {
+        if (!userData) {
             return
         }
-        const user = new AuthUser(userData.id, userData.userName, userData.email, <"organizer" | "judge" | "rider"> userData.userRole, userData.tokenId);
+        const user: User = {
+            id: userData.id,
+            userName: userData.userName,
+            email: userData.email,
+            userRole: <"organizer" | "judge" | "rider">userData.userRole,
+            token: userData.tokenId,
+            favouriteRiders: [],
+            isAuthenticated: true
+        };
 
         if (user.token) {
             this.user.next(user);

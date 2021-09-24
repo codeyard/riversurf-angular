@@ -2,19 +2,19 @@ import {Role} from "./role.type";
 
 export interface User {
     id: string;
-    userName: string;
-    password: string;
-    email: string;
-    role: Role;
+    userName?: string;
+    email?: string;
+    userRole?: Role;
     profile?: string;
+    token?: string;
+    isAuthenticated?: boolean;
     favouriteRiders: string[];
 }
 
 export const examplejudge: User = {
     email: "miki@miki.ch",
     id: "example",
-    password: "",
-    role: 'judge',
+    userRole: 'judge',
     userName: "mikimaus",
     favouriteRiders: []
 }

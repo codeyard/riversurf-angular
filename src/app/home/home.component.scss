@@ -35,6 +35,11 @@
                 grid-template-columns: repeat(auto-fit, minmax(100%, 1fr));
             }
 
+            @include respond(large) {
+                row-gap: 1rem;
+            }
+
+
             & rs-carousel {
                 width: 100%;
                 max-width: 100%;

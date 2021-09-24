@@ -73,7 +73,8 @@ export class HeatComponent implements OnInit, OnChanges {
         });
 
         for (let i = 0; i < this.heat.riders.length; i++) {
-            const initValue = this.heat.results[i]?.value || null;
+            const resultOfRiderIndex = this.heat.results.findIndex(result => result.riderId === this.heat.riders[i]);
+            const initValue = resultOfRiderIndex > -1 ? this.heat.results[resultOfRiderIndex].value : null;
             (<FormArray>this.heatForm.get('heat')).push(new FormControl({
                 value: initValue,
                 disabled: this.heat.state === 'completed'

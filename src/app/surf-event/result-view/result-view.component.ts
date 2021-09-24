@@ -1,10 +1,10 @@
 import {AfterViewInit, ChangeDetectorRef, Component, OnDestroy, OnInit, QueryList, ViewChildren} from '@angular/core';
 import {Competition, Heat, Result} from "../../core/models/competition.model";
 import {RiderResultComponent} from "../surf-event/competition/round/rider-result/rider-result.component";
-import {Subject} from "rxjs";
+import {Subject, zip} from "rxjs";
 import {ActivatedRoute, Router} from "@angular/router";
 import {SurfEventService} from "../../core/services/surf-event.service";
-import {switchMap, takeUntil, tap} from "rxjs/operators";
+import {switchMap, take, takeUntil, tap} from "rxjs/operators";
 import {SnackbarService} from "../../core/services/snackbar.service";
 import {BreakpointObserver} from "@angular/cdk/layout";
 import {CarouselComponent} from "../../shared/carousel/carousel.component";
@@ -55,6 +55,7 @@ export class ResultViewComponent implements OnInit, AfterViewInit, OnDestroy {
     init: any;
     resultAndHeatData!: { riderId: string, result: Result }[];
     smallScreen?: boolean;
+
     private destroy$ = new Subject();
 
     constructor(private cd: ChangeDetectorRef,
@@ -91,11 +92,15 @@ export class ResultViewComponent implements OnInit, AfterViewInit, OnDestroy {
                 this.smallScreen = result.matches;
             });
 
-        this.userService.user.subscribe(
-            user => {
-                (user?.userRole === 'organizer' || user?.userRole === 'judge')
-                    ? this.isAdministrator = true
-                    : this.isAdministrator = false;
+        zip(this.getUser(), this.getSurfEvent()).subscribe(
+            ([user, surfEvent]) => {
+                if (user.isAuthenticated) {
+                    if (surfEvent.judge === user.id || surfEvent.organizer === user.id) {
+                        this.isAdministrator = true;
+                    }
+                } else {
+
+                }
             }
         )
     }
@@ -107,7 +112,7 @@ export class ResultViewComponent implements OnInit, AfterViewInit, OnDestroy {
         if (this.smallScreen) {
             this.carousel?.forEach((item, roundIndex) => {
                 const heatNumber = this.getHeatNumberOfRider(roundIndex, riderId)
-                if(heatNumber !== undefined) {
+                if (heatNumber !== undefined) {
                     item.setIndex(heatNumber)
                 }
             });
@@ -119,9 +124,9 @@ export class ResultViewComponent implements OnInit, AfterViewInit, OnDestroy {
         const heats = this.competition.rounds[roundIndex].heats;
 
         for (let i = 0; i < heats.length; i++) {
-             if(heats[i].riders.indexOf(riderId) > -1) {
-                 riderIndex = i;
-             }
+            if (heats[i].riders.indexOf(riderId) > -1) {
+                riderIndex = i;
+            }
         }
 
         return riderIndex;
@@ -139,7 +144,6 @@ export class ResultViewComponent implements OnInit, AfterViewInit, OnDestroy {
                 return 'assigned';
         }
     }
-
 
     getPointsAndLines() {
         const ridersWithTheirMaxRound: RiderProgress[] = []
@@ -197,6 +201,21 @@ export class ResultViewComponent implements OnInit, AfterViewInit, OnDestroy {
         }
     }
 
+    getUser() {
+        return this.userService.getUser().pipe(
+            take(1))
+    }
+
+    getSurfEvent() {
+        return this.route.params
+            .pipe(
+                switchMap(params => {
+                    const id = params['id'].split('-').pop();
+                    return this.surfEventService.getSurfEvent(id);
+                })
+            )
+    }
+
     getRidersWithRespectiveMaxRound(ridersWithResult: RiderProgress[]): RiderProgress[] {
         const temp = new Map();
 
@@ -228,7 +247,7 @@ export class ResultViewComponent implements OnInit, AfterViewInit, OnDestroy {
         this.destroy$.complete();
     }
 
-    private extractPoints(points: Point[], i: number): { a: Point, b: Point } {
+    extractPoints(points: Point[], i: number): { a: Point, b: Point } {
         return {
             a: {
                 x: points[i].x,
@@ -242,12 +261,11 @@ export class ResultViewComponent implements OnInit, AfterViewInit, OnDestroy {
         }
     }
 
-    private calculatePath(a: Point, b: Point) {
+    calculatePath(a: Point, b: Point) {
 
         const deltaX = b.x - a.x;
         const varianz = Math.random() * this.VARIANZ + this.VARIANZ_OFFSET;
         const middleX = a.x + (deltaX / 2) + varianz;
-        console.log("middleX:", middleX);
         let deltaY = b.y - a.y;
         let middleY = a.y + (deltaY / 2);
         let signY = Math.sign(deltaY)

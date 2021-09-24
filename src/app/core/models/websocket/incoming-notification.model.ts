@@ -1,4 +1,5 @@
-export interface UserNotification {
+export interface IncomingNotification {
+    surfEventName: string;
     timestamp: Date;
     content: string;
     link?: string;

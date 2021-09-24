@@ -1,3 +1,5 @@
+@import "variables";
+
 .rider__card {
     cursor: pointer;
     margin-bottom: .5rem;
@@ -15,6 +17,8 @@
 
     &__header {
         flex: 90%;
+        color: $color-text-1;
+        text-decoration: none;
 
         &__image {
             background-position: center;

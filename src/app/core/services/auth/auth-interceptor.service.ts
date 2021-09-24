@@ -18,10 +18,10 @@ export class AuthInterceptorService implements HttpInterceptor {
             || req.url.split("/").includes("register")) {
             return next.handle(req);
         } else {
-            return this.userService.user.pipe(
+            return this.userService.getUser().pipe(
                 take(1),
                 exhaustMap(user => {
-                    if (!user) {
+                    if (!user.isAuthenticated) {
                         return throwError("No Auth included");
                     } else {
                         let modifiedRequest = req.clone({

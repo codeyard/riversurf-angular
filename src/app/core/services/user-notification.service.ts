@@ -1,23 +1,23 @@
 import {Injectable} from '@angular/core';
 import {Observable, Subject} from "rxjs";
-import {UserNotification} from "../models/user-notification.model";
+import {IncomingNotification} from "../models/websocket/incoming-notification.model";
 
 @Injectable({
     providedIn: 'root'
 })
 export class UserNotificationService {
 
-    private notificationData = new Subject<UserNotification>();
+    private notificationData = new Subject<IncomingNotification>();
     private notification$ = this.notificationData.asObservable();
 
     constructor() {
     }
 
-    getNotification(): Observable<UserNotification> {
+    getNotification(): Observable<IncomingNotification> {
         return this.notification$;
     }
 
-    showNotification(notification: UserNotification) {
+    showNotification(notification: IncomingNotification) {
         this.notificationData.next(notification);
     }
 }

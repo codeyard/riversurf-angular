@@ -32,6 +32,7 @@ export class FavoriteRiderComponent implements OnInit, OnDestroy {
 
     toggleFavorites(event: Event) {
         event.stopPropagation();
+        event.preventDefault();
         this.userService.toggleFavoriteRider(this.rider)
     }
 

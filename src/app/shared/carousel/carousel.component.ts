@@ -74,7 +74,6 @@ export class CarouselComponent implements OnInit, OnDestroy, OnChanges, AfterCon
     }
 
     ngOnInit(): void {
-        this.resizeObserver.observe(this.elementRef.nativeElement);
     }
 
     ngOnDestroy() {
@@ -86,12 +85,22 @@ export class CarouselComponent implements OnInit, OnDestroy, OnChanges, AfterCon
 
     ngAfterContentInit(): void {
         // content- Childs are ready here
+
     }
 
     ngAfterViewInit() {
         // view-Childs are ready here
-        this.ready = true;
-        this.initCarousel();
+        if(this.carouselListItems.length > 0) {
+            this.ready = true;
+            this.initCarousel();
+            this.resizeObserver.observe(this.elementRef.nativeElement);
+        }
+        this.carouselListItems.changes.pipe(takeUntil(this.destroy$)).subscribe(list => {
+            if(list.length > 0) {
+                this.ready = true;
+                this.initCarousel();
+                this.resizeObserver.observe(this.elementRef.nativeElement);            }
+        });
     }
 
     ngOnChanges(changes: SimpleChanges) {
@@ -169,7 +178,7 @@ export class CarouselComponent implements OnInit, OnDestroy, OnChanges, AfterCon
     }
 
     private initCarousel() {
-        this.calculateSizes();
+        //this.calculateSizes();
         if (this.auto) {
             this.interval = interval(this.intervalTime)
                 .pipe(

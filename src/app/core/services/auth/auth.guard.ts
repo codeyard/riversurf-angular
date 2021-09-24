@@ -3,7 +3,7 @@ import {ActivatedRouteSnapshot, CanActivate, Router, RouterStateSnapshot, UrlTre
 import {Observable, zip} from 'rxjs';
 import {UserService} from "../user.service";
 import {SnackbarService} from "../snackbar.service";
-import {map, take} from "rxjs/operators";
+import {filter, map} from "rxjs/operators";
 import {SurfEventService} from "../surf-event.service";
 
 @Injectable({
@@ -15,15 +15,11 @@ export class AuthGuard implements CanActivate {
     }
 
     getUser() {
-        return this.userService.user.pipe(
-            take(1))
+        return this.userService.user;
     }
 
-    getCompetition(route: ActivatedRouteSnapshot) {
-        const id = route.params['id'].split('-').pop();
-        return this.surfEventService.getSurfEvent(id).pipe(
-            take(1)
-        )
+    getSurfEvent(id: string) {
+        return this.surfEventService.getSurfEvent(id);
     }
 
 
@@ -31,18 +27,20 @@ export class AuthGuard implements CanActivate {
         route: ActivatedRouteSnapshot,
         state: RouterStateSnapshot): Observable<boolean | UrlTree> | Promise<boolean | UrlTree> | boolean | UrlTree {
         const isAdministratorRoute = route.url.toString().split("/")[0].split(",").includes("edit")
-        return zip(this.getUser(), this.getCompetition(route)).pipe(
+        const id = route.params['id'].split('-').pop();
+        console.log(id)
+        return zip(this.getUser(), this.getSurfEvent(id)).pipe(
             map((concatedUserAndSurfEvent) => {
                 const user = concatedUserAndSurfEvent[0];
                 const surfEvent = concatedUserAndSurfEvent[1];
                 if (user !== null) {
                     if (isAdministratorRoute && user) {
-                        if (surfEvent.judge === user.id || surfEvent.organizer === user.id) {
-                            console.log("YOU ARE THE JUDGE OF THE EVENT OR ORGANIZER", user, surfEvent)
+                        if (surfEvent?.judge === user.id || surfEvent?.organizer === user.id) {
                             this.snackBarService.send("Hold on a second while we grab the data for you!", "success");
                             return true;
                         } else {
-                            this.snackBarService.send("You are logged in, but you don't have the right permission to do that!", "error");
+                            console.log("NOT JUDGE OR ORGANIZER OF EVENT!")
+                            this.snackBarService.send("Fella, you don't have the right permission to do that!", "error");
                             return this.router.createUrlTree(["/"]);
                             return false;
                         }

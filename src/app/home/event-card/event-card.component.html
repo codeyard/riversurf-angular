@@ -1,24 +1,26 @@
-<mat-card
-    routerLink="/event/{{surfEvent.name | slugify}}-{{ surfEvent.id }}"
-    class="event__card">
-    <mat-card-header class="event__card__header">
-        <div mat-card-avatar [style.background-image]="'url(' + surfEvent.logo + ')'"
-             class="event__card__headerimage"></div>
-        <mat-card-title>{{surfEvent.name}}</mat-card-title>
-        <mat-card-subtitle>{{surfEvent.location}}</mat-card-subtitle>
-        <mat-card-subtitle>{{surfEvent.startDateTime | date:'dd.MM.YYYY'}}</mat-card-subtitle>
-    </mat-card-header>
-    <img draggable="false" mat-card-image src="{{surfEvent.mainPicture}}"
-         alt="{{surfEvent.name}}">
-    <mat-card-content>
-        <p>
-            {{surfEvent.description}}
-        </p>
-    </mat-card-content>
-    <a mat-raised-button
-        *ngFor="let division of surfEvent.divisions"
-        class="division-{{division}}"
-        routerLink="/event/{{surfEvent.name | slugify}}-{{surfEvent.id}}/competition/{{ division }}">
-        {{division | titlecase}}
-    </a>
-</mat-card>
+<a routerLink="/event/{{surfEvent.name | slugify}}-{{ surfEvent.id }}">
+    <mat-card class="event__card">
+        <mat-card-header class="event__card__header">
+            <div mat-card-avatar [style.background-image]="'url(' + surfEvent.logo + ')'"
+                 class="event__card__headerimage"></div>
+            <mat-card-title>{{surfEvent.name}}</mat-card-title>
+            <mat-card-subtitle>{{surfEvent.location}}</mat-card-subtitle>
+            <mat-card-subtitle>{{surfEvent.startDateTime | date:'dd.MM.YYYY'}}</mat-card-subtitle>
+        </mat-card-header>
+        <img draggable="false" mat-card-image src="{{surfEvent.mainPicture}}"
+             alt="{{surfEvent.name}}">
+        <mat-card-content>
+            <p>
+                {{surfEvent.description}}
+            </p>
+        </mat-card-content>
+        <div class="event__card__division">
+            <a mat-raised-button
+               *ngFor="let division of surfEvent.divisions"
+               class="division-{{division}}"
+               routerLink="/event/{{surfEvent.name | slugify}}-{{surfEvent.id}}/competition/{{ division }}">
+                {{division | titlecase}}
+            </a>
+        </div>
+    </mat-card>
+</a>

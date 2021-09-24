@@ -1,19 +1,21 @@
-<mat-card routerLink="/riders/{{ rider.nickName + '-' + rider.id | slugify }}" class="rider__card">
-    <mat-card-header class="rider__card__header">
-        <div mat-card-avatar
-             class="rider__card__header__image"
-             [style.background-image]="'url(' + rider.profilePicture + ')'"></div>
-        <mat-card-title>{{ rider.firstName }} {{ rider.lastName }}</mat-card-title>
-        <mat-card-subtitle class="rider__card__header__subtitle">
+<a class="rider__card__header" routerLink="/riders/{{ rider.nickName + '-' + rider.id | slugify }}">
+    <mat-card class="rider__card">
+        <mat-card-header>
+            <div mat-card-avatar
+                 class="rider__card__header__image"
+                 [style.background-image]="'url(' + rider.profilePicture + ')'"></div>
+            <mat-card-title>{{ rider.firstName }} {{ rider.lastName }}</mat-card-title>
+            <mat-card-subtitle class="rider__card__header__subtitle">
             <span title="{{ rider.division | titlecase }}">
                 <mat-icon *ngIf="rider.division === 'male'">male</mat-icon>
                 <mat-icon *ngIf="rider.division === 'female'">female</mat-icon>
                 <mat-icon *ngIf="rider.division === 'kid'">child_care</mat-icon>
             </span>
-            {{ rider.nickName }}
-        </mat-card-subtitle>
-    </mat-card-header>
-    <mat-card-content class="rider__card__content">
-        <rs-favorite-rider [rider]="rider"></rs-favorite-rider>
-    </mat-card-content>
-</mat-card>
+                {{ rider.nickName }}
+            </mat-card-subtitle>
+        </mat-card-header>
+        <mat-card-content class="rider__card__content">
+            <rs-favorite-rider [rider]="rider"></rs-favorite-rider>
+        </mat-card-content>
+    </mat-card>
+</a>

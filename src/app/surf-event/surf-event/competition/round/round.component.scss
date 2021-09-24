@@ -8,7 +8,11 @@
     @include respond(small) {
         min-width: auto;
         padding: .1rem;
+
+
     }
+
+
 }
 
 .round {
@@ -20,6 +24,11 @@
         display: flex;
         padding: 0.5rem;
         width: 100%;
+
+        @include respond(small) {
+            flex-direction: column;
+            align-items: center;
+        }
 
         & h1 {
             flex: 1;
@@ -83,9 +92,19 @@
         margin: .5rem;
         border: 1px solid $color-primary;
         border-radius: 4px;
+        @include respond(small) {
+            &:last-of-type {
+                margin-bottom: 5rem;
+            }
+        }
         &__container {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+
+            @include respond(small) {
+                display: flex;
+                flex-direction: column;
+            }
         }
 
 
@@ -95,6 +114,8 @@
 
         &__single-rider{
             margin: 0.5rem 0;
+
+
         }
     }
 

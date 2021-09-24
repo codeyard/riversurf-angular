@@ -2,4 +2,8 @@
 
 .competition-container {
     padding: 2rem;
+
+    @include respond(small) {
+        padding: .1rem;
+    }
 }

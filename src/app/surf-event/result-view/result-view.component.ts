@@ -93,10 +93,8 @@ export class ResultViewComponent implements OnInit, AfterViewInit, OnDestroy {
             });
 
         zip(this.getUser(), this.getSurfEvent()).subscribe(
-            surfEventConcat => {
-                const user = surfEventConcat[0];
-                const surfEvent = surfEventConcat[1];
-                if (user) {
+            ([user, surfEvent]) => {
+                if (user.isAuthenticated) {
                     if (surfEvent.judge === user.id || surfEvent.organizer === user.id) {
                         this.isAdministrator = true;
                     }

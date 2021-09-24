@@ -21,7 +21,7 @@ export class AuthInterceptorService implements HttpInterceptor {
             return this.userService.getUser().pipe(
                 take(1),
                 exhaustMap(user => {
-                    if (!user) {
+                    if (!user.isAuthenticated) {
                         return throwError("No Auth included");
                     } else {
                         let modifiedRequest = req.clone({

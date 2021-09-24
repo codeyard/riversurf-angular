@@ -20,7 +20,7 @@ export class NavigationComponent implements OnInit, OnDestroy{
 
     ngOnInit(): void {
         this.authSubscription = this.userService.getUser().subscribe(user => {
-            this.loggedIn = !!user;
+            this.loggedIn = !!user.isAuthenticated;
         })
     }
 

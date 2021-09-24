@@ -43,7 +43,15 @@
         justify-content: space-around;
     }
 
-    a {
-        margin-right: 1rem;
+    &__division {
+        a {
+            color: $color-white;
+            margin-right: 1rem;
+        }
     }
+}
+
+a {
+    text-decoration: none;
+    color: $color-text-1;
 }

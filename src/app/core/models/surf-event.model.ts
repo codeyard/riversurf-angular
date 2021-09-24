@@ -1,4 +1,3 @@
-import {examplejudge} from "./user.model";
 import {Division} from "./division.type";
 
 export interface SurfEvent {
@@ -17,22 +16,4 @@ export interface SurfEvent {
     judge: string;
     organizer: string;
     divisions: Division[];
-}
-
-export const exampleEvent: SurfEvent = {
-    competitions: ["comp1"],
-    description: "Das ist die Beschreibung vom Event",
-    endDateTime: new Date(),
-    hashTag: "riversurf-thun",
-    id: "riversurf-jam-thun-2021",
-    judge: "examplejudge",
-    location: "somewhere",
-    locationLat: 46.761725,
-    locationLong: 7.617745,
-    name: "RiversurfJam",
-    organizer: "examplejudge",
-    mainPicture: "https://riversurfstorage.blob.core.windows.net/eventimages/event1.jpg",
-    logo: "https://riversurfstorage.blob.core.windows.net/eventimages/logo_event1.jpg",
-    startDateTime: new Date(),
-    divisions: ["male", "female"]
 }

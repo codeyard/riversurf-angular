@@ -3,7 +3,7 @@ import {CommonModule} from '@angular/common';
 import {RidersComponent} from "./riders.component";
 import {RiderProfileComponent} from "./rider-profile/rider-profile.component";
 import {RiderOverviewComponent} from "./rider-profile/rider-overview/rider-overview.component";
-import {RiderTimelineComponent} from "./rider-profile/rider-timeline/rider-timeline.component";
+import {RiderTimeLineComponent} from "./rider-profile/rider-timeline/rider-time-line.component";
 import {MatButtonToggleModule} from "@angular/material/button-toggle";
 import {MatIconModule} from "@angular/material/icon";
 import {MatFormFieldModule} from "@angular/material/form-field";
@@ -20,6 +20,8 @@ import {SharedModule} from "../shared/shared.module";
 import {MatInputModule} from "@angular/material/input";
 import {MatButtonModule} from "@angular/material/button";
 import {MatProgressSpinnerModule} from "@angular/material/progress-spinner";
+import {MatExpansionModule} from "@angular/material/expansion";
+import {TimeLineComponent} from "./rider-profile/rider-timeline/time-line/time-line.component";
 
 
 @NgModule({
@@ -27,8 +29,9 @@ import {MatProgressSpinnerModule} from "@angular/material/progress-spinner";
         RidersComponent,
         RiderProfileComponent,
         RiderOverviewComponent,
-        RiderTimelineComponent,
-        AgePipe
+        RiderTimeLineComponent,
+        AgePipe,
+        TimeLineComponent
     ],
     imports: [
         RidersRoutingModule,
@@ -46,7 +49,8 @@ import {MatProgressSpinnerModule} from "@angular/material/progress-spinner";
         MatTabsModule,
         MatCardModule,
         MatButtonModule,
-        MatProgressSpinnerModule
+        MatProgressSpinnerModule,
+        MatExpansionModule
     ],
     exports: [
         RidersComponent

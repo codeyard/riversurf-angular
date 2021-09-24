@@ -3,7 +3,7 @@ import {ActivatedRouteSnapshot, CanActivate, Router, RouterStateSnapshot, UrlTre
 import {Observable, zip} from 'rxjs';
 import {UserService} from "../user.service";
 import {SnackbarService} from "../snackbar.service";
-import {filter, map} from "rxjs/operators";
+import {map} from "rxjs/operators";
 import {SurfEventService} from "../surf-event.service";
 
 @Injectable({
@@ -28,7 +28,6 @@ export class AuthGuard implements CanActivate {
         state: RouterStateSnapshot): Observable<boolean | UrlTree> | Promise<boolean | UrlTree> | boolean | UrlTree {
         const isAdministratorRoute = route.url.toString().split("/")[0].split(",").includes("edit")
         const id = route.params['id'].split('-').pop();
-        console.log(id)
         return zip(this.getUser(), this.getSurfEvent(id)).pipe(
             map(([user, surfEvent]) => {
                 if (user.isAuthenticated) {
@@ -40,7 +39,6 @@ export class AuthGuard implements CanActivate {
                             console.log("NOT JUDGE OR ORGANIZER OF EVENT!")
                             this.snackBarService.send("Fella, you don't have the right permission to do that!", "error");
                             return this.router.createUrlTree(["/"]);
-                            return false;
                         }
                     } else {
                         this.snackBarService.send("Hold on a second while we grab the data for you!!!", "success");
@@ -49,7 +47,6 @@ export class AuthGuard implements CanActivate {
                 } else {
                     this.snackBarService.send("Fella, you need to login first!", "error");
                     return this.router.createUrlTree(["/login"]);
-                    return false;
                 }
             })
         )

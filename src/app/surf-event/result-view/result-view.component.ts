@@ -266,7 +266,6 @@ export class ResultViewComponent implements OnInit, AfterViewInit, OnDestroy {
         const deltaX = b.x - a.x;
         const varianz = Math.random() * this.VARIANZ + this.VARIANZ_OFFSET;
         const middleX = a.x + (deltaX / 2) + varianz;
-        console.log("middleX:", middleX);
         let deltaY = b.y - a.y;
         let middleY = a.y + (deltaY / 2);
         let signY = Math.sign(deltaY)

@@ -3,10 +3,9 @@ import {BehaviorSubject, Observable, throwError} from "rxjs";
 import {Rider} from "../models/rider.model";
 import {SnackbarService} from "./snackbar.service";
 import {HttpClient, HttpErrorResponse} from "@angular/common/http";
-import {AuthResponseData, AuthUser, User} from "../models/user.model";
+import {User} from "../models/user.model";
 import {AppConfigService} from "./app-config.service";
 import {catchError, map, tap} from "rxjs/operators";
-import {Role} from "../models/role.type";
 import {Router} from "@angular/router";
 import {JwtHelperService} from '@auth0/angular-jwt';
 import * as uuid from 'uuid';
@@ -45,7 +44,15 @@ export class UserService {
             .pipe(
                 catchError(err => this.handleError(err)),
                 tap(resData => {
-                    const user: User = {id: resData.id, userName: resData.userName, email: resData.email, userRole: resData.userRole, token: resData.token, favouriteRiders: resData.favouriteRiders, isAuthenticated: true}
+                    const user: User = {
+                        id: resData.id,
+                        userName: resData.userName,
+                        email: resData.email,
+                        userRole: resData.userRole,
+                        token: resData.token,
+                        favouriteRiders: resData.favouriteRiders ?? [],
+                        isAuthenticated: true
+                    }
                     this.handleAuthentication(user)
                 }))
 

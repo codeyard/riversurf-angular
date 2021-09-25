@@ -9,6 +9,7 @@ import {SnackbarService} from "../../core/services/snackbar.service";
 import {BreakpointObserver} from "@angular/cdk/layout";
 import {CarouselComponent} from "../../shared/carousel/carousel.component";
 import {UserService} from "../../core/services/user.service";
+import {AppConfigService} from "../../core/services/app-config.service";
 
 export interface Line {
     source: Point,
@@ -56,6 +57,8 @@ export class ResultViewComponent implements OnInit, AfterViewInit, OnDestroy {
     resultAndHeatData!: { riderId: string, result: Result }[];
     smallScreen?: boolean;
 
+    qrCodeLink?: string;
+
     private destroy$ = new Subject();
 
     constructor(private cd: ChangeDetectorRef,
@@ -85,6 +88,8 @@ export class ResultViewComponent implements OnInit, AfterViewInit, OnDestroy {
                         console.log('ERROR loading competition data :-(', error)
                     })
             )
+
+        this.qrCodeLink = window.location.toString();
 
         this.observer.observe('(max-width: 878px)')
             .pipe(takeUntil(this.destroy$))

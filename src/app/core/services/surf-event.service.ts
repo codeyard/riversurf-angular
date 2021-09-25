@@ -26,7 +26,8 @@ export class SurfEventService {
         private httpClient: HttpClient,
         private appConfigService: AppConfigService,
         private competitionService: CompetitionService,
-        private ridersService: RidersService, private snacBarService: SnackbarService) {
+        private ridersService: RidersService,
+        private snackBarService: SnackbarService) {
     }
 
     getSurfEvent(id: string): Observable<SurfEvent> {
@@ -125,7 +126,7 @@ export class SurfEventService {
         this.httpClient.get<SurfEvent[]>(requestUrl).subscribe(
             (responseData: SurfEvent[]) => this.surfEventsData.next(responseData),
             error => {
-                this.snacBarService.send("We couldn't load the latest jam data. Please try again", "error");
+                this.snackBarService.send("We couldn't load the latest jam data. Please try again", "error");
                 console.log('ERROR loading surfEvent data :-(', error)
             }
         )

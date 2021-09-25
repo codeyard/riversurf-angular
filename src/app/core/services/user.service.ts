@@ -68,7 +68,7 @@ export class UserService {
                 favouriteRiders: riders
             };
             this.user.next(user);
-            this.snackBarService.send(`You'll no longer get updated about "${rider.firstName} ${rider.lastName}"!`, "success");
+            this.snackBarService.send(`We won't update you about "${rider.firstName} ${rider.lastName}" anymore!`, "success");
         } else {
             riders.push(rider.id)
             const user = {
@@ -76,7 +76,7 @@ export class UserService {
                 favouriteRiders: riders
             };
             this.user.next(user);
-            this.snackBarService.send(`You'll get updated about "${rider.firstName} ${rider.lastName}"!`, "success");
+            this.snackBarService.send(`We'll keep you updated about "${rider.firstName} ${rider.lastName}"!`, "success");
         }
     }
 

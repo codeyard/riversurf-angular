@@ -13,7 +13,7 @@ import {SnackbarService} from "../../core/services/snackbar.service";
 })
 export class RiderProfileComponent implements OnInit, OnDestroy {
     routeSubscription?: Subscription;
-    rider? : Rider;
+    rider?: Rider;
     isLoading = true;
 
     constructor(private route: ActivatedRoute, private ridersService: RidersService, private snackBarService: SnackbarService) {
@@ -35,8 +35,8 @@ export class RiderProfileComponent implements OnInit, OnDestroy {
                 },
                 error => {
                     this.isLoading = false;
-                    this.snackBarService.send("Unable to load Riders", "error");
-                    console.log('ERROR loading riders data :-(', error)
+                    this.snackBarService.send("Sorry mate, we are unable to load our Riders", "error");
+                    console.log(error)
                 });
     }
 

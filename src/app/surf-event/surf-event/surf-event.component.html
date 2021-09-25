@@ -42,7 +42,7 @@
             </a>
         </div>
         <div class="event__divisions__riders">
-            <h2>Riders</h2>
+            <h2>Riders in Action</h2>
             <ng-container *ngIf="enrolledRiders$ | async as enrolledRiders">
                 <a *ngFor="let rider of enrolledRiders"
                     routerLink="/riders/{{ rider.nickName + '-' + rider.id | slugify }}">

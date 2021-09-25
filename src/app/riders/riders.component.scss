@@ -192,6 +192,7 @@
                     border-radius: 50%;
                     padding: 0.5rem;
                     transition: .5s all;
+                    object-fit: cover;
 
                     @include respond(small) {
                         width: 3rem;
@@ -277,4 +278,8 @@ th.mat-header-cell:last-of-type, td.mat-cell:last-of-type, td.mat-footer-cell:la
     }
 
 
+}
+
+.underline {
+    @include underline-magical;
 }

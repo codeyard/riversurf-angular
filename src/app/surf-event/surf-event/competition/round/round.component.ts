@@ -53,7 +53,6 @@ export class RoundComponent implements OnInit, OnChanges {
     }
 
     drop(event: CdkDragDrop<string[], any>) {
-        console.log(`event`, event);
         if (event.previousContainer === event.container) {
             moveItemInArray(event.container.data, event.previousIndex, event.currentIndex);
             return
@@ -63,12 +62,11 @@ export class RoundComponent implements OnInit, OnChanges {
                     event.container.data,
                     event.previousIndex,
                     event.currentIndex);
-                this.snackbarService.send(`Successfully Assigned!`, "success")
+                this.snackbarService.send(`Successfully Assigned to Heat!`, "success")
                 return
             }
         }
-        this.snackbarService.send(`Sorry, this heat is already complete!`, "warning")
-        console.log(`heats`, this.round.heats);
+        this.snackbarService.send(`Sorry mate, this heat is already full!`, "warning")
     }
 
     revert() {
@@ -79,7 +77,7 @@ export class RoundComponent implements OnInit, OnChanges {
                 if (removedRider)
                     this.unassignedRiders.push(removedRider);
             }
-            this.snackbarService.send("All riders are no longer assigned", "success");
+            this.snackbarService.send("All Riders are waiting to be assigned to a Heat!", "success");
         }
     }
 
@@ -88,7 +86,7 @@ export class RoundComponent implements OnInit, OnChanges {
             const riderId = this.unassignedRiders.splice(Math.floor(Math.random() * this.unassignedRiders.length), 1);
             this.assignRiderToHeat(riderId[0]);
         }
-        this.snackbarService.send("Hope you like my heat assignment?", "success")
+        this.snackbarService.send("Mate, hope you like my heat assignment?", "success")
     }
 
     assignRiderToHeat(riderId: string) {
@@ -129,7 +127,7 @@ export class RoundComponent implements OnInit, OnChanges {
                 break;
             case "stop":
                 this.round.heats[event.heat.id] = {...event.heat, state: 'finished'}
-                this.snackbarService.send(`Heat ${event.heat.id + 1} started!`, 'success')
+                this.snackbarService.send(`Heat ${event.heat.id + 1} stopped!`, 'success')
                 msg += "stopped!"
                 break;
             case "save":
@@ -143,7 +141,7 @@ export class RoundComponent implements OnInit, OnChanges {
     }
 
     finishCompetition() {
-        this.snackbarService.send("Competition finished", "success");
+        this.snackbarService.send("Competition finished! Legendary!", "success");
         this.router.navigate(['../'], { relativeTo: this.route });
     }
 

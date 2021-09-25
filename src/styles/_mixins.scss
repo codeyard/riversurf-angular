@@ -24,7 +24,6 @@
     flex: 30%;
     margin: 3rem;
     box-shadow: 0 2px 1px -1px rgb(0 0 0 / 20%), 0 1px 1px 0 rgb(0 0 0 / 14%), 0 1px 3px 0 rgb(0 0 0 / 12%);
-    color: $color-primary;
     height: 100%;
 
     @include respond(small) {
@@ -43,4 +42,12 @@
     }
 
 
+}
+
+@mixin underline-magical {
+    display: inline-block;
+    color: $color-white;
+    padding: .2rem .4rem;
+    background-size: 100% 88%;
+    background: linear-gradient(180deg, rgba(63, 81, 181, 1) 0%, rgba(101, 115, 195, 1) 100%) no-repeat 0 100%;
 }

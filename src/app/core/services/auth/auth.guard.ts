@@ -36,12 +36,11 @@ export class AuthGuard implements CanActivate {
                             this.snackBarService.send("Hold on a second while we grab the data for you!", "success");
                             return true;
                         } else {
-                            console.log("NOT JUDGE OR ORGANIZER OF EVENT!")
                             this.snackBarService.send("Fella, you don't have the right permission to do that!", "error");
                             return this.router.createUrlTree(["/"]);
                         }
                     } else {
-                        this.snackBarService.send("Hold on a second while we grab the data for you!!!", "success");
+                        this.snackBarService.send("Hold on a second while we grab the data for you!", "success");
                         return true;
                     }
                 } else {

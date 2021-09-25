@@ -81,7 +81,7 @@ export class ResultViewComponent implements OnInit, AfterViewInit, OnDestroy {
 
                     },
                     error => {
-                        this.snackBarService.send("Unable to load Competition", "error");
+                        this.snackBarService.send("Sorry fella, we couldn't load the Competition", "error");
                         console.log('ERROR loading competition data :-(', error)
                     })
             )

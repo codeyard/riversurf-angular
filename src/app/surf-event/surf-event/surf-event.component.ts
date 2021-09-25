@@ -52,7 +52,7 @@ export class SurfEventComponent implements OnInit {
                 },
                 error => {
                     this.isLoading = false;
-                    this.snackBarService.send("Unable to load Surf Event", "error");
+                    this.snackBarService.send("Sorry, we are unable to load Surf Event", "error");
                     console.log('ERROR loading surf event data :-(', error)
                 });
     }

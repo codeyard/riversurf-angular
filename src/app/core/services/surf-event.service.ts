@@ -9,6 +9,7 @@ import {CompetitionService} from "./competition.service";
 import {Competition} from "../models/competition.model";
 import {RidersService} from "./riders.service";
 import {Rider} from "../models/rider.model";
+import {SnackbarService} from "./snackbar.service";
 
 @Injectable({
     providedIn: 'root'
@@ -25,7 +26,7 @@ export class SurfEventService {
         private httpClient: HttpClient,
         private appConfigService: AppConfigService,
         private competitionService: CompetitionService,
-        private ridersService: RidersService) {
+        private ridersService: RidersService, private snacBarService: SnackbarService) {
     }
 
     getSurfEvent(id: string): Observable<SurfEvent> {
@@ -124,6 +125,7 @@ export class SurfEventService {
         this.httpClient.get<SurfEvent[]>(requestUrl).subscribe(
             (responseData: SurfEvent[]) => this.surfEventsData.next(responseData),
             error => {
+                this.snacBarService.send("We couldn't load the latest jam data. Please try again", "error");
                 console.log('ERROR loading surfEvent data :-(', error)
             }
         )

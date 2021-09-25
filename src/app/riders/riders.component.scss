@@ -278,3 +278,7 @@ th.mat-header-cell:last-of-type, td.mat-cell:last-of-type, td.mat-footer-cell:la
 
 
 }
+
+.underline {
+    @include underline-magical;
+}

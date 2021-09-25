@@ -1,5 +1,5 @@
 import {Injectable} from '@angular/core';
-import {combineLatest, Subscription} from "rxjs";
+import {combineLatest} from "rxjs";
 import {webSocket, WebSocketSubject} from "rxjs/webSocket";
 import {
     AuthSessionResponse,
@@ -15,6 +15,7 @@ import {distinctUntilChanged, map} from "rxjs/operators";
 import {HttpClient} from "@angular/common/http";
 import {OutgoingMessageModel} from "../models/websocket/outgoing-message.model";
 import {OutgoingSubscriptionPayload} from "../models/websocket/outgoing-subscription-payload.model";
+import {SnackbarService} from "./snackbar.service";
 
 /*
     Example data for the websocket when sending a notification:
@@ -49,7 +50,8 @@ export class WebSocketService {
                 private userService: UserService,
                 private networkStatusService: NetworkStatusService,
                 private httpClient: HttpClient,
-                private appConfigService: AppConfigService
+                private appConfigService: AppConfigService,
+                private snackBarService: SnackbarService
     ) {
         // ToDo: check if User is logged in, check if we are online
         const networkState$ = networkStatusService.getNetworkStatus();
@@ -83,6 +85,35 @@ export class WebSocketService {
             });
     }
 
+    parseDataMessage(message: any) {
+        const dataMessage: WebSocketDataPayload = {
+            id: message.id,
+            payload: {
+                data: ''
+            }
+        };
+
+        if (message.payload.data) {
+            dataMessage.payload.data = message.payload.data;
+
+            console.log(`Received data message`, dataMessage);
+        }
+    }
+
+    parseSubscriptionMessage(message: any) {
+        const subscriptionMessage: WebSocketSubscriptionPayload = {
+            id: message.id,
+            payload: {
+                riderIds: []
+            }
+        };
+
+        if (message.payload.riderIds) {
+            subscriptionMessage.payload.riderIds = message.payload.riderIds;
+
+            console.log(`Received subscription message`, subscriptionMessage);
+        }
+    }
 
     private receiveMessage(message: any) {
         if (message.id && message.messageType && message.payload) {
@@ -101,36 +132,6 @@ export class WebSocketService {
             }
         } else {
             console.log(`Received unknown message`, message);
-        }
-    }
-
-    private parseDataMessage(message: any) {
-        const dataMessage: WebSocketDataPayload = {
-            id: message.id,
-            payload: {
-                data: ''
-            }
-        };
-
-        if (message.payload.data) {
-            dataMessage.payload.data = message.payload.data;
-
-            console.log(`Received data message`, dataMessage);
-        }
-    }
-
-    private parseSubscriptionMessage(message: any) {
-        const subscriptionMessage: WebSocketSubscriptionPayload = {
-            id: message.id,
-            payload: {
-                riderIds: []
-            }
-        };
-
-        if (message.payload.riderIds) {
-            subscriptionMessage.payload.riderIds = message.payload.riderIds;
-
-            console.log(`Received subscription message`, subscriptionMessage);
         }
     }
 
@@ -186,7 +187,10 @@ export class WebSocketService {
         this.webSocketData = webSocket(webSocketUrl);
         this.webSocketData.subscribe(
             msg => this.receiveMessage(msg),
-            err => console.log(`WebSocket Error`, err),
+            err => {
+                this.snackBarService.send("We couldn't update incoming live data for you", "error");
+                console.log(`WebSocket Error`, err);
+            },
             () => console.log(`WebSocket Complete`)
         );
     }

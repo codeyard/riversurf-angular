@@ -39,7 +39,7 @@ export class CompetitionComponent implements OnInit, OnDestroy {
                             round.riders.length > 0 ? 'round-started': 'round-not-started').lastIndexOf("round-started")
                 },
                 error => {
-                    this.snackBarService.send("Unable to load Competition", "error");
+                    this.snackBarService.send("Sorry fella, we couldn't load the Competition", "error");
                     console.log('ERROR loading competition data :-(', error)
                 });
     }
@@ -52,7 +52,7 @@ export class CompetitionComponent implements OnInit, OnDestroy {
         this.competition.rounds[event.currentRound + 1] = {...this.competition.rounds[event.currentRound + 1], riders: event.promotedRiders};
         this.updateCompetition(this.competition.rounds[event.currentRound + 1])
         this.selectedTabIndex = this.selectedTabIndex + 1;
-        this.snackBarService.send('Round successfully finished!', 'success');
+        this.snackBarService.send("Yeah, round completed! Let's move to the next one", 'success');
     }
 
     getRoundLabel(roundIndex: number): string {
@@ -76,9 +76,10 @@ export class CompetitionComponent implements OnInit, OnDestroy {
 
         this.surfEventService.updateCompetition(this.competition)
             .subscribe(
-                val => () => {},
+                () => () => {},
                 error => {
-                    this.snackBarService.send("Unable to save changes to server", "error");
+                    this.snackBarService.send("Sorry mate, we are Unable to save changes to server", "error");
+                    console.log(error)
                 });
     }
 

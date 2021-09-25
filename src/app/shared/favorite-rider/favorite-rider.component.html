@@ -1,6 +1,5 @@
 <button mat-icon-button title="Follow this rider" aria-label="Follow this rider"
         (click)="toggleFavorites($event)" >
-    <mat-icon *ngIf="isFavoriteRider" class="favorite">favorite
-    </mat-icon>
+    <mat-icon *ngIf="isFavoriteRider" class="favorite">favorite</mat-icon>
     <mat-icon *ngIf="!isFavoriteRider">favorite_border</mat-icon>
 </button>

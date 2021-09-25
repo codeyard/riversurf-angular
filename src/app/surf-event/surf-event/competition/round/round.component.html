@@ -25,7 +25,7 @@
                 <div cdkDropList [cdkDropListData]="unassignedRiders" class="round__riders"
                      (cdkDropListDropped)="drop($event)" id="unassignedRiders">
                     <div class="round__riders__single-rider" *ngFor="let rider of unassignedRiders" cdkDrag>
-                        <rs-rider-result [riderId]="rider" resultType="default"></rs-rider-result>
+                        <rs-rider-result [riderId]="rider" [isEditMode]="true" resultType="default"></rs-rider-result>
                     </div>
                 </div>
             </div>

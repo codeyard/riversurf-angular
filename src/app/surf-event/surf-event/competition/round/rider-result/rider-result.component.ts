@@ -22,6 +22,7 @@ export class RiderResultComponent implements OnInit, OnDestroy {
     @Input() roundNumber?: number;
     @Input() isHighlighted?: boolean
     @Input() isFadedOut?: boolean
+    @Input() isEditMode?: boolean = false;
 
 
 

@@ -1,8 +1,26 @@
-<div class="edit-button" *ngIf="isAdministrator">
-    <button mat-raised-button color="primary" type="button"
-            (click)="editCompetition()">Edit Competition
-    </button>
-</div>
+<ng-container *ngIf="surfEvent">
+    <div class="competition-container">
+        <h1>{{surfEvent.name}}</h1>
+
+        <div>
+            <div class="division-selector" aria-label="Division">
+                <button mat-raised-button *ngFor="let division of surfEvent.divisions"
+                        value="{{division}}" (click)="toggleDivision(division)"
+                        class="division-selector__item division-selector__item--{{division}}"
+                        [disabled]="division === selectedDivision"
+                        [ngClass]="{'division-selector__item--disabled': division === selectedDivision}">
+                    <mat-icon class="division-selector__item__icon">{{division}}</mat-icon>
+                    {{division | titlecase}}
+                </button>
+            </div>
+        </div>
+        <button *ngIf="isAdministrator" mat-raised-button color="primary" type="button"
+                (click)="editCompetition()">Edit Competition
+        </button>
+    </div>
+</ng-container>
+
+
 <div class="relative-container">
     <div class="result-container" *ngIf="!isLoading">
         <div class="round" *ngFor="let round of competition.rounds">
@@ -61,7 +79,7 @@
                             </ng-container>
                             <ng-container *ngIf="heat.results.length === 0">
                                 <ng-container *ngFor="let rider of heat.riders; let riderIndex = index">
-                                    <div class="rider" *ngIf="heat.results.length === 0" >
+                                    <div class="rider" *ngIf="heat.results.length === 0">
                                         <rs-rider-result [riderId]="rider"
                                                          [riderColorIndex]="riderIndex"
                                                          [resultType]="getHeatStatus(heat)"
@@ -90,7 +108,7 @@
                       [lines]="lines"
     ></rs-progress-line>
 
-    <qr-code value="{{qrCodeLink}}" size="200" errorCorrectionLevel="M"></qr-code>
+    <qr-code *ngIf="!isLoading" value="{{qrCodeLink}}" size="200" errorCorrectionLevel="M"></qr-code>
 </div>
 
 

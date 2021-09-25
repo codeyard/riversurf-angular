@@ -1,13 +1,43 @@
 @import "responsive";
 @import "variables";
 
-.edit-button {
+.competition-container {
     display: flex;
-    justify-content: center;
+    padding: 2rem;
+    align-items: center;
+    justify-content: space-between;
 
-    & button {
-        margin-top: 1rem;
-        margin-bottom: .5rem;
+
+    @include respond(small) {
+        flex-direction: column;
+        padding: .5rem;
+        gap: .5rem;
+    }
+
+    .division-selector {
+        border: none;
+
+        &__item {
+            color: $color-white;
+            margin-right: 1rem;
+            border-radius: 4px;
+
+            &--male {
+                background-color: $color-male;
+            }
+
+            &--female {
+                background-color: $color-female;
+            }
+
+            &--kids {
+                background-color: $color-kids;
+            }
+
+            &--disabled {
+                background-color: darken($color-grey-light-2, 15);
+            }
+        }
     }
 }
 .result-container {

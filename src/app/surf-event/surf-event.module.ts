@@ -22,6 +22,7 @@ import {GoogleMapsModule} from "@angular/google-maps";
 import {ResultViewComponent} from './result-view/result-view.component';
 import {ProgressLineComponent} from './result-view/progress-line/progress-line.component';
 import {QrCodeModule} from "ng-qrcode";
+import {MatButtonToggleModule} from "@angular/material/button-toggle";
 
 
 @NgModule({
@@ -51,7 +52,8 @@ import {QrCodeModule} from "ng-qrcode";
         MatTabsModule,
         MatFormFieldModule,
         GoogleMapsModule,
-        QrCodeModule
+        QrCodeModule,
+        MatButtonToggleModule
     ]
 })
 export class SurfEventModule {

@@ -33,7 +33,7 @@
     </div>
     <div class="event__divisions">
         <div class="event__divisions__selection">
-            <h2><span class="underline">Competitions</span></h2>
+            <h2>Competitions</h2>
             <a mat-raised-button
                 *ngFor="let division of surfEvent.divisions"
                 class="division-{{division}}"
@@ -42,7 +42,7 @@
             </a>
         </div>
         <div class="event__divisions__riders">
-            <h2><span class="underline">Riders in Action</span></h2>
+            <h2>Riders in Action</h2>
             <ng-container *ngIf="enrolledRiders$ | async as enrolledRiders">
                 <a *ngFor="let rider of enrolledRiders"
                     routerLink="/riders/{{ rider.nickName + '-' + rider.id | slugify }}">

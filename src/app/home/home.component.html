@@ -1,6 +1,6 @@
 <div class="content">
     <main class="main">
-        <h2>Check out our <span class="underline">Jams:</span></h2>
+        <h2>Check out our <span class="underline">Jams</span></h2>
         <mat-tab-group [selectedIndex]="selectedTabIndex" (selectedTabChange)="onTabChange($event)">
             <mat-tab *ngIf="currentSurfEvents$ | async as currentSurfEvents" label="Latest Jams"
                      class="main__tab-body">
@@ -52,7 +52,7 @@
     </main>
 
     <aside class="aside">
-        <h2>Check out our <span class="underline">awesome Riders:</span></h2>
+        <h2>Check out our <span class="underline">awesome Riders</span></h2>
         <mat-spinner *ngIf="isLoadingRandomRiders" diameter="40"></mat-spinner>
         <div *ngIf="!isLoadingRandomRiders && randomRiders.length">
             <div class="rider__cards">
@@ -65,7 +65,7 @@
 
 <ng-container *ngIf="upcomingSurfEvents$ | async as upcomingSurfEvents">
     <div class="map">
-        <h2>Where to find <span class="underline">our Jams:</span></h2>
+        <h2>Where to find <span class="underline">our Jams</span></h2>
         <div class="event__map">
             <google-map
                 width="100%"

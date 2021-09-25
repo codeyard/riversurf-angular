@@ -46,15 +46,8 @@
 
 @mixin underline-magical {
     display: inline-block;
-    padding-top: .2rem;
-    background: linear-gradient(180deg, rgba(63, 81, 181, 1) 0%, rgba(101, 115, 195, 1) 100%);
-    background-repeat: no-repeat;
-    background-size: 100% 0.2rem;
-    background-position: 0 100%;
-    transition: background-size 0.25s ease-in;
-
-    &:hover {
-        color: $color-white;
-        background-size: 100% 88%;
-    }
+    color: $color-white;
+    padding: .2rem .4rem;
+    background-size: 100% 88%;
+    background: linear-gradient(180deg, rgba(63, 81, 181, 1) 0%, rgba(101, 115, 195, 1) 100%) no-repeat 0 100%;
 }

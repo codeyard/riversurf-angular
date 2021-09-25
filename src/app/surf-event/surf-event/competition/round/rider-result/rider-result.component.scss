@@ -30,6 +30,8 @@
     }
 
     &__content {
+        display: flex;
+        align-items: center;
     }
 
 
@@ -73,7 +75,7 @@
         color: $color-white;
         font-weight: 800;
 
-        &-cointainer {
+        &-container {
             height: 2rem;
             width: 2rem;
             border-radius: 50%;

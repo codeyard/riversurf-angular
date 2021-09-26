@@ -3,7 +3,7 @@ import {Competition} from "../models/competition.model";
 import {BehaviorSubject, Observable} from "rxjs";
 import {HttpClient} from "@angular/common/http";
 import {AppConfigService} from "./app-config.service";
-import {filter, map} from "rxjs/operators";
+import {filter, map, tap} from "rxjs/operators";
 
 @Injectable({
     providedIn: 'root'
@@ -26,7 +26,13 @@ export class CompetitionService {
         return this.competition$
             .pipe(
                 filter(competitions => competitions.length > 0),
-                map(competitions => competitions.filter(competition => ids.includes(competition.id)))
+                map(competitions => {
+                    if(competitions.filter(competition => ids.includes(competition.id)) !== undefined) {
+                    return competitions.filter(competition => ids.includes(competition.id))
+                    } else {
+                        throw ("NOT_EXISTS");
+                    }
+                })
             )
     }
 

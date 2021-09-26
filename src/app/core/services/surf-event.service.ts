@@ -32,7 +32,14 @@ export class SurfEventService {
 
     getSurfEvent(id: string): Observable<SurfEvent> {
         return this.getSurfEvents().pipe(
-            map(surfEvents => surfEvents.filter(surfEvent => surfEvent.id === id)[0])
+            filter(surfEvents => surfEvents.length > 0),
+            map(surfEvents => {
+                if (surfEvents.filter(surfEvent => surfEvent.id === id)[0] !== undefined) {
+                    return surfEvents.filter(surfEvent => surfEvent.id === id)[0]
+                } else {
+                    throw "NOT_EXISTS";
+                }
+            }),
         );
     }
 
@@ -113,8 +120,7 @@ export class SurfEventService {
             filter(surfEvent => surfEvent !== undefined),
             switchMap((surfEvent: SurfEvent) => this.competitionService.getCompetitionsByIds(surfEvent.competitions)),
             filter(competitions => competitions !== undefined && competitions.length > 0),
-            map((competitions: Competition[]) => competitions.filter(competition => competition.division === division)[0])
-        );
+            map((competitions: Competition[]) => competitions.filter(competition => competition.division === division)[0]));
     }
 
     updateCompetition(competition: Competition) {

@@ -14,6 +14,8 @@ import {NewUserNotificationsPipe} from './header/navigation/notification/new-use
 import {MatTableModule} from "@angular/material/table";
 import {A11yModule} from "@angular/cdk/a11y";
 import {MatPaginatorModule} from "@angular/material/paginator";
+import {MatFormFieldModule} from "@angular/material/form-field";
+import {MatAutocompleteModule} from "@angular/material/autocomplete";
 
 
 @NgModule({
@@ -34,7 +36,9 @@ import {MatPaginatorModule} from "@angular/material/paginator";
         MatButtonModule,
         MatTableModule,
         A11yModule,
-        MatPaginatorModule
+        MatPaginatorModule,
+        MatFormFieldModule,
+        MatAutocompleteModule
     ],
     exports: [
         HeaderComponent

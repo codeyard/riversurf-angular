@@ -42,41 +42,7 @@
             display: none;
         }
 
-        input {
-            @include text;
-            font-family: inherit;
-            background-color: $color-white;
-            border: none;
-            color: $color-text-3;
-            padding: 0.5rem 2rem;
-            border-radius: 1.5rem;
-            width: 40%;
-            min-width: 480px;
-            transition: all 0.2s;
-            text-align: center;
 
-            &:focus {
-                outline: none;
-                width: 45%;
-                padding: 0.7rem 2rem;
-
-                @include respond(medium) {
-                    width: 80%;
-                }
-
-            }
-
-            &::placeholder {
-                font-weight: 100;
-                color: $color-text-4;
-
-            }
-
-            @include respond(medium) {
-                width: 60%;
-            }
-
-        }
 
         @include respond(small) {
             display: none;

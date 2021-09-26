@@ -15,6 +15,8 @@ import {distinctUntilChanged, map} from "rxjs/operators";
 import {HttpClient} from "@angular/common/http";
 import {OutgoingMessageModel} from "../models/websocket/outgoing-message.model";
 import {OutgoingSubscriptionPayload} from "../models/websocket/outgoing-subscription-payload.model";
+import {OutgoingNotification} from "../models/websocket/OutgoingNotification";
+import {OutgoingAuthenticationPayload} from "../models/websocket/outgoing-authentication-payload";
 
 /*
     Example data for the websocket when sending a notification:
@@ -41,7 +43,7 @@ export class WebSocketService {
 
     private webSocketData?: WebSocketSubject<any>;
 
-    private MAP_TO_REMOTE_WEBSOCKET = true; // set to false, if you want to use your own websocket (on localhost)
+    private MAP_TO_REMOTE_WEBSOCKET = false; // set to false, if you want to use your own websocket (on localhost)
     private WEBSOCKET_PORT_ON_LOCALHOST = 8080; // set the port number of your websocket when hosting on localhost
 
     constructor(private config: AppConfigService,
@@ -51,21 +53,22 @@ export class WebSocketService {
                 private httpClient: HttpClient,
                 private appConfigService: AppConfigService
     ) {
-        // ToDo: check if User is logged in, check if we are online
-        const networkState$ = networkStatusService.getNetworkStatus();
-        const authState$ = userService.getUser().pipe(map(user => user.isAuthenticated));
+        networkStatusService.getNetworkStatus().subscribe(networkstate => {
+            if (networkstate === "ONLINE") {
+                this.connect();
+            } else {
+                this.disconnect();
+            }
+        });
 
-        combineLatest([networkState$, authState$])
-            .pipe(distinctUntilChanged(([netprev, authprev], [netcurr, authcurr]) => {
-                return netprev === netcurr && authprev === authcurr;
-            }))
-            .subscribe(([networkState, authState]) => {
-                if (networkState === "ONLINE") {
-                    if (authState) {
-                        this.connectAuth();
-                    } else {
-                        this.connect();
-                    }
+
+        userService.getUser()
+            .pipe(distinctUntilChanged((prevUser, nextUser) => prevUser.isAuthenticated === nextUser.isAuthenticated))
+            .subscribe(user => {
+                if (user.isAuthenticated) {
+                    this.sendAuthMessage(user.token ?? "");
+                } else {
+                    this.sendAuthMessage("");
                 }
             });
 
@@ -79,8 +82,18 @@ export class WebSocketService {
                     messageType: "subscription",
                     payload: outgoingSubscriptionPayload
                 }
-                this.webSocketData?.next(outgoingMessage);
+                if (this.webSocketData) {
+                    this.webSocketData.next(outgoingMessage);
+                }
             });
+    }
+
+    public sendNotification(outgoingNotification: OutgoingNotification) {
+        const outgoingMessage: OutgoingMessageModel = {
+            messageType: "notification",
+            payload: outgoingNotification
+        }
+        this.webSocketData?.next(outgoingMessage)
     }
 
 
@@ -155,20 +168,15 @@ export class WebSocketService {
         }
     }
 
-    private connectAuth() {
-        const requestUrl = this.PROTOCOL + this.appConfigService.getHostName() + this.PATH_ENDPOINT;
-        const body = {}
-        return this.httpClient.post<AuthSessionResponse>(requestUrl, body)
-            .subscribe(response => this.connect(response.sessionToken));
-    }
-
     private connect(sessionToken?: string): void {
-        this.webSocketData?.complete();
+        if (this.webSocketData?.closed !== true) {
+            this.disconnect();
+        }
 
         sessionToken = sessionToken ?? "";
 
         let protocol = window.location.protocol === "https:" ? "wss://" : "ws://";
-        let host = '';
+        let host = 'localhost';
 
         if (this.MAP_TO_REMOTE_WEBSOCKET) {
             host = this.config.getHostName();
@@ -187,7 +195,23 @@ export class WebSocketService {
         this.webSocketData.subscribe(
             msg => this.receiveMessage(msg),
             err => console.log(`WebSocket Error`, err),
-            () => console.log(`WebSocket Complete`)
+            () => console.log(`WebSocket Closed for unknown reason`)
         );
+    }
+
+    private sendAuthMessage(token: string) {
+        const outgoingAuthenticationPayload: OutgoingAuthenticationPayload = {
+            baererToken: token
+        }
+        const outgoningMessage: OutgoingMessageModel = {
+            messageType: "authentication",
+            payload: outgoingAuthenticationPayload
+        }
+        this.webSocketData?.next(outgoningMessage);
+    }
+
+    private disconnect() {
+        this.webSocketData?.unsubscribe();
+        this.webSocketData?.complete();
     }
 }

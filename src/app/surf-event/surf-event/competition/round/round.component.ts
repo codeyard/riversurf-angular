@@ -4,6 +4,7 @@ import {SnackbarService} from "../../../../core/services/snackbar.service";
 import {Heat, Round} from "../../../../core/models/competition.model";
 import {CompetitionService} from "../../../../core/services/competition.service";
 import {ActivatedRoute, Router} from "@angular/router";
+import {WebSocketService} from "../../../../core/services/web-socket.service";
 
 @Component({
     selector: 'rs-round',
@@ -24,7 +25,8 @@ export class RoundComponent implements OnInit, OnChanges {
         private snackbarService: SnackbarService,
         private competitionService: CompetitionService,
         private router: Router,
-        private route: ActivatedRoute) {
+        private route: ActivatedRoute,
+        private webSocketService: WebSocketService) {
     }
 
     ngOnInit(): void {
@@ -139,6 +141,14 @@ export class RoundComponent implements OnInit, OnChanges {
                 break;
         }
         this.snackbarService.send(msg, "success");
+        this.webSocketService.sendNotification({
+            surfEventName: "",
+            topic: "heat",
+            action: event.action,
+            riders: event.heat.riders,
+            timestamp: Date.now().toString(),
+            link: this.router.url.slice(0, -5) // remove "/edit"
+        })
         this.onSyncRound()
     }
 

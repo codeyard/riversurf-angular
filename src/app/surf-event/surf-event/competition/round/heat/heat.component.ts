@@ -28,6 +28,7 @@ export class HeatComponent implements OnInit, OnChanges {
             this.setResults()
         }
         this.statusChange.emit({action, heat: this.heat, form: this.heatForm});
+
     }
 
     setResults() {

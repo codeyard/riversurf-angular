@@ -7,9 +7,12 @@ import {AuthGuard} from "../core/services/auth/auth.guard";
 
 
 const routes: Routes = [
-    {path: ':id', component: SurfEventComponent},
-    {path: ':id/competition/:division', component: ResultViewComponent},
-    {path: ':id/competition/:division/edit', canActivate:[AuthGuard], component: CompetitionComponent},
+    {path: ':id', children: [
+            {path: '', component: SurfEventComponent},
+            {path: 'competition/:division', component: ResultViewComponent},
+            {path: 'competition/:division/edit', canActivate:[AuthGuard], component: CompetitionComponent},
+            {path: '**', redirectTo: ''}
+            ]}
 ]
 
 @NgModule({

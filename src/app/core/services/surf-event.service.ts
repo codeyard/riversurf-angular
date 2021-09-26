@@ -32,6 +32,7 @@ export class SurfEventService {
 
     getSurfEvent(id: string): Observable<SurfEvent> {
         return this.getSurfEvents().pipe(
+            filter(surfEvents => surfEvents.length > 0),
             map(surfEvents => {
                 if (surfEvents.filter(surfEvent => surfEvent.id === id)[0] !== undefined) {
                     return surfEvents.filter(surfEvent => surfEvent.id === id)[0]

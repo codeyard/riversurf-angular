@@ -1,4 +1,5 @@
 @import "responsive";
+@import "mixins";
 @import "variables";
 
 .competition-container {
@@ -116,4 +117,8 @@ qr-code {
     @include respond(small) {
         display: none;
     }
+}
+
+.underline {
+    @include underline-magical;
 }

@@ -71,7 +71,13 @@ export class RidersService {
         return this.riders$
             .pipe(
                 filter(riders => riders.length > 0),
-                map(riders => riders.filter(rider => rider.id === id)[0])
+                map(riders => {
+                    if(riders.filter(rider => rider.id === id)[0] !== undefined) {
+                        return riders.filter(rider => rider.id === id)[0]
+                    } else {
+                        throw "NOT_EXISTS";
+                    }
+                })
             );
 
     }

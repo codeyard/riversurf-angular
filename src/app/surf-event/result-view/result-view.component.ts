@@ -61,6 +61,8 @@ export class ResultViewComponent implements OnInit, AfterViewInit, OnDestroy {
     qrCodeLink?: string;
     selectedDivision: string = '';
 
+    private selectedSurfEvent: string = '';
+
     private destroy$ = new Subject();
 
     constructor(private cd: ChangeDetectorRef,
@@ -79,15 +81,24 @@ export class ResultViewComponent implements OnInit, AfterViewInit, OnDestroy {
                     const id = params['id'].split('-').pop();
                     const division = params['division'].toLowerCase();
                     this.selectedDivision = division;
+                    this.selectedSurfEvent = id;
                     return this.surfEventService.getCompetitionByDivision(id, division);
                 }),
                 tap(competition => {
                         this.competition = competition;
                         this.isLoading = false;
-
                     },
                     error => {
-                        this.snackBarService.send("Sorry fella, we couldn't load the Competition", "error");
+                        this.isLoading = false;
+                        let errorMessage = "Sorry fella, we couldn't load the Competition";
+                        let routerNavigation = '/';
+                        if (error === "NON_EXISTING_COMPETITION") {
+                            errorMessage = "Sorry mate, it seems like this Competition does not exist!";
+                            routerNavigation += 'event/' + this.selectedSurfEvent;
+                        }
+                        console.log(`Re-navigate to: ${routerNavigation}`);
+                        this.snackBarService.send(errorMessage, "error");
+                        this.router.navigate([routerNavigation]);
                         console.log('ERROR loading competition data :-(', error)
                     })
             )

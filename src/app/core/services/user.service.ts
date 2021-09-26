@@ -109,7 +109,7 @@ export class UserService {
         const userData: {
             email: string,
             id: string,
-            tokenId: string,
+            token: string,
             userName: string,
             userRole: string
         } = JSON.parse(<string>localStorage.getItem("userData"))
@@ -121,14 +121,14 @@ export class UserService {
             userName: userData.userName,
             email: userData.email,
             userRole: <"organizer" | "judge" | "rider">userData.userRole,
-            token: userData.tokenId,
+            token: userData.token,
             favouriteRiders: [],
             isAuthenticated: true
         };
 
         if (user.token) {
             this.user.next(user);
-            this.startAutologout(userData.tokenId)
+            this.startAutologout(userData.token)
         }
 
 

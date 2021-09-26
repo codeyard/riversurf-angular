@@ -8,7 +8,6 @@ import {SharedModule} from "./shared/shared.module";
 import {CoreModule} from "./core/core.module";
 import {EventCardComponent} from "./home/event-card/event-card.component";
 import {MatCardModule} from "@angular/material/card";
-import {MatChipsModule} from "@angular/material/chips";
 import {UserModule} from "./user/user.module";
 import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
 import {HTTP_INTERCEPTORS, HttpClientModule} from "@angular/common/http";

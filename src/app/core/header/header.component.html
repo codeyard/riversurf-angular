@@ -8,11 +8,25 @@
         <h1>RiverSurf</h1>
     </div>
     <div class="header__search">
-        <input type="text"
-               name="search"
-               placeholder="Search events or riders"
-               autocomplete="off"
-        >
+        <form>
+            <input matInput
+                   aria-label="Search jams or riders"
+                   placeholder="Search jams or riders"
+                   [matAutocomplete]="auto"
+                   [formControl]="autocompleteCtrl">
+            <mat-autocomplete class="header__search__results" #auto="matAutocomplete">
+                <mat-option *ngFor="let event of filteredResults.events" [value]="event.name" (onSelectionChange)="goToSurfEvent(event)">
+                    <mat-icon>event_note</mat-icon>
+                    {{event.name}}
+                    <span class="header__search__results-small">{{event.location}}</span>
+                </mat-option>
+                <mat-option *ngFor="let rider of filteredResults.riders" [value]="rider.firstName + ' ' + rider.lastName" (onSelectionChange)="goToRider(rider)">
+                    <mat-icon>surfing</mat-icon>
+                    {{rider.firstName}} {{rider.lastName}}
+                    <span class="header__search__results-small">{{rider.nickName}}</span>
+                </mat-option>
+            </mat-autocomplete>
+        </form>
     </div>
     <rs-navigation></rs-navigation>
 </mat-toolbar>

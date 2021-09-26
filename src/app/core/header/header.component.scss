@@ -45,7 +45,6 @@
         input {
             @include text;
             font-family: inherit;
-            background-color: $color-white;
             border: none;
             color: $color-text-3;
             padding: 0.5rem 2rem;
@@ -63,13 +62,11 @@
                 @include respond(medium) {
                     width: 80%;
                 }
-
             }
 
             &::placeholder {
                 font-weight: 100;
                 color: $color-text-4;
-
             }
 
             @include respond(medium) {
@@ -97,4 +94,3 @@
         }
     }
 }
-

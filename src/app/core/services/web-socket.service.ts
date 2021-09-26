@@ -1,8 +1,6 @@
 import {Injectable} from '@angular/core';
-import {combineLatest} from "rxjs";
 import {webSocket, WebSocketSubject} from "rxjs/webSocket";
 import {
-    AuthSessionResponse,
     WebSocketDataPayload,
     WebSocketNotificationPayload,
     WebSocketSubscriptionPayload
@@ -16,21 +14,8 @@ import {HttpClient} from "@angular/common/http";
 import {OutgoingMessageModel} from "../models/websocket/outgoing-message.model";
 import {OutgoingSubscriptionPayload} from "../models/websocket/outgoing-subscription-payload.model";
 import {SnackbarService} from "./snackbar.service";
-
-/*
-    Example data for the websocket when sending a notification:
-    {
-        "id" : "0",
-        "type" : "notification",
-        "payload" : {
-            "notification" : {
-                "timestamp" : "2021-09-20T20:28:52.512Z",
-                "content" : "The next river surf jam in thun will be in 2022! Click on the link to see more details.",
-                "link" : "/event/riversurfjam-thun-2022-613917dd771da527952a46a7"
-            }
-        }
-    }
- */
+import {OutgoingNotification} from "../models/websocket/OutgoingNotification";
+import {OutgoingAuthenticationPayload} from "../models/websocket/outgoing-authentication-payload";
 
 @Injectable({
     providedIn: 'root'
@@ -53,21 +38,22 @@ export class WebSocketService {
                 private appConfigService: AppConfigService,
                 private snackBarService: SnackbarService
     ) {
-        // ToDo: check if User is logged in, check if we are online
-        const networkState$ = networkStatusService.getNetworkStatus();
-        const authState$ = userService.getUser().pipe(map(user => user.isAuthenticated));
+        networkStatusService.getNetworkStatus().subscribe(networkstate => {
+            if (networkstate === "ONLINE") {
+                this.connect();
+            } else {
+                this.disconnect();
+            }
+        });
 
-        combineLatest([networkState$, authState$])
-            .pipe(distinctUntilChanged(([netprev, authprev], [netcurr, authcurr]) => {
-                return netprev === netcurr && authprev === authcurr;
-            }))
-            .subscribe(([networkState, authState]) => {
-                if (networkState === "ONLINE") {
-                    if (authState) {
-                        this.connectAuth();
-                    } else {
-                        this.connect();
-                    }
+
+        userService.getUser()
+            .pipe(distinctUntilChanged((prevUser, nextUser) => prevUser.isAuthenticated === nextUser.isAuthenticated))
+            .subscribe(user => {
+                if (user.isAuthenticated) {
+                    this.sendAuthMessage(user.token ?? "");
+                } else {
+                    this.sendAuthMessage("");
                 }
             });
 
@@ -81,11 +67,21 @@ export class WebSocketService {
                     messageType: "subscription",
                     payload: outgoingSubscriptionPayload
                 }
-                this.webSocketData?.next(outgoingMessage);
+                if (this.webSocketData) {
+                    this.webSocketData.next(outgoingMessage);
+                }
             });
     }
 
-    parseDataMessage(message: any) {
+    public sendNotification(outgoingNotification: OutgoingNotification) {
+        const outgoingMessage: OutgoingMessageModel = {
+            messageType: "notification",
+            payload: outgoingNotification
+        }
+        this.webSocketData?.next(outgoingMessage)
+    }
+
+    private parseDataMessage(message: any) {
         const dataMessage: WebSocketDataPayload = {
             id: message.id,
             payload: {
@@ -100,7 +96,7 @@ export class WebSocketService {
         }
     }
 
-    parseSubscriptionMessage(message: any) {
+    private parseSubscriptionMessage(message: any) {
         const subscriptionMessage: WebSocketSubscriptionPayload = {
             id: message.id,
             payload: {
@@ -156,20 +152,15 @@ export class WebSocketService {
         }
     }
 
-    private connectAuth() {
-        const requestUrl = this.PROTOCOL + this.appConfigService.getHostName() + this.PATH_ENDPOINT;
-        const body = {}
-        return this.httpClient.post<AuthSessionResponse>(requestUrl, body)
-            .subscribe(response => this.connect(response.sessionToken));
-    }
-
     private connect(sessionToken?: string): void {
-        this.webSocketData?.complete();
+        if (this.webSocketData?.closed !== true) {
+            this.disconnect();
+        }
 
         sessionToken = sessionToken ?? "";
 
         let protocol = window.location.protocol === "https:" ? "wss://" : "ws://";
-        let host = '';
+        let host = 'localhost';
 
         if (this.MAP_TO_REMOTE_WEBSOCKET) {
             host = this.config.getHostName();
@@ -193,5 +184,21 @@ export class WebSocketService {
             },
             () => console.log(`WebSocket Complete`)
         );
+    }
+
+    private sendAuthMessage(token: string) {
+        const outgoingAuthenticationPayload: OutgoingAuthenticationPayload = {
+            baererToken: token
+        }
+        const outgoningMessage: OutgoingMessageModel = {
+            messageType: "authentication",
+            payload: outgoingAuthenticationPayload
+        }
+        this.webSocketData?.next(outgoningMessage);
+    }
+
+    private disconnect() {
+        this.webSocketData?.unsubscribe();
+        this.webSocketData?.complete();
     }
 }

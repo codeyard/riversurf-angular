@@ -1,1 +1,1 @@
-export type MessageType = "notification" | "subscription" | "data";
+export type MessageType = "notification" | "subscription" | "data" | "authentication";

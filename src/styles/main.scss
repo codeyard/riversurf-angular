@@ -110,3 +110,13 @@ snack-bar-container {
     padding: 0;
 }
 
+.header__search__results {
+    margin-top: 13px;
+    max-height: 50%;
+
+    &-small {
+        color: $color-grey-dark-2;
+        font-size: .75rem;
+        margin-left: .75rem;
+    }
+}

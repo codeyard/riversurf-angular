@@ -16,6 +16,8 @@ import {A11yModule} from "@angular/cdk/a11y";
 import {MatPaginatorModule} from "@angular/material/paginator";
 import {MatFormFieldModule} from "@angular/material/form-field";
 import {MatAutocompleteModule} from "@angular/material/autocomplete";
+import {ReactiveFormsModule} from "@angular/forms";
+import {MatInputModule} from "@angular/material/input";
 
 
 @NgModule({
@@ -38,7 +40,9 @@ import {MatAutocompleteModule} from "@angular/material/autocomplete";
         A11yModule,
         MatPaginatorModule,
         MatFormFieldModule,
-        MatAutocompleteModule
+        MatAutocompleteModule,
+        ReactiveFormsModule,
+        MatInputModule
     ],
     exports: [
         HeaderComponent

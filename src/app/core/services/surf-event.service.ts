@@ -9,6 +9,7 @@ import {CompetitionService} from "./competition.service";
 import {Competition} from "../models/competition.model";
 import {RidersService} from "./riders.service";
 import {Rider} from "../models/rider.model";
+import {SnackbarService} from "./snackbar.service";
 
 @Injectable({
     providedIn: 'root'
@@ -25,12 +26,20 @@ export class SurfEventService {
         private httpClient: HttpClient,
         private appConfigService: AppConfigService,
         private competitionService: CompetitionService,
-        private ridersService: RidersService) {
+        private ridersService: RidersService,
+        private snackBarService: SnackbarService) {
     }
 
     getSurfEvent(id: string): Observable<SurfEvent> {
         return this.getSurfEvents().pipe(
-            map(surfEvents => surfEvents.filter(surfEvent => surfEvent.id === id)[0])
+            filter(surfEvents => surfEvents.length > 0),
+            map(surfEvents => {
+                if (surfEvents.filter(surfEvent => surfEvent.id === id)[0] !== undefined) {
+                    return surfEvents.filter(surfEvent => surfEvent.id === id)[0]
+                } else {
+                    throw "NOT_EXISTS";
+                }
+            }),
         );
     }
 
@@ -111,8 +120,7 @@ export class SurfEventService {
             filter(surfEvent => surfEvent !== undefined),
             switchMap((surfEvent: SurfEvent) => this.competitionService.getCompetitionsByIds(surfEvent.competitions)),
             filter(competitions => competitions !== undefined && competitions.length > 0),
-            map((competitions: Competition[]) => competitions.filter(competition => competition.division === division)[0])
-        );
+            map((competitions: Competition[]) => competitions.filter(competition => competition.division === division)[0]));
     }
 
     updateCompetition(competition: Competition) {
@@ -124,6 +132,7 @@ export class SurfEventService {
         this.httpClient.get<SurfEvent[]>(requestUrl).subscribe(
             (responseData: SurfEvent[]) => this.surfEventsData.next(responseData),
             error => {
+                this.snackBarService.send("We couldn't load the latest jam data. Please try again", "error");
                 console.log('ERROR loading surfEvent data :-(', error)
             }
         )

@@ -1,8 +1,8 @@
 <div class="content">
     <main class="main">
-        <h2>River Surf Events</h2>
+        <h2>Check out our <span class="underline">Jams</span></h2>
         <mat-tab-group [selectedIndex]="selectedTabIndex" (selectedTabChange)="onTabChange($event)">
-            <mat-tab *ngIf="currentSurfEvents$ | async as currentSurfEvents" label="Current Events"
+            <mat-tab *ngIf="currentSurfEvents$ | async as currentSurfEvents" label="Latest Jams"
                      class="main__tab-body">
                 <div class="events">
                     <rs-carousel *ngIf="smallScreen" [index]="currentEvent" [auto]="false">
@@ -19,7 +19,7 @@
             </mat-tab>
 
 
-            <mat-tab *ngIf="upcomingSurfEvents$ | async as upcomingSurfEvents" label="Upcoming Events">
+            <mat-tab *ngIf="upcomingSurfEvents$ | async as upcomingSurfEvents" label="Upcoming Jams">
                 <div class="events">
                     <rs-carousel *ngIf="smallScreen" [index]="currentEvent" [auto]="false">
                         <ng-container *ngFor="let surfEvent of upcomingSurfEvents">
@@ -34,7 +34,7 @@
                 </div>
             </mat-tab>
 
-            <mat-tab *ngIf="pastSurfEvents$ | async as pastSurfEvents" label="Past Events">
+            <mat-tab *ngIf="pastSurfEvents$ | async as pastSurfEvents" label="Past Jams">
                 <div class="events">
                     <rs-carousel *ngIf="smallScreen" [index]="currentEvent" [auto]="false">
                         <ng-container *ngFor="let surfEvent of pastSurfEvents">
@@ -52,7 +52,7 @@
     </main>
 
     <aside class="aside">
-        <h2>Some Awesome Riders</h2>
+        <h2>Check out our <span class="underline">awesome Riders</span></h2>
         <mat-spinner *ngIf="isLoadingRandomRiders" diameter="40"></mat-spinner>
         <div *ngIf="!isLoadingRandomRiders && randomRiders.length">
             <div class="rider__cards">
@@ -65,7 +65,7 @@
 
 <ng-container *ngIf="upcomingSurfEvents$ | async as upcomingSurfEvents">
     <div class="map">
-        <h2>Awesome Event Locations</h2>
+        <h2>Where to find <span class="underline">our Jams</span></h2>
         <div class="event__map">
             <google-map
                 width="100%"

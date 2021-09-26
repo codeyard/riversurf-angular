@@ -1,5 +1,5 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
-import {ActivatedRoute} from "@angular/router";
+import {ActivatedRoute, Router} from "@angular/router";
 import {Rider} from "../../core/models/rider.model";
 import {Subscription} from "rxjs";
 import {switchMap} from "rxjs/operators";
@@ -13,10 +13,10 @@ import {SnackbarService} from "../../core/services/snackbar.service";
 })
 export class RiderProfileComponent implements OnInit, OnDestroy {
     routeSubscription?: Subscription;
-    rider? : Rider;
+    rider?: Rider;
     isLoading = true;
 
-    constructor(private route: ActivatedRoute, private ridersService: RidersService, private snackBarService: SnackbarService) {
+    constructor(private route: ActivatedRoute, private router: Router, private ridersService: RidersService, private snackBarService: SnackbarService) {
 
     }
 
@@ -35,8 +35,13 @@ export class RiderProfileComponent implements OnInit, OnDestroy {
                 },
                 error => {
                     this.isLoading = false;
-                    this.snackBarService.send("Unable to load Riders", "error");
-                    console.log('ERROR loading riders data :-(', error)
+                    let defaultMsg = "An error occured. Please try again!"
+                    if(error === "NOT_EXISTS") {
+                        defaultMsg = "Sorry mate, this jamer seems not to exist here!";
+                    }
+                    this.snackBarService.send( defaultMsg, "error");
+                    this.router.navigate(["/"]);
+                    console.log(error)
                 });
     }
 

@@ -7,6 +7,7 @@ import {filter, map, take} from "rxjs/operators";
 import {DexieService} from "./dexie.service";
 import {NetworkStatusService} from "./network-status.service";
 import {GenericCollectionResponseModel} from "../models/generic-collection-response.model";
+import {SnackbarService} from "./snackbar.service";
 
 /**
  * Riders are versioned by collection, we track the version of the whole collection
@@ -39,7 +40,8 @@ export class RidersService {
         private httpClient: HttpClient,
         private appConfigService: AppConfigService,
         private dexieService: DexieService,
-        private networkStatusService: NetworkStatusService
+        private networkStatusService: NetworkStatusService,
+        private snackBarService: SnackbarService
     ) {
         this.dexieDB = dexieService.getDB();
         this.dexieDB.riders.toArray().then((riders: Rider[]) => {
@@ -49,7 +51,7 @@ export class RidersService {
         });
         this.networkStatus
             .pipe(filter(status => status === 'ONLINE'))
-            .subscribe(status => {
+            .subscribe((status) => {
                 console.log('We are back online, lets sync!');
             })
     }
@@ -69,7 +71,13 @@ export class RidersService {
         return this.riders$
             .pipe(
                 filter(riders => riders.length > 0),
-                map(riders => riders.filter(rider => rider.id === id)[0])
+                map(riders => {
+                    if(riders.filter(rider => rider.id === id)[0] !== undefined) {
+                        return riders.filter(rider => rider.id === id)[0]
+                    } else {
+                        throw "NOT_EXISTS";
+                    }
+                })
             );
 
     }
@@ -117,10 +125,12 @@ export class RidersService {
                         version: responseData.version
                     })
                 } else {
-                    console.log('our riders were up to date already')
+                     // our riders were up to date already
                 }
             },
             error => {
+                // Error loading riders data
+                this.snackBarService.send("Sorry mate, We could not get the riders data. Try again!", "error");
                 console.log('ERROR loading riders data :-(', error)
             }
         )

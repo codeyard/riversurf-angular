@@ -1,7 +1,7 @@
 import {AfterViewInit, ChangeDetectorRef, Component, OnDestroy, OnInit, QueryList, ViewChildren} from '@angular/core';
 import {Competition, Heat, Result} from "../../core/models/competition.model";
 import {RiderResultComponent} from "../surf-event/competition/round/rider-result/rider-result.component";
-import {Subject, zip} from "rxjs";
+import {combineLatest, Subject} from "rxjs";
 import {ActivatedRoute, Router} from "@angular/router";
 import {SurfEventService} from "../../core/services/surf-event.service";
 import {switchMap, take, takeUntil, tap} from "rxjs/operators";
@@ -9,6 +9,7 @@ import {SnackbarService} from "../../core/services/snackbar.service";
 import {BreakpointObserver} from "@angular/cdk/layout";
 import {CarouselComponent} from "../../shared/carousel/carousel.component";
 import {UserService} from "../../core/services/user.service";
+import {SurfEvent} from "../../core/models/surf-event.model";
 
 export interface Line {
     source: Point,
@@ -35,6 +36,7 @@ interface RiderProgress {
 export class ResultViewComponent implements OnInit, AfterViewInit, OnDestroy {
 
     competition!: Competition;
+    surfEvent!: SurfEvent;
     @ViewChildren(RiderResultComponent) results!: QueryList<any>;
     @ViewChildren(CarouselComponent) carousel?: QueryList<any>
 
@@ -56,6 +58,9 @@ export class ResultViewComponent implements OnInit, AfterViewInit, OnDestroy {
     resultAndHeatData!: { riderId: string, result: Result }[];
     smallScreen?: boolean;
 
+    qrCodeLink?: string;
+    selectedDivision: string = '';
+
     private destroy$ = new Subject();
 
     constructor(private cd: ChangeDetectorRef,
@@ -73,6 +78,7 @@ export class ResultViewComponent implements OnInit, AfterViewInit, OnDestroy {
                 switchMap(params => {
                     const id = params['id'].split('-').pop();
                     const division = params['division'].toLowerCase();
+                    this.selectedDivision = division;
                     return this.surfEventService.getCompetitionByDivision(id, division);
                 }),
                 tap(competition => {
@@ -81,10 +87,12 @@ export class ResultViewComponent implements OnInit, AfterViewInit, OnDestroy {
 
                     },
                     error => {
-                        this.snackBarService.send("Unable to load Competition", "error");
+                        this.snackBarService.send("Sorry fella, we couldn't load the Competition", "error");
                         console.log('ERROR loading competition data :-(', error)
                     })
             )
+
+        this.qrCodeLink = window.location.toString();
 
         this.observer.observe('(max-width: 878px)')
             .pipe(takeUntil(this.destroy$))
@@ -92,8 +100,9 @@ export class ResultViewComponent implements OnInit, AfterViewInit, OnDestroy {
                 this.smallScreen = result.matches;
             });
 
-        zip(this.getUser(), this.getSurfEvent()).subscribe(
+        combineLatest(this.getUser(), this.getSurfEvent()).subscribe(
             ([user, surfEvent]) => {
+                this.surfEvent = surfEvent;
                 if (user.isAuthenticated) {
                     if (surfEvent.judge === user.id || surfEvent.organizer === user.id) {
                         this.isAdministrator = true;
@@ -262,7 +271,6 @@ export class ResultViewComponent implements OnInit, AfterViewInit, OnDestroy {
     }
 
     calculatePath(a: Point, b: Point) {
-
         const deltaX = b.x - a.x;
         const varianz = Math.random() * this.VARIANZ + this.VARIANZ_OFFSET;
         const middleX = a.x + (deltaX / 2) + varianz;
@@ -289,5 +297,16 @@ export class ResultViewComponent implements OnInit, AfterViewInit, OnDestroy {
 
     editCompetition() {
         this.router.navigate(["edit"], {relativeTo: this.route});
+    }
+
+    toggleDivision(division: string): void {
+        this.selectedDivision = division;
+        this.router.navigate(['../', this.selectedDivision], {
+            relativeTo: this.route
+        }).then();
+        this.lines = [];
+        this.points = [];
+        this.highlightedRider = '';
+        this.highlightActive = false;
     }
 }

@@ -1,9 +1,9 @@
 import {Component, OnInit} from '@angular/core';
 import {SurfEvent} from "../../core/models/surf-event.model";
 import {SurfEventService} from "../../core/services/surf-event.service";
-import {ActivatedRoute} from "@angular/router";
+import {ActivatedRoute, Router} from "@angular/router";
 import {Observable, Subscription} from "rxjs";
-import {filter, switchMap} from "rxjs/operators";
+import {catchError, filter, switchMap} from "rxjs/operators";
 import {SnackbarService} from "../../core/services/snackbar.service";
 import {Rider} from "../../core/models/rider.model";
 
@@ -32,6 +32,7 @@ export class SurfEventComponent implements OnInit {
     constructor(
         private surfEventService: SurfEventService,
         private route: ActivatedRoute,
+        private router: Router,
         private snackBarService: SnackbarService) {
     }
 
@@ -41,9 +42,7 @@ export class SurfEventComponent implements OnInit {
                 switchMap(params => {
                     const id = params['id'].split('-').pop();
                     return this.surfEventService.getSurfEvent(id)
-                }),
-                filter(surfEvent => surfEvent !== undefined)
-            )
+                }))
             .subscribe(
                 surfEvent => {
                     this.surfEvent = surfEvent;
@@ -52,8 +51,13 @@ export class SurfEventComponent implements OnInit {
                 },
                 error => {
                     this.isLoading = false;
-                    this.snackBarService.send("Unable to load Surf Event", "error");
-                    console.log('ERROR loading surf event data :-(', error)
+                    let defaultMsg = "An error occured. Please try again!"
+                    if(error === "NOT_EXISTS") {
+                        defaultMsg = "Sorry mate, it seems like this Jam does not exist!";
+                    }
+                    this.snackBarService.send( defaultMsg, "error");
+                    this.router.navigate(["/"]);
+                    console.log(error)
                 });
     }
 }

@@ -86,17 +86,17 @@ export class RidersComponent implements OnInit, AfterViewInit, OnDestroy {
                 },
                 error => {
                     this.isLoading = false;
-                    this.snackBarService.send("Unable to load Riders", "error");
+                    this.snackBarService.send("Sorry mate, we were Unable to load the Riders", "error");
                     console.log('ERROR loading riders data :-(', error)
                 }
             );
 
         this.favoriteRidersSubscription = this.userService.getFavoriteRiders()
             .pipe(
-            switchMap(riderId => this.ridersService.getRidersByIds(riderId))
-        ).subscribe(
-            val => this.favoriteRiders = val
-        );
+                switchMap(riderId => this.ridersService.getRidersByIds(riderId))
+            ).subscribe(
+                val => this.favoriteRiders = val
+            );
 
         this.dataSource.filterPredicate = this.createFilterPredicate();
     }
@@ -208,7 +208,7 @@ export class RidersComponent implements OnInit, AfterViewInit, OnDestroy {
     }
 
     private createFilterPredicate() {
-        const filterFunction = function(data: any, filter: string): boolean {
+        const filterFunction = function (data: any, filter: string): boolean {
             let text =
                 data.firstName.toLowerCase()
                 + data.lastName.toLowerCase()

@@ -24,7 +24,7 @@
         <main class="main">
             <div class="main--center">
                 <h1 *ngIf="division">{{ division | titlecase}} Riders</h1>
-                <h1 *ngIf="!division">Riders</h1>
+                <h1 *ngIf="!division"><span class="underline">Browse</span> or <span class="underline">Search</span> for Riders</h1>
 
                 <div class="loading" *ngIf="isLoading">
                     <mat-spinner diameter="40"></mat-spinner>
@@ -112,8 +112,8 @@
         <aside class="aside">
             <div class="aside__favorite">
                 <h2 *ngIf="!favoriteRiders.length">
-                    <mat-icon>favorite_border</mat-icon>
-                    your favorite Riders to get notified about their results!
+                    <mat-icon>favorite_border</mat-icon>&nbsp;
+                    <span class="underline">your favorite Riders</span> to get <span class="underline">notified</span> about their results!
                 </h2>
                 <h2 *ngIf="favoriteRiders.length">
                     Your

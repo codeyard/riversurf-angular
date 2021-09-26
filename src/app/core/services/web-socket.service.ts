@@ -1,8 +1,6 @@
 import {Injectable} from '@angular/core';
-import {combineLatest, Subscription} from "rxjs";
 import {webSocket, WebSocketSubject} from "rxjs/webSocket";
 import {
-    AuthSessionResponse,
     WebSocketDataPayload,
     WebSocketNotificationPayload,
     WebSocketSubscriptionPayload
@@ -15,23 +13,9 @@ import {distinctUntilChanged, map} from "rxjs/operators";
 import {HttpClient} from "@angular/common/http";
 import {OutgoingMessageModel} from "../models/websocket/outgoing-message.model";
 import {OutgoingSubscriptionPayload} from "../models/websocket/outgoing-subscription-payload.model";
+import {SnackbarService} from "./snackbar.service";
 import {OutgoingNotification} from "../models/websocket/OutgoingNotification";
 import {OutgoingAuthenticationPayload} from "../models/websocket/outgoing-authentication-payload";
-
-/*
-    Example data for the websocket when sending a notification:
-    {
-        "id" : "0",
-        "type" : "notification",
-        "payload" : {
-            "notification" : {
-                "timestamp" : "2021-09-20T20:28:52.512Z",
-                "content" : "The next river surf jam in thun will be in 2022! Click on the link to see more details.",
-                "link" : "/event/riversurfjam-thun-2022-613917dd771da527952a46a7"
-            }
-        }
-    }
- */
 
 @Injectable({
     providedIn: 'root'
@@ -43,7 +27,7 @@ export class WebSocketService {
 
     private webSocketData?: WebSocketSubject<any>;
 
-    private MAP_TO_REMOTE_WEBSOCKET = false; // set to false, if you want to use your own websocket (on localhost)
+    private MAP_TO_REMOTE_WEBSOCKET = true; // set to false, if you want to use your own websocket (on localhost)
     private WEBSOCKET_PORT_ON_LOCALHOST = 8080; // set the port number of your websocket when hosting on localhost
 
     constructor(private config: AppConfigService,
@@ -51,7 +35,8 @@ export class WebSocketService {
                 private userService: UserService,
                 private networkStatusService: NetworkStatusService,
                 private httpClient: HttpClient,
-                private appConfigService: AppConfigService
+                private appConfigService: AppConfigService,
+                private snackBarService: SnackbarService
     ) {
         networkStatusService.getNetworkStatus().subscribe(networkstate => {
             if (networkstate === "ONLINE") {
@@ -96,27 +81,6 @@ export class WebSocketService {
         this.webSocketData?.next(outgoingMessage)
     }
 
-
-    private receiveMessage(message: any) {
-        if (message.id && message.messageType && message.payload) {
-            switch (message.messageType) {
-                case "data":
-                    this.parseDataMessage(message);
-                    break;
-
-                case "notification":
-                    this.parseNotificationMessage(message);
-                    break;
-
-                default:
-                    console.log(`Received unknown message type`, message);
-                    break;
-            }
-        } else {
-            console.log(`Received unknown message`, message);
-        }
-    }
-
     private parseDataMessage(message: any) {
         const dataMessage: WebSocketDataPayload = {
             id: message.id,
@@ -144,6 +108,26 @@ export class WebSocketService {
             subscriptionMessage.payload.riderIds = message.payload.riderIds;
 
             console.log(`Received subscription message`, subscriptionMessage);
+        }
+    }
+
+    private receiveMessage(message: any) {
+        if (message.id && message.messageType && message.payload) {
+            switch (message.messageType) {
+                case "data":
+                    this.parseDataMessage(message);
+                    break;
+
+                case "notification":
+                    this.parseNotificationMessage(message);
+                    break;
+
+                default:
+                    console.log(`Received unknown message type`, message);
+                    break;
+            }
+        } else {
+            console.log(`Received unknown message`, message);
         }
     }
 
@@ -194,8 +178,11 @@ export class WebSocketService {
         this.webSocketData = webSocket(webSocketUrl);
         this.webSocketData.subscribe(
             msg => this.receiveMessage(msg),
-            err => console.log(`WebSocket Error`, err),
-            () => console.log(`WebSocket Closed for unknown reason`)
+            err => {
+                this.snackBarService.send("We couldn't update incoming live data for you", "error");
+                console.log(`WebSocket Error`, err);
+            },
+            () => console.log(`WebSocket Complete`)
         );
     }
 

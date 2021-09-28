@@ -42,8 +42,9 @@
             display: none;
         }
 
-        input {
+        &__input {
             @include text;
+            background-color: $color-white;
             font-family: inherit;
             border: none;
             color: $color-text-3;
@@ -72,7 +73,6 @@
             @include respond(medium) {
                 width: 60%;
             }
-
         }
 
         @include respond(small) {

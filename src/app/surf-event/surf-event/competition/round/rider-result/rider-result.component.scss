@@ -89,6 +89,11 @@
     &__type {
         color: $color-primary;
     }
+
+    &__winner {
+        margin-right: .5rem;
+        color: #FBC02D;
+    }
 }
 
 .no-hover{

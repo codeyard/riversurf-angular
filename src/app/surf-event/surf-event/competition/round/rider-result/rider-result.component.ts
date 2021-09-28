@@ -23,7 +23,8 @@ export class RiderResultComponent implements OnInit, OnDestroy {
     @Input() isHighlighted?: boolean
     @Input() isFadedOut?: boolean
     @Input() isEditMode?: boolean = false;
-
+    @Input() isFinalRound?: boolean = false;
+    @Input() isWinner?: boolean = false;
 
 
     rider ?: Rider;

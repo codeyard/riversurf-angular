@@ -18,6 +18,7 @@
             <a mat-raised-button
                *ngFor="let division of surfEvent.divisions"
                class="division-{{division}}"
+               (click)="onClick($event)"
                routerLink="/event/{{surfEvent.name | slugify}}-{{surfEvent.id}}/competition/{{ division }}">
                 {{division | titlecase}}
             </a>

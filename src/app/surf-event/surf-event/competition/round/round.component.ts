@@ -109,11 +109,10 @@ export class RoundComponent implements OnInit, OnChanges {
     moveToNextRound(roundNumber: number) {
         let promotedRiders = [];
         for (const heat of this.round.heats) {
-            const sortedArray = heat.results.sort((a, b) => a.value < b.value ? 1 : -1)
             if (roundNumber === 0) {
-                promotedRiders.push(sortedArray.map(result => result.riderId));
+                promotedRiders.push(heat.results.map(result => result.riderId));
             } else {
-                promotedRiders.push(sortedArray.map(result => result.riderId).splice(0, 2));
+                promotedRiders.push(heat.results.map(result => result.riderId).splice(0, 2));
             }
         }
         promotedRiders = promotedRiders.reduce((acc, val) => acc.concat(val), []);
@@ -133,6 +132,7 @@ export class RoundComponent implements OnInit, OnChanges {
                 msg += "stopped!"
                 break;
             case "save":
+                event.heat.results = event.heat.results.sort((a, b) => a.value < b.value ? 1 : -1)
                 this.round.heats[event.heat.id] = {...event.heat, state: 'completed'}
                 this.allHeatsFinished()
                 msg += "saved!"

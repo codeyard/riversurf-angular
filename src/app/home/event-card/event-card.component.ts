@@ -22,5 +22,7 @@ export class EventCardComponent {
         }
     }
 
-
+    onClick(event: Event) {
+        event.stopImmediatePropagation();
+    }
 }

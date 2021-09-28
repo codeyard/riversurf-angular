@@ -1,7 +1,7 @@
 import {AfterViewInit, ChangeDetectorRef, Component, OnDestroy, OnInit, QueryList, ViewChildren} from '@angular/core';
 import {Competition, Heat, Result} from "../../core/models/competition.model";
 import {RiderResultComponent} from "../surf-event/competition/round/rider-result/rider-result.component";
-import {combineLatest, Subject} from "rxjs";
+import {combineLatest, Subject, Subscription} from "rxjs";
 import {ActivatedRoute, Router} from "@angular/router";
 import {SurfEventService} from "../../core/services/surf-event.service";
 import {switchMap, take, takeUntil, tap} from "rxjs/operators";
@@ -39,6 +39,7 @@ export class ResultViewComponent implements OnInit, AfterViewInit, OnDestroy {
     surfEvent!: SurfEvent;
     @ViewChildren(RiderResultComponent) results!: QueryList<any>;
     @ViewChildren(CarouselComponent) carousel?: QueryList<any>
+    queryParamSubscription?: Subscription;
 
     lines: Line[] = [];
     points: Point[] = []
@@ -103,6 +104,13 @@ export class ResultViewComponent implements OnInit, AfterViewInit, OnDestroy {
                     })
             )
 
+        this.queryParamSubscription = this.route.queryParams.subscribe(params => {
+            const highlightedRider = params['highlight'];
+            if (highlightedRider) {
+                this.highlightRider(highlightedRider);
+            }
+        });
+
         this.qrCodeLink = window.location.toString();
 
         this.observer.observe('(max-width: 878px)')
@@ -137,6 +145,11 @@ export class ResultViewComponent implements OnInit, AfterViewInit, OnDestroy {
                 }
             });
         }
+
+        this.router.navigate([], {
+            queryParams: {highlight: riderId},
+            queryParamsHandling: 'merge',
+        }).then();
     }
 
     getHeatNumberOfRider(roundIndex: number, riderId: string): number | undefined {

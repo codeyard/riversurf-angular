@@ -1,4 +1,5 @@
 import {Role} from "./role.type";
+import {JwtHelperService} from "@auth0/angular-jwt";
 
 export interface User {
     id: string;
@@ -9,14 +10,6 @@ export interface User {
     token?: string;
     isAuthenticated?: boolean;
     favouriteRiders: string[];
-}
-
-export const examplejudge: User = {
-    email: "miki@miki.ch",
-    id: "example",
-    userRole: 'judge',
-    userName: "mikimaus",
-    favouriteRiders: []
 }
 
 export interface AuthResponseData {
@@ -34,14 +27,17 @@ export class AuthUser {
         public email: string,
         public userRole: Role,
         private tokenId: string,
-    ) {}
-
-    get token() {
-        // TODO ADD LOGIC FOR VALIDATION OF TOKEN
-        return this.tokenId;
+    ) {
     }
 
-
+    get token() {
+        const helper = new JwtHelperService();
+        const expirationDate = helper.getTokenExpirationDate(this.tokenId);
+        if (!expirationDate || new Date() > expirationDate) {
+            return null;
+        }
+        return this.tokenId;
+    }
 }
 
 

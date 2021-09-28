@@ -3,9 +3,10 @@ import {SurfEvent} from "../../core/models/surf-event.model";
 import {SurfEventService} from "../../core/services/surf-event.service";
 import {ActivatedRoute, Router} from "@angular/router";
 import {Observable, Subscription} from "rxjs";
-import {catchError, filter, switchMap} from "rxjs/operators";
+import {switchMap} from "rxjs/operators";
 import {SnackbarService} from "../../core/services/snackbar.service";
 import {Rider} from "../../core/models/rider.model";
+import {WeatherLocation, weatherLocations} from "../weather/weather-location";
 
 @Component({
     selector: 'rs-surf-event',
@@ -17,6 +18,7 @@ export class SurfEventComponent implements OnInit {
     surfEvent!: SurfEvent;
     isLoading = true;
     enrolledRiders$?: Observable<Rider[]>;
+    weatherLocation?: WeatherLocation;
 
     mapZoom = 17;
     mapOptions: google.maps.MapOptions = {
@@ -48,16 +50,29 @@ export class SurfEventComponent implements OnInit {
                     this.surfEvent = surfEvent;
                     this.isLoading = false;
                     this.enrolledRiders$ = this.surfEventService.getEnrolledRiders(this.surfEvent.id);
+                    this.guessWeatherLocation(this.surfEvent.location);
                 },
                 error => {
                     this.isLoading = false;
                     let defaultMsg = "An error occured. Please try again!"
-                    if(error === "NOT_EXISTS") {
+                    if (error === "NOT_EXISTS") {
                         defaultMsg = "Sorry mate, it seems like this Jam does not exist!";
                     }
-                    this.snackBarService.send( defaultMsg, "error");
+                    this.snackBarService.send(defaultMsg, "error");
                     this.router.navigate(["/"]);
                     console.log(error)
                 });
+    }
+
+    guessWeatherLocation(location: string) {
+        const locationParts: string[] = location.toLowerCase().split(',').join('').split(' ').reverse();
+
+        locationParts.forEach(word => {
+            const position = weatherLocations.indexOf(word);
+            if (position > -1) {
+                this.weatherLocation = weatherLocations[position] as WeatherLocation;
+                return;
+            }
+        });
     }
 }

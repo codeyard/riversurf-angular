@@ -29,7 +29,7 @@
                 <div class="heat" *ngFor="let heat of round.heats; let heatIndex = index">
                     <h4 class="heat__title">Heat {{heatIndex + 1}}</h4>
                     <ng-container *ngIf="heat.results.length > 0">
-                        <div class="rider" *ngFor="let result of heat.results">
+                        <div class="rider" *ngFor="let result of heat.results; let index = index">
                             <rs-rider-result [riderId]="result.riderId"
                                              [riderColorIndex]="result.color"
                                              [resultType]="getHeatStatus(heat)"
@@ -38,6 +38,8 @@
                                              (click)="highlightRider(result.riderId)"
                                              [isHighlighted]="result.riderId === highlightedRider && highlightActive"
                                              [isFadedOut]="result.riderId !== highlightedRider && highlightActive"
+                                             [isFinalRound]="round.id === competition.rounds.length-1"
+                                             [isWinner]="round.id === competition.rounds.length-1 && heat.results[0].riderId === result.riderId"
                             ></rs-rider-result>
                         </div>
                     </ng-container>

@@ -37,7 +37,7 @@ export class RiderProfileComponent implements OnInit, OnDestroy {
                     this.isLoading = false;
                     let defaultMsg = "An error occured. Please try again!"
                     if(error === "NOT_EXISTS") {
-                        defaultMsg = "Sorry mate, this jamer seems not to exist here!";
+                        defaultMsg = "Sorry mate, this rider seems not to exist here!";
                     }
                     this.snackBarService.send( defaultMsg, "error");
                     this.router.navigate(["/"]);

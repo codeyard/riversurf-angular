@@ -14,7 +14,8 @@
         <mat-card-title class="rider__card__nickname" *ngIf="!control"> {{rider.firstName}} {{rider.lastName.charAt(0)}}.</mat-card-title>
     </mat-card-header>
     <mat-card-content class="rider__card__content">
-        <rs-favorite-rider *ngIf="rider && !isEditMode" [rider]="rider"></rs-favorite-rider>
+        <rs-favorite-rider *ngIf="rider && !isEditMode && !isFinalRound" [rider]="rider"></rs-favorite-rider>
+        <mat-icon *ngIf="rider && !isEditMode && isWinner" class="rider__card__winner">emoji_events</mat-icon>
         <div [ngSwitch]="resultType">
             <div *ngSwitchCase="'default'" class="rider__card__type">
                 <mat-icon aria-hidden="false" aria-label="default" class="rider__card__icon">hourglass_empty</mat-icon>

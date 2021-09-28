@@ -12,14 +12,6 @@ export interface User {
     favouriteRiders: string[];
 }
 
-export const examplejudge: User = {
-    email: "miki@miki.ch",
-    id: "example",
-    userRole: 'judge',
-    userName: "mikimaus",
-    favouriteRiders: []
-}
-
 export interface AuthResponseData {
     id: string,
     userName: string,

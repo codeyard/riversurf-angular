@@ -1,6 +1,6 @@
 <ng-container *ngIf="surfEvent">
     <div class="competition-container">
-        <h1><span class="underline">{{surfEvent.name}}</span></h1>
+        <h1><a routerLink="/event/{{surfEvent.name | slugify}}-{{ surfEvent.id }}" class="underline">{{surfEvent.name}}</a></h1>
 
         <div>
             <div class="division-selector" aria-label="Division">

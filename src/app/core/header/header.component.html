@@ -9,11 +9,11 @@
     </div>
     <div class="header__search">
         <form>
-            <input matInput
-                   aria-label="Search jams or riders"
+            <input aria-label="Search jams or riders"
                    placeholder="Search jams or riders"
                    [matAutocomplete]="auto"
-                   [formControl]="autocompleteCtrl">
+                   [formControl]="autocompleteCtrl"
+                   class="header__search__input">
             <mat-autocomplete class="header__search__results" #auto="matAutocomplete">
                 <mat-option *ngFor="let event of filteredResults.events" [value]="event.name" (onSelectionChange)="goToSurfEvent(event)">
                     <mat-icon>event_note</mat-icon>

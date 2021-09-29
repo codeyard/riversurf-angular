@@ -10,6 +10,7 @@ import {BreakpointObserver} from "@angular/cdk/layout";
 import {CarouselComponent} from "../../shared/carousel/carousel.component";
 import {UserService} from "../../core/services/user.service";
 import {SurfEvent} from "../../core/models/surf-event.model";
+import {WeatherLocation, weatherLocations} from "../weather/weather-location";
 
 export interface Line {
     source: Point,
@@ -34,12 +35,12 @@ interface RiderProgress {
     styleUrls: ['./result-view.component.scss']
 })
 export class ResultViewComponent implements OnInit, AfterViewInit, OnDestroy {
-
     competition!: Competition;
     surfEvent!: SurfEvent;
     @ViewChildren(RiderResultComponent) results!: QueryList<any>;
     @ViewChildren(CarouselComponent) carousel?: QueryList<any>
     queryParamSubscription?: Subscription;
+    weatherLocation?: WeatherLocation;
 
     lines: Line[] = [];
     points: Point[] = []
@@ -99,7 +100,7 @@ export class ResultViewComponent implements OnInit, AfterViewInit, OnDestroy {
                         }
                         console.log(`Re-navigate to: ${routerNavigation}`);
                         this.snackBarService.send(errorMessage, "error");
-                        this.router.navigate([routerNavigation]);
+                        this.router.navigate([routerNavigation]).then();
                         console.log('ERROR loading competition data :-(', error)
                     })
             )
@@ -122,6 +123,7 @@ export class ResultViewComponent implements OnInit, AfterViewInit, OnDestroy {
         combineLatest(this.getUser(), this.getSurfEvent()).subscribe(
             ([user, surfEvent]) => {
                 this.surfEvent = surfEvent;
+                this.guessWeatherLocation(this.surfEvent.location);
                 if (user.isAuthenticated) {
                     if (surfEvent.judge === user.id || surfEvent.organizer === user.id) {
                         this.isAdministrator = true;
@@ -320,7 +322,7 @@ export class ResultViewComponent implements OnInit, AfterViewInit, OnDestroy {
     }
 
     editCompetition() {
-        this.router.navigate(["edit"], {relativeTo: this.route});
+        this.router.navigate(["edit"], {relativeTo: this.route}).then();
     }
 
     toggleDivision(division: string): void {
@@ -332,5 +334,17 @@ export class ResultViewComponent implements OnInit, AfterViewInit, OnDestroy {
         this.points = [];
         this.highlightedRider = '';
         this.highlightActive = false;
+    }
+
+    guessWeatherLocation(location: string) {
+        const locationParts: string[] = location.toLowerCase().split(',').join('').split(' ').reverse();
+
+        locationParts.forEach(word => {
+            const position = weatherLocations.indexOf(word);
+            if (position > -1) {
+                this.weatherLocation = weatherLocations[position] as WeatherLocation;
+                return;
+            }
+        });
     }
 }

@@ -5,17 +5,22 @@
 }
 
 .weather__card {
-    margin-bottom: 1rem;
+
+    .mat-card-title-group img {
+        width: 100px;
+        height: 100px;
+    }
 
 
     &__air-water {
         display: flex;
+        gap: 1rem;
         justify-content: space-between;
-        align-items: baseline;
+        align-items: self-end;
 
         .air {
             color: $color-text-1;
-            font-size: 1.2rem;
+            font-size: 1.5rem;
         }
 
         .water {

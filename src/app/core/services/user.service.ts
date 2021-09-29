@@ -102,7 +102,7 @@ export class UserService {
             clearTimeout(this.tokenExpirationTimer)
         }
         this.tokenExpirationTimer = null;
-        this.router.navigate(["/"]);
+        this.router.navigate(["/"]).then();
     }
 
     autoLogin() {

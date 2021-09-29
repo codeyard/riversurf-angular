@@ -110,7 +110,10 @@
                       [lines]="lines"
     ></rs-progress-line>
 
-    <qr-code *ngIf="!isLoading" value="{{qrCodeLink}}" size="200" errorCorrectionLevel="M"></qr-code>
+    <div *ngIf="!isLoading" class="weather-qr-code-container">
+        <qr-code value="{{qrCodeLink}}" size="180" errorCorrectionLevel="M"></qr-code>
+        <rs-weather *ngIf="weatherLocation" [weatherLocation]="weatherLocation" weatherIconStyle="line"></rs-weather>
+    </div>
 </div>
 
 

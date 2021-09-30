@@ -1,6 +1,6 @@
-@import "mixins";
-@import "responsive";
-@import "variables";
+@import "src/styles/mixins";
+@import "src/styles/responsive";
+@import "src/styles/variables";
 
 .event__card {
     width: 400px;

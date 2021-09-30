@@ -48,14 +48,16 @@
 
 .result-container {
     display: flex;
-    justify-content: space-around;
+    justify-content: space-between;
+
+    &::before, &::after {
+        content: '';
+    }
 
     @include respond(small) {
         flex-direction: column;
         flex: 100%;
     }
-
-
 }
 
 .round {
@@ -112,6 +114,7 @@
 
 .relative-container {
     position: relative;
+    overflow-x: auto;
 }
 
 .weather-qr-code-container {

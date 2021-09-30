@@ -4,7 +4,7 @@ import {RiderResultComponent} from "../surf-event/competition/round/rider-result
 import {combineLatest, Subject, Subscription} from "rxjs";
 import {ActivatedRoute, Router} from "@angular/router";
 import {SurfEventService} from "../../core/services/surf-event.service";
-import {switchMap, take, takeUntil, tap} from "rxjs/operators";
+import {debounceTime, distinctUntilChanged, switchMap, take, takeUntil, tap} from "rxjs/operators";
 import {SnackbarService} from "../../core/services/snackbar.service";
 import {BreakpointObserver} from "@angular/cdk/layout";
 import {CarouselComponent} from "../../shared/carousel/carousel.component";
@@ -63,6 +63,7 @@ export class ResultViewComponent implements OnInit, AfterViewInit, OnDestroy {
     qrCodeLink?: string;
     selectedDivision: string = '';
 
+    private windowResizeSubject$ = new Subject<number | null>();
     private selectedSurfEvent: string = '';
 
     private destroy$ = new Subject();
@@ -132,7 +133,19 @@ export class ResultViewComponent implements OnInit, AfterViewInit, OnDestroy {
 
                 }
             }
-        )
+        );
+
+        this.windowResizeSubject$.pipe(
+            tap(() => {
+                this.lines = [];
+                this.points = [];
+            }),
+            debounceTime(500),
+            distinctUntilChanged()
+        ).subscribe(() => {
+            this.cd.detectChanges();
+            this.getPointsAndLines();
+        });
     }
 
     highlightRider(riderId: string) {
@@ -346,5 +359,9 @@ export class ResultViewComponent implements OnInit, AfterViewInit, OnDestroy {
                 return;
             }
         });
+    }
+
+    onResize(event: any) {
+        this.windowResizeSubject$.next(event.target.innerWidth);
     }
 }

@@ -59,7 +59,7 @@
             </ng-container>
 
             <ng-container *ngIf="smallScreen">
-                <rs-carousel [index]="0" [auto]="false">
+                <rs-carousel [auto]="false">
                     <ng-container *ngFor="let heat of round.heats; let heatIndex = index">
                         <div class="heat" *rs-carousel-item>
                             <h4 class="heat__title">Heat {{heatIndex + 1}}</h4>

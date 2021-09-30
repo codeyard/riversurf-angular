@@ -1,14 +1,14 @@
 import {Component, OnDestroy, OnInit, ViewChild} from '@angular/core';
-import {SurfEvent} from "../core/models/surf-event.model";
-import {Rider} from "../core/models/rider.model";
+import {SurfEvent} from "../models/surf-event.model";
+import {Rider} from "../models/rider.model";
 import {BreakpointObserver} from "@angular/cdk/layout";
-import {RidersService} from "../core/services/riders.service";
+import {RidersService} from "../services/riders.service";
 import {Observable, Subject, Subscription} from "rxjs";
 import {takeUntil} from "rxjs/operators";
-import {SurfEventService} from "../core/services/surf-event.service";
+import {SurfEventService} from "../services/surf-event.service";
 import {MapInfoWindow} from "@angular/google-maps";
 import {ActivatedRoute, Router} from "@angular/router";
-import {SlugifyPipe} from "../shared/pipes/slugify.pipe";
+import {SlugifyPipe} from "../../shared/pipes/slugify.pipe";
 import {MatTabChangeEvent} from "@angular/material/tabs";
 
 @Component({

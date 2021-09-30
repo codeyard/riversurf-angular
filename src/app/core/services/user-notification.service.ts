@@ -18,9 +18,8 @@ export class UserNotificationService {
     getNotification(): Observable<IncomingNotification> {
         return this.notification$.pipe(
             tap(val =>  {
-                console.log('I want some good vibrations')
                 if (this.hasVibrationSupport) {
-                    window.navigator.vibrate(200);
+                    window.navigator.vibrate(400);
                 }
             })
         );

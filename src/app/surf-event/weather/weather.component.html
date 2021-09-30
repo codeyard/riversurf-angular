@@ -1,25 +1,27 @@
-<mat-card>
-    <mat-card-title>{{weather.location}}</mat-card-title>
-    <mat-card-content>
-        <mat-spinner *ngIf="loading"></mat-spinner>
-        <mat-grid-list *ngIf="!loading" cols="2" rowHeight="50px">
-            <mat-grid-tile>
-                <img alt="Weather symbol" src="./assets/weather/{{weather.weatherSymbol}}.png">
-            </mat-grid-tile>
-            <mat-grid-tile class="water">
-                <mat-icon>waves</mat-icon>
+<mat-card class="weather__card">
+    <ng-container *ngIf="loading">
+        <mat-spinner diameter="40"></mat-spinner>
+    </ng-container>
+
+    <ng-container *ngIf="!loading">
+        <mat-card-title-group>
+            <mat-card-title>{{weather.location}}</mat-card-title>
+            <mat-card-subtitle>{{weather.weatherSymbol | weatherCondition}}</mat-card-subtitle>
+            <img mat-card-md-image alt="Weather symbol"
+                 src="./assets/weather/{{weatherIconStyle}}/{{weather.weatherSymbol | weatherIcon}}.svg">
+        </mat-card-title-group>
+        <mat-card-content class="weather__card__air-water">
+        <span class="air">
+            {{weather.airTemperature}} °C
+        </span>
+            <span class="water">
+            <mat-icon>waves</mat-icon>
                 {{weather.waterTemperature}} °C
-            </mat-grid-tile>
-            <mat-grid-tile class="air">
-                {{weather.airTemperature}} °C
-            </mat-grid-tile>
-            <mat-grid-tile class="water">
-                <mat-icon>waves</mat-icon>
+        </span>
+            <span class="water">
+            <mat-icon>waves</mat-icon>
                 {{weather.waterFlow}} m³/s
-            </mat-grid-tile>
-        </mat-grid-list>
-    </mat-card-content>
+        </span>
+        </mat-card-content>
+    </ng-container>
 </mat-card>
-
-
-

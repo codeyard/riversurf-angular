@@ -22,6 +22,8 @@ import {GoogleMapsModule} from "@angular/google-maps";
 import {ResultViewComponent} from './result-view/result-view.component';
 import {ProgressLineComponent} from './result-view/progress-line/progress-line.component';
 import {QrCodeModule} from "ng-qrcode";
+import { WeatherIconPipe } from './weather/weather-icon.pipe';
+import { WeatherConditionPipe } from './weather/weather-condition.pipe';
 
 
 @NgModule({
@@ -33,7 +35,9 @@ import {QrCodeModule} from "ng-qrcode";
         RiderResultComponent,
         HeatComponent,
         ResultViewComponent,
-        ProgressLineComponent
+        ProgressLineComponent,
+        WeatherIconPipe,
+        WeatherConditionPipe
     ],
     imports: [
         SurfEventRoutingModule,

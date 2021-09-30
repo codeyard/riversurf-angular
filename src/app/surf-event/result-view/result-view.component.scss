@@ -45,6 +45,7 @@
         }
     }
 }
+
 .result-container {
     display: flex;
     justify-content: space-around;
@@ -113,13 +114,37 @@
     position: relative;
 }
 
-qr-code {
-    position: absolute;
-    bottom: 10px;
-    right: 10px;
+.weather-qr-code-container {
+    display: flex;
+    flex: 100%;
+    flex-direction: row-reverse;
+    padding: 1rem;
+    justify-content: center;
+    @include bottom-space;
 
-    @include respond(small) {
+    @include for-medium-and-large() {
+        gap: 1.5rem;
+    }
+
+    @include for-large() {
+        position: fixed;
+        bottom: 10px;
+        right: 10px;
+        margin: 0;
+    }
+
+    rs-weather {
+        margin-top: .7rem;
+        max-width: 450px;
+        min-width: 300px;
+    }
+
+    qr-code {
         display: none;
+
+        @include for-medium-and-large() {
+            display: inline-block;
+        }
     }
 }
 

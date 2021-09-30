@@ -152,7 +152,7 @@ export class RoundComponent implements OnInit, OnChanges {
 
     finishCompetition() {
         this.snackbarService.send("Competition finished! Legendary!", "success");
-        this.router.navigate(['../'], { relativeTo: this.route });
+        this.router.navigate(['../'], { relativeTo: this.route }).then();
     }
 
     onSyncRound() {

@@ -3,7 +3,7 @@ import {SurfEvent} from "../../core/models/surf-event.model";
 import {SurfEventService} from "../../core/services/surf-event.service";
 import {ActivatedRoute, Router} from "@angular/router";
 import {Observable, Subscription} from "rxjs";
-import {catchError, filter, switchMap} from "rxjs/operators";
+import {switchMap} from "rxjs/operators";
 import {SnackbarService} from "../../core/services/snackbar.service";
 import {Rider} from "../../core/models/rider.model";
 
@@ -51,12 +51,12 @@ export class SurfEventComponent implements OnInit {
                 },
                 error => {
                     this.isLoading = false;
-                    let defaultMsg = "An error occured. Please try again!"
-                    if(error === "NOT_EXISTS") {
+                    let defaultMsg = "An error occurred. Please try again!"
+                    if (error === "NOT_EXISTS") {
                         defaultMsg = "Sorry mate, it seems like this Jam does not exist!";
                     }
-                    this.snackBarService.send( defaultMsg, "error");
-                    this.router.navigate(["/"]);
+                    this.snackBarService.send(defaultMsg, "error");
+                    this.router.navigate(["/"]).then();
                     console.log(error)
                 });
     }

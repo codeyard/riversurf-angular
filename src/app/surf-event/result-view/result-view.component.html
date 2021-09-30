@@ -22,7 +22,7 @@
 
 
 <div (window:resize)="onResize($event)" class="relative-container">
-    <div class="result-container" *ngIf="!isLoading">
+    <div class="result-container" *ngIf="!isLoading" (click)="unHighlightRider()">
         <div class="round" *ngFor="let round of competition.rounds">
             <h2 class="round__title">{{ getRoundLabel(round.id) | uppercase}}</h2>
             <ng-container *ngIf="!smallScreen">
@@ -35,7 +35,7 @@
                                              [resultType]="getHeatStatus(heat)"
                                              [points]="result.value"
                                              [roundNumber]="round.id"
-                                             (click)="highlightRider(result.riderId)"
+                                             (click)="addHighlightedRiderToRoute(result.riderId, $event)"
                                              [isHighlighted]="result.riderId === highlightedRider && highlightActive"
                                              [isFadedOut]="result.riderId !== highlightedRider && highlightActive"
                                              [isFinalRound]="round.id === competition.rounds.length-1"
@@ -49,7 +49,7 @@
                                              [riderColorIndex]="riderIndex"
                                              [resultType]="getHeatStatus(heat)"
                                              [roundNumber]="round.id"
-                                             (click)="highlightRider(rider)"
+                                             (click)="addHighlightedRiderToRoute(rider, $event)"
                                              [isHighlighted]="rider === highlightedRider && highlightActive"
                                              [isFadedOut]="rider !== highlightedRider && highlightActive"
                             ></rs-rider-result>
@@ -59,7 +59,7 @@
             </ng-container>
 
             <ng-container *ngIf="smallScreen">
-                <rs-carousel [index]="0" [auto]="false">
+                <rs-carousel [auto]="false">
                     <ng-container *ngFor="let heat of round.heats; let heatIndex = index">
                         <div class="heat" *rs-carousel-item>
                             <h4 class="heat__title">Heat {{heatIndex + 1}}</h4>
@@ -71,7 +71,7 @@
                                                          [resultType]="getHeatStatus(heat)"
                                                          [points]="result.value"
                                                          [roundNumber]="round.id"
-                                                         (click)="highlightRider(result.riderId)"
+                                                         (click)="addHighlightedRiderToRoute(result.riderId, $event)"
                                                          [isHighlighted]="result.riderId === highlightedRider && highlightActive"
                                                          [isFadedOut]="result.riderId !== highlightedRider && highlightActive"
 
@@ -86,7 +86,7 @@
                                                          [riderColorIndex]="riderIndex"
                                                          [resultType]="getHeatStatus(heat)"
                                                          [roundNumber]="round.id"
-                                                         (click)="highlightRider(rider)"
+                                                         (click)="addHighlightedRiderToRoute(rider, $event)"
                                                          [isHighlighted]="rider === highlightedRider && highlightActive"
                                                          [isFadedOut]="rider !== highlightedRider && highlightActive"
                                         ></rs-rider-result>

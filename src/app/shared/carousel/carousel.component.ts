@@ -90,16 +90,17 @@ export class CarouselComponent implements OnInit, OnDestroy, OnChanges, AfterCon
 
     ngAfterViewInit() {
         // view-Childs are ready here
-        if(this.carouselListItems.length > 0) {
+        if (this.carouselListItems.length > 0) {
             this.ready = true;
             this.initCarousel();
             this.resizeObserver.observe(this.elementRef.nativeElement);
         }
         this.carouselListItems.changes.pipe(takeUntil(this.destroy$)).subscribe(list => {
-            if(list.length > 0) {
+            if (list.length > 0) {
                 this.ready = true;
                 this.initCarousel();
-                this.resizeObserver.observe(this.elementRef.nativeElement);            }
+                this.resizeObserver.observe(this.elementRef.nativeElement);
+            }
         });
     }
 
@@ -171,14 +172,23 @@ export class CarouselComponent implements OnInit, OnDestroy, OnChanges, AfterCon
         this.goToIndex(this.currentIndex - 1);
     }
 
+    public setIndex(index: number) {
+        this.goToIndex(index);
+    }
+
     private calculateSizes() {
         this.carouselWidth = this.carouselList.nativeElement.clientWidth;
         this.itemWidth = this.carouselListItems.first.nativeElement.clientWidth;
-        this.itemOffsetSpacing = (this.carouselWidth - this.itemWidth) / 2;
+        if (this.carouselListItems.length > 1) {
+            this.itemOffsetSpacing = (this.carouselWidth - this.itemWidth) / 2;
+        } else {
+            const carouselWidth = this.carouselList.nativeElement.parentElement?.clientWidth || this.carouselWidth;
+            this.itemOffsetSpacing = (carouselWidth - this.itemWidth) / 2;
+        }
     }
 
     private initCarousel() {
-        //this.calculateSizes();
+        this.calculateSizes();
         if (this.auto) {
             this.interval = interval(this.intervalTime)
                 .pipe(
@@ -196,6 +206,7 @@ export class CarouselComponent implements OnInit, OnDestroy, OnChanges, AfterCon
             this.playAnimation();
             return;
         }
+
         this.previousIndex = this.currentIndex;
         this.currentIndex = index;
         this.playAnimation();
@@ -226,7 +237,7 @@ export class CarouselComponent implements OnInit, OnDestroy, OnChanges, AfterCon
     }
 
     private calcTranslation(): string {
-        const offset = (this.currentIndex * (-this.itemWidth)) + this.itemOffsetSpacing;
+        let offset = (this.currentIndex * (-this.itemWidth)) + this.itemOffsetSpacing;
         return `translateX(${offset}px)`;
     }
 
@@ -255,9 +266,5 @@ export class CarouselComponent implements OnInit, OnDestroy, OnChanges, AfterCon
 
     private isIndexValid(index: number): boolean {
         return (index >= 0) && (index < this.carouselListItems.length) ? true : false;
-    }
-
-    public setIndex(index: number) {
-        this.goToIndex(index);
     }
 }

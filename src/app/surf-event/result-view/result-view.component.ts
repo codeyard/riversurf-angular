@@ -1,4 +1,13 @@
-import {AfterViewInit, ChangeDetectorRef, Component, OnDestroy, OnInit, QueryList, ViewChildren} from '@angular/core';
+import {
+    AfterViewChecked,
+    AfterViewInit,
+    ChangeDetectorRef,
+    Component,
+    OnDestroy,
+    OnInit,
+    QueryList,
+    ViewChildren
+} from '@angular/core';
 import {Competition, Heat, Result} from "../../core/models/competition.model";
 import {RiderResultComponent} from "../surf-event/competition/round/rider-result/rider-result.component";
 import {combineLatest, Subject, Subscription} from "rxjs";
@@ -34,7 +43,7 @@ interface RiderProgress {
     templateUrl: './result-view.component.html',
     styleUrls: ['./result-view.component.scss']
 })
-export class ResultViewComponent implements OnInit, AfterViewInit, OnDestroy {
+export class ResultViewComponent implements OnInit, AfterViewInit, AfterViewChecked, OnDestroy {
     competition!: Competition;
     surfEvent!: SurfEvent;
     @ViewChildren(RiderResultComponent) results!: QueryList<any>;
@@ -77,7 +86,23 @@ export class ResultViewComponent implements OnInit, AfterViewInit, OnDestroy {
                 private observer: BreakpointObserver) {
     }
 
+    ngAfterViewChecked(): void {
+
+
+
+
+    }
+
     ngOnInit(): void {
+        this.queryParamSubscription = this.route.queryParams.subscribe(params => {
+            const highlightedRider = params['highlight'];
+            if (highlightedRider) {
+                this.highlightRider(highlightedRider);
+            } else {
+                this.highlightActive = false;
+            }
+        });
+
         this.init = this.route.params
             .pipe(
                 switchMap(params => {
@@ -99,27 +124,21 @@ export class ResultViewComponent implements OnInit, AfterViewInit, OnDestroy {
                             errorMessage = "Sorry mate, it seems like this Competition does not exist!";
                             routerNavigation += 'event/' + this.selectedSurfEvent;
                         }
-                        console.log(`Re-navigate to: ${routerNavigation}`);
                         this.snackBarService.send(errorMessage, "error");
                         this.router.navigate([routerNavigation]).then();
-                        console.log('ERROR loading competition data :-(', error)
-                    })
+                })
             )
-
-        this.queryParamSubscription = this.route.queryParams.subscribe(params => {
-            const highlightedRider = params['highlight'];
-            if (highlightedRider) {
-                this.highlightRider(highlightedRider);
-            }
-        });
-
-        this.qrCodeLink = window.location.toString();
 
         this.observer.observe('(max-width: 878px)')
             .pipe(takeUntil(this.destroy$))
             .subscribe(result => {
                 this.smallScreen = result.matches;
+                if (this.smallScreen && this.highlightedRider && this.highlightActive) {
+                    this.highlightRider(this.highlightedRider);
+                }
             });
+
+        this.qrCodeLink = window.location.toString();
 
         combineLatest(this.getUser(), this.getSurfEvent()).subscribe(
             ([user, surfEvent]) => {
@@ -148,21 +167,41 @@ export class ResultViewComponent implements OnInit, AfterViewInit, OnDestroy {
         });
     }
 
-    highlightRider(riderId: string) {
-        this.highlightedRider = riderId;
-        this.highlightActive = !this.highlightActive;
+    ngAfterViewInit(): void {
+        this.init.subscribe(() => {
+                this.isLoading = false;
+                this.cd.detectChanges();
+                this.getPointsAndLines();
+            }
+        )
 
-        if (this.smallScreen) {
-            this.carousel?.forEach((item, roundIndex) => {
-                const heatNumber = this.getHeatNumberOfRider(roundIndex, riderId)
-                if (heatNumber !== undefined) {
-                    item.setIndex(heatNumber)
-                }
-            });
+        this.carousel?.changes.subscribe(
+            () => this.setCarouselIndexes()
+        )
+    }
+
+
+    ngOnDestroy(): void {
+        this.destroy$.next(null);
+        this.destroy$.complete();
+        this.windowResizeSubject$.unsubscribe();
+    }
+
+    addHighlightedRiderToRoute(riderId: string, event: Event) {
+        event.stopImmediatePropagation();
+        if (this.highlightActive && riderId === this.highlightedRider) {
+            this.unHighlightRider();
+        } else {
+            this.router.navigate([], {
+                queryParams: {highlight: riderId},
+                queryParamsHandling: 'merge',
+            }).then();
         }
+    }
 
+    unHighlightRider() {
         this.router.navigate([], {
-            queryParams: {highlight: riderId},
+            queryParams: {highlight: null},
             queryParamsHandling: 'merge',
         }).then();
     }
@@ -179,7 +218,6 @@ export class ResultViewComponent implements OnInit, AfterViewInit, OnDestroy {
 
         return riderIndex;
     }
-
 
     getHeatStatus(heat: Heat) {
         switch (heat.state) {
@@ -281,20 +319,6 @@ export class ResultViewComponent implements OnInit, AfterViewInit, OnDestroy {
         return Array.from(temp.values());
     }
 
-    ngAfterViewInit(): void {
-        this.init.subscribe(() => {
-                this.isLoading = false;
-                this.cd.detectChanges();
-                this.getPointsAndLines();
-            }
-        )
-    }
-
-    ngOnDestroy(): void {
-        this.destroy$.next(null);
-        this.destroy$.complete();
-    }
-
     extractPoints(points: Point[], i: number): { a: Point, b: Point } {
         return {
             a: {
@@ -363,5 +387,29 @@ export class ResultViewComponent implements OnInit, AfterViewInit, OnDestroy {
 
     onResize(event: any) {
         this.windowResizeSubject$.next(event.target.innerWidth);
+    }
+
+    private highlightRider(riderId: string) {
+        this.highlightedRider = riderId;
+        this.highlightActive = true;
+
+        if (this.smallScreen) {
+            this.setCarouselIndexes();
+        }
+    }
+
+    private setCarouselIndexes() {
+        if (this.smallScreen) {
+            this.carousel?.forEach((item, roundIndex) => {
+                if (this.highlightedRider) {
+                    const heatNumber = this.getHeatNumberOfRider(roundIndex, this.highlightedRider)
+                    if (heatNumber !== undefined) {
+                        item.setIndex(heatNumber)
+                    } else {
+                        item.setIndex(0);
+                    }
+                }
+            });
+        }
     }
 }

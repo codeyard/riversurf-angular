@@ -38,6 +38,7 @@
                *ngFor="let division of surfEvent.divisions"
                class="division-{{division}}"
                routerLink="/event/{{surfEvent.name | slugify}}-{{surfEvent.id}}/competition/{{ division }}">
+                <mat-icon>{{division}}</mat-icon>
                 {{division | titlecase}}
             </a>
         </div>

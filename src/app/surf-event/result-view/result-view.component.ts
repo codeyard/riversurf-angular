@@ -43,7 +43,7 @@ interface RiderProgress {
     templateUrl: './result-view.component.html',
     styleUrls: ['./result-view.component.scss']
 })
-export class ResultViewComponent implements OnInit, AfterViewInit, AfterViewChecked, OnDestroy {
+export class ResultViewComponent implements OnInit, AfterViewInit, OnDestroy {
     competition!: Competition;
     surfEvent!: SurfEvent;
     @ViewChildren(RiderResultComponent) results!: QueryList<any>;
@@ -84,13 +84,6 @@ export class ResultViewComponent implements OnInit, AfterViewInit, AfterViewChec
                 private userService: UserService,
                 private surfEventService: SurfEventService,
                 private observer: BreakpointObserver) {
-    }
-
-    ngAfterViewChecked(): void {
-
-
-
-
     }
 
     ngOnInit(): void {

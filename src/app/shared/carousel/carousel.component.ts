@@ -158,13 +158,13 @@ export class CarouselComponent implements OnInit, OnDestroy, OnChanges, AfterCon
 
     goToNextOrFirst() {
         if (this.isIndexValid(this.currentIndex + 1)) {
-            this.goToNex();
+            this.goToNext();
         } else {
             this.goToIndex(0);
         }
     }
 
-    goToNex() {
+    goToNext() {
         this.goToIndex(this.currentIndex + 1);
     }
 
@@ -214,30 +214,32 @@ export class CarouselComponent implements OnInit, OnDestroy, OnChanges, AfterCon
 
     /* when we move to an index we want to animate it */
     private playAnimation(): void {
-        /* inputvalue: focusCurrent -> blur every element except for the focused one */
-        if (this.focusCurrent) {
-            this.stopTransitionFocus();
-        }
+        if (this.carouselListItems.length > 0) {
+            /* inputvalue: focusCurrent -> blur every element except for the focused one */
+            if (this.focusCurrent) {
+                this.stopTransitionFocus();
+            }
 
-        const translation = this.calcTranslation();
-        const translationFactory = this.animationBuilder.build(
-            animate(this.TIMING, style({transform: translation}))
-        );
-        const translationAnimation = translationFactory.create(this.carouselList.nativeElement);
-        translationAnimation.onDone(() => {
-            this.renderer.setStyle(
-                this.carouselList.nativeElement,
-                'transform',
-                translation
+            const translation = this.calcTranslation();
+            const translationFactory = this.animationBuilder.build(
+                animate(this.TIMING, style({transform: translation}))
             );
-            translationAnimation.destroy();
-            this.intervalIsPaused = false;
-        });
-        translationAnimation.play();
+            const translationAnimation = translationFactory.create(this.carouselList.nativeElement);
+            translationAnimation.onDone(() => {
+                this.renderer.setStyle(
+                    this.carouselList.nativeElement,
+                    'transform',
+                    translation
+                );
+                translationAnimation.destroy();
+                this.intervalIsPaused = false;
+            });
+            translationAnimation.play();
+        }
     }
 
     private calcTranslation(): string {
-        let offset = (this.currentIndex * (-this.itemWidth)) + this.itemOffsetSpacing;
+        const offset = (this.currentIndex * (-this.itemWidth)) + this.itemOffsetSpacing;
         return `translateX(${offset}px)`;
     }
 

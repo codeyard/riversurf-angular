@@ -2,7 +2,7 @@
     <main class="main">
         <h2>Check out our <span class="underline">Jams</span></h2>
         <mat-tab-group [selectedIndex]="selectedTabIndex" (selectedTabChange)="onTabChange($event)">
-            <mat-tab *ngIf="currentSurfEvents$ | async as currentSurfEvents" label="Latest Jams"
+            <mat-tab *ngIf="currentSurfEvents$ | async as currentSurfEvents" label="Current"
                      class="main__tab-body">
                 <div class="events">
                     <rs-carousel *ngIf="smallScreen" [index]="currentEvent" [auto]="false">
@@ -19,7 +19,7 @@
             </mat-tab>
 
 
-            <mat-tab *ngIf="upcomingSurfEvents$ | async as upcomingSurfEvents" label="Upcoming Jams">
+            <mat-tab *ngIf="upcomingSurfEvents$ | async as upcomingSurfEvents" label="Next">
                 <div class="events">
                     <rs-carousel *ngIf="smallScreen" [index]="currentEvent" [auto]="false">
                         <ng-container *ngFor="let surfEvent of upcomingSurfEvents">
@@ -34,7 +34,7 @@
                 </div>
             </mat-tab>
 
-            <mat-tab *ngIf="pastSurfEvents$ | async as pastSurfEvents" label="Past Jams">
+            <mat-tab *ngIf="pastSurfEvents$ | async as pastSurfEvents" label="Previous">
                 <div class="events">
                     <rs-carousel *ngIf="smallScreen" [index]="currentEvent" [auto]="false">
                         <ng-container *ngFor="let surfEvent of pastSurfEvents">

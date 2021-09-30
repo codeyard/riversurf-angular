@@ -55,7 +55,7 @@ export class SignupFormComponent implements OnInit {
         this.userService.loginUser(username, password).subscribe(() => {
                 this.snackBar.send("You're logged in mate!", "success");
                 this.isLoading = false;
-                this.router.navigate(["/"])
+                this.router.navigate(["/"]).then();
             },
             errorMessage => {
                 this.snackBar.send(errorMessage, "error");

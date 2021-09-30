@@ -1,5 +1,6 @@
 import {A11yModule} from "@angular/cdk/a11y";
 import {CommonModule} from '@angular/common';
+import {FormsModule, ReactiveFormsModule} from "@angular/forms";
 import {GoogleMapsModule} from "@angular/google-maps";
 import {HeaderComponent} from "./header/header.component";
 import {HomeComponent} from "./home/home.component";
@@ -20,7 +21,6 @@ import {NavigationComponent} from "./header/navigation/navigation.component";
 import {NewUserNotificationsPipe} from './header/navigation/notification/new-user-notifications.pipe';
 import {NgModule} from '@angular/core';
 import {NotificationComponent} from './header/navigation/notification/notification.component';
-import {ReactiveFormsModule} from "@angular/forms";
 import {RouterModule} from "@angular/router";
 import {SharedModule} from "../shared/shared.module";
 
@@ -36,6 +36,7 @@ import {SharedModule} from "../shared/shared.module";
     imports: [
         A11yModule,
         CommonModule,
+        FormsModule,
         GoogleMapsModule,
         MatAutocompleteModule,
         MatBadgeModule,

@@ -21,7 +21,7 @@
 </ng-container>
 
 
-<div class="relative-container">
+<div (window:resize)="onResize($event)" class="relative-container">
     <div class="result-container" *ngIf="!isLoading">
         <div class="round" *ngFor="let round of competition.rounds">
             <h2 class="round__title">{{ getRoundLabel(round.id) | uppercase}}</h2>

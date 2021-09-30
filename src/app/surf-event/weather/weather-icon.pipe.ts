@@ -10,7 +10,7 @@ export class WeatherIconPipe implements PipeTransform {
         const dayOrNight = (hours > 6 && hours < 20) ? 'day' : 'night';
 
         switch (value) {
-            default: return 'sunny';
+            default: return `clear-${dayOrNight}`;
 
             case 1: return `clear-${dayOrNight}`;
             case 2: return `partly-cloudy-${dayOrNight}`;

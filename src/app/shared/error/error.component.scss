@@ -1,0 +1,27 @@
+@import "responsive";
+@import "mixins";
+
+.error-container{
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    align-items: center;
+
+    &__message{
+        align-self: center;
+    }
+
+    &__history{
+        display: flex;
+        width: 100%;
+        justify-content: space-around;
+
+        @include respond(small) {
+            flex-direction: column;
+        }
+    }
+
+    &__game{
+
+    }
+}

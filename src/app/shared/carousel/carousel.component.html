@@ -14,7 +14,7 @@
             </div>
         </li>
     </ul>
-    <div class="button__container">
+    <div class="button__container" *ngIf="elements.length > 1">
         <button
             *ngIf="showControls"
             [disabled]="currentIndex === 0"
@@ -23,11 +23,11 @@
             <mat-icon>arrow_back_ios</mat-icon>
         </button>
     </div>
-    <div class="button__container">
+    <div class="button__container" *ngIf="elements.length > 1">
         <button
             *ngIf="showControls"
             [disabled]="currentIndex >= elements.length -1"
-            (click)="goToNex()"
+            (click)="goToNext()"
         >
             <mat-icon>arrow_forward_ios</mat-icon>
         </button>

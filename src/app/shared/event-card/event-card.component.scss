@@ -1,0 +1,57 @@
+@import "src/styles/mixins";
+@import "src/styles/responsive";
+@import "src/styles/variables";
+
+.event__card {
+    width: 400px;
+    transition: all .3s;
+    cursor: pointer;
+    max-width: 100%;
+    outline: none;
+
+    &:hover {
+        transform: scale(1.01);
+        box-shadow: 0 14px 28px rgba(0, 0, 0, 0.1), 0 10px 10px rgba(0, 0, 0, 0.1);
+    }
+
+    &:active {
+        transform: translateY(2px);
+    }
+
+    @include respond(small) {
+        max-width: 100%;
+    }
+
+    &__header {
+        position: relative;
+
+        &__date {
+            @include text;
+            position: absolute;
+            top: 0;
+            right: 0;
+            color: $color-text-2;
+        }
+    }
+
+    &__headerimage {
+        background-size: cover;
+    }
+
+    &__subinfo {
+        display: flex;
+        justify-content: space-around;
+    }
+
+    &__division {
+        a {
+            color: $color-white;
+            margin-right: 1rem;
+        }
+    }
+}
+
+a {
+    text-decoration: none;
+    color: $color-text-1;
+}

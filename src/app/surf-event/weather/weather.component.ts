@@ -4,6 +4,8 @@ import {DefaultWeatherData, WeatherData} from "./weather-data";
 import {WeatherService} from "./weather.service";
 import {Subscription} from "rxjs";
 
+export type WeatherIconStyle = 'fill' | 'line';
+
 @Component({
     selector: 'rs-weather',
     templateUrl: './weather.component.html',
@@ -25,11 +27,13 @@ export class WeatherComponent implements OnInit, OnDestroy, OnChanges {
      * Weather location as input
      */
     @Input() weatherLocation: WeatherLocation;
+    @Input() weatherIconStyle: WeatherIconStyle;
 
     private weatherServiceSubscription: Subscription = new Subscription();
 
     constructor(private weatherService: WeatherService) {
         this.weatherLocation = 'thun';
+        this.weatherIconStyle = 'fill';
         this.weather = {...DefaultWeatherData};
         this.loading = true;
     }

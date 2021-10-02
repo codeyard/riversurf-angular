@@ -1,47 +1,50 @@
-import {NgModule} from '@angular/core';
+import {CarouselComponent, CarouselItemDirective} from "./carousel/carousel.component";
 import {CommonModule} from '@angular/common';
-import {RiderCardComponent} from "./rider-card/rider-card.component";
+import {DivisionColorPipe} from './pipes/division-color.pipe';
+import {ErrorComponent} from "./error/error.component";
+import {EventCardComponent} from "./event-card/event-card.component";
+import {FavoriteRiderComponent} from './favorite-rider/favorite-rider.component';
+import {HammerModule} from "@angular/platform-browser";
+import {MatButtonModule} from "@angular/material/button";
 import {MatCardModule} from "@angular/material/card";
 import {MatIconModule} from "@angular/material/icon";
-import {RouterModule} from "@angular/router";
-import {CarouselComponent, CarouselItemDirective} from "./carousel/carousel.component";
-import {ErrorComponent} from "./error/error.component";
-import {SlugifyPipe} from "./pipes/slugify.pipe";
-import {HammerModule} from "@angular/platform-browser";
+import {NgModule} from '@angular/core';
+import {RiderCardComponent} from "./rider-card/rider-card.component";
 import {RiderColorPipe} from "./pipes/rider-color.pipe";
-import {FavoriteRiderComponent} from './favorite-rider/favorite-rider.component';
-import {MatButtonModule} from "@angular/material/button";
-import {DivisionColorPipe} from './pipes/division-color.pipe';
+import {RouterModule} from "@angular/router";
+import {SlugifyPipe} from "./pipes/slugify.pipe";
 
 
 @NgModule({
     declarations: [
         CarouselComponent,
         CarouselItemDirective,
+        DivisionColorPipe,
         ErrorComponent,
-        RiderCardComponent,
-        SlugifyPipe,
-        RiderColorPipe,
+        EventCardComponent,
         FavoriteRiderComponent,
-        DivisionColorPipe
+        RiderCardComponent,
+        RiderColorPipe,
+        SlugifyPipe
     ],
     imports: [
         CommonModule,
+        HammerModule,
+        MatButtonModule,
         MatCardModule,
         MatIconModule,
-        RouterModule,
-        HammerModule,
-        MatButtonModule
+        RouterModule
     ],
     exports: [
         CarouselComponent,
         CarouselItemDirective,
+        DivisionColorPipe,
+        EventCardComponent,
         ErrorComponent,
-        RiderCardComponent,
-        SlugifyPipe,
-        RiderColorPipe,
         FavoriteRiderComponent,
-        DivisionColorPipe
+        RiderCardComponent,
+        RiderColorPipe,
+        SlugifyPipe
     ]
 })
 export class SharedModule {

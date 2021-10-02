@@ -23,7 +23,7 @@
     <div class="content">
         <main class="main">
             <div class="main--center">
-                <h1 *ngIf="division">{{ division | titlecase}} Riders</h1>
+                <h1 *ngIf="division"><span class="underline">{{ division | titlecase}}</span> Riders</h1>
                 <h1 *ngIf="!division"><span class="underline">Browse</span> or <span class="underline">Search</span> for Riders</h1>
 
                 <div class="loading" *ngIf="isLoading">

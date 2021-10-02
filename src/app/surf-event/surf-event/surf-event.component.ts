@@ -6,6 +6,7 @@ import {Observable, Subscription} from "rxjs";
 import {switchMap} from "rxjs/operators";
 import {SnackbarService} from "../../core/services/snackbar.service";
 import {Rider} from "../../core/models/rider.model";
+import {NetworkStatusService} from "../../core/services/network-status.service";
 
 @Component({
     selector: 'rs-surf-event',
@@ -28,11 +29,14 @@ export class SurfEventComponent implements OnInit {
         minZoom: 5
     };
 
+    isOffline: boolean = false;
+
 
     constructor(
         private surfEventService: SurfEventService,
         private route: ActivatedRoute,
         private router: Router,
+        private networkStatusService: NetworkStatusService,
         private snackBarService: SnackbarService) {
     }
 
@@ -59,5 +63,9 @@ export class SurfEventComponent implements OnInit {
                     this.router.navigate(["/"]).then();
                     console.log(error)
                 });
+
+        this.networkStatusService.getNetworkStatus().subscribe(status => {
+            this.isOffline = status !== 'ONLINE';
+        });
     }
 }

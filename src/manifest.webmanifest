@@ -1,6 +1,7 @@
 {
   "name": "RiverSurf App",
   "short_name": "RiverSurf",
+  "description": "RiverSurf • Plan, keep track and stay up to date at river surf events.",
   "theme_color": "#3f51b5",
   "background_color": "#3f51b5",
   "display": "fullscreen",

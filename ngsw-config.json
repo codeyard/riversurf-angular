@@ -14,10 +14,9 @@
                     "/*.js"
                 ],
                 "urls": [
-                    "https://robohash.org/*",
+                    "https://robohash.org/**",
                     "https://fonts.googleapis.com/**",
                     "https://fonts.gstatic.com/**",
-                    "https://maps.googleapis.com/**",
                     "https://riversurfstorage.blob.core.windows.net/**"
                 ]
             }

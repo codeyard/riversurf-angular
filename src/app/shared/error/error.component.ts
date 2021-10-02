@@ -1,15 +1,24 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, OnDestroy, OnInit} from '@angular/core';
+import {RouterHistoryService} from "../../core/services/router-history.service";
 
 @Component({
-  selector: 'rs-error',
-  templateUrl: './error.component.html',
-  styleUrls: ['./error.component.scss']
+    selector: 'rs-error',
+    templateUrl: './error.component.html',
+    styleUrls: ['./error.component.scss']
 })
-export class ErrorComponent implements OnInit {
+export class ErrorComponent implements OnInit, OnDestroy {
 
-  constructor() { }
+    routerHistory: string[] = [];
 
-  ngOnInit(): void {
-  }
+    constructor(private routerHistoryService: RouterHistoryService) {
+    }
+
+    ngOnInit(): void {
+        this.routerHistory = this.routerHistoryService.getLastUrls();
+    }
+
+    ngOnDestroy() {
+
+    }
 
 }

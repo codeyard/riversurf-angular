@@ -3,14 +3,8 @@
         This is the message
     </div>
     <div class="error-container__history">
-        <div class="error-containter__history-item">
-            This is the history 1
-        </div>
-        <div class="error-containter__history-item">
-            This is the history 2
-        </div>
-        <div class="error-containter__history-item">
-            This is the history 3
+        <div class="error-containter__history-item" *ngFor="let history of routerHistory">
+            {{history}}
         </div>
     </div>
     <div class="error-container__game">

@@ -16,8 +16,7 @@
                 "urls": [
                     "https://robohash.org/**",
                     "https://fonts.googleapis.com/**",
-                    "https://fonts.gstatic.com/**",
-                    "https://riversurfstorage.blob.core.windows.net/**"
+                    "https://fonts.gstatic.com/**"
                 ]
             }
         },
@@ -28,6 +27,8 @@
             "resources": {
                 "files": [
                     "/assets/**",
+                    "/assets/weather/fill/**",
+                    "/assets/weather/line/**",
                     "/*.(eot|svg|cur|jpg|png|webp|gif|otf|ttf|woff|woff2|ani)"
                 ]
             }
@@ -37,7 +38,8 @@
         {
             "name": "surfdata",
             "urls": [
-                "https://test-riversurf-springboot.azurewebsites.net/api/**"
+                "https://test-riversurf-springboot.azurewebsites.net/api/**",
+                "https://riversurfstorage.blob.core.windows.net/**"
             ],
             "cacheConfig": {
                 "maxSize": 10,

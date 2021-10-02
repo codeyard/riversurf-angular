@@ -4,14 +4,13 @@
 .error-container {
     display: flex;
     flex-direction: column;
-    width: 100%;
-    height: 100%;
     align-items: center;
     justify-content: center;
     gap: 1rem;
     margin: 2rem;
 
     @include respond(small) {
+        margin: 0.5rem;
         @include bottom-space;
     }
 
@@ -29,12 +28,12 @@
         align-items: center;
 
         &-rider {
-            animation-name: rideIn;
-            animation-duration: 3s;
+            animation-name: rideInAndSink;
+            animation-duration: 6s;
             animation-fill-mode: forwards;
         }
 
-        &-waves{
+        &-waves {
             position: relative;
             top: -15px;
         }
@@ -43,13 +42,32 @@
     &__history {
         display: flex;
         width: 100%;
-        justify-content: space-around;
+        flex-wrap: wrap;
 
-        &-item{
-            flex: 25%;
+        &-item {
+            margin: 1rem;
+            flex: 30%;
+            cursor: pointer;
 
             @include respond(small) {
-                flex: 100;
+                flex: 100%;
+            }
+
+            mat-card {
+                height: 100%;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                gap: 1rem;
+            }
+
+            &:hover {
+                transform: scale(1.01);
+                box-shadow: 0 14px 28px rgba(0, 0, 0, 0.1), 0 10px 10px rgba(0, 0, 0, 0.1);
+            }
+
+            &:active {
+                transform: translateY(2px);
             }
         }
 
@@ -57,26 +75,26 @@
             flex-direction: column;
         }
     }
-
-    &__game {
-
-    }
 }
 
 .underline {
     @include underline-magical;
 }
 
-@keyframes rideIn {
+@keyframes rideInAndSink {
     0% {
         transform: translateX(-200%)
     }
-    90% {
-        transform: translateX(0) translateY(0);
+    50% {
+        transform: translateX(50%) translateY(0);
         opacity: 1;
     }
+    60% {
+        transform: rotate(-45deg) translateY(50%) translateX(-50%);
+        opacity: 0.5;
+    }
     100% {
-        transform: rotate(-45deg) translateY(50%);
-        opacity: 0;
+        transform: translateY(125%) rotate(-10deg);
+        opacity: 0.5;
     }
 }

@@ -5,6 +5,7 @@ import {ActivatedRoute} from "@angular/router";
 import {switchMap} from "rxjs/operators";
 import {Subscription} from "rxjs";
 import {SurfEventService} from "../../../core/services/surf-event.service";
+import {NetworkStatusService} from "../../../core/services/network-status.service";
 
 @Component({
     selector: 'rs-competition',
@@ -14,12 +15,15 @@ import {SurfEventService} from "../../../core/services/surf-event.service";
 export class CompetitionComponent implements OnInit, OnDestroy {
 
     routeSubscription?: Subscription;
+    networkStatusSubscription?: Subscription;
+    isOffline: boolean = false;
     competition!: Competition;
     selectedTabIndex: number = 0;
 
     constructor(private snackBarService: SnackbarService,
                 private route: ActivatedRoute,
-                private surfEventService: SurfEventService) {
+                private surfEventService: SurfEventService,
+                private networkStatusService: NetworkStatusService) {
     }
 
     ngOnInit(): void {
@@ -42,10 +46,15 @@ export class CompetitionComponent implements OnInit, OnDestroy {
                     this.snackBarService.send("Sorry fella, we couldn't load the Competition", "error");
                     console.log('ERROR loading competition data :-(', error)
                 });
+
+        this.networkStatusSubscription = this.networkStatusService.getNetworkStatus().subscribe(status => {
+            this.isOffline = status !== 'ONLINE';
+        });
     }
 
     ngOnDestroy(): void {
         this.routeSubscription?.unsubscribe();
+        this.networkStatusSubscription?.unsubscribe();
     }
 
     onFinishedRound(event: {currentRound: number, promotedRiders: string[]}) {
@@ -74,13 +83,24 @@ export class CompetitionComponent implements OnInit, OnDestroy {
 
         this.competition = competitionCopy;
 
-        this.surfEventService.updateCompetition(this.competition)
-            .subscribe(
-                () => () => {},
-                error => {
-                    this.snackBarService.send("Sorry mate, we are Unable to save changes to server", "error");
-                    console.log(error)
-                });
+        if (this.isOffline) {
+            this.surfEventService.updateCompetition(this.competition, this.isOffline)
+                .subscribe(
+                    () => () => {},
+                    error => {
+                        this.snackBarService.send("Sorry mate, we are unable to save changes to server", "error");
+                        console.log(error)
+                    });
+        } else {
+            this.surfEventService.updateCompetition(this.competition, this.isOffline)
+                .subscribe(
+                    () => () => {},
+                    error => {
+                        this.snackBarService.send("Sorry mate, we are unable to save changes to server", "error");
+                        console.log(error)
+                    });
+        }
+
     }
 
     hasNextRoundReady(currentRound: number) {

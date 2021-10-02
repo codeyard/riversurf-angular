@@ -1,17 +1,19 @@
-import {Component, EventEmitter, Input, OnChanges, OnInit, Output} from '@angular/core';
+import {Component, EventEmitter, Input, OnChanges, OnDestroy, OnInit, Output} from '@angular/core';
 import {CdkDragDrop, moveItemInArray, transferArrayItem} from "@angular/cdk/drag-drop";
-import {SnackbarService} from "../../../../core/services/snackbar.service";
+import {MessageLevel, SnackbarService} from "../../../../core/services/snackbar.service";
 import {Heat, Round} from "../../../../core/models/competition.model";
 import {CompetitionService} from "../../../../core/services/competition.service";
 import {ActivatedRoute, Router} from "@angular/router";
 import {WebSocketService} from "../../../../core/services/web-socket.service";
+import {NetworkStatusService} from "../../../../core/services/network-status.service";
+import {Subscription} from "rxjs";
 
 @Component({
     selector: 'rs-round',
     templateUrl: './round.component.html',
     styleUrls: ['./round.component.scss']
 })
-export class RoundComponent implements OnInit, OnChanges {
+export class RoundComponent implements OnInit, OnChanges, OnDestroy {
     @Input() hasNextRound!: boolean;
     @Input() round!: Round;
     @Input() maxRidersInHeat!: number;
@@ -21,20 +23,32 @@ export class RoundComponent implements OnInit, OnChanges {
     areAllHeatsFinished!: boolean;
     unassignedRiders!: string[];
 
+    networkStatusSubscription?: Subscription;
+    isOffline: boolean = false;
+
     constructor(
         private snackbarService: SnackbarService,
         private competitionService: CompetitionService,
         private router: Router,
         private route: ActivatedRoute,
-        private webSocketService: WebSocketService) {
+        private webSocketService: WebSocketService,
+        private networkStatusService: NetworkStatusService) {
     }
 
     ngOnInit(): void {
         this.allHeatsFinished();
+
+        this.networkStatusSubscription = this.networkStatusService.getNetworkStatus().subscribe(status => {
+            this.isOffline = status !== 'ONLINE';
+        });
     }
 
     ngOnChanges(): void {
         this.setupRound();
+    }
+
+    ngOnDestroy() {
+        this.networkStatusSubscription?.unsubscribe();
     }
 
     setupRound(): void {
@@ -138,7 +152,11 @@ export class RoundComponent implements OnInit, OnChanges {
                 msg += "saved!"
                 break;
         }
-        this.snackbarService.send(msg, "success");
+        if (this.isOffline) {
+            msg += " Please go back online to save the updates."
+        }
+        let messageLevel = this.isOffline ? 'warning' : 'success' as MessageLevel;
+        this.snackbarService.send(msg, messageLevel);
         this.webSocketService.sendNotification({
             surfEventName: "",
             topic: "heat",

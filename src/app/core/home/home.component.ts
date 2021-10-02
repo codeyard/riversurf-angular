@@ -30,6 +30,7 @@ export class HomeComponent implements OnInit, OnDestroy {
 
     selectedTabIndex!: number;
     routeSubscription?: Subscription;
+    networkStatusSubscription?: Subscription;
 
     mapZoom = 9;
     mapOptions: google.maps.MapOptions = {
@@ -82,7 +83,7 @@ export class HomeComponent implements OnInit, OnDestroy {
             }
         });
 
-        this.networkStatusService.getNetworkStatus().subscribe(status => {
+        this.networkStatusSubscription = this.networkStatusService.getNetworkStatus().subscribe(status => {
             this.isOffline = status !== 'ONLINE';
         });
     }
@@ -90,6 +91,7 @@ export class HomeComponent implements OnInit, OnDestroy {
     ngOnDestroy(): void {
         this.destroy$.next(null);
         this.destroy$.complete();
+        this.networkStatusSubscription?.unsubscribe();
     }
 
     goToSurfEvent(surfEvent: SurfEvent) {

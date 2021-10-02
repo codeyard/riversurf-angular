@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, OnDestroy, OnInit} from '@angular/core';
 import {SurfEvent} from "../../core/models/surf-event.model";
 import {SurfEventService} from "../../core/services/surf-event.service";
 import {ActivatedRoute, Router} from "@angular/router";
@@ -13,8 +13,9 @@ import {NetworkStatusService} from "../../core/services/network-status.service";
     templateUrl: './surf-event.component.html',
     styleUrls: ['./surf-event.component.scss']
 })
-export class SurfEventComponent implements OnInit {
+export class SurfEventComponent implements OnInit, OnDestroy {
     routeSubscription?: Subscription;
+    networkStatusSubscription?: Subscription;
     surfEvent!: SurfEvent;
     isLoading = true;
     enrolledRiders$?: Observable<Rider[]>;
@@ -64,8 +65,12 @@ export class SurfEventComponent implements OnInit {
                     console.log(error)
                 });
 
-        this.networkStatusService.getNetworkStatus().subscribe(status => {
+        this.networkStatusSubscription = this.networkStatusService.getNetworkStatus().subscribe(status => {
             this.isOffline = status !== 'ONLINE';
         });
+    }
+
+    ngOnDestroy() {
+        this.networkStatusSubscription?.unsubscribe();
     }
 }

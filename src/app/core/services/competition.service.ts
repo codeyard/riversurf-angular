@@ -1,9 +1,11 @@
 import {Injectable} from '@angular/core';
 import {Competition} from "../models/competition.model";
-import {BehaviorSubject, Observable} from "rxjs";
+import {BehaviorSubject, from, Observable} from "rxjs";
 import {HttpClient} from "@angular/common/http";
 import {AppConfigService} from "./app-config.service";
 import {filter, map, tap} from "rxjs/operators";
+import {NetworkStatusService} from "./network-status.service";
+import {DexieService} from "./dexie.service";
 
 @Injectable({
     providedIn: 'root'
@@ -16,10 +18,18 @@ export class CompetitionService {
     private competitionData = new BehaviorSubject<Competition[]>([])
     private competition$ = this.competitionData.asObservable();
 
+    dexieDB: any;
+
     constructor(
         private httpClient: HttpClient,
-        private appConfigService: AppConfigService) {
+        private appConfigService: AppConfigService,
+        private networkStatusService: NetworkStatusService,
+        private dexieService: DexieService) {
         this.fetchAllCompetitions();
+        this.dexieDB = dexieService.getDB();
+        this.dexieDB.competitions.toArray().then((competitions: Competition[]) => {
+            this.competitionData.next(competitions);
+        })
     }
 
     getCompetitionsByIds(ids: string[]): Observable<Competition[]> {
@@ -36,9 +46,13 @@ export class CompetitionService {
             )
     }
 
-    updateCompetition(competition: Competition) {
-        const requestUrl = this.PROTOCOL_HTTPS + this.appConfigService.getHostName() + this.PATH_ENDPOINT + `/${competition.id}`;
-        return this.httpClient.put(requestUrl, competition)
+    updateCompetition(competition: Competition, isOffline: boolean): Observable<any> {
+        if (isOffline) {
+            return from(this.dexieDB.competitions.put(competition));
+        } else {
+            const requestUrl = this.PROTOCOL_HTTPS + this.appConfigService.getHostName() + this.PATH_ENDPOINT + `/${competition.id}`;
+            return this.httpClient.put(requestUrl, competition)
+        }
     }
 
     private fetchAllCompetitions() {

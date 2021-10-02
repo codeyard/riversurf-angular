@@ -131,8 +131,8 @@ export class SurfEventService {
             }));
     }
 
-    updateCompetition(competition: Competition) {
-        return this.competitionService.updateCompetition(competition);
+    updateCompetition(competition: Competition, isOffline: boolean) {
+        return this.competitionService.updateCompetition(competition, isOffline);
     }
 
     private fetchAllSurfEvents() {

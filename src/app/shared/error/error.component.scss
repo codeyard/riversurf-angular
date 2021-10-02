@@ -45,6 +45,14 @@
         width: 100%;
         justify-content: space-around;
 
+        &-item{
+            flex: 25%;
+
+            @include respond(small) {
+                flex: 100;
+            }
+        }
+
         @include respond(small) {
             flex-direction: column;
         }

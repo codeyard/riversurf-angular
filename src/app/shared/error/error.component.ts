@@ -10,6 +10,8 @@ export class ErrorComponent implements OnInit, OnDestroy {
 
     routerHistory: string[] = [];
 
+    errorResource: string = '';
+
     constructor(private routerHistoryService: RouterHistoryService) {
     }
 

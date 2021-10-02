@@ -335,7 +335,7 @@ export class ResultViewComponent implements OnInit, AfterViewInit, OnDestroy {
         let signY = Math.sign(deltaY)
         // funktioniert momentan nur für horizontale verbindungen, für vertikale, muss wohl auch noch ein signX eingesetzt werden
         // M 0 0 L 1 0 Q 2 0 2 1 L 2 2 L 2 3 Q 2 4 3 4 L 4 4
-        let path = `M ${a.x} ${a.y}, L ${middleX - this.CURVE_RADIUS} ${a.y}, Q ${middleX} ${a.y} ${middleX} ${a.y + signY * this.CURVE_RADIUS}, L ${middleX} ${middleY}, L ${middleX} ${b.y - signY * this.CURVE_RADIUS}, Q ${middleX} ${b.y} ${middleX + this.CURVE_RADIUS} ${b.y}, L ${b.x} ${b.y}`;
+        let path = `M ${a.x} ${a.y} L ${middleX - this.CURVE_RADIUS} ${a.y} Q ${middleX} ${a.y} ${middleX} ${a.y + signY * this.CURVE_RADIUS} L ${middleX} ${middleY} L ${middleX} ${b.y - signY * this.CURVE_RADIUS} Q ${middleX} ${b.y} ${middleX + this.CURVE_RADIUS} ${b.y} L ${b.x} ${b.y}`;
         return path;
     }
 

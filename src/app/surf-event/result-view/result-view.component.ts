@@ -20,6 +20,7 @@ import {CarouselComponent} from "../../shared/carousel/carousel.component";
 import {UserService} from "../../core/services/user.service";
 import {SurfEvent} from "../../core/models/surf-event.model";
 import {WeatherLocation, weatherLocations} from "../weather/weather-location";
+import {NetworkStatusService} from "../../core/services/network-status.service";
 
 export interface Line {
     source: Point,
@@ -49,6 +50,7 @@ export class ResultViewComponent implements OnInit, AfterViewInit, OnDestroy {
     @ViewChildren(RiderResultComponent) results!: QueryList<any>;
     @ViewChildren(CarouselComponent) carousel?: QueryList<any>
     queryParamSubscription?: Subscription;
+    networkStatusSubscription?: Subscription;
     weatherLocation?: WeatherLocation;
 
     lines: Line[] = [];
@@ -75,6 +77,8 @@ export class ResultViewComponent implements OnInit, AfterViewInit, OnDestroy {
     private windowResizeSubject$ = new Subject<number | null>();
     private selectedSurfEvent: string = '';
 
+    isOffline: boolean = false;
+
     private destroy$ = new Subject();
 
     constructor(private cd: ChangeDetectorRef,
@@ -83,7 +87,8 @@ export class ResultViewComponent implements OnInit, AfterViewInit, OnDestroy {
                 private router: Router,
                 private userService: UserService,
                 private surfEventService: SurfEventService,
-                private observer: BreakpointObserver) {
+                private observer: BreakpointObserver,
+                private networkStatusService: NetworkStatusService) {
     }
 
     ngOnInit(): void {
@@ -157,6 +162,10 @@ export class ResultViewComponent implements OnInit, AfterViewInit, OnDestroy {
         ).subscribe(() => {
             this.cd.detectChanges();
             this.getPointsAndLines();
+        });
+
+        this.networkStatusSubscription = this.networkStatusService.getNetworkStatus().subscribe(status => {
+            this.isOffline = status !== 'ONLINE';
         });
     }
 

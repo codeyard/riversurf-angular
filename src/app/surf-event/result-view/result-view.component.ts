@@ -367,13 +367,20 @@ export class ResultViewComponent implements OnInit, AfterViewInit, OnDestroy {
 
     toggleDivision(division: Division): void {
         this.selectedDivision = division;
-        this.router.navigate(['../', this.selectedDivision], {
-            relativeTo: this.route
-        }).then();
         this.lines = [];
         this.points = [];
         this.highlightedRider = '';
         this.highlightActive = false;
+        this.router.navigate(['../', this.selectedDivision], {
+            relativeTo: this.route
+        }).then(
+            () => {
+                this.cd.detectChanges();
+                this.getPointsAndLines();
+            }
+        );
+
+
     }
 
     guessWeatherLocation(location: string) {

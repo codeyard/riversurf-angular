@@ -1,5 +1,5 @@
 import {Injectable} from '@angular/core';
-import {BehaviorSubject, Observable, throwError} from "rxjs";
+import {BehaviorSubject, noop, Observable, throwError} from "rxjs";
 import {Rider} from "../models/rider.model";
 import {SnackbarService} from "./snackbar.service";
 import {HttpClient, HttpErrorResponse} from "@angular/common/http";
@@ -16,8 +16,9 @@ import {DexieService} from "./dexie.service";
 })
 export class UserService {
 
-    PROTOCOL = 'https://'
-    PATH_ENDPOINT = '/api/user/login';
+    PROTOCOL = 'https://';
+    PATH_LOGIN = '/api/user/login';
+    PATH_PUT = '/api/user';
 
     ANONYMOUS = "anonymous";
 
@@ -64,7 +65,7 @@ export class UserService {
     }
 
     public loginUser(username: string, password: string) {
-        const requestUrl = this.PROTOCOL + this.appConfigService.getHostName() + this.PATH_ENDPOINT;
+        const requestUrl = this.PROTOCOL + this.appConfigService.getHostName() + this.PATH_LOGIN;
         const body = {userName: username, password: password}
         return this.httpClient.post<User>(requestUrl, body)
             .pipe(
@@ -123,6 +124,11 @@ export class UserService {
 
     private putUser(user: User): void {
         this.dexieDB.users.put(user);
+        if(user.isAuthenticated) {
+            const requestUrl = this.PROTOCOL + this.appConfigService.getHostName() + this.PATH_PUT;
+            const body = user
+            this.httpClient.put<User>(requestUrl, body).subscribe(() => noop())
+        }
     }
 
     private handleAuthentication(user: User) {

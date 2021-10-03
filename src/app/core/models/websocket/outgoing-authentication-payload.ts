@@ -1,3 +1,3 @@
 export interface OutgoingAuthenticationPayload {
-    baererToken: string;
+    bearerToken: string;
 }

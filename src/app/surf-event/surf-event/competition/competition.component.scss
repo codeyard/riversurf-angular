@@ -21,6 +21,7 @@
     &__item {
         color: $color-white;
         border-radius: 4px;
+        margin-right: 1rem;
 
         &--male {
             background-color: $color-male;
@@ -35,7 +36,8 @@
         }
 
         &--disabled {
-            display: none;
+            background-color: darken($color-grey-light-2, 15);
+            color: $color-white !important;
         }
     }
 

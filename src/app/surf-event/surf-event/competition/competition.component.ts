@@ -39,6 +39,7 @@ export class CompetitionComponent implements OnInit, OnDestroy {
                 switchMap(params => {
                     const id = params['id'].split('-').pop();
                     const division = params['division'].toLowerCase();
+                    this.selectedDivision = division;
                     return this.surfEventService.getCompetitionByDivision(id, division);
                 })
             )
@@ -108,7 +109,7 @@ export class CompetitionComponent implements OnInit, OnDestroy {
     }
 
     goToTournamentView() {
-        this.router.navigate(["../"], {relativeTo: this.route})
+        this.router.navigate(["../"], {relativeTo: this.route}).then();
     }
 
     toggleDivision(division: Division) {

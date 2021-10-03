@@ -18,7 +18,6 @@
                 </div>
             </mat-tab>
 
-
             <mat-tab *ngIf="upcomingSurfEvents$ | async as upcomingSurfEvents" label="Next">
                 <div class="events">
                     <rs-carousel *ngIf="smallScreen" [index]="currentEvent" [auto]="false">
@@ -72,13 +71,11 @@
                 [center]="{lat: 46.9332651, lng: 7.497035}"
                 [zoom]="mapZoom"
                 [options]="mapOptions">
-                <ng-container *ngIf="upcomingSurfEvents">
                 <map-marker *ngFor="let upcomingSurfEvent of upcomingSurfEvents"
                             [position]="{lat: upcomingSurfEvent.locationLat, lng: upcomingSurfEvent.locationLong}"
                             [title]="upcomingSurfEvent.name"
                             (mapClick)="goToSurfEvent(upcomingSurfEvent)">
                 </map-marker>
-                </ng-container>
                 <ng-container *ngIf="currentSurfEvents$ | async as currentSurfEvents">
                     <map-marker *ngFor="let currentSurfEvent of currentSurfEvents"
                                 [position]="{lat: currentSurfEvent.locationLat, lng: currentSurfEvent.locationLong}"

@@ -1,9 +1,11 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
 import {RouterHistoryService} from "../../core/services/router-history.service";
 import {Subscription} from "rxjs";
-import {map} from "rxjs/operators";
+import {filter, map, switchMap} from "rxjs/operators";
 import {SearchService} from "../../core/services/search.service";
 import {RouterHistoryModel} from "../../core/models/router-history.model";
+import {SurfEvent} from "../../core/models/surf-event.model";
+import {Rider} from "../../core/models/rider.model";
 
 @Component({
     selector: 'rs-error',
@@ -16,35 +18,39 @@ export class ErrorComponent implements OnInit, OnDestroy {
 
     errorResource: string = '';
 
-    private routerHistoryServiceSubscription ?: Subscription;
+    private searchSubscription ?: Subscription;
 
     constructor(private routerHistoryService: RouterHistoryService, private searchService: SearchService) {
     }
 
     ngOnInit(): void {
-        this.routerHistoryServiceSubscription = this.routerHistoryService.getRouterHistory().pipe(
+        this.searchSubscription = this.routerHistoryService.getRouterHistory().pipe(
             map((historyUrls: RouterHistoryModel[]) => {
-                return historyUrls.slice(0, 6);
-            })
-        ).subscribe(historyElements  => {
-            if (historyElements.length > 0) {
-                if (historyElements[0].description !== 'page-not-found') {
-                    this.routerHistory = historyElements;
-                    if(this.routerHistory[0].description) {
-                        this.errorResource = this.routerHistory[0].description;
+                historyUrls = historyUrls.slice(0, 6);
+                if (historyUrls.length > 0) {
+                    this.errorResource = historyUrls[0].description !== 'page-not-found' ? historyUrls[0].description : '';
+                    this.routerHistory = this.errorResource ? historyUrls : historyUrls.slice(1);
+                    if (this.errorResource) {
+                        if (!this.routerHistory[0].error) {
+                            this.routerHistoryService.markErrorInHistory(0);
+                            this.routerHistory[0].error = true;
+                        }
                     }
                 } else {
-                    this.routerHistory = historyElements.slice(1);
+                    this.routerHistory = [];
                     this.errorResource = '';
                 }
-            } else {
-                this.routerHistory = [];
-                this.errorResource = '';
-            }
-        })
+                return this.errorResource;
+            }),
+            filter(searchTerm => searchTerm !== ''),
+            switchMap(searchTerm => this.searchService.searchByTerm(searchTerm))
+        ).subscribe(([events, riders]) => {
+            console.log(`Search results: events`, events as SurfEvent[]);
+            console.log(`Search results: riders`, riders as Rider[]);
+        });
     }
 
     ngOnDestroy() {
-        this.routerHistoryServiceSubscription?.unsubscribe();
+        this.searchSubscription?.unsubscribe();
     }
 }

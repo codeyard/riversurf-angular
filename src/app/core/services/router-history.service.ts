@@ -35,15 +35,13 @@ export class RouterHistoryService {
                 if (historyElement.url === '/') {
                     historyElement.description = 'Home';
                     if (historyElement.queryString) {
-                        historyElement.description += ` (${historyElement.queryString})`;
+                        historyElement.description += ` (${historyElement.queryString.substring(1).replace('?',',')})`;
                     }
                 } else {
                     historyElement.description = historyElement.url.substring(1);
                 }
 
-                console.log(`Created history`, historyElement);
-
-                if (this.routerHistoryData.value.length === 0 || this.routerHistoryData.value[0].url !== historyElement.url) {
+                if (this.routerHistoryData.value.length === 0 || this.routerHistoryData.value[0].url !== historyElement.url || this.routerHistoryData.value[0].queryString !== historyElement.queryString) {
                     this.routerHistoryData.value.unshift(historyElement);
                     this.routerHistoryData.next(this.routerHistoryData.value);
                 }
@@ -53,5 +51,11 @@ export class RouterHistoryService {
 
     getRouterHistory(): Observable<RouterHistoryModel[]> {
         return this.routerHistory$;
+    }
+
+    markErrorInHistory(index: number) {
+        if (this.routerHistoryData.value.length > index) {
+            this.routerHistoryData.value[index].error = true;
+        }
     }
 }

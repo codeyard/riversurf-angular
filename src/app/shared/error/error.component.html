@@ -21,9 +21,9 @@
     </div>
     <h2 *ngIf="routerHistory.length > 0">Your last <span class="underline">destinations</span>:</h2>
     <div *ngIf="routerHistory.length > 0" class="error-container__history">
-        <div class="error-container__history-item" *ngFor="let history of routerHistory; first as isFirst">
+        <div class="error-container__history-item" *ngFor="let history of routerHistory">
             <mat-card [routerLink]="history.url" [queryParams]="history.queryParams">
-                <mat-icon *ngIf="isFirst && errorResource">thumb_down</mat-icon>
+                <mat-icon *ngIf="history.error">thumb_down</mat-icon>
                 {{history.description}}
             </mat-card>
         </div>

@@ -10,7 +10,6 @@ import {AppConfigService} from "./app-config.service";
 import {UserService} from "./user.service";
 import {NetworkStatusService} from "./network-status.service";
 import {distinctUntilChanged, map} from "rxjs/operators";
-import {HttpClient} from "@angular/common/http";
 import {OutgoingMessageModel} from "../models/websocket/outgoing-message.model";
 import {OutgoingSubscriptionPayload} from "../models/websocket/outgoing-subscription-payload.model";
 import {SnackbarService} from "./snackbar.service";
@@ -22,9 +21,6 @@ import {OutgoingAuthenticationPayload} from "../models/websocket/outgoing-authen
 })
 export class WebSocketService {
 
-    PROTOCOL = 'https://'
-    PATH_ENDPOINT = '/api/ws/sessions';
-
     private webSocketData?: WebSocketSubject<any>;
 
     private MAP_TO_REMOTE_WEBSOCKET = true; // set to false, if you want to use your own websocket (on localhost)
@@ -33,10 +29,7 @@ export class WebSocketService {
     constructor(private config: AppConfigService,
                 private notificationService: UserNotificationService,
                 private userService: UserService,
-                private networkStatusService: NetworkStatusService,
-                private httpClient: HttpClient,
-                private appConfigService: AppConfigService,
-                private snackBarService: SnackbarService
+                private networkStatusService: NetworkStatusService
     ) {
         networkStatusService.getNetworkStatus().subscribe(networkstate => {
             if (networkstate === "ONLINE") {

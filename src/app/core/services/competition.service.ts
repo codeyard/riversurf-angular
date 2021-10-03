@@ -13,7 +13,6 @@ import {SnackbarService} from "./snackbar.service";
 })
 export class CompetitionService implements OnInit, OnDestroy {
 
-    PROTOCOL_HTTPS = 'https://';
     PATH_ENDPOINT = '/api/competitions';
     isOffline: boolean = false;
     networkStatusSubscription!: Subscription;
@@ -89,7 +88,7 @@ export class CompetitionService implements OnInit, OnDestroy {
     }
 
     pushToServer(competition: Competition) {
-        const requestUrl = this.PROTOCOL_HTTPS + this.appConfigService.getHostName() + this.PATH_ENDPOINT + `/${competition.id}`;
+        const requestUrl = this.appConfigService.getProtocol() + this.appConfigService.getHostName() + this.PATH_ENDPOINT + `/${competition.id}`;
         return this.httpClient.put(requestUrl, competition)
     }
 
@@ -103,7 +102,7 @@ export class CompetitionService implements OnInit, OnDestroy {
     }
 
     private fetchAllCompetitions() {
-        const requestUrl = this.PROTOCOL_HTTPS + this.appConfigService.getHostName() + this.PATH_ENDPOINT;
+        const requestUrl = this.appConfigService.getProtocol() + this.appConfigService.getHostName() + this.PATH_ENDPOINT;
         this.httpClient.get<Competition[]>(requestUrl).subscribe(
             (responseData: Competition[]) => {
                 responseData.forEach(competition => this.setupRounds(competition));

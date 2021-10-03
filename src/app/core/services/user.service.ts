@@ -16,7 +16,6 @@ import * as uuid from 'uuid';
 })
 export class UserService {
 
-    PROTOCOL = 'https://'
     PATH_ENDPOINT = '/api/user/login';
     private tokenExpirationTimer: any;
 
@@ -38,7 +37,7 @@ export class UserService {
     }
 
     loginUser(username: string, password: string) {
-        const requestUrl = this.PROTOCOL + this.appConfigService.getHostName() + this.PATH_ENDPOINT;
+        const requestUrl = this.appConfigService.getProtocol() + this.appConfigService.getHostName() + this.PATH_ENDPOINT;
         const body = {userName: username, password: password}
         return this.httpClient.post<User>(requestUrl, body)
             .pipe(

@@ -16,7 +16,6 @@ import {SnackbarService} from "./snackbar.service";
 })
 export class SurfEventService {
 
-    PROTOCOL_HTTPS = 'https://';
     PATH_ENDPOINT = '/api/surfevents';
 
     private surfEventsData = new BehaviorSubject<SurfEvent[]>([]);
@@ -141,7 +140,7 @@ export class SurfEventService {
     }
 
     private fetchAllSurfEvents() {
-        const requestUrl = this.PROTOCOL_HTTPS + this.appConfigService.getHostName() + this.PATH_ENDPOINT;
+        const requestUrl = this.appConfigService.getProtocol() + this.appConfigService.getHostName() + this.PATH_ENDPOINT;
         this.httpClient.get<SurfEvent[]>(requestUrl).subscribe(
             (responseData: SurfEvent[]) => this.surfEventsData.next(responseData),
             error => {

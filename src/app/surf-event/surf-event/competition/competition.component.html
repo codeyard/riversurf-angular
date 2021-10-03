@@ -1,6 +1,19 @@
 <mat-tab-group [selectedIndex]="selectedTabIndex">
     <ng-container *ngIf="competition">
         <mat-tab *ngFor="let round of competition.rounds; let roundIndex = index" [label]="getRoundLabel(roundIndex)" [disabled]="round.riders.length === 0">
+            <div class="switch-container">
+                <button mat-raised-button color="primary" type="button" class="switch-container__view"
+                        (click)="goToTournamentView()">Tournament-View
+                </button>
+                <button mat-raised-button *ngFor="let division of surfEvent.divisions"
+                        value="{{division}}" (click)="toggleDivision(division)"
+                        class="switch-container__item switch-container__item--{{division}}"
+                        [disabled]="division === selectedDivision"
+                        [ngClass]="{'switch-container__item--disabled': division === selectedDivision}">
+                    <mat-icon class="switch-container__item__icon">{{division}}</mat-icon>
+                    {{division | titlecase}}
+                </button>
+            </div>
             <div class="competition-container">
                 <rs-round
                     [hasNextRound]="hasNextRoundReady(roundIndex)"

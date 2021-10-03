@@ -1,10 +1,12 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
 import {Competition, Round} from "../../../core/models/competition.model";
 import {SnackbarService} from "../../../core/services/snackbar.service";
-import {ActivatedRoute} from "@angular/router";
-import {switchMap} from "rxjs/operators";
+import {ActivatedRoute, Router} from "@angular/router";
+import {switchMap, tap} from "rxjs/operators";
 import {Subscription} from "rxjs";
 import {SurfEventService} from "../../../core/services/surf-event.service";
+import {Division} from "../../../core/models/division.type";
+import {SurfEvent} from "../../../core/models/surf-event.model";
 
 @Component({
     selector: 'rs-competition',
@@ -16,15 +18,24 @@ export class CompetitionComponent implements OnInit, OnDestroy {
     routeSubscription?: Subscription;
     competition!: Competition;
     selectedTabIndex: number = 0;
+    selectedDivision!: Division;
+    surfEvent!: SurfEvent;
 
     constructor(private snackBarService: SnackbarService,
                 private route: ActivatedRoute,
+                private router: Router,
                 private surfEventService: SurfEventService,) {
     }
 
     ngOnInit(): void {
         this.routeSubscription = this.route.params
             .pipe(
+                tap(params => {
+                    const id = params['id'].split('-').pop();
+                    this.surfEventService.getSurfEvent(id).subscribe(surfEvent => {
+                        this.surfEvent = surfEvent;
+                    })
+                }),
                 switchMap(params => {
                     const id = params['id'].split('-').pop();
                     const division = params['division'].toLowerCase();
@@ -94,5 +105,16 @@ export class CompetitionComponent implements OnInit, OnDestroy {
         return currentRound < this.competition.rounds.length - 1
             ? this.competition.rounds[currentRound + 1].riders.length > 0
             : false;
+    }
+
+    goToTournamentView() {
+        this.router.navigate(["../"], {relativeTo: this.route})
+    }
+
+    toggleDivision(division: Division) {
+        this.selectedDivision = division;
+        this.router.navigate(['../../', this.selectedDivision, "edit"], {
+            relativeTo: this.route
+        }).then();
     }
 }

@@ -153,7 +153,7 @@ export class RoundComponent implements OnInit, OnChanges, OnDestroy {
                 break;
         }
         if (this.isOffline) {
-            msg += " Please go back online to save the updates."
+            msg += " But only on your device! :( Please go back online to save the updates on the server."
         }
         let messageLevel = this.isOffline ? 'warning' : 'success' as MessageLevel;
         this.snackbarService.send(msg, messageLevel);

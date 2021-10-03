@@ -9,7 +9,7 @@ export class DexieService {
     private db;
 
     constructor() {
-        this.db = new Dexie("ridersDatabase");
+        this.db = new Dexie("riverSurfDB");
         this.db.version(1).stores({
             riders: "id",
             user: "id",
@@ -28,7 +28,10 @@ export class DexieService {
     }
 
     public getVersionsTable() {
-        return this.db.table('verisons');
+        return this.db.table('versions');
     }
 
+    public getCompetitionsTable() {
+        return this.db.table('competitions');
+    }
 }

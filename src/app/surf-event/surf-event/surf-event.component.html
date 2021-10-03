@@ -58,7 +58,7 @@
     </div>
 </div>
 
-<div *ngIf="!isLoading" class="event__map">
+<div *ngIf="!isOffline && !isLoading" class="event__map">
     <google-map
         width="100%"
         height="500px"

@@ -10,6 +10,7 @@ import {MapInfoWindow} from "@angular/google-maps";
 import {ActivatedRoute, Router} from "@angular/router";
 import {SlugifyPipe} from "../../shared/pipes/slugify.pipe";
 import {MatTabChangeEvent} from "@angular/material/tabs";
+import {NetworkStatusService} from "../services/network-status.service";
 
 @Component({
     selector: 'rs-home',
@@ -29,6 +30,7 @@ export class HomeComponent implements OnInit, OnDestroy {
 
     selectedTabIndex!: number;
     routeSubscription?: Subscription;
+    networkStatusSubscription?: Subscription;
 
     mapZoom = 9;
     mapOptions: google.maps.MapOptions = {
@@ -41,6 +43,8 @@ export class HomeComponent implements OnInit, OnDestroy {
     };
     mapInfoContent = '';
 
+    isOffline: boolean = false;
+
     private destroy$ = new Subject();
 
     constructor(private observer: BreakpointObserver,
@@ -48,6 +52,7 @@ export class HomeComponent implements OnInit, OnDestroy {
                 private surfEventService: SurfEventService,
                 private router: Router,
                 private route: ActivatedRoute,
+                private networkStatusService: NetworkStatusService,
                 private slugify: SlugifyPipe) {
     }
 
@@ -77,11 +82,16 @@ export class HomeComponent implements OnInit, OnDestroy {
                 this.selectedTabIndex = 0;
             }
         });
+
+        this.networkStatusSubscription = this.networkStatusService.getNetworkStatus().subscribe(status => {
+            this.isOffline = status !== 'ONLINE';
+        });
     }
 
     ngOnDestroy(): void {
         this.destroy$.next(null);
         this.destroy$.complete();
+        this.networkStatusSubscription?.unsubscribe();
     }
 
     goToSurfEvent(surfEvent: SurfEvent) {

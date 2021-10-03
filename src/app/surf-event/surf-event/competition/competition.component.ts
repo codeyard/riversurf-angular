@@ -39,7 +39,6 @@ export class CompetitionComponent implements OnInit, OnDestroy {
                 switchMap(params => {
                     const id = params['id'].split('-').pop();
                     const division = params['division'].toLowerCase();
-                    this.selectedDivision = division;
                     return this.surfEventService.getCompetitionByDivision(id, division);
                 })
             )
@@ -62,8 +61,11 @@ export class CompetitionComponent implements OnInit, OnDestroy {
         this.routeSubscription?.unsubscribe();
     }
 
-    onFinishedRound(event: {currentRound: number, promotedRiders: string[]}) {
-        this.competition.rounds[event.currentRound + 1] = {...this.competition.rounds[event.currentRound + 1], riders: event.promotedRiders};
+    onFinishedRound(event: { currentRound: number, promotedRiders: string[] }) {
+        this.competition.rounds[event.currentRound + 1] = {
+            ...this.competition.rounds[event.currentRound + 1],
+            riders: event.promotedRiders
+        };
         this.updateCompetition(this.competition.rounds[event.currentRound + 1])
         this.selectedTabIndex = this.selectedTabIndex + 1;
         this.snackBarService.send("Yeah, round completed! Let's move to the next one", 'success');
@@ -90,9 +92,10 @@ export class CompetitionComponent implements OnInit, OnDestroy {
 
         this.surfEventService.updateCompetition(this.competition)
             .subscribe(
-                () => () => {},
+                () => () => {
+                },
                 error => {
-                    this.snackBarService.send("Sorry mate, we are Unable to save changes to server", "error");
+                    this.snackBarService.send("Sorry mate, we are unable to save your changes!", "error");
                     console.log(error)
                 });
     }
@@ -100,7 +103,7 @@ export class CompetitionComponent implements OnInit, OnDestroy {
 
     hasNextRoundReady(currentRound: number) {
         return currentRound < this.competition.rounds.length - 1
-            ? this.competition.rounds[currentRound+1].riders.length > 0
+            ? this.competition.rounds[currentRound + 1].riders.length > 0
             : false;
     }
 

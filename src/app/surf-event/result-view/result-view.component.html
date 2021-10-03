@@ -112,7 +112,7 @@
 
     <div *ngIf="!isLoading" class="weather-qr-code-container">
         <qr-code value="{{qrCodeLink}}" size="180" errorCorrectionLevel="M"></qr-code>
-        <rs-weather *ngIf="weatherLocation" [weatherLocation]="weatherLocation" weatherIconStyle="line"></rs-weather>
+        <rs-weather *ngIf="weatherLocation && !isOffline" [weatherLocation]="weatherLocation" weatherIconStyle="line"></rs-weather>
     </div>
 </div>
 

@@ -1,5 +1,5 @@
 import {Injectable} from '@angular/core';
-import {BehaviorSubject, combineLatest, noop, Observable, of, throwError} from "rxjs";
+import {BehaviorSubject, combineLatest, noop, Observable, throwError} from "rxjs";
 import {Rider} from "../models/rider.model";
 import {SnackbarService} from "./snackbar.service";
 import {HttpClient, HttpErrorResponse} from "@angular/common/http";
@@ -54,7 +54,7 @@ export class UserService {
                     this.autoLogin(authuser);
                     this.user.next(authuser);
                 } else {
-                    const user = users.filter(user => !user.isAuthenticated)[0];
+                    const user = users.filter(user => user.id === this.ANONYMOUS)[0];
                     this.user.next(user)
                 }
             }
@@ -115,6 +115,9 @@ export class UserService {
 
     public logout(route?: string) {
         const navigateTo = route ?? "/";
+        const user = {...this.user.getValue()};
+        user.isAuthenticated = false;
+        this.user.next(user);
         this.setAnonymousUser();
         this.snackBarService.send("We logged you out mate!", "success")
         if (this.tokenExpirationTimer) {

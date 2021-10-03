@@ -19,13 +19,45 @@
                 stroke="#3f51b5" fill="none" stroke-width="0.5rem"></path>
         </svg>
     </div>
-    <h2 *ngIf="routerHistory.length > 0">Your last <span class="underline">destinations</span>:</h2>
-    <div *ngIf="routerHistory.length > 0" class="error-container__history">
-        <div class="error-container__history-item" *ngFor="let history of routerHistory">
-            <mat-card [routerLink]="history.url" [queryParams]="history.queryParams">
-                <mat-icon *ngIf="history.error">thumb_down</mat-icon>
-                {{history.description}}
-            </mat-card>
+    <ng-container *ngIf="searchedRiders && searchedRiders.length > 0">
+        <h2>Did you mean the following
+            <span class="underline" *ngIf="searchedRiders.length > 1; else singleRider">Riders</span>
+            <ng-template #singleRider><span class="underline">Rider</span></ng-template>
+            :
+        </h2>
+        <div class="error-container__history">
+            <div class="error-container__history-item" *ngFor="let rider of searchedRiders">
+                <mat-card routerLink="/riders/{{rider.id}}">
+                    <mat-icon>surfing</mat-icon>
+                    {{rider.firstName}} {{rider.lastName}} ({{rider.nickName}})
+                </mat-card>
+            </div>
         </div>
-    </div>
+    </ng-container>
+    <ng-container *ngIf="searchedSurfEvents && searchedSurfEvents.length > 0">
+        <h2>Did you mean the following
+            <span class="underline" *ngIf="searchedSurfEvents.length > 1; else singleJam">Jams</span>
+            <ng-template #singleJam><span class="underline">Jam</span></ng-template>
+            :
+        </h2>
+        <div class="error-container__history">
+            <div class="error-container__history-item" *ngFor="let surfEvent of searchedSurfEvents">
+                <mat-card routerLink="/event/{{surfEvent.id}}">
+                    <mat-icon>event_note</mat-icon>
+                    {{surfEvent.name}}
+                </mat-card>
+            </div>
+        </div>
+    </ng-container>
+    <ng-container *ngIf="routerHistory.length > 0">
+        <h2>Your last <span class="underline">destinations</span>:</h2>
+        <div class="error-container__history">
+            <div class="error-container__history-item" *ngFor="let history of routerHistory">
+                <mat-card [routerLink]="history.url" [queryParams]="history.queryParams">
+                    <mat-icon *ngIf="history.error">thumb_down</mat-icon>
+                    {{history.description}}
+                </mat-card>
+            </div>
+        </div>
+    </ng-container>
 </div>

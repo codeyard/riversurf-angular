@@ -15,8 +15,12 @@ import {Rider} from "../../core/models/rider.model";
 export class ErrorComponent implements OnInit, OnDestroy {
 
     routerHistory: RouterHistoryModel[] = [];
-
     errorResource: string = '';
+    searchedSurfEvents ?: SurfEvent[];
+    searchedRiders ?: Rider[];
+
+    private HISTORY_LIMIT = 6;
+    private SEARCH_LIMIT = 9;
 
     private searchSubscription ?: Subscription;
 
@@ -26,7 +30,7 @@ export class ErrorComponent implements OnInit, OnDestroy {
     ngOnInit(): void {
         this.searchSubscription = this.routerHistoryService.getRouterHistory().pipe(
             map((historyUrls: RouterHistoryModel[]) => {
-                historyUrls = historyUrls.slice(0, 6);
+                historyUrls = historyUrls.slice(0, this.HISTORY_LIMIT);
                 if (historyUrls.length > 0) {
                     this.errorResource = historyUrls[0].description !== 'page-not-found' ? historyUrls[0].description : '';
                     this.routerHistory = this.errorResource ? historyUrls : historyUrls.slice(1);
@@ -43,10 +47,15 @@ export class ErrorComponent implements OnInit, OnDestroy {
                 return this.errorResource;
             }),
             filter(searchTerm => searchTerm !== ''),
-            switchMap(searchTerm => this.searchService.searchByTerm(searchTerm))
+            switchMap(searchTerm => this.searchService.searchByTerm(searchTerm)),
+            map(([events, riders]) => {
+                events = events.slice(0, this.SEARCH_LIMIT);
+                riders = riders.slice(0,this.SEARCH_LIMIT);
+                return [events, riders];
+            })
         ).subscribe(([events, riders]) => {
-            console.log(`Search results: events`, events as SurfEvent[]);
-            console.log(`Search results: riders`, riders as Rider[]);
+            this.searchedSurfEvents = events as SurfEvent[];
+            this.searchedRiders = riders as Rider[];
         });
     }
 

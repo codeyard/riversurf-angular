@@ -375,8 +375,8 @@ export class ResultViewComponent implements OnInit, AfterViewInit, OnDestroy {
             relativeTo: this.route
         }).then(
             () => {
-                this.cd.detectChanges();
-                this.getPointsAndLines();
+                //this.cd.detectChanges();
+                //this.getPointsAndLines();
             }
         );
 

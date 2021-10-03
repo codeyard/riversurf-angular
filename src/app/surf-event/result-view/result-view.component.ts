@@ -159,6 +159,7 @@ export class ResultViewComponent implements OnInit, AfterViewInit, OnDestroy {
             this.cd.detectChanges();
             this.getPointsAndLines();
         });
+
     }
 
     ngAfterViewInit(): void {

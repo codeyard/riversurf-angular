@@ -20,6 +20,7 @@ import {CarouselComponent} from "../../shared/carousel/carousel.component";
 import {UserService} from "../../core/services/user.service";
 import {SurfEvent} from "../../core/models/surf-event.model";
 import {WeatherLocation, weatherLocations} from "../weather/weather-location";
+import {Division} from "../../core/models/division.type";
 import {NetworkStatusService} from "../../core/services/network-status.service";
 
 export interface Line {
@@ -72,7 +73,7 @@ export class ResultViewComponent implements OnInit, AfterViewInit, OnDestroy {
     smallScreen?: boolean;
 
     qrCodeLink?: string;
-    selectedDivision: string = '';
+    selectedDivision?: Division;
 
     private windowResizeSubject$ = new Subject<number | null>();
     private selectedSurfEvent: string = '';
@@ -106,7 +107,7 @@ export class ResultViewComponent implements OnInit, AfterViewInit, OnDestroy {
                 switchMap(params => {
                     const id = params['id'].split('-').pop();
                     const division = params['division'].toLowerCase();
-                    this.selectedDivision = division;
+                    this.selectedDivision = division as Division;
                     this.selectedSurfEvent = id;
                     return this.surfEventService.getCompetitionByDivision(id, division);
                 }),
@@ -234,7 +235,7 @@ export class ResultViewComponent implements OnInit, AfterViewInit, OnDestroy {
     }
 
     getPointsAndLines() {
-        const ridersWithTheirMaxRound: RiderProgress[] = []
+        const ridersWithTheirMaxRound: RiderProgress[] = [];
         this.competition.rounds.forEach((round, roundNumber) =>
             round.heats.forEach(heat =>
                 heat.riders.forEach(rider => {
@@ -364,7 +365,7 @@ export class ResultViewComponent implements OnInit, AfterViewInit, OnDestroy {
         this.router.navigate(["edit"], {relativeTo: this.route}).then();
     }
 
-    toggleDivision(division: string): void {
+    toggleDivision(division: Division): void {
         this.selectedDivision = division;
         this.router.navigate(['../', this.selectedDivision], {
             relativeTo: this.route

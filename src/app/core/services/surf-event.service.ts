@@ -3,7 +3,7 @@ import {BehaviorSubject, Observable} from "rxjs";
 import {SurfEvent} from "../models/surf-event.model";
 import {HttpClient} from "@angular/common/http";
 import {AppConfigService} from "./app-config.service";
-import {filter, map, switchMap} from "rxjs/operators";
+import {filter, map, switchMap, tap} from "rxjs/operators";
 import {Division} from "../models/division.type";
 import {CompetitionService} from "./competition.service";
 import {Competition} from "../models/competition.model";
@@ -59,6 +59,11 @@ export class SurfEventService {
             })),
             map(results => {
                 return results.sort((a, b) => new Date(a.startDateTime).getTime() - new Date(b.startDateTime).getTime())
+            }),
+            tap(currentSurfEvents => {
+                for(const currentSurfEvent of currentSurfEvents){
+                    this.competitionService.getCompetitionsByIds(currentSurfEvent.competitions).subscribe();
+                }
             })
         );
     }

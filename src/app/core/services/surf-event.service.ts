@@ -3,7 +3,7 @@ import {BehaviorSubject, Observable} from "rxjs";
 import {SurfEvent} from "../models/surf-event.model";
 import {HttpClient} from "@angular/common/http";
 import {AppConfigService} from "./app-config.service";
-import {filter, map, switchMap, tap} from "rxjs/operators";
+import {distinctUntilChanged, filter, map, switchMap, tap} from "rxjs/operators";
 import {Division} from "../models/division.type";
 import {CompetitionService} from "./competition.service";
 import {Competition} from "../models/competition.model";
@@ -132,7 +132,9 @@ export class SurfEventService {
                 } else {
                     throw "NON_EXISTING_COMPETITION";
                 }
-            }));
+            }),
+            distinctUntilChanged((prevComp, nextComp) => prevComp.id === nextComp.id && prevComp.version === nextComp.version)
+            );
     }
 
     updateCompetition(competition: Competition) {

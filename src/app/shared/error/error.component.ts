@@ -2,6 +2,8 @@ import {Component, OnDestroy, OnInit} from '@angular/core';
 import {RouterHistoryService} from "../../core/services/router-history.service";
 import {Subscription} from "rxjs";
 import {map} from "rxjs/operators";
+import {SearchService} from "../../core/services/search.service";
+import {RouterHistoryModel} from "../../core/models/router-history.model";
 
 @Component({
     selector: 'rs-error',
@@ -10,41 +12,27 @@ import {map} from "rxjs/operators";
 })
 export class ErrorComponent implements OnInit, OnDestroy {
 
-    routerHistory: {
-        url: string,
-        description: string
-    }[] = [];
+    routerHistory: RouterHistoryModel[] = [];
 
     errorResource: string = '';
 
     private routerHistoryServiceSubscription ?: Subscription;
 
-    constructor(private routerHistoryService: RouterHistoryService) {
+    constructor(private routerHistoryService: RouterHistoryService, private searchService: SearchService) {
     }
 
     ngOnInit(): void {
         this.routerHistoryServiceSubscription = this.routerHistoryService.getRouterHistory().pipe(
-            map((historyUrls: string[]) => {
-                historyUrls = historyUrls.slice(0, 6);
-                const result = [];
-                for (let historyUrl of historyUrls) {
-                    const queryParamIndex = historyUrl.indexOf('?');
-                    if (queryParamIndex !== -1) {
-                        historyUrl = historyUrl.substring(0, queryParamIndex);
-                    }
-                    const dest = historyUrl === '/' ? 'Home' : historyUrl.substring(1);
-                    result.push({
-                        url: historyUrl,
-                        description: dest
-                    });
-                }
-                return result;
+            map((historyUrls: RouterHistoryModel[]) => {
+                return historyUrls.slice(0, 6);
             })
-        ).subscribe(historyElements => {
+        ).subscribe(historyElements  => {
             if (historyElements.length > 0) {
                 if (historyElements[0].description !== 'page-not-found') {
                     this.routerHistory = historyElements;
-                    this.errorResource = this.routerHistory[0].description;
+                    if(this.routerHistory[0].description) {
+                        this.errorResource = this.routerHistory[0].description;
+                    }
                 } else {
                     this.routerHistory = historyElements.slice(1);
                     this.errorResource = '';

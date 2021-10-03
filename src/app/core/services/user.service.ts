@@ -1,14 +1,15 @@
 import {Injectable} from '@angular/core';
-import {BehaviorSubject, noop, Observable, throwError} from "rxjs";
+import {BehaviorSubject, combineLatest, noop, Observable, of, throwError} from "rxjs";
 import {Rider} from "../models/rider.model";
 import {SnackbarService} from "./snackbar.service";
 import {HttpClient, HttpErrorResponse} from "@angular/common/http";
 import {User} from "../models/user.model";
 import {AppConfigService} from "./app-config.service";
-import {catchError, distinctUntilChanged, filter, map, tap} from "rxjs/operators";
+import {catchError, distinctUntilChanged, map, tap} from "rxjs/operators";
 import {Router} from "@angular/router";
 import {JwtHelperService} from '@auth0/angular-jwt';
 import {DexieService} from "./dexie.service";
+import {NetworkStatusService} from "./network-status.service";
 
 
 @Injectable({
@@ -18,7 +19,7 @@ export class UserService {
 
     PROTOCOL = 'https://';
     PATH_LOGIN = '/api/user/login';
-    PATH_PUT = '/api/user';
+    PATH_FAVOURITERIDERS = '/api/user/favouriteriders';
 
     ANONYMOUS = "anonymous";
 
@@ -37,7 +38,8 @@ export class UserService {
         private appConfigService: AppConfigService,
         private snackBarService: SnackbarService,
         private router: Router,
-        private dexieService: DexieService
+        private dexieService: DexieService,
+        private networkStatusService: NetworkStatusService
     ) {
 
         // wenn User ändert -> store to indexedDB
@@ -56,7 +58,7 @@ export class UserService {
                     this.user.next(user)
                 }
             }
-            this.subScribeToUserChanges();
+            this.subscribeToUserChanges();
         });
     }
 
@@ -122,13 +124,19 @@ export class UserService {
         this.router.navigate([navigateTo]).then();
     }
 
-    private putUser(user: User): void {
+    private putUserToIndexed(user: User): void {
         this.dexieDB.users.put(user);
-        if(user.isAuthenticated) {
-            const requestUrl = this.PROTOCOL + this.appConfigService.getHostName() + this.PATH_PUT;
-            const body = user
-            this.httpClient.put<User>(requestUrl, body).subscribe(() => noop())
-        }
+    }
+
+    /**
+     * Only post favourite riders instead of whole User -> the user can not be modified (feature out of scope)
+     **/
+    private putUserToBackend(user: User): void {
+        const requestUrl = this.PROTOCOL + this.appConfigService.getHostName() + this.PATH_FAVOURITERIDERS;
+        const body = {
+            favouriteRiders: user.favouriteRiders
+        };
+        this.httpClient.post<User>(requestUrl, body).subscribe(() => noop());
     }
 
     private handleAuthentication(user: User) {
@@ -176,18 +184,24 @@ export class UserService {
         return throwError(errorMessage);
     }
 
-    private subScribeToUserChanges() {
-        this.user$
+    private subscribeToUserChanges() {
+        combineLatest([this.networkStatusService.getNetworkStatus(), this.user$])
             .pipe(
-                filter(user => user !== undefined),
-                distinctUntilChanged((prevUser, nextUser) => this.isUserEqal(prevUser, nextUser))
+                distinctUntilChanged(([prevNetwork, prevUser], [nextNetwork, nextUser]) => {
+                    // Only emit if User is NOT eqal OR networkState is NOT equal (looks weird because distinctUntilChanged acts like a filter with predicate => flase)
+                    return this.isUserEqal(prevUser, nextUser) && prevNetwork === nextNetwork;
+                })
             )
-            .subscribe(user => {
-                this.putUser(user)
-            })
+            .subscribe(([network, user]) => {
+                this.putUserToIndexed(user);
+                if (network === 'ONLINE' && user.isAuthenticated) {
+                    this.putUserToBackend(user);
+                }
+            });
     }
 
-    private setAnonymousUser(): void {this.dexieDB.users.toArray().then((users: User[]) => {
+    private setAnonymousUser(): void {
+        this.dexieDB.users.toArray().then((users: User[]) => {
             const user = users.filter(user => user.id === this.ANONYMOUS)[0];
             this.user.next(user);
         });

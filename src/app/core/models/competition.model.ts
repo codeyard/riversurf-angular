@@ -2,6 +2,7 @@ import {Division} from "./division.type";
 
 export interface Competition {
     id: string;
+    version: number;
     division: Division;
     config: CompetitionConfig;
     riders: string[];

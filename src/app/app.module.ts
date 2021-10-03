@@ -1,45 +1,38 @@
 import {APP_INITIALIZER, NgModule} from '@angular/core';
-import {BrowserModule, HammerModule} from '@angular/platform-browser';
-
-import {AppRoutingModule} from './app-routing.module';
 import {AppComponent} from './app.component';
-import {HomeComponent} from './home/home.component';
-import {SharedModule} from "./shared/shared.module";
-import {CoreModule} from "./core/core.module";
-import {EventCardComponent} from "./home/event-card/event-card.component";
-import {MatCardModule} from "@angular/material/card";
-import {UserModule} from "./user/user.module";
-import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
-import {HTTP_INTERCEPTORS, HttpClientModule} from "@angular/common/http";
-import {loadInitialData} from "./init";
 import {AppConfigService} from "./core/services/app-config.service";
-import {MatProgressSpinnerModule} from "@angular/material/progress-spinner";
-import {GoogleMapsModule} from "@angular/google-maps";
-import {MatTabsModule} from "@angular/material/tabs";
-import {SlugifyPipe} from "./shared/pipes/slugify.pipe";
+import {AppRoutingModule} from './app-routing.module';
 import {AuthInterceptorService} from "./core/services/auth/auth-interceptor.service";
-import {MatButtonModule} from "@angular/material/button";
+import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
+import {BrowserModule, HammerModule} from '@angular/platform-browser';
+import {CoreModule} from "./core/core.module";
+import {HTTP_INTERCEPTORS, HttpClientModule} from "@angular/common/http";
+import {SharedModule} from "./shared/shared.module";
+import {SlugifyPipe} from "./shared/pipes/slugify.pipe";
+import {UserModule} from "./user/user.module";
+import {loadInitialData} from "./init";
+import { ServiceWorkerModule } from '@angular/service-worker';
+import { environment } from '../environments/environment';
 
 @NgModule({
     declarations: [
-        AppComponent,
-        HomeComponent,
-        EventCardComponent
+        AppComponent
     ],
     imports: [
         AppRoutingModule,
-        BrowserModule,
         BrowserAnimationsModule,
+        BrowserModule,
         CoreModule,
+        HammerModule,
         HttpClientModule,
         SharedModule,
-        MatButtonModule,
-        MatCardModule,
         UserModule,
-        MatProgressSpinnerModule,
-        HammerModule,
-        GoogleMapsModule,
-        MatTabsModule
+        ServiceWorkerModule.register('ngsw-worker.js', {
+          enabled: environment.production,
+          // Register the ServiceWorker as soon as the app is stable
+          // or after 30 seconds (whichever comes first).
+          registrationStrategy: 'registerWhenStable:30000'
+        }),
     ],
     providers: [{
         provide: APP_INITIALIZER,

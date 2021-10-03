@@ -1,15 +1,25 @@
-import {AfterViewInit, ChangeDetectorRef, Component, OnDestroy, OnInit, QueryList, ViewChildren} from '@angular/core';
+import {
+    AfterViewChecked,
+    AfterViewInit,
+    ChangeDetectorRef,
+    Component,
+    OnDestroy,
+    OnInit,
+    QueryList,
+    ViewChildren
+} from '@angular/core';
 import {Competition, Heat, Result} from "../../core/models/competition.model";
 import {RiderResultComponent} from "../surf-event/competition/round/rider-result/rider-result.component";
 import {combineLatest, Subject, Subscription} from "rxjs";
 import {ActivatedRoute, Router} from "@angular/router";
 import {SurfEventService} from "../../core/services/surf-event.service";
-import {switchMap, take, takeUntil, tap} from "rxjs/operators";
+import {debounceTime, distinctUntilChanged, switchMap, take, takeUntil, tap} from "rxjs/operators";
 import {SnackbarService} from "../../core/services/snackbar.service";
 import {BreakpointObserver} from "@angular/cdk/layout";
 import {CarouselComponent} from "../../shared/carousel/carousel.component";
 import {UserService} from "../../core/services/user.service";
 import {SurfEvent} from "../../core/models/surf-event.model";
+import {WeatherLocation, weatherLocations} from "../weather/weather-location";
 
 export interface Line {
     source: Point,
@@ -34,12 +44,12 @@ interface RiderProgress {
     styleUrls: ['./result-view.component.scss']
 })
 export class ResultViewComponent implements OnInit, AfterViewInit, OnDestroy {
-
     competition!: Competition;
     surfEvent!: SurfEvent;
     @ViewChildren(RiderResultComponent) results!: QueryList<any>;
     @ViewChildren(CarouselComponent) carousel?: QueryList<any>
     queryParamSubscription?: Subscription;
+    weatherLocation?: WeatherLocation;
 
     lines: Line[] = [];
     points: Point[] = []
@@ -62,6 +72,7 @@ export class ResultViewComponent implements OnInit, AfterViewInit, OnDestroy {
     qrCodeLink?: string;
     selectedDivision: string = '';
 
+    private windowResizeSubject$ = new Subject<number | null>();
     private selectedSurfEvent: string = '';
 
     private destroy$ = new Subject();
@@ -76,6 +87,15 @@ export class ResultViewComponent implements OnInit, AfterViewInit, OnDestroy {
     }
 
     ngOnInit(): void {
+        this.queryParamSubscription = this.route.queryParams.subscribe(params => {
+            const highlightedRider = params['highlight'];
+            if (highlightedRider) {
+                this.highlightRider(highlightedRider);
+            } else {
+                this.highlightActive = false;
+            }
+        });
+
         this.init = this.route.params
             .pipe(
                 switchMap(params => {
@@ -97,31 +117,26 @@ export class ResultViewComponent implements OnInit, AfterViewInit, OnDestroy {
                             errorMessage = "Sorry mate, it seems like this Competition does not exist!";
                             routerNavigation += 'event/' + this.selectedSurfEvent;
                         }
-                        console.log(`Re-navigate to: ${routerNavigation}`);
                         this.snackBarService.send(errorMessage, "error");
-                        this.router.navigate([routerNavigation]);
-                        console.log('ERROR loading competition data :-(', error)
-                    })
+                        this.router.navigate([routerNavigation]).then();
+                })
             )
-
-        this.queryParamSubscription = this.route.queryParams.subscribe(params => {
-            const highlightedRider = params['highlight'];
-            if (highlightedRider) {
-                this.highlightRider(highlightedRider);
-            }
-        });
-
-        this.qrCodeLink = window.location.toString();
 
         this.observer.observe('(max-width: 878px)')
             .pipe(takeUntil(this.destroy$))
             .subscribe(result => {
                 this.smallScreen = result.matches;
+                if (this.smallScreen && this.highlightedRider && this.highlightActive) {
+                    this.highlightRider(this.highlightedRider);
+                }
             });
+
+        this.qrCodeLink = window.location.toString();
 
         combineLatest(this.getUser(), this.getSurfEvent()).subscribe(
             ([user, surfEvent]) => {
                 this.surfEvent = surfEvent;
+                this.guessWeatherLocation(this.surfEvent.location);
                 if (user.isAuthenticated) {
                     if (surfEvent.judge === user.id || surfEvent.organizer === user.id) {
                         this.isAdministrator = true;
@@ -130,24 +145,56 @@ export class ResultViewComponent implements OnInit, AfterViewInit, OnDestroy {
 
                 }
             }
+        );
+
+        this.windowResizeSubject$.pipe(
+            tap(() => {
+                this.lines = [];
+                this.points = [];
+            }),
+            debounceTime(500),
+            distinctUntilChanged()
+        ).subscribe(() => {
+            this.cd.detectChanges();
+            this.getPointsAndLines();
+        });
+    }
+
+    ngAfterViewInit(): void {
+        this.init.subscribe(() => {
+                this.isLoading = false;
+                this.cd.detectChanges();
+                this.getPointsAndLines();
+            }
+        )
+
+        this.carousel?.changes.subscribe(
+            () => this.setCarouselIndexes()
         )
     }
 
-    highlightRider(riderId: string) {
-        this.highlightedRider = riderId;
-        this.highlightActive = !this.highlightActive;
 
-        if (this.smallScreen) {
-            this.carousel?.forEach((item, roundIndex) => {
-                const heatNumber = this.getHeatNumberOfRider(roundIndex, riderId)
-                if (heatNumber !== undefined) {
-                    item.setIndex(heatNumber)
-                }
-            });
+    ngOnDestroy(): void {
+        this.destroy$.next(null);
+        this.destroy$.complete();
+        this.windowResizeSubject$.unsubscribe();
+    }
+
+    addHighlightedRiderToRoute(riderId: string, event: Event) {
+        event.stopImmediatePropagation();
+        if (this.highlightActive && riderId === this.highlightedRider) {
+            this.unHighlightRider();
+        } else {
+            this.router.navigate([], {
+                queryParams: {highlight: riderId},
+                queryParamsHandling: 'merge',
+            }).then();
         }
+    }
 
+    unHighlightRider() {
         this.router.navigate([], {
-            queryParams: {highlight: riderId},
+            queryParams: {highlight: null},
             queryParamsHandling: 'merge',
         }).then();
     }
@@ -164,7 +211,6 @@ export class ResultViewComponent implements OnInit, AfterViewInit, OnDestroy {
 
         return riderIndex;
     }
-
 
     getHeatStatus(heat: Heat) {
         switch (heat.state) {
@@ -266,20 +312,6 @@ export class ResultViewComponent implements OnInit, AfterViewInit, OnDestroy {
         return Array.from(temp.values());
     }
 
-    ngAfterViewInit(): void {
-        this.init.subscribe(() => {
-                this.isLoading = false;
-                this.cd.detectChanges();
-                this.getPointsAndLines();
-            }
-        )
-    }
-
-    ngOnDestroy(): void {
-        this.destroy$.next(null);
-        this.destroy$.complete();
-    }
-
     extractPoints(points: Point[], i: number): { a: Point, b: Point } {
         return {
             a: {
@@ -303,7 +335,7 @@ export class ResultViewComponent implements OnInit, AfterViewInit, OnDestroy {
         let signY = Math.sign(deltaY)
         // funktioniert momentan nur für horizontale verbindungen, für vertikale, muss wohl auch noch ein signX eingesetzt werden
         // M 0 0 L 1 0 Q 2 0 2 1 L 2 2 L 2 3 Q 2 4 3 4 L 4 4
-        let path = `M ${a.x} ${a.y}, L ${middleX - this.CURVE_RADIUS} ${a.y}, Q ${middleX} ${a.y} ${middleX} ${a.y + signY * this.CURVE_RADIUS}, L ${middleX} ${middleY}, L ${middleX} ${b.y - signY * this.CURVE_RADIUS}, Q ${middleX} ${b.y} ${middleX + this.CURVE_RADIUS} ${b.y}, L ${b.x} ${b.y}`;
+        let path = `M ${a.x} ${a.y} L ${middleX - this.CURVE_RADIUS} ${a.y} Q ${middleX} ${a.y} ${middleX} ${a.y + signY * this.CURVE_RADIUS} L ${middleX} ${middleY} L ${middleX} ${b.y - signY * this.CURVE_RADIUS} Q ${middleX} ${b.y} ${middleX + this.CURVE_RADIUS} ${b.y} L ${b.x} ${b.y}`;
         return path;
     }
 
@@ -320,7 +352,7 @@ export class ResultViewComponent implements OnInit, AfterViewInit, OnDestroy {
     }
 
     editCompetition() {
-        this.router.navigate(["edit"], {relativeTo: this.route});
+        this.router.navigate(["edit"], {relativeTo: this.route}).then();
     }
 
     toggleDivision(division: string): void {
@@ -332,5 +364,45 @@ export class ResultViewComponent implements OnInit, AfterViewInit, OnDestroy {
         this.points = [];
         this.highlightedRider = '';
         this.highlightActive = false;
+    }
+
+    guessWeatherLocation(location: string) {
+        const locationParts: string[] = location.toLowerCase().split(',').join('').split(' ').reverse();
+
+        locationParts.forEach(word => {
+            const position = weatherLocations.indexOf(word);
+            if (position > -1) {
+                this.weatherLocation = weatherLocations[position] as WeatherLocation;
+                return;
+            }
+        });
+    }
+
+    onResize(event: any) {
+        this.windowResizeSubject$.next(event.target.innerWidth);
+    }
+
+    private highlightRider(riderId: string) {
+        this.highlightedRider = riderId;
+        this.highlightActive = true;
+
+        if (this.smallScreen) {
+            this.setCarouselIndexes();
+        }
+    }
+
+    private setCarouselIndexes() {
+        if (this.smallScreen) {
+            this.carousel?.forEach((item, roundIndex) => {
+                if (this.highlightedRider) {
+                    const heatNumber = this.getHeatNumberOfRider(roundIndex, this.highlightedRider)
+                    if (heatNumber !== undefined) {
+                        item.setIndex(heatNumber)
+                    } else {
+                        item.setIndex(0);
+                    }
+                }
+            });
+        }
     }
 }

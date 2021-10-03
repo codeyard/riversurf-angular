@@ -32,32 +32,33 @@
         </div>
     </div>
     <div class="event__divisions">
-        <div class="event__divisions__selection">
+        <div *ngIf="surfEvent.divisions.length" class="event__divisions__selection">
             <h2>Competitions</h2>
             <a mat-raised-button
-                *ngFor="let division of surfEvent.divisions"
-                class="division-{{division}}"
-                routerLink="/event/{{surfEvent.name | slugify}}-{{surfEvent.id}}/competition/{{ division }}">
+               *ngFor="let division of surfEvent.divisions"
+               class="division-{{division}}"
+               routerLink="/event/{{surfEvent.name | slugify}}-{{surfEvent.id}}/competition/{{ division }}">
+                <mat-icon>{{division}}</mat-icon>
                 {{division | titlecase}}
             </a>
         </div>
-        <div class="event__divisions__riders">
-            <h2>Riders in Action</h2>
-            <ng-container *ngIf="enrolledRiders$ | async as enrolledRiders">
+        <ng-container *ngIf="enrolledRiders$ | async as enrolledRiders">
+            <div class="event__divisions__riders">
+                <h2>Riders in Action</h2>
                 <a *ngFor="let rider of enrolledRiders"
-                    routerLink="/riders/{{ rider.nickName + '-' + rider.id | slugify }}">
+                   routerLink="/riders/{{ rider.nickName + '-' + rider.id | slugify }}">
                     <div title="{{rider.firstName}} {{rider.lastName}} ({{rider.division | titlecase}})"
                          class="event__divisions__riders__avatar"
                          [style.background-image]="'url(' + rider.profilePicture + ')'"
                          [ngStyle]="{'border-color': rider.division | divisionColor}">
                     </div>
                 </a>
-            </ng-container>
-        </div>
+            </div>
+        </ng-container>
     </div>
 </div>
 
-<div *ngIf="!isLoading" class="event__map">
+<div *ngIf="!isOffline && !isLoading" class="event__map">
     <google-map
         width="100%"
         height="500px"

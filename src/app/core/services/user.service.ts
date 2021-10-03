@@ -119,7 +119,7 @@ export class UserService {
             clearTimeout(this.tokenExpirationTimer)
         }
         this.tokenExpirationTimer = null;
-        this.router.navigate([navigateTo]);
+        this.router.navigate([navigateTo]).then();
     }
 
     private putUser(user: User): void {

@@ -179,7 +179,6 @@ export class WebSocketService {
         this.webSocketData.subscribe(
             msg => this.receiveMessage(msg),
             err => {
-                this.snackBarService.send("We couldn't update incoming live data for you", "error");
                 console.log(`WebSocket Error`, err);
             },
             () => console.log(`WebSocket Complete`)
@@ -190,11 +189,11 @@ export class WebSocketService {
         const outgoingAuthenticationPayload: OutgoingAuthenticationPayload = {
             baererToken: token
         }
-        const outgoningMessage: OutgoingMessageModel = {
+        const outgoingMessage: OutgoingMessageModel = {
             messageType: "authentication",
             payload: outgoingAuthenticationPayload
         }
-        this.webSocketData?.next(outgoningMessage);
+        this.webSocketData?.next(outgoingMessage);
     }
 
     private disconnect() {

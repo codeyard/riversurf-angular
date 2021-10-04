@@ -1,7 +1,11 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
 import {RouterHistoryService} from "../../core/services/router-history.service";
 import {Subscription} from "rxjs";
-import {map} from "rxjs/operators";
+import {filter, map, switchMap} from "rxjs/operators";
+import {SearchService} from "../../core/services/search.service";
+import {RouterHistoryModel} from "../../core/models/router-history.model";
+import {SurfEvent} from "../../core/models/surf-event.model";
+import {Rider} from "../../core/models/rider.model";
 
 @Component({
     selector: 'rs-error',
@@ -10,53 +14,52 @@ import {map} from "rxjs/operators";
 })
 export class ErrorComponent implements OnInit, OnDestroy {
 
-    routerHistory: {
-        url: string,
-        description: string
-    }[] = [];
-
+    routerHistory: RouterHistoryModel[] = [];
     errorResource: string = '';
+    searchedSurfEvents ?: SurfEvent[];
+    searchedRiders ?: Rider[];
 
-    private routerHistoryServiceSubscription ?: Subscription;
+    private HISTORY_LIMIT = 6;
+    private SEARCH_LIMIT = 9;
 
-    constructor(private routerHistoryService: RouterHistoryService) {
+    private searchSubscription ?: Subscription;
+
+    constructor(private routerHistoryService: RouterHistoryService, private searchService: SearchService) {
     }
 
     ngOnInit(): void {
-        this.routerHistoryServiceSubscription = this.routerHistoryService.getRouterHistory().pipe(
-            map((historyUrls: string[]) => {
-                historyUrls = historyUrls.slice(0, 6);
-                const result = [];
-                for (let historyUrl of historyUrls) {
-                    const queryParamIndex = historyUrl.indexOf('?');
-                    if (queryParamIndex !== -1) {
-                        historyUrl = historyUrl.substring(0, queryParamIndex);
+        this.searchSubscription = this.routerHistoryService.getRouterHistory().pipe(
+            map((historyUrls: RouterHistoryModel[]) => {
+                historyUrls = historyUrls.slice(0, this.HISTORY_LIMIT);
+                if (historyUrls.length > 0) {
+                    this.errorResource = historyUrls[0].description !== 'page-not-found' ? historyUrls[0].description : '';
+                    this.routerHistory = this.errorResource ? historyUrls : historyUrls.slice(1);
+                    if (this.errorResource) {
+                        if (!this.routerHistory[0].error) {
+                            this.routerHistoryService.markErrorInHistory(0);
+                            this.routerHistory[0].error = true;
+                        }
                     }
-                    const dest = historyUrl === '/' ? 'Home' : historyUrl.substring(1);
-                    result.push({
-                        url: historyUrl,
-                        description: dest
-                    });
-                }
-                return result;
-            })
-        ).subscribe(historyElements => {
-            if (historyElements.length > 0) {
-                if (historyElements[0].description !== 'page-not-found') {
-                    this.routerHistory = historyElements;
-                    this.errorResource = this.routerHistory[0].description;
                 } else {
-                    this.routerHistory = historyElements.slice(1);
+                    this.routerHistory = [];
                     this.errorResource = '';
                 }
-            } else {
-                this.routerHistory = [];
-                this.errorResource = '';
-            }
-        })
+                return this.errorResource;
+            }),
+            filter(searchTerm => searchTerm !== ''),
+            switchMap(searchTerm => this.searchService.searchByTerm(searchTerm)),
+            map(([events, riders]) => {
+                events = events.slice(0, this.SEARCH_LIMIT);
+                riders = riders.slice(0,this.SEARCH_LIMIT);
+                return [events, riders];
+            })
+        ).subscribe(([events, riders]) => {
+            this.searchedSurfEvents = events as SurfEvent[];
+            this.searchedRiders = riders as Rider[];
+        });
     }
 
     ngOnDestroy() {
-        this.routerHistoryServiceSubscription?.unsubscribe();
+        this.searchSubscription?.unsubscribe();
     }
 }

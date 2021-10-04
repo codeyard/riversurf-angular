@@ -17,7 +17,6 @@ import {NetworkStatusService} from "./network-status.service";
 })
 export class UserService {
 
-    PROTOCOL = 'https://';
     PATH_LOGIN = '/api/user/login';
     PATH_FAVOURITERIDERS = '/api/user/favouriteriders';
 
@@ -67,7 +66,7 @@ export class UserService {
     }
 
     public loginUser(username: string, password: string) {
-        const requestUrl = this.PROTOCOL + this.appConfigService.getHostName() + this.PATH_LOGIN;
+        const requestUrl = this.appConfigService.getProtocol() + this.appConfigService.getHostName() + this.PATH_ENDPOINT;
         const body = {userName: username, password: password}
         return this.httpClient.post<User>(requestUrl, body)
             .pipe(

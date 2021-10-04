@@ -3,17 +3,19 @@ import {Competition} from "../models/competition.model";
 import {BehaviorSubject, from, Observable, Subscription} from "rxjs";
 import {HttpClient} from "@angular/common/http";
 import {AppConfigService} from "./app-config.service";
-import {filter, map} from "rxjs/operators";
+import {distinctUntilChanged, filter, map} from "rxjs/operators";
 import {NetworkStatusService} from "./network-status.service";
 import {DexieService} from "./dexie.service";
 import {SnackbarService} from "./snackbar.service";
+import {WebSocketService} from "./web-socket.service";
+import {Topic} from "../models/topic.type";
 
 @Injectable({
     providedIn: 'root'
 })
-export class CompetitionService implements OnInit, OnDestroy {
+export class CompetitionService {
 
-    PROTOCOL_HTTPS = 'https://';
+    TOPIC: Topic = "competitions";
     PATH_ENDPOINT = '/api/competitions';
     isOffline: boolean = false;
     networkStatusSubscription!: Subscription;
@@ -26,13 +28,14 @@ export class CompetitionService implements OnInit, OnDestroy {
         private appConfigService: AppConfigService,
         private networkStatusService: NetworkStatusService,
         private dexieService: DexieService,
-        private snackBarService: SnackbarService) {
+        private snackBarService: SnackbarService,
+        private webSocketService: WebSocketService) {
 
         this.fetchAllCompetitions();
         this.dexieDB = dexieService.getDB();
         this.dexieDB.competitions.toArray().then((competitions: Competition[]) => {
             this.competitionData.next(competitions);
-        })
+        });
         this.networkStatusSubscription = this.networkStatusService.getNetworkStatus()
             .subscribe(
                 (status) => {
@@ -54,16 +57,18 @@ export class CompetitionService implements OnInit, OnDestroy {
                         })
                     }
                 }
-            )
-    }
+            );
 
-
-    ngOnInit(): void {
-
-    }
-
-    ngOnDestroy(): void {
-        this.networkStatusSubscription.unsubscribe();
+        this.webSocketService.getUpdatedAboutTopic('competition')
+            .subscribe(competition => {
+            const allCompetitions = [...this.competitionData.getValue()];
+            const compToBeUpdated = allCompetitions.find(comp => comp.id === competition.id);
+            // filter for "if I already have the correct verison" AND for "if i dont have this competition at all"
+            if(compToBeUpdated?.version !== competition.version){
+                Object.assign(compToBeUpdated, competition);
+                this.competitionData.next(allCompetitions);
+            }
+        });
     }
 
     getCompetitionsByIds(ids: string[]): Observable<Competition[]> {
@@ -81,6 +86,7 @@ export class CompetitionService implements OnInit, OnDestroy {
     }
 
     updateCompetition(competition: Competition): Observable<any> {
+        competition.version += 1;
         if (this.isOffline) {
             return from(this.dexieDB.competitions.put(competition));
         } else {
@@ -89,7 +95,7 @@ export class CompetitionService implements OnInit, OnDestroy {
     }
 
     pushToServer(competition: Competition) {
-        const requestUrl = this.PROTOCOL_HTTPS + this.appConfigService.getHostName() + this.PATH_ENDPOINT + `/${competition.id}`;
+        const requestUrl = this.appConfigService.getProtocol() + this.appConfigService.getHostName() + this.PATH_ENDPOINT + `/${competition.id}`;
         return this.httpClient.put(requestUrl, competition)
     }
 
@@ -103,7 +109,7 @@ export class CompetitionService implements OnInit, OnDestroy {
     }
 
     private fetchAllCompetitions() {
-        const requestUrl = this.PROTOCOL_HTTPS + this.appConfigService.getHostName() + this.PATH_ENDPOINT;
+        const requestUrl = this.appConfigService.getProtocol() + this.appConfigService.getHostName() + this.PATH_ENDPOINT;
         this.httpClient.get<Competition[]>(requestUrl).subscribe(
             (responseData: Competition[]) => {
                 responseData.forEach(competition => this.setupRounds(competition));

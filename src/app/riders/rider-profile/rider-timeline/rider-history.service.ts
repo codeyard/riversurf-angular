@@ -3,8 +3,8 @@ import {BehaviorSubject, Observable} from "rxjs";
 import {EventTimeLine} from "./time-line/event-timeline.model";
 import {map} from "rxjs/operators";
 import {HttpClient} from "@angular/common/http";
-import {Competition} from "../../../core/models/competition.model";
 import {AppConfigService} from "../../../core/services/app-config.service";
+import {WebSocketService} from "../../../core/services/web-socket.service";
 
 @Injectable({
     providedIn: 'root'
@@ -19,11 +19,19 @@ export class RiderHistoryService {
 
     constructor(
         private appConfigService: AppConfigService,
-        private httpClient: HttpClient
+        private httpClient: HttpClient,
+        private webSocketService: WebSocketService
     ) {
-        // ToDo: load initial data over api for data and subscribe to websocket for updates (only the currently ongoing timelines will be pushed over websocket)
-
-        //this.updateTimeLines(/* put received event timelines here */);
+        this.webSocketService.getUpdatedAboutTopic("eventtimeline").subscribe(eventtimeline => {
+            const allTimelines = [...this.eventTimeLines.getValue()];
+            const timelineToBeUpdated = allTimelines.find(comp => comp.id === eventtimeline.id);
+            Object.assign(timelineToBeUpdated, eventtimeline);
+            allTimelines.forEach(eventTimeLine => {
+                const isongoing = new Date(eventTimeLine.timeline[0].time).toDateString() === new Date().toDateString();
+                eventTimeLine.ongoing = isongoing;
+            });
+            this.eventTimeLines.next(allTimelines);
+        });
     }
 
     getRiderTimeLines(id: string): Observable<EventTimeLine[]> {

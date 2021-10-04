@@ -42,7 +42,7 @@
                 "https://riversurfstorage.blob.core.windows.net/**"
             ],
             "cacheConfig": {
-                "maxSize": 10,
+                "maxSize": 100,
                 "maxAge": "5h",
                 "timeout": "30s",
                 "strategy": "freshness"

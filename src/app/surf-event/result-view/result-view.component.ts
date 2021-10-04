@@ -20,6 +20,8 @@ import {CarouselComponent} from "../../shared/carousel/carousel.component";
 import {UserService} from "../../core/services/user.service";
 import {SurfEvent} from "../../core/models/surf-event.model";
 import {WeatherLocation, weatherLocations} from "../weather/weather-location";
+import {Division} from "../../core/models/division.type";
+import {NetworkStatusService} from "../../core/services/network-status.service";
 
 export interface Line {
     source: Point,
@@ -49,6 +51,7 @@ export class ResultViewComponent implements OnInit, AfterViewInit, OnDestroy {
     @ViewChildren(RiderResultComponent) results!: QueryList<any>;
     @ViewChildren(CarouselComponent) carousel?: QueryList<any>
     queryParamSubscription?: Subscription;
+    networkStatusSubscription?: Subscription;
     weatherLocation?: WeatherLocation;
 
     lines: Line[] = [];
@@ -70,10 +73,12 @@ export class ResultViewComponent implements OnInit, AfterViewInit, OnDestroy {
     smallScreen?: boolean;
 
     qrCodeLink?: string;
-    selectedDivision: string = '';
+    selectedDivision?: Division;
 
     private windowResizeSubject$ = new Subject<number | null>();
     private selectedSurfEvent: string = '';
+
+    isOffline: boolean = false;
 
     private destroy$ = new Subject();
 
@@ -83,7 +88,8 @@ export class ResultViewComponent implements OnInit, AfterViewInit, OnDestroy {
                 private router: Router,
                 private userService: UserService,
                 private surfEventService: SurfEventService,
-                private observer: BreakpointObserver) {
+                private observer: BreakpointObserver,
+                private networkStatusService: NetworkStatusService) {
     }
 
     ngOnInit(): void {
@@ -101,7 +107,7 @@ export class ResultViewComponent implements OnInit, AfterViewInit, OnDestroy {
                 switchMap(params => {
                     const id = params['id'].split('-').pop();
                     const division = params['division'].toLowerCase();
-                    this.selectedDivision = division;
+                    this.selectedDivision = division as Division;
                     this.selectedSurfEvent = id;
                     return this.surfEventService.getCompetitionByDivision(id, division);
                 }),
@@ -157,6 +163,10 @@ export class ResultViewComponent implements OnInit, AfterViewInit, OnDestroy {
         ).subscribe(() => {
             this.cd.detectChanges();
             this.getPointsAndLines();
+        });
+
+        this.networkStatusSubscription = this.networkStatusService.getNetworkStatus().subscribe(status => {
+            this.isOffline = status !== 'ONLINE';
         });
     }
 
@@ -225,7 +235,7 @@ export class ResultViewComponent implements OnInit, AfterViewInit, OnDestroy {
     }
 
     getPointsAndLines() {
-        const ridersWithTheirMaxRound: RiderProgress[] = []
+        const ridersWithTheirMaxRound: RiderProgress[] = [];
         this.competition.rounds.forEach((round, roundNumber) =>
             round.heats.forEach(heat =>
                 heat.riders.forEach(rider => {
@@ -355,15 +365,22 @@ export class ResultViewComponent implements OnInit, AfterViewInit, OnDestroy {
         this.router.navigate(["edit"], {relativeTo: this.route}).then();
     }
 
-    toggleDivision(division: string): void {
+    toggleDivision(division: Division): void {
         this.selectedDivision = division;
-        this.router.navigate(['../', this.selectedDivision], {
-            relativeTo: this.route
-        }).then();
         this.lines = [];
         this.points = [];
         this.highlightedRider = '';
         this.highlightActive = false;
+        this.router.navigate(['../', this.selectedDivision], {
+            relativeTo: this.route
+        }).then(
+            () => {
+                //this.cd.detectChanges();
+                //this.getPointsAndLines();
+            }
+        );
+
+
     }
 
     guessWeatherLocation(location: string) {

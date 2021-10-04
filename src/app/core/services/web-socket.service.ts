@@ -187,7 +187,7 @@ export class WebSocketService {
 
     private sendAuthMessage(token: string) {
         const outgoingAuthenticationPayload: OutgoingAuthenticationPayload = {
-            baererToken: token
+            bearerToken: token
         }
         const outgoingMessage: OutgoingMessageModel = {
             messageType: "authentication",

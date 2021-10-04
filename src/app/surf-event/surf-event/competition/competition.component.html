@@ -3,7 +3,7 @@
         <mat-tab *ngFor="let round of competition.rounds; let roundIndex = index" [label]="getRoundLabel(roundIndex)" [disabled]="round.riders.length === 0">
             <div class="switch-container">
                 <button mat-raised-button color="primary" type="button" class="switch-container__view"
-                        (click)="goToTournamentView()">Tournament-View
+                        (click)="goToTournamentView()">Tournament View
                 </button>
                 <button mat-raised-button *ngFor="let division of surfEvent.divisions"
                         value="{{division}}" (click)="toggleDivision(division)"

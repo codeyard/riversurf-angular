@@ -24,7 +24,7 @@ export class RiderHistoryService {
     ) {
         this.webSocketService.getUpdatedAboutTopic("eventtimeline").subscribe(eventtimeline => {
             const allTimelines = [...this.eventTimeLines.getValue()];
-            const timelineToBeUpdated = allTimelines.find(comp => comp.id === eventtimeline.id);
+            const timelineToBeUpdated = allTimelines.find(comp => comp.id === eventtimeline.id) ?? {};
             Object.assign(timelineToBeUpdated, eventtimeline);
             allTimelines.forEach(eventTimeLine => {
                 const isongoing = new Date(eventTimeLine.timeline[0].time).toDateString() === new Date().toDateString();

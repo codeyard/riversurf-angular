@@ -1,4 +1,4 @@
-<mat-card class="weather__card">
+<mat-card class="weather__card" (click)="openDataSourceLink()">
     <ng-container *ngIf="loading">
         <mat-spinner diameter="40"></mat-spinner>
     </ng-container>

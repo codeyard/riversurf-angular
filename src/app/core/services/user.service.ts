@@ -66,7 +66,7 @@ export class UserService {
     }
 
     public loginUser(username: string, password: string) {
-        const requestUrl = this.appConfigService.getProtocol() + this.appConfigService.getHostName() + this.PATH_ENDPOINT;
+        const requestUrl = this.appConfigService.getProtocol() + this.appConfigService.getHostName() + this.PATH_LOGIN;
         const body = {userName: username, password: password}
         return this.httpClient.post<User>(requestUrl, body)
             .pipe(
@@ -134,7 +134,7 @@ export class UserService {
      * Only post favourite riders instead of whole User -> the user can not be modified (feature out of scope)
      **/
     private putUserToBackend(user: User): void {
-        const requestUrl = this.PROTOCOL + this.appConfigService.getHostName() + this.PATH_FAVOURITERIDERS;
+        const requestUrl = this.appConfigService.getProtocol() + this.appConfigService.getHostName() + this.PATH_FAVOURITERIDERS;
         const body = {
             favouriteRiders: user.favouriteRiders
         };

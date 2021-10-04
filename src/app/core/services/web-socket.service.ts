@@ -10,10 +10,8 @@ import {NetworkStatusService} from "./network-status.service";
 import {distinctUntilChanged, filter, map} from "rxjs/operators";
 import {OutgoingMessageModel} from "../models/websocket/outgoing-message.model";
 import {OutgoingSubscriptionPayload} from "../models/websocket/outgoing-subscription-payload.model";
-import {SnackbarService} from "./snackbar.service";
 import {OutgoingNotification} from "../models/websocket/OutgoingNotification";
 import {OutgoingAuthenticationPayload} from "../models/websocket/outgoing-authentication-payload";
-import {Topic} from "../models/topic.type";
 import {BehaviorSubject, Observable} from "rxjs";
 import {IncomingMessage} from "../models/websocket/incoming-message.model";
 

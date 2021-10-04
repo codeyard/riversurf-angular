@@ -16,7 +16,7 @@ import {UserService} from "../core/services/user.service";
     styleUrls: ['./riders.component.scss']
 })
 export class RidersComponent implements OnInit, AfterViewInit, OnDestroy {
-    displayedColumns: string[] = ['avatar', 'name', 'nickName', 'division', 'action'];
+    displayedColumns: string[] = ['avatar', 'lastName', 'nickName', 'division', 'action'];
     ridersSubscription?: Subscription;
     ridersData: Rider[] = [];
     dataSource: MatTableDataSource<Rider> = new MatTableDataSource(this.ridersData);
@@ -34,7 +34,7 @@ export class RidersComponent implements OnInit, AfterViewInit, OnDestroy {
     pageIndex: number = 0;
     pageSize: number = 10;
     length!: number;
-    sortBy = 'name';
+    sortBy = 'lastName';
     sortDir: SortDirection = 'asc';
 
     maleCount: number = 0;

@@ -56,7 +56,11 @@ export class RidersService {
     }
 
     getRiders(): Observable<Rider[]> {
-        return this.riders$;
+        return this.riders$.pipe(
+            map(results => {
+                return results.sort((a, b) => (a.lastName + '' + a.firstName).localeCompare((b.lastName + '' + b.firstName)))
+            })
+        );
     }
 
     getRider(id: string): Observable<Rider> {

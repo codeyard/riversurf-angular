@@ -42,7 +42,7 @@ export class RiderTimeLineComponent implements OnDestroy, OnChanges {
                     const historyTimeLines = timelines.filter(timeline => !timeline.ongoing).sort((a, b) => this.timeLineSorter(a, b));
                     const historyTimeLineCollection: EventTimeLineCollection[] = [];
                     for (const timeLine of historyTimeLines) {
-                        const year = timeLine.event.startDateTime.getFullYear();
+                        const year = timeLine.surfEvent.startDateTime.getFullYear();
                         const index = historyTimeLineCollection.findIndex(htl => htl.year === year);
                         if (index != -1) {
                             historyTimeLineCollection[index].timeLines.push(timeLine);
@@ -62,10 +62,10 @@ export class RiderTimeLineComponent implements OnDestroy, OnChanges {
     }
 
     private timeLineSorter(tlA: EventTimeLine, tlB: EventTimeLine): number {
-        if (tlA.event.startDateTime.getFullYear() < tlB.event.startDateTime.getFullYear()) {
+        if (tlA.surfEvent.startDateTime.getFullYear() < tlB.surfEvent.startDateTime.getFullYear()) {
             return -1;
         } else {
-            if (tlA.event.startDateTime.getFullYear() > tlB.event.startDateTime.getFullYear()) {
+            if (tlA.surfEvent.startDateTime.getFullYear() > tlB.surfEvent.startDateTime.getFullYear()) {
                 return 1;
             } else {
                 return 0;

@@ -3,7 +3,7 @@ import {SurfEvent} from "../../../../core/models/surf-event.model";
 
 export interface EventTimeLine {
     id: string;
-    event: SurfEvent;
+    surfEvent: SurfEvent;
     ongoing: boolean;
     riderId: string;
     timeline: TimeLineItem[];

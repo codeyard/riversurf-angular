@@ -12,7 +12,7 @@ export class DexieService {
         this.db = new Dexie("riverSurfDB");
         this.db.version(1).stores({
             riders: "id",
-            user: "id",
+            users: "id",
             surfevents: "id",
             competitions: "id",
             versions: "topic"

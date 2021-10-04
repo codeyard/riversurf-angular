@@ -24,7 +24,6 @@ import {SnackbarService} from "./snackbar.service";
     providedIn: 'root'
 })
 export class RidersService {
-    PROTOCOL_HTTPS = 'https://'
     PATH_ENDPOINT = '/api/riders';
 
     private ridersData = new BehaviorSubject<Rider[]>([]);
@@ -109,7 +108,7 @@ export class RidersService {
     }
 
     private fetchAllRidersWithVersioning(): void {
-        const requestUrl = this.PROTOCOL_HTTPS + this.appConfigService.getHostName() + this.PATH_ENDPOINT;
+        const requestUrl = this.appConfigService.getProtocol() + this.appConfigService.getHostName() + this.PATH_ENDPOINT;
         this.httpClient.get<GenericCollectionResponseModel<Rider[]>>(requestUrl).subscribe(
             (responseData: GenericCollectionResponseModel<Rider[]>) => {
                 if (responseData.version > 0) {

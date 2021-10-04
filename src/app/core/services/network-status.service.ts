@@ -1,5 +1,5 @@
 import {Injectable} from '@angular/core';
-import {BehaviorSubject, Subject} from "rxjs";
+import {BehaviorSubject, Observable} from "rxjs";
 
 export type NetworkStatus = 'ONLINE' | 'OFFLINE';
 
@@ -17,7 +17,11 @@ export class NetworkStatusService {
         window.addEventListener('online', () => this.networkStatusSub.next('ONLINE'));
     }
 
-    public getNetworkStatus() {
+    public getNetworkStatus(): Observable<NetworkStatus> {
         return this.networkStatus$;
+    }
+
+    public getCurrentNetworkStatus(): NetworkStatus {
+        return this.networkStatusSub.getValue();
     }
 }

@@ -17,14 +17,19 @@
 
         &:first-of-type {
             left: 0px;
+            justify-content: start;
         }
 
         &:last-of-type {
             right: 0px;
+            justify-content: end;
+
+            & button mat-icon {
+                transform: translateX(25%);
+            }
         }
 
         & button {
-            position: absolute;
             background: transparent;
             cursor: pointer;
             outline: none;
@@ -36,7 +41,6 @@
                 width: 60px;
                 font-size: 60px;
                 color: $color-primary;
-
             }
 
             &:disabled {

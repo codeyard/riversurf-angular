@@ -54,6 +54,10 @@ export class WeatherComponent implements OnInit, OnDestroy, OnChanges {
         }
     }
 
+    openDataSourceLink() {
+        window.open(this.weatherService.getWeatherSourceLink(), "_blank");
+    }
+
     private refreshWeatherData(data: WeatherData) {
         this.weather.location = data.locationText;
         this.weather.weatherSymbol = data.weatherSymbol;

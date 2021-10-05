@@ -144,12 +144,14 @@ export class ResultViewComponent implements OnInit, AfterViewInit, OnDestroy {
         this.qrCodeLink = window.location.toString();
 
         this.surfEventService.getCompetitionUpdates().subscribe(
-            () => {
+            (competitions) => {
                 if(this.competition) {
-                    this.lines = [];
-                    this.points = [];
-                    this.cd.detectChanges();
-                    this.getPointsAndLines();
+                    if(competitions.findIndex(competition => competition.id === this.competition.id) !== -1) {
+                        this.lines = [];
+                        this.points = [];
+                        this.cd.detectChanges();
+                        this.getPointsAndLines();
+                    }
                 }
             }
         )

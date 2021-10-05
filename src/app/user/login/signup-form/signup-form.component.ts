@@ -66,6 +66,7 @@ export class SignupFormComponent implements OnInit {
 
 
     registerUser() {
-
+        this.isLoading = false;
+        this.snackBar.send('Sorry mate, but registration is currently not yet available.', 'warning');
     }
 }

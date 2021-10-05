@@ -7,7 +7,7 @@
     display: flex;
     justify-content: flex-end;
 
-    &__notification{
+    &__notification {
         margin-right: 1rem;
         @include respond(small) {
             display: none;
@@ -29,7 +29,7 @@
         outline: none;
     }
 
-    &__button{
+    &__button {
         z-index: 12;
     }
 
@@ -149,7 +149,7 @@
         }
     }
 
-    &__notification-menu{
+    &__notification-menu {
         display: none;
         @include respond(small) {
             display: inherit;
@@ -158,6 +158,7 @@
 
     &__checkbox:checked ~ &__background {
         height: 100vh;
+        position: fixed;
     }
 
     &__checkbox:checked ~ &__nav {
@@ -165,6 +166,7 @@
         opacity: 1;
         left: 0;
     }
+
     &__checkbox:checked + &__button {
         background-color: transparent;
     }

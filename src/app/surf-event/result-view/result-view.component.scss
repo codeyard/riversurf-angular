@@ -23,23 +23,11 @@
         border: none;
 
         &__item {
-            color: $color-white;
             margin-right: 1rem;
             border-radius: 4px;
 
-            &--male {
-                background-color: $color-male;
-            }
-
-            &--female {
-                background-color: $color-female;
-            }
-
-            &--kid {
-                background-color: $color-kids;
-            }
-
             &--disabled {
+                color: $color-white;
                 background-color: darken($color-grey-light-2, 15);
             }
         }

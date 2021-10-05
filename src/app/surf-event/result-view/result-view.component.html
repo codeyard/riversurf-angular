@@ -6,7 +6,7 @@
             <div class="division-selector" aria-label="Division">
                 <button mat-raised-button *ngFor="let division of surfEvent.divisions"
                         value="{{division}}" (click)="toggleDivision(division)"
-                        class="division-selector__item division-selector__item--{{division}}"
+                        class="division-selector__item division-selector__item division-{{division}}"
                         [disabled]="division === selectedDivision"
                         [ngClass]="{'division-selector__item--disabled': division === selectedDivision}">
                     <mat-icon class="division-selector__item__icon">{{division | divisionIcon}}</mat-icon>

@@ -7,7 +7,7 @@
                 </button>
                 <button mat-raised-button *ngFor="let division of surfEvent.divisions"
                         value="{{division}}" (click)="toggleDivision(division)"
-                        class="switch-container__item switch-container__item--{{division}}"
+                        class="switch-container__item switch-container__item division-{{division}}"
                         [disabled]="division === selectedDivision"
                         [ngClass]="{'switch-container__item--disabled': division === selectedDivision}">
                     <mat-icon class="switch-container__item__icon">{{division}}</mat-icon>

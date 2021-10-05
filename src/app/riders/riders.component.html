@@ -2,17 +2,17 @@
     <div>
         <mat-button-toggle-group class="division-selector" aria-label="Division" #group="matButtonToggleGroup">
             <mat-button-toggle value="male" (change)="toggleDivision($event, group)" [checked]="division === 'male'"
-                               class="division-selector__item division-selector__item--male">
+                               class="division-selector__item division-selector__item division-male">
                 <mat-icon class="division-selector__item__icon">male</mat-icon>
                 <h2 class="division-selector__item__info">{{ maleCount }} Men</h2>
             </mat-button-toggle>
             <mat-button-toggle value="female" (change)="toggleDivision($event, group)" [checked]="division === 'female'"
-                               class="division-selector__item division-selector__item--female">
+                               class="division-selector__item division-selector__item division-female">
                 <mat-icon class="division-selector__item__icon" >female</mat-icon>
                     <h2 class="division-selector__item__info" >{{ femaleCount }} female</h2>
             </mat-button-toggle>
             <mat-button-toggle value="kid" (change)="toggleDivision($event, group)" [checked]="division === 'kid'"
-                               class="division-selector__item division-selector__item--kids">
+                               class="division-selector__item division-selector__item division-kid">
                 <mat-icon class="division-selector__item__icon">child_care</mat-icon>
                 <h2 class="division-selector__item__info">{{ kidCount }} kids </h2>
             </mat-button-toggle>

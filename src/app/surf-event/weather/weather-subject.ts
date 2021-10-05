@@ -35,6 +35,10 @@ export class WeatherSubject {
         clearInterval(this.pollerNumber);
     }
 
+    static getWeatherSourceLink(){
+        return "https://aare.guru/";
+    }
+
     private loadWeatherData() {
         // see https://aareguru.existenz.ch/openapi/ and https://aareguru.existenz.ch/#parameter for details
         let weatherDataUrl = "https://aareguru.existenz.ch/v2018/current"

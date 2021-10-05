@@ -151,4 +151,8 @@ export class SurfEventService {
             }
         )
     }
+
+    getCompetitionUpdates() {
+        return this.competitionService.competition;
+    }
 }

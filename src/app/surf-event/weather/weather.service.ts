@@ -24,6 +24,10 @@ export class WeatherService implements OnDestroy {
         return subject.getWeatherObservable();
     }
 
+    getWeatherSourceLink(){
+        return WeatherSubject.getWeatherSourceLink();
+    }
+
     ngOnDestroy(): void {
         this.weatherSubjects.forEach(subject => subject.stop());
     }

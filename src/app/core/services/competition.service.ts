@@ -1,9 +1,9 @@
-import {Injectable, OnDestroy, OnInit} from '@angular/core';
+import {Injectable} from '@angular/core';
 import {Competition} from "../models/competition.model";
 import {BehaviorSubject, from, Observable, Subscription} from "rxjs";
 import {HttpClient} from "@angular/common/http";
 import {AppConfigService} from "./app-config.service";
-import {distinctUntilChanged, filter, map} from "rxjs/operators";
+import {filter, map} from "rxjs/operators";
 import {NetworkStatusService} from "./network-status.service";
 import {DexieService} from "./dexie.service";
 import {SnackbarService} from "./snackbar.service";
@@ -30,11 +30,20 @@ export class CompetitionService {
         private dexieService: DexieService,
         private snackBarService: SnackbarService,
         private webSocketService: WebSocketService) {
-
         this.fetchAllCompetitions();
         this.dexieDB = dexieService.getDB();
         this.dexieDB.competitions.toArray().then((competitions: Competition[]) => {
-            this.competitionData.next(competitions);
+            if(competitions.length > 0) {
+                let allCompetitions = [...this.competitionData.value];
+                competitions.forEach(competition => {
+                    const compToBeUpdated = allCompetitions.find(comp => comp.id === competition.id);
+                    // filter for "if I already have the correct verison" AND for "if i dont have this competition at all"
+                    if(compToBeUpdated?.version !== competition.version){
+                        Object.assign(compToBeUpdated, competition);
+                    }
+                })
+                this.competitionData.next(allCompetitions);
+            }
         });
         this.networkStatusSubscription = this.networkStatusService.getNetworkStatus()
             .subscribe(
@@ -69,6 +78,10 @@ export class CompetitionService {
                 this.competitionData.next(allCompetitions);
             }
         });
+    }
+
+    get competition() {
+        return this.competition$;
     }
 
     getCompetitionsByIds(ids: string[]): Observable<Competition[]> {

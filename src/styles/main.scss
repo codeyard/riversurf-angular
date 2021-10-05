@@ -93,6 +93,11 @@ snack-bar-container {
     color: $color-white;
 }
 
+.division-disabled {
+    opacity: .5;
+    color: $color-white !important;
+}
+
 
 .notification-dialog {
     max-width: 80vw;

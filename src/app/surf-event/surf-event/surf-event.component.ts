@@ -30,7 +30,8 @@ export class SurfEventComponent implements OnInit, OnDestroy {
         minZoom: 5
     };
 
-    isOffline: boolean = false;
+    isOffline!: boolean;
+    isUpcomingSurfEvent!: boolean;
 
 
     constructor(
@@ -53,6 +54,7 @@ export class SurfEventComponent implements OnInit, OnDestroy {
                     this.surfEvent = surfEvent;
                     this.isLoading = false;
                     this.enrolledRiders$ = this.surfEventService.getEnrolledRiders(this.surfEvent.id);
+                    this.isUpcomingSurfEvent = this.surfEventService.isUpcomingSurfEvent(this.surfEvent.startDateTime);
                 },
                 error => {
                     this.isLoading = false;

@@ -104,6 +104,14 @@ export class SurfEventService {
         return this.surfEvents$;
     }
 
+    isUpcomingSurfEvent(startDateTime: string): boolean {
+        const today = new Date();
+        today.setHours(0, 0, 0, 0);
+        const startDate: Date = new Date(startDateTime);
+        startDate.setHours(0, 0, 0, 0);
+        return today < startDate;
+    }
+
     getEnrolledRiders(id: string): Observable<Rider[]> {
         return this.getSurfEvent(id).pipe(
             filter(surfEvent => surfEvent !== undefined),

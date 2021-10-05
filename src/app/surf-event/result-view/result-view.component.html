@@ -9,7 +9,7 @@
                         class="division-selector__item division-selector__item--{{division}}"
                         [disabled]="division === selectedDivision"
                         [ngClass]="{'division-selector__item--disabled': division === selectedDivision}">
-                    <mat-icon class="division-selector__item__icon">{{division}}</mat-icon>
+                    <mat-icon class="division-selector__item__icon">{{division | divisionIcon}}</mat-icon>
                     {{division | titlecase}}
                 </button>
             </div>

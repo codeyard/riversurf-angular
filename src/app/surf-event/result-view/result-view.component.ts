@@ -23,7 +23,6 @@ import {SurfEvent} from "../../core/models/surf-event.model";
 import {WeatherLocation, weatherLocations} from "../weather/weather-location";
 import {Division} from "../../core/models/division.type";
 import {NetworkStatusService} from "../../core/services/network-status.service";
-import {SwUpdate} from "@angular/service-worker";
 
 export interface Line {
     source: Point,
@@ -93,8 +92,6 @@ export class ResultViewComponent implements OnInit, AfterViewInit, OnDestroy {
                 private observer: BreakpointObserver,
                 private networkStatusService: NetworkStatusService) {}
 
-
-
     ngOnInit(): void {
         this.queryParamSubscription = this.route.queryParams.subscribe(params => {
             const highlightedRider = params['highlight'];
@@ -145,6 +142,17 @@ export class ResultViewComponent implements OnInit, AfterViewInit, OnDestroy {
             });
 
         this.qrCodeLink = window.location.toString();
+
+        this.surfEventService.getCompetitionUpdates().subscribe(
+            () => {
+                if(this.competition) {
+                    this.lines = [];
+                    this.points = [];
+                    this.cd.detectChanges();
+                    this.getPointsAndLines();
+                }
+            }
+        )
 
         combineLatest(this.getUser(), this.getSurfEvent()).subscribe(
             ([user, surfEvent]) => {

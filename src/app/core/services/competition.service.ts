@@ -80,6 +80,10 @@ export class CompetitionService {
         });
     }
 
+    get competition() {
+        return this.competition$;
+    }
+
     getCompetitionsByIds(ids: string[]): Observable<Competition[]> {
         return this.competition$
             .pipe(

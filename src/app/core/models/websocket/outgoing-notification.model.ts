@@ -14,3 +14,4 @@ export interface OutgoingNotification {
     results: Result[];
     link: string;
 }
+

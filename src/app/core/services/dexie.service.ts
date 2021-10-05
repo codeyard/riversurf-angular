@@ -17,21 +17,28 @@ export class DexieService {
             competitions: "id",
             versions: "topic"
         });
+        this.db.version(2).stores({
+            notifications: "++id"
+        });
     }
 
-    public getDB() {
+    getDB() {
         return this.db;
     }
 
-    public getRidersTable() {
+    getRidersTable() {
         return this.db.table('riders');
     }
 
-    public getVersionsTable() {
+    getVersionsTable() {
         return this.db.table('versions');
     }
 
-    public getCompetitionsTable() {
+    getCompetitionsTable() {
         return this.db.table('competitions');
+    }
+
+    getNotificationsTable(){
+        return this.db.table('notifications');
     }
 }

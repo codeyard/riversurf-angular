@@ -74,7 +74,8 @@
                                                          (click)="addHighlightedRiderToRoute(result.riderId, $event)"
                                                          [isHighlighted]="result.riderId === highlightedRider && highlightActive"
                                                          [isFadedOut]="result.riderId !== highlightedRider && highlightActive"
-
+                                                         [isFinalRound]="round.id === competition.rounds.length-1"
+                                                         [isWinner]="round.id === competition.rounds.length-1 && heat.results[0].riderId === result.riderId"
                                         ></rs-rider-result>
                                     </div>
                                 </ng-container>

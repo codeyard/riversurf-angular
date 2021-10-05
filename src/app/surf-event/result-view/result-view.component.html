@@ -56,6 +56,9 @@
                         </div>
                     </ng-container>
                 </div>
+                <div *ngIf="!round.heats.length">
+                    <div class="heat__placeholder">Stay tuned, this round didn't start yet</div>
+                </div>
             </ng-container>
 
             <ng-container *ngIf="smallScreen">
@@ -95,13 +98,13 @@
                                 </ng-container>
 
                             </ng-container>
-
                         </div>
                     </ng-container>
                 </rs-carousel>
+                <div *ngIf="!round.heats.length">
+                    <div class="heat__placeholder">Stay tuned, this round didn't start yet</div>
+                </div>
             </ng-container>
-
-
         </div>
     </div>
 

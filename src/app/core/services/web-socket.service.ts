@@ -116,7 +116,7 @@ export class WebSocketService {
         };
 
         if (message.payload.timestamp && message.payload.content) {
-            notificationMessage.payload.surfEventName = message.payload.surfeventName;
+            notificationMessage.payload.surfEventName = message.payload.surfEventName;
             notificationMessage.payload.timestamp = message.payload.timestamp;
             notificationMessage.payload.content = message.payload.content;
             notificationMessage.payload.link = message.payload.link;

@@ -8,21 +8,46 @@ import {tap} from "rxjs/operators";
 })
 export class UserNotificationService {
     private notificationData = new Subject<IncomingNotification>();
-    private notification$ = this.notificationData.asObservable();
+    private notifiedNotificationData = new Subject<IncomingNotification>();
+    private notification$ = this.notifiedNotificationData.asObservable();
     private readonly hasVibrationSupport;
+    private readonly hasNotificationSupport;
+    private hasGrantedNotificationSupport;
 
     constructor() {
         this.hasVibrationSupport = !!window.navigator.vibrate;
+        this.hasNotificationSupport = !!window.Notification;
+        if(this.hasNotificationSupport){
+            this.hasGrantedNotificationSupport = Notification.permission === "granted";
+            if(!this.hasGrantedNotificationSupport){
+                Notification.requestPermission().then(()=>{
+                    this.hasGrantedNotificationSupport = Notification.permission === "granted";
+                });
+            }
+        }
+        this.notificationData.pipe(
+            tap(val =>  {
+                if(this.hasNotificationSupport && this.hasGrantedNotificationSupport){
+                    console.log(`Notifying`, val);
+                    new Notification('RiverSurf', {
+                        body: val.content,
+                        tag: val.surfEventName,
+                        icon: '/assets/icons/icon-512x512.png',
+                        vibrate: 400
+                    });
+                } else {
+                    if (this.hasVibrationSupport) {
+                        window.navigator.vibrate(400);
+                    }
+                }
+            })
+        ).subscribe(val => {
+            this.notifiedNotificationData.next(val);
+        });
     }
 
     getNotification(): Observable<IncomingNotification> {
-        return this.notification$.pipe(
-            tap(val =>  {
-                if (this.hasVibrationSupport) {
-                    window.navigator.vibrate(400);
-                }
-            })
-        );
+        return this.notification$;
     }
 
     showNotification(notification: IncomingNotification) {

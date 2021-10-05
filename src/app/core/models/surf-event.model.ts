@@ -6,7 +6,7 @@ export interface SurfEvent {
     description: string;
     logo: string;
     mainPicture: string;
-    startDateTime: Date;
+    startDateTime: string;
     endDateTime: Date;
     location: string;
     locationLat: number;

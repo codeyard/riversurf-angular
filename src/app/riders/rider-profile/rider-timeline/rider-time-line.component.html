@@ -14,10 +14,10 @@
             <!-- One or more currently ongoing timelines of the rider -->
             <mat-tab label="Ongoing" class="timeline-container__timeline">
                 <div class="timeline-container__timeline__description" *ngFor="let timeLine of currentTimeLines">
-                    <h1 class="timeline-container__timeline__description-title">{{timeLine.event.name}}</h1>
-                    <h2 class="timeline-container__timeline__description-location">{{timeLine.event.location}}</h2>
+                    <h1 class="timeline-container__timeline__description-title">{{timeLine.surfEvent.name}}</h1>
+                    <h2 class="timeline-container__timeline__description-location">{{timeLine.surfEvent.location}}</h2>
                     <hr>
-                    <p class="timeline-container__timeline__description-text">{{timeLine.event.description}}</p>
+                    <p class="timeline-container__timeline__description-text">{{timeLine.surfEvent.description}}</p>
                     <rs-time-line *ngIf="timeLine.timeline" [timeline]="timeLine.timeline"
                                   [ongoing]="true"></rs-time-line>
                 </div>
@@ -31,10 +31,10 @@
                     <!-- Only one timeline in this year = don't use accordion, show full history -->
                     <div class="timeline-container__timeline__description"
                          *ngFor="let timeLine of yearBasedTimeLines.timeLines">
-                        <h1 class="timeline-container__timeline__description-title">{{timeLine.event.name}}</h1>
-                        <h2 class="timeline-container__timeline__description-location">{{timeLine.event.location}}</h2>
+                        <h1 class="timeline-container__timeline__description-title">{{timeLine.surfEvent.name}}</h1>
+                        <h2 class="timeline-container__timeline__description-location">{{timeLine.surfEvent.location}}</h2>
                         <hr>
-                        <p class="timeline-container__timeline__description-text">{{timeLine.event.description}}</p>
+                        <p class="timeline-container__timeline__description-text">{{timeLine.surfEvent.description}}</p>
                         <rs-time-line *ngIf="timeLine.timeline" [timeline]="timeLine.timeline"></rs-time-line>
                     </div>
                 </ng-container>
@@ -45,10 +45,10 @@
                             <mat-expansion-panel-header>
                                 <mat-panel-title>
                                     <div class="timeline-container__timeline__description">
-                                        <h1 class="timeline-container__timeline__description-title">{{timeLine.event.name}}</h1>
-                                        <h2 class="timeline-container__timeline__description-location">{{timeLine.event.location}}</h2>
+                                        <h1 class="timeline-container__timeline__description-title">{{timeLine.surfEvent.name}}</h1>
+                                        <h2 class="timeline-container__timeline__description-location">{{timeLine.surfEvent.location}}</h2>
                                         <hr>
-                                        <p class="timeline-container__timeline__description-text">{{timeLine.event.description}}</p>
+                                        <p class="timeline-container__timeline__description-text">{{timeLine.surfEvent.description}}</p>
                                     </div>
                                 </mat-panel-title>
                             </mat-expansion-panel-header>

@@ -7,6 +7,7 @@ import {ActivatedRoute, Router} from "@angular/router";
 import {WebSocketService} from "../../../../core/services/web-socket.service";
 import {NetworkStatusService} from "../../../../core/services/network-status.service";
 import {Subscription} from "rxjs";
+import {Division} from "../../../../core/models/division.type";
 
 @Component({
     selector: 'rs-round',
@@ -157,14 +158,7 @@ export class RoundComponent implements OnInit, OnChanges, OnDestroy {
         }
         let messageLevel = this.isOffline ? 'warning' : 'success' as MessageLevel;
         this.snackbarService.send(msg, messageLevel);
-        this.webSocketService.sendNotification({
-            surfEventName: "",
-            topic: "heat",
-            action: event.action,
-            riders: event.heat.riders,
-            timestamp: Date.now().toString(),
-            link: this.router.url.slice(0, -5) // remove "/edit"
-        })
+        this.sendWsNotification(event);
         this.onSyncRound()
     }
 
@@ -175,5 +169,26 @@ export class RoundComponent implements OnInit, OnChanges, OnDestroy {
 
     onSyncRound() {
         this.syncRound.emit(this.round);
+    }
+
+    private sendWsNotification(event: { action: string, heat: Heat } ) {
+        let eventSlug = this.router.url.split('/')[2].split('-');
+        let division = this.router.url.split('/')[4] as Division;
+        let eventId = eventSlug.pop() ?? '';
+        let eventName = eventSlug.join(' ');
+        let roundId = this.round.id;
+        this.webSocketService.sendNotification({
+            surfEvent: eventId,
+            surfEventName: eventName,
+            division: division,
+            round: roundId,
+            heat: event.heat.id,
+            topic: "heat",
+            action: event.action,
+            riders: event.heat.riders,
+            results: event.heat.results,
+            timestamp: Date.now().toString(),
+            link: this.router.url.slice(0, -5) // remove "/edit"
+        });
     }
 }

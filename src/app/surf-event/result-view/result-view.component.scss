@@ -131,6 +131,7 @@
 .relative-container {
     position: relative;
     overflow-x: auto;
+    min-height: 400px;
 }
 
 .weather-qr-code-container {
@@ -167,6 +168,41 @@
 
         @include for-medium-and-large() {
             display: inline-block;
+        }
+    }
+}
+
+.not-started {
+    display:flex;
+    flex-direction: column;
+    height: 60vh;
+    justify-content: center;
+
+    &__message {
+        font-size: 2rem;
+        margin-bottom: 5rem;
+        text-align: center;
+    }
+
+    &__info {
+        display: flex;
+        flex-direction: row-reverse;
+        gap: 2rem;
+        justify-content: center;
+
+        rs-weather {
+            margin-top: .7rem;
+        }
+
+        @include respond(small) {
+            rs-weather {
+                max-width: 450px;
+                min-width: 300px;
+            }
+
+            qr-code {
+                display: none;
+            }
         }
     }
 }

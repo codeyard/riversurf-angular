@@ -8,17 +8,13 @@ import {NetworkStatusService} from "./network-status.service";
 import {distinctUntilChanged, filter, map} from "rxjs/operators";
 import {OutgoingMessageModel} from "../models/websocket/outgoing-message.model";
 import {OutgoingSubscriptionPayload} from "../models/websocket/outgoing-subscription-payload.model";
-import {OutgoingNotification} from "../models/websocket/outgoing-notification.model";
+import {OutgoingNotification, OutgoingNotificationWithId} from "../models/websocket/outgoing-notification.model";
 import {OutgoingAuthenticationPayload} from "../models/websocket/outgoing-authentication-payload";
 import {BehaviorSubject, Observable} from "rxjs";
 import {IncomingMessage} from "../models/websocket/incoming-message.model";
 import {DexieService} from "./dexie.service";
 import {SnackbarService} from "./snackbar.service";
 
-export interface OutgoingVersionised{
-    id: string,
-    notification: OutgoingNotification
-}
 
 @Injectable({
     providedIn: 'root'
@@ -35,19 +31,19 @@ export class WebSocketService {
 
     private dexieDB: any;
     private isOffline: boolean = false;
+    private userToken: string = '';
 
     constructor(private config: AppConfigService,
                 private notificationService: UserNotificationService,
                 private userService: UserService,
                 private networkStatusService: NetworkStatusService,
                 private dexieService: DexieService,
-                private snackBarService : SnackbarService
+                private snackBarService: SnackbarService
     ) {
         this.dexieDB = dexieService.getDB();
 
         networkStatusService.getNetworkStatus().subscribe(networkstate => {
             this.isOffline = networkstate === 'OFFLINE';
-            console.log(`WebsocketService offline:`, this.isOffline);
             if (!this.isOffline) {
                 this.connect();
             } else {
@@ -59,8 +55,10 @@ export class WebSocketService {
             .pipe(distinctUntilChanged((prevUser, nextUser) => prevUser.isAuthenticated === nextUser.isAuthenticated))
             .subscribe(user => {
                 if (user.isAuthenticated) {
+                    this.userToken = user.token ?? "";
                     this.sendAuthMessage(user.token ?? "");
                 } else {
+                    this.userToken = "";
                     this.sendAuthMessage("");
                 }
             });
@@ -79,8 +77,6 @@ export class WebSocketService {
                     this.webSocketData.next(outgoingMessage);
                 }
             });
-
-
     }
 
     sendNotification(outgoingNotification: OutgoingNotification) {
@@ -92,10 +88,10 @@ export class WebSocketService {
         if (this.webSocketData !== undefined && !this.isOffline) {
             this.webSocketData?.next(outgoingMessage);
         } else {
-            console.log(`Storing notification`, outgoingNotification);
-            this.dexieDB.notifications.put({
+            const storedMessage: OutgoingNotificationWithId = {
                 notification: outgoingNotification
-            });
+            }
+            this.dexieDB.notifications.put(storedMessage);
         }
     }
 
@@ -178,20 +174,20 @@ export class WebSocketService {
             () => console.log(`WebSocket Complete`)
         );
 
-        this.dexieDB.notifications.toArray().then((outgoingNotifications: OutgoingVersionised[]) => {
-            console.log(`Found ${outgoingNotifications.length} notifications to send to the server`);
+        if (this.userToken) {
+            this.sendAuthMessage(this.userToken);
+        }
+
+        this.dexieDB.notifications.toArray().then((outgoingNotifications: OutgoingNotificationWithId[]) => {
             if (outgoingNotifications.length > 0) {
-                const deletions : Promise<any>[] = [];
+                const deletions: Promise<any>[] = [];
                 outgoingNotifications.forEach(outgoingNotification => {
                     this.sendNotification(outgoingNotification.notification);
                     deletions.push(this.dexieDB.notifications.delete(outgoingNotification.id));
                 });
-                Promise.all(deletions).then(() =>{
-                    this.dexieDB.notifications.toArray().then((outgoingNotificationsWithIds: {
-                        id: string,
-                        notification: OutgoingNotification
-                    }[]) => {
-                        if (outgoingNotificationsWithIds.length === 0) {
+                Promise.all(deletions).then(() => {
+                    this.dexieDB.notifications.toArray().then((outgoingNotifications: OutgoingNotificationWithId[]) => {
+                        if (outgoingNotifications.length === 0) {
                             this.snackBarService.send("Welcome Back Online. All notifications were sent to the server!", "success")
                         } else {
                             this.snackBarService.send("We could not save your notifications on the server!", "error")

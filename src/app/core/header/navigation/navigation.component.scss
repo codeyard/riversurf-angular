@@ -14,7 +14,6 @@
         }
     }
 
-
     &__checkbox {
         display: none;
     }
@@ -24,13 +23,14 @@
         position: relative;
         top: .4rem;
         right: 0;
-        z-index: 12;
         box-shadow: 0 1rem 3rem rgba($color-black, 0.1);
         text-align: center;
         cursor: pointer;
         outline: none;
+    }
 
-
+    &__button{
+        z-index: 12;
     }
 
     &__logout {

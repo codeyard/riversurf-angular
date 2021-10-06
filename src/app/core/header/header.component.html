@@ -10,9 +10,10 @@
     <div class="header__search">
         <form>
             <input aria-label="Search jams or riders"
-                   placeholder="Search jams or riders"
+                   [placeholder]="isMac ? 'Search jams or riders (Ctrl-Opt-i)' : 'Search jams or riders (Alt-i)'"
                    [matAutocomplete]="auto"
                    [formControl]="autocompleteCtrl"
+                   accessKey="i"
                    class="header__search__input">
             <mat-autocomplete class="header__search__results" #auto="matAutocomplete">
                 <mat-option *ngFor="let event of filteredResults.events" [value]="event.name" (onSelectionChange)="goToSurfEvent(event)">

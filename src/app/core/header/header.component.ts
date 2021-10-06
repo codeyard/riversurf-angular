@@ -21,6 +21,8 @@ export class HeaderComponent {
     autocompleteCtrl = new FormControl();
     filteredResults: SearchResults = {events: [], riders: []};
 
+    isMac: boolean = navigator.platform.toLowerCase().indexOf('mac') >= 0;
+
     constructor(
         private searchService: SearchService,
         private router: Router,

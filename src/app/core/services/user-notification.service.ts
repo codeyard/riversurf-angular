@@ -32,18 +32,12 @@ export class UserNotificationService {
                         const notification = new Notification('RiverSurf', {
                             body: val.content,
                             tag: val.surfEventName,
-                            icon: '/assets/icons/icon-256x256.png',
-                            vibrate: 400
+                            icon: '/assets/icons/icon-256x256.png'
                         });
-                    } catch {
-                        if (this.hasVibrationSupport) {
-                            window.navigator.vibrate(400);
-                        }
-                    }
-                } else {
-                    if (this.hasVibrationSupport) {
-                        window.navigator.vibrate(400);
-                    }
+                    } catch {}
+                }
+                if (this.hasVibrationSupport) {
+                    window.navigator.vibrate(400);
                 }
             })
         ).subscribe(val => {

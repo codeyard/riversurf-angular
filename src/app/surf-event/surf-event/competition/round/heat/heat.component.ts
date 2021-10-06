@@ -60,6 +60,7 @@ export class HeatComponent implements OnInit, OnChanges {
     onDrop(event: CdkDragDrop<string[], any>) {
         if (this.heat.state === "idle") {
             this.drop.emit(event);
+            this.resetForm();
         } else {
             this.snackbarService.send("Fella, this heat is already in progress!", "warning");
         }
@@ -70,6 +71,10 @@ export class HeatComponent implements OnInit, OnChanges {
     }
 
     ngOnChanges(changes: SimpleChanges): void {
+        this.resetForm();
+    }
+
+    resetForm() {
         this.heatForm?.get('heat')?.reset();
 
         this.heatForm = new FormGroup({

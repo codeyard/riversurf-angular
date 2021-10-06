@@ -72,6 +72,7 @@ export class RoundComponent implements OnInit, OnChanges, OnDestroy {
     drop(event: CdkDragDrop<string[], any>) {
         if (event.previousContainer === event.container) {
             moveItemInArray(event.container.data, event.previousIndex, event.currentIndex);
+            this.onSyncRound();
             return
         } else {
             if (event.container.data.length !== this.maxRidersInHeat || event.container.id === 'unassignedRiders') {
@@ -80,6 +81,7 @@ export class RoundComponent implements OnInit, OnChanges, OnDestroy {
                     event.previousIndex,
                     event.currentIndex);
                 this.snackbarService.send(`Successfully Assigned to Heat!`, "success")
+                this.onSyncRound();
                 return
             }
         }

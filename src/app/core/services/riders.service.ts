@@ -64,13 +64,6 @@ export class RidersService {
     }
 
     getRider(id: string): Observable<Rider> {
-        // FIXME: indexed db and subject might not be ready yet, fetch missing rider in an other way...
-        /*
-        const index = this.ridersData.value.findIndex(rider => rider.id === id);
-        if(index === -1){
-            this.fetchAllRidersWithVersioning();
-        }
-         */
         return this.riders$
             .pipe(
                 filter(riders => riders.length > 0),

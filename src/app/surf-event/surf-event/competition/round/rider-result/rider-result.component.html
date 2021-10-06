@@ -27,7 +27,7 @@
                 <mat-icon aria-hidden="false" aria-label="surfing" class="rider__card__icon">surfing</mat-icon>
             </div>
             <div *ngSwitchCase="'finished'" class="rider__card__type">
-                <mat-icon aria-hidden="false" aria-label="updating" class="rider__card__icon" *ngIf="!points">update</mat-icon>
+                <mat-icon aria-hidden="false" aria-label="updating" class="rider__card__icon" *ngIf="!points && !control">update</mat-icon>
                 <p *ngIf="control">Points:</p>
                 <div class="rider__card__input-container">
 

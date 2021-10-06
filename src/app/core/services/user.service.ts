@@ -180,7 +180,6 @@ export class UserService {
                 break;
             case "No User found":
                 errorMessage = "r u sure about the username?"
-                // TODO IMPLEMENT IN BACKEND?
                 break;
         }
         return throwError(errorMessage);

@@ -28,11 +28,9 @@ You can visit the application at [https://test.riversurf.app](https://test.river
 
 ## Installation
 
-Clone the repository: `git clone https://gitlab.ti.bfh.ch/aligmara/riversurf-angular.git`.
-
-Run `npm ci` to install all required modules.
-
-Run `npm start` or `ng serve` and navigate to [http://localhost:4200](http://localhost:4200).
+* Clone the repository: `git clone https://gitlab.ti.bfh.ch/aligmara/riversurf-angular.git`
+* Run `npm ci` to install all required modules
+* Run `npm start` or `ng serve` and navigate to [http://localhost:4200](http://localhost:4200).
 
 ## Build
 
@@ -41,11 +39,14 @@ Run `npm run build` or `ng build` to build the project. The build artifacts will
 
 ## Progressive Web App (PWA)
 
-To test the PWA locally, you need to **build** the project. Furthermore, you need to install an HTTP-Server, e.g. by running `npm install http-server -g`.
+To test the PWA locally, the following steps are required:
 
-After that, you need to serve the build by running `http-server -p <desired-port-number>`.
+* **Build** the project (see above)
+* Install an HTTP-Server, e.g. by running `npm install http-server -g`
+* Serve the build with `http-server -p 9000`
+* Navigate to [http://localhost:9000](http://localhost:9000)
 
-You can then navigate to [http://localhost:<desired-port-number>](http://localhost:<desired-port-number>).
+Please note that `Port 9000` is only a suggestion and can be customized as desired.
 
 
 ## Documentation

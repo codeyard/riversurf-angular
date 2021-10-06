@@ -24,16 +24,16 @@ export class TimeLineComponent implements OnInit {
                 return "";
 
             case "start":
-                return "play_arrow";
+                return "tour";
 
             case "finish":
-                return "stop";
+                return "sports_score";
 
             case "win":
-                return "flare";
+                return "sentiment_very_satisfied";
 
             case "lose":
-                return "flash_on";
+                return "sentiment_very_dissatisfied";
         }
     }
 }

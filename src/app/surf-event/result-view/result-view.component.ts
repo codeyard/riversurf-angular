@@ -64,9 +64,11 @@ export class ResultViewComponent implements OnInit, AfterViewInit, OnDestroy {
 
     qrCodeLink?: string;
     selectedDivision?: Division;
-    isOffline: boolean = false;
+    isOffline!: boolean;
+
     private windowResizeSubject$ = new Subject<number | null>();
     private selectedSurfEvent: string = '';
+
     private destroy$ = new Subject();
 
     constructor(private cd: ChangeDetectorRef,
@@ -131,12 +133,14 @@ export class ResultViewComponent implements OnInit, AfterViewInit, OnDestroy {
         this.qrCodeLink = window.location.toString();
 
         this.surfEventService.getCompetitionUpdates().subscribe(
-            () => {
+            (competitions) => {
                 if (this.competition) {
-                    this.lines = [];
-                    this.points = [];
-                    this.cd.detectChanges();
-                    this.getPointsAndLines();
+                    if (competitions.findIndex(competition => competition.id === this.competition.id) !== -1) {
+                        this.lines = [];
+                        this.points = [];
+                        this.cd.detectChanges();
+                        this.getPointsAndLines();
+                    }
                 }
             }
         )
@@ -369,10 +373,7 @@ export class ResultViewComponent implements OnInit, AfterViewInit, OnDestroy {
         this.highlightActive = false;
         this.router.navigate(['../', this.selectedDivision], {
             relativeTo: this.route
-        }).then(
-            () => {
-            }
-        );
+        }).then();
 
 
     }

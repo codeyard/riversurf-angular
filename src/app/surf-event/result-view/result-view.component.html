@@ -6,10 +6,10 @@
             <div class="division-selector" aria-label="Division">
                 <button mat-raised-button *ngFor="let division of surfEvent.divisions"
                         value="{{division}}" (click)="toggleDivision(division)"
-                        class="division-selector__item division-selector__item--{{division}}"
+                        class="division-selector__item division-selector__item division-{{division}}"
                         [disabled]="division === selectedDivision"
                         [ngClass]="{'division-selector__item--disabled': division === selectedDivision}">
-                    <mat-icon class="division-selector__item__icon">{{division}}</mat-icon>
+                    <mat-icon class="division-selector__item__icon">{{division | divisionIcon}}</mat-icon>
                     {{division | titlecase}}
                 </button>
             </div>
@@ -21,7 +21,7 @@
 </ng-container>
 
 
-<div (window:resize)="onResize($event)" class="relative-container">
+<div *ngIf="hasCompetitionStarted()" (window:resize)="onResize($event)" class="relative-container">
     <div class="result-container" *ngIf="!isLoading" (click)="unHighlightRider()">
         <div class="round" *ngFor="let round of competition.rounds">
             <h2 class="round__title">{{ getRoundLabel(round.id) | uppercase}}</h2>
@@ -56,6 +56,9 @@
                         </div>
                     </ng-container>
                 </div>
+                <div *ngIf="!round.heats.length">
+                    <div class="heat__placeholder">Stay tuned, this round didn't start yet</div>
+                </div>
             </ng-container>
 
             <ng-container *ngIf="smallScreen">
@@ -74,7 +77,8 @@
                                                          (click)="addHighlightedRiderToRoute(result.riderId, $event)"
                                                          [isHighlighted]="result.riderId === highlightedRider && highlightActive"
                                                          [isFadedOut]="result.riderId !== highlightedRider && highlightActive"
-
+                                                         [isFinalRound]="round.id === competition.rounds.length-1"
+                                                         [isWinner]="round.id === competition.rounds.length-1 && heat.results[0].riderId === result.riderId"
                                         ></rs-rider-result>
                                     </div>
                                 </ng-container>
@@ -94,13 +98,13 @@
                                 </ng-container>
 
                             </ng-container>
-
                         </div>
                     </ng-container>
                 </rs-carousel>
+                <div *ngIf="!round.heats.length">
+                    <div class="heat__placeholder">Stay tuned, this round didn't start yet</div>
+                </div>
             </ng-container>
-
-
         </div>
     </div>
 
@@ -117,3 +121,10 @@
 </div>
 
 
+<div *ngIf="!hasCompetitionStarted()" class="not-started">
+    <h2 class="not-started__message">Stay tuned, this competition is <span class="underline">about to start pretty soon!</span></h2>
+    <div class="not-started__info">
+        <qr-code value="{{qrCodeLink}}" size="180" errorCorrectionLevel="M"></qr-code>
+        <rs-weather *ngIf="weatherLocation && !isOffline" [weatherLocation]="weatherLocation" weatherIconStyle="line"></rs-weather>
+    </div>
+</div>

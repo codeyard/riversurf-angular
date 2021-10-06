@@ -23,23 +23,11 @@
         border: none;
 
         &__item {
-            color: $color-white;
             margin-right: 1rem;
             border-radius: 4px;
 
-            &--male {
-                background-color: $color-male;
-            }
-
-            &--female {
-                background-color: $color-female;
-            }
-
-            &--kids {
-                background-color: $color-kids;
-            }
-
             &--disabled {
+                color: $color-white;
                 background-color: darken($color-grey-light-2, 15);
             }
         }
@@ -100,6 +88,22 @@
         color: $color-white;
         transform: translateY(-50%);
     }
+
+    &__placeholder {
+        text-align: center;
+        font-style: italic;
+        color: $color-grey-dark-2;
+        padding: 1rem;
+        border: 1px dashed $color-primary;
+        border-radius: 10px;
+        margin-top: 1rem;
+
+        @include respond(small) {
+            margin: .5rem auto;
+            min-width: 95%;
+            max-width: 95%;
+        }
+    }
 }
 
 .rider {
@@ -115,6 +119,7 @@
 .relative-container {
     position: relative;
     overflow-x: auto;
+    min-height: 400px;
 }
 
 .weather-qr-code-container {
@@ -151,6 +156,41 @@
 
         @include for-medium-and-large() {
             display: inline-block;
+        }
+    }
+}
+
+.not-started {
+    display:flex;
+    flex-direction: column;
+    height: 60vh;
+    justify-content: center;
+
+    &__message {
+        font-size: 2rem;
+        margin-bottom: 5rem;
+        text-align: center;
+    }
+
+    &__info {
+        display: flex;
+        flex-direction: row-reverse;
+        gap: 2rem;
+        justify-content: center;
+
+        rs-weather {
+            margin-top: .7rem;
+        }
+
+        @include respond(small) {
+            rs-weather {
+                max-width: 450px;
+                min-width: 300px;
+            }
+
+            qr-code {
+                display: none;
+            }
         }
     }
 }

@@ -1,6 +1,7 @@
 import {CarouselComponent, CarouselItemDirective} from "./carousel/carousel.component";
 import {CommonModule} from '@angular/common';
 import {DivisionColorPipe} from './pipes/division-color.pipe';
+import {DivisionIconPipe} from './pipes/division-icon.pipe';
 import {ErrorComponent} from "./error/error.component";
 import {EventCardComponent} from "./event-card/event-card.component";
 import {FavoriteRiderComponent} from './favorite-rider/favorite-rider.component';
@@ -20,12 +21,14 @@ import {SlugifyPipe} from "./pipes/slugify.pipe";
         CarouselComponent,
         CarouselItemDirective,
         DivisionColorPipe,
+        DivisionIconPipe,
         ErrorComponent,
         EventCardComponent,
         FavoriteRiderComponent,
         RiderCardComponent,
         RiderColorPipe,
-        SlugifyPipe
+        SlugifyPipe,
+        DivisionIconPipe
     ],
     imports: [
         CommonModule,
@@ -39,6 +42,7 @@ import {SlugifyPipe} from "./pipes/slugify.pipe";
         CarouselComponent,
         CarouselItemDirective,
         DivisionColorPipe,
+        DivisionIconPipe,
         EventCardComponent,
         ErrorComponent,
         FavoriteRiderComponent,

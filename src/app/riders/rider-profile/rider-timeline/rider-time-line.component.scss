@@ -9,6 +9,10 @@
     flex-direction: column;
     padding: 1rem;
 
+    @include respond(small) {
+        padding: 0rem;
+    }
+
     &__loading{
         flex: 100%;
         display: flex;
@@ -40,16 +44,9 @@
             }
 
             &-location {
-                display: inline-block;
-                margin-left: .3rem;
-                position: relative;
-                vertical-align: top;
                 font-weight: 400;
                 text-transform: uppercase;
-                padding: .3rem .5rem;
                 font-size: 1rem;
-                background-color: $color-primary;
-                color: $color-white;
                 border-radius: 1.5rem;
             }
 

@@ -10,7 +10,7 @@
                         class="switch-container__item switch-container__item division-{{division}}"
                         [disabled]="division === selectedDivision"
                         [ngClass]="{'switch-container__item--disabled': division === selectedDivision}">
-                    <mat-icon class="switch-container__item__icon">{{division}}</mat-icon>
+                    <mat-icon class="switch-container__item__icon">{{division | divisionIcon}}</mat-icon>
                     {{division | titlecase}}
                 </button>
             </div>

@@ -17,18 +17,17 @@ export class UserNotificationService {
     constructor() {
         this.hasVibrationSupport = !!window.navigator.vibrate;
         this.hasNotificationSupport = !!window.Notification;
-        if(this.hasNotificationSupport){
+        if (this.hasNotificationSupport) {
             this.hasGrantedNotificationSupport = Notification.permission === "granted";
-            if(!this.hasGrantedNotificationSupport){
-                Notification.requestPermission().then(()=>{
+            if (!this.hasGrantedNotificationSupport) {
+                Notification.requestPermission().then(() => {
                     this.hasGrantedNotificationSupport = Notification.permission === "granted";
                 });
             }
         }
         this.notificationData.pipe(
-            tap(val =>  {
-                if(this.hasNotificationSupport && this.hasGrantedNotificationSupport){
-                    console.log(`Notifying`, val);
+            tap(val => {
+                if (this.hasNotificationSupport && this.hasGrantedNotificationSupport) {
                     new Notification('RiverSurf', {
                         body: val.content,
                         tag: val.surfEventName,

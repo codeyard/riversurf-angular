@@ -14,3 +14,8 @@ export interface OutgoingNotification {
     results: Result[];
     link: string;
 }
+
+export interface OutgoingNotificationWithId {
+    id?: string,
+    notification: OutgoingNotification
+}

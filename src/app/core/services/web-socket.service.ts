@@ -1,8 +1,6 @@
 import {Injectable} from '@angular/core';
 import {webSocket, WebSocketSubject} from "rxjs/webSocket";
-import {
-    WebSocketNotificationPayload
-} from "../models/websocket/web-socket-data.model";
+import {WebSocketNotificationPayload} from "../models/websocket/web-socket-data.model";
 import {UserNotificationService} from "./user-notification.service";
 import {AppConfigService} from "./app-config.service";
 import {UserService} from "./user.service";
@@ -10,10 +8,13 @@ import {NetworkStatusService} from "./network-status.service";
 import {distinctUntilChanged, filter, map} from "rxjs/operators";
 import {OutgoingMessageModel} from "../models/websocket/outgoing-message.model";
 import {OutgoingSubscriptionPayload} from "../models/websocket/outgoing-subscription-payload.model";
-import {OutgoingNotification} from "../models/websocket/OutgoingNotification";
+import {OutgoingNotification, OutgoingNotificationWithId} from "../models/websocket/outgoing-notification.model";
 import {OutgoingAuthenticationPayload} from "../models/websocket/outgoing-authentication-payload";
 import {BehaviorSubject, Observable} from "rxjs";
 import {IncomingMessage} from "../models/websocket/incoming-message.model";
+import {DexieService} from "./dexie.service";
+import {SnackbarService} from "./snackbar.service";
+
 
 @Injectable({
     providedIn: 'root'
@@ -28,26 +29,36 @@ export class WebSocketService {
     private recievedData = new BehaviorSubject<any>(null);
     private recievedData$ = this.recievedData.asObservable();
 
+    private dexieDB: any;
+    private isOffline: boolean = false;
+    private userToken: string = '';
+
     constructor(private config: AppConfigService,
                 private notificationService: UserNotificationService,
                 private userService: UserService,
-                private networkStatusService: NetworkStatusService
+                private networkStatusService: NetworkStatusService,
+                private dexieService: DexieService,
+                private snackBarService: SnackbarService
     ) {
+        this.dexieDB = dexieService.getDB();
+
         networkStatusService.getNetworkStatus().subscribe(networkstate => {
-            if (networkstate === "ONLINE") {
+            this.isOffline = networkstate === 'OFFLINE';
+            if (!this.isOffline) {
                 this.connect();
             } else {
                 this.disconnect();
             }
         });
 
-
         userService.getUser()
             .pipe(distinctUntilChanged((prevUser, nextUser) => prevUser.isAuthenticated === nextUser.isAuthenticated))
             .subscribe(user => {
                 if (user.isAuthenticated) {
+                    this.userToken = user.token ?? "";
                     this.sendAuthMessage(user.token ?? "");
                 } else {
+                    this.userToken = "";
                     this.sendAuthMessage("");
                 }
             });
@@ -68,15 +79,23 @@ export class WebSocketService {
             });
     }
 
-    public sendNotification(outgoingNotification: OutgoingNotification) {
+    sendNotification(outgoingNotification: OutgoingNotification) {
         const outgoingMessage: OutgoingMessageModel = {
             messageType: "notification",
             payload: outgoingNotification
         }
-        this.webSocketData?.next(outgoingMessage)
+
+        if (this.webSocketData !== undefined && !this.isOffline) {
+            this.webSocketData?.next(outgoingMessage);
+        } else {
+            const storedMessage: OutgoingNotificationWithId = {
+                notification: outgoingNotification
+            }
+            this.dexieDB.notifications.put(storedMessage);
+        }
     }
 
-    public getUpdatedAboutTopic(topic: string): Observable<any> {
+    getUpdatedAboutTopic(topic: string): Observable<any> {
         return this.recievedData$.pipe(
             filter(data => !!data),
             map(data => data[topic]),
@@ -85,19 +104,19 @@ export class WebSocketService {
     }
 
     private receiveMessage(message: IncomingMessage) {
-            switch (message.messageType) {
-                case "data":
-                    this.parseDataMessage(message.payload);
-                    break;
+        switch (message.messageType) {
+            case "data":
+                this.parseDataMessage(message.payload);
+                break;
 
-                case "notification":
-                    this.parseNotificationMessage(message);
-                    break;
+            case "notification":
+                this.parseNotificationMessage(message);
+                break;
 
-                default:
-                    console.log(`Received unknown message type`, message);
-                    break;
-            }
+            default:
+                console.log(`Received unknown message type`, message);
+                break;
+        }
     }
 
     private parseDataMessage(payload: any) {
@@ -125,12 +144,10 @@ export class WebSocketService {
         }
     }
 
-    private connect(sessionToken?: string): void {
+    private connect(): void {
         if (this.webSocketData?.closed !== true) {
             this.disconnect();
         }
-
-        sessionToken = sessionToken ?? "";
 
         let protocol = window.location.protocol === "https:" ? "wss://" : "ws://";
         let host = 'localhost';
@@ -146,7 +163,7 @@ export class WebSocketService {
             }
         }
 
-        const webSocketUrl = protocol + host + '/ws?sessionToken=' + sessionToken;
+        const webSocketUrl = protocol + host + '/ws';
 
         this.webSocketData = webSocket(webSocketUrl);
         this.webSocketData.subscribe(
@@ -156,6 +173,29 @@ export class WebSocketService {
             },
             () => console.log(`WebSocket Complete`)
         );
+
+        if (this.userToken) {
+            this.sendAuthMessage(this.userToken);
+        }
+
+        this.dexieDB.notifications.toArray().then((outgoingNotifications: OutgoingNotificationWithId[]) => {
+            if (outgoingNotifications.length > 0) {
+                const deletions: Promise<any>[] = [];
+                outgoingNotifications.forEach(outgoingNotification => {
+                    this.sendNotification(outgoingNotification.notification);
+                    deletions.push(this.dexieDB.notifications.delete(outgoingNotification.id));
+                });
+                Promise.all(deletions).then(() => {
+                    this.dexieDB.notifications.toArray().then((outgoingNotifications: OutgoingNotificationWithId[]) => {
+                        if (outgoingNotifications.length === 0) {
+                            this.snackBarService.send("Welcome Back Online. All notifications were sent to the server!", "success")
+                        } else {
+                            this.snackBarService.send("We could not save your notifications on the server!", "error")
+                        }
+                    });
+                });
+            }
+        });
     }
 
     private sendAuthMessage(token: string) {

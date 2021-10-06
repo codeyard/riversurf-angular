@@ -1,7 +1,7 @@
 import {Injectable} from '@angular/core';
 import {BehaviorSubject, Observable} from "rxjs";
 import {EventTimeLine} from "./time-line/event-timeline.model";
-import {map} from "rxjs/operators";
+import {distinctUntilChanged, map} from "rxjs/operators";
 import {HttpClient} from "@angular/common/http";
 import {AppConfigService} from "../../../core/services/app-config.service";
 import {WebSocketService} from "../../../core/services/web-socket.service";
@@ -23,14 +23,7 @@ export class RiderHistoryService {
         private webSocketService: WebSocketService
     ) {
         this.webSocketService.getUpdatedAboutTopic("eventtimeline").subscribe(eventtimeline => {
-            const allTimelines = [...this.eventTimeLines.getValue()];
-            const timelineToBeUpdated = allTimelines.find(comp => comp.id === eventtimeline.id) ?? {};
-            Object.assign(timelineToBeUpdated, eventtimeline);
-            allTimelines.forEach(eventTimeLine => {
-                const isongoing = new Date(eventTimeLine.timeline[0].time).toDateString() === new Date().toDateString();
-                eventTimeLine.ongoing = isongoing;
-            });
-            this.eventTimeLines.next(allTimelines);
+            this.updateTimeLine(eventtimeline);
         });
     }
 
@@ -39,7 +32,7 @@ export class RiderHistoryService {
             let requestUrl = this.appConfigService.getProtocol() + this.appConfigService.getHostName() + this.RIDER_PAT + id + this.EVENTTIMELINE_ENDPOINT;
             this.httpClient.get<EventTimeLine[]>(requestUrl).subscribe(
                 (responseData: EventTimeLine[]) => {
-                    const allEventTimeLines = [...this.eventTimeLines.getValue()];
+                    const allEventTimeLines = this.eventTimeLines.getValue();
                     allEventTimeLines.push(...responseData);
                     allEventTimeLines.forEach(eventTimeLine => {
                         const isongoing = new Date(eventTimeLine.timeline[0].time).toDateString() === new Date().toDateString();
@@ -54,20 +47,27 @@ export class RiderHistoryService {
         }
 
         return this.eventTimeLines$.pipe(
-            map(eventTimeLines => eventTimeLines.filter(eventTimeLine => eventTimeLine.riderId === id))
+            map(eventTimeLines => eventTimeLines.filter(eventTimeLine => eventTimeLine.riderId === id)),
+            // filter for if any of riders timelines has changed reference
+            distinctUntilChanged((prevTimeLines, nextTimelines) => {
+                return prevTimeLines.length === nextTimelines.length &&
+                prevTimeLines.every(timeline => nextTimelines.includes(timeline));
+            })
         );
     }
 
-    private updateTimeLines(updatedTimeLines: EventTimeLine[]) {
+    private updateTimeLine(updatedTimeLine: EventTimeLine) {
         const currentEventTimeLines = this.eventTimeLines.value;
-        for (const updatedTimeLine of updatedTimeLines) {
             const index = currentEventTimeLines.findIndex(item => item.id === updatedTimeLine.id);
             if (index != -1) {
                 currentEventTimeLines[index] = updatedTimeLine;
             } else {
                 currentEventTimeLines.push(updatedTimeLine);
             }
-        }
+        currentEventTimeLines.forEach(eventTimeLine => {
+            const isongoing = new Date(eventTimeLine.timeline[0].time).toDateString() === new Date().toDateString();
+            eventTimeLine.ongoing = isongoing;
+        });
         this.eventTimeLines.next(currentEventTimeLines);
     }
 }

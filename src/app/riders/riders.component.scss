@@ -24,18 +24,6 @@
             box-shadow: 0 14px 28px rgba(0, 0, 0, 0.1), 0 10px 10px rgba(0, 0, 0, 0.1);
         }
 
-        &--male {
-            background-color: $color-male;
-        }
-
-        &--female {
-            background-color: $color-female;
-        }
-
-        &--kids {
-            background-color: $color-kids;
-        }
-
         &__info {
             color: $color-white;
             text-transform: uppercase;

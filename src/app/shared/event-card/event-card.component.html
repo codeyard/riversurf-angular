@@ -15,13 +15,24 @@
             </p>
         </mat-card-content>
         <div class="event__card__division">
-            <a mat-raised-button
-               *ngFor="let division of surfEvent.divisions"
-               class="division-{{division}}"
-               (click)="onClick($event)"
-               routerLink="/event/{{surfEvent.name | slugify}}-{{surfEvent.id}}/competition/{{ division }}">
-                {{division | titlecase}}
-            </a>
+            <ng-container *ngIf="!isUpcomingSurfEvent">
+                <a mat-raised-button
+                   *ngFor="let division of surfEvent.divisions"
+                   class="division-{{division}}"
+                   (click)="onClick($event)"
+                   routerLink="/event/{{surfEvent.name | slugify}}-{{surfEvent.id}}/competition/{{ division }}">
+                    <mat-icon>{{division | divisionIcon}}</mat-icon>
+                    {{division | titlecase}}
+                </a>
+            </ng-container>
+            <ng-container *ngIf="isUpcomingSurfEvent">
+                <a mat-stroked-button
+                   *ngFor="let division of surfEvent.divisions"
+                   class="division-{{division}} division-disabled">
+                    <mat-icon>{{division | divisionIcon}}</mat-icon>
+                    {{division | titlecase}}
+                </a>
+            </ng-container>
         </div>
     </mat-card>
 </a>

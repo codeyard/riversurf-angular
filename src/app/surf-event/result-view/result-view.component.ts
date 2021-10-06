@@ -1,15 +1,5 @@
-import {
-    AfterViewInit,
-    ChangeDetectorRef,
-    Component,
-    OnChanges,
-    OnDestroy,
-    OnInit,
-    QueryList,
-    SimpleChanges,
-    ViewChildren
-} from '@angular/core';
-import {Competition, Heat, Result} from "../../core/models/competition.model";
+import {AfterViewInit, ChangeDetectorRef, Component, OnDestroy, OnInit, QueryList, ViewChildren} from '@angular/core';
+import {Competition, Heat} from "../../core/models/competition.model";
 import {RiderResultComponent} from "../surf-event/competition/round/rider-result/rider-result.component";
 import {combineLatest, Subject, Subscription} from "rxjs";
 import {ActivatedRoute, Router} from "@angular/router";
@@ -70,16 +60,14 @@ export class ResultViewComponent implements OnInit, AfterViewInit, OnDestroy {
 
     isLoading = true;
     init!: Subscription;
-    resultAndHeatData!: { riderId: string, result: Result }[];
     smallScreen?: boolean;
 
     qrCodeLink?: string;
     selectedDivision?: Division;
+    isOffline!: boolean;
 
     private windowResizeSubject$ = new Subject<number | null>();
     private selectedSurfEvent: string = '';
-
-    isOffline: boolean = false;
 
     private destroy$ = new Subject();
 
@@ -90,7 +78,8 @@ export class ResultViewComponent implements OnInit, AfterViewInit, OnDestroy {
                 private userService: UserService,
                 private surfEventService: SurfEventService,
                 private observer: BreakpointObserver,
-                private networkStatusService: NetworkStatusService) {}
+                private networkStatusService: NetworkStatusService) {
+    }
 
     ngOnInit(): void {
         this.queryParamSubscription = this.route.queryParams.subscribe(params => {
@@ -114,23 +103,23 @@ export class ResultViewComponent implements OnInit, AfterViewInit, OnDestroy {
                 }),
                 tap(() => this.isLoading = false),
             ).subscribe(
-            (competition: Competition) => {
-                this.competition = competition;
-                this.isLoading = false;
-                this.cd.detectChanges();
-                this.getPointsAndLines();
-            },
-            (error: string) => {
-                let errorMessage = "Sorry fella, we couldn't load the Competition";
-                let routerNavigation = '/';
-                if (error === "NON_EXISTING_COMPETITION") {
-                    errorMessage = "Sorry mate, it seems like this Competition does not exist!";
-                    routerNavigation += 'event/' + this.selectedSurfEvent;
-                    this.snackBarService.send(errorMessage, "error");
-                    this.router.navigate([routerNavigation]).then();
-                }
+                (competition: Competition) => {
+                    this.competition = competition;
+                    this.isLoading = false;
+                    this.cd.detectChanges();
+                    this.calcPointsAndLines();
+                },
+                (error: string) => {
+                    let errorMessage = "Sorry fella, we couldn't load the Competition";
+                    let routerNavigation = '/';
+                    if (error === "NON_EXISTING_COMPETITION") {
+                        errorMessage = "Sorry mate, it seems like this Competition does not exist!";
+                        routerNavigation += 'event/' + this.selectedSurfEvent;
+                        this.snackBarService.send(errorMessage, "error");
+                        this.router.navigate([routerNavigation]).then();
+                    }
 
-            });
+                });
 
         this.observer.observe('(max-width: 878px)')
             .pipe(takeUntil(this.destroy$))
@@ -142,19 +131,6 @@ export class ResultViewComponent implements OnInit, AfterViewInit, OnDestroy {
             });
 
         this.qrCodeLink = window.location.toString();
-
-        this.surfEventService.getCompetitionUpdates().subscribe(
-            (competitions) => {
-                if(this.competition) {
-                    if(competitions.findIndex(competition => competition.id === this.competition.id) !== -1) {
-                        this.lines = [];
-                        this.points = [];
-                        this.cd.detectChanges();
-                        this.getPointsAndLines();
-                    }
-                }
-            }
-        )
 
         combineLatest(this.getUser(), this.getSurfEvent()).subscribe(
             ([user, surfEvent]) => {
@@ -179,7 +155,7 @@ export class ResultViewComponent implements OnInit, AfterViewInit, OnDestroy {
             distinctUntilChanged()
         ).subscribe(() => {
             this.cd.detectChanges();
-            this.getPointsAndLines();
+            this.calcPointsAndLines();
         });
 
         this.networkStatusSubscription = this.networkStatusService.getNetworkStatus().subscribe(status => {
@@ -245,7 +221,9 @@ export class ResultViewComponent implements OnInit, AfterViewInit, OnDestroy {
         }
     }
 
-    getPointsAndLines() {
+    calcPointsAndLines() {
+        this.lines = [];
+        this.points = [];
         const ridersWithTheirMaxRound: RiderProgress[] = [];
         this.competition.rounds.forEach((round, roundNumber) =>
             round.heats.forEach(heat =>
@@ -384,9 +362,7 @@ export class ResultViewComponent implements OnInit, AfterViewInit, OnDestroy {
         this.highlightActive = false;
         this.router.navigate(['../', this.selectedDivision], {
             relativeTo: this.route
-        }).then(
-            () => {}
-        );
+        }).then();
 
 
     }
@@ -405,6 +381,10 @@ export class ResultViewComponent implements OnInit, AfterViewInit, OnDestroy {
 
     onResize(event: any) {
         this.windowResizeSubject$.next(event.target.innerWidth);
+    }
+
+    hasCompetitionStarted() {
+        return !this.competition?.rounds.every(round => round.heats.length === 0);
     }
 
     private highlightRider(riderId: string) {

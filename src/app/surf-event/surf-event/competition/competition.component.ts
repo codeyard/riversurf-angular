@@ -1,4 +1,4 @@
-import {Component, OnDestroy, OnInit} from '@angular/core';
+import {Component, OnChanges, OnDestroy, OnInit} from '@angular/core';
 import {Competition, Round} from "../../../core/models/competition.model";
 import {SnackbarService} from "../../../core/services/snackbar.service";
 import {ActivatedRoute, Router} from "@angular/router";
@@ -45,6 +45,9 @@ export class CompetitionComponent implements OnInit, OnDestroy {
             )
             .subscribe(
                 competition => {
+                    if(this.competition?.id === competition.id && this.competition.version === competition.version) {
+                        return;
+                    }
                     this.competition = competition;
                     this.selectedTabIndex = this.competition.rounds
                         .map(round =>

@@ -60,9 +60,9 @@ export class SurfEventService {
                 return results.sort((a, b) => new Date(a.startDateTime).getTime() - new Date(b.startDateTime).getTime())
             }),
             tap(currentSurfEvents => {
-                for(const currentSurfEvent of currentSurfEvents){
-                    this.competitionService.getCompetitionsByIds(currentSurfEvent.competitions).subscribe();
-                }
+                // for(const currentSurfEvent of currentSurfEvents){
+                //     this.competitionService.getCompetitionsByIds(currentSurfEvent.competitions).subscribe();
+                // }
             })
         );
     }
@@ -102,6 +102,14 @@ export class SurfEventService {
             this.fetchAllSurfEvents();
         }
         return this.surfEvents$;
+    }
+
+    isUpcomingSurfEvent(startDateTime: string): boolean {
+        const today = new Date();
+        today.setHours(0, 0, 0, 0);
+        const startDate: Date = new Date(startDateTime);
+        startDate.setHours(0, 0, 0, 0);
+        return today < startDate;
     }
 
     getEnrolledRiders(id: string): Observable<Rider[]> {

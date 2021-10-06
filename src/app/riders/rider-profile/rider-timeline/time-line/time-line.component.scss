@@ -12,12 +12,12 @@ $line-dash-width: 0.35rem;
 
     &__timeline {
 
-        &-viewbox{
+        &-viewbox {
             position: relative;
             height: 100%;
             min-width: 60px;
 
-            svg{
+            svg {
                 position: absolute;
                 left: 0;
                 top: 0;
@@ -26,16 +26,16 @@ $line-dash-width: 0.35rem;
 
                 stroke: $line-color;
 
-                line{
+                line {
                     stroke-width: $line-width;
                     vector-effect: non-scaling-stroke;
                 }
 
-                .info{
+                .info {
                     stroke-dasharray: $line-dash-width $line-dash-width;
                 }
 
-                circle{
+                circle {
                     fill: $color-primary;
                     vector-effect: non-scaling-stroke;
                 }
@@ -62,7 +62,6 @@ $line-dash-width: 0.35rem;
         }
 
 
-
         &__card {
             display: flex;
             flex-direction: column;
@@ -75,14 +74,13 @@ $line-dash-width: 0.35rem;
                 position: absolute;
                 top: 1rem;
                 right: 1rem;
-                background-color: $color-primary;
                 border-radius: 50%;
                 width: 2rem;
                 height: 2rem;
                 display: flex;
                 justify-content: center;
                 align-items: center;
-                color: $color-white;
+                color: $color-primary;
 
                 @include respond(medium) {
                     top: 0;

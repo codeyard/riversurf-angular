@@ -1,5 +1,5 @@
 import {Injectable} from '@angular/core';
-import {BehaviorSubject, Observable} from "rxjs";
+import {Observable, Subject} from "rxjs";
 import {EventTimeLine} from "./time-line/event-timeline.model";
 import {distinctUntilChanged, map} from "rxjs/operators";
 import {HttpClient} from "@angular/common/http";
@@ -13,8 +13,8 @@ export class RiderHistoryService {
 
     RIDER_PAT = "/api/riders/";
     EVENTTIMELINE_ENDPOINT = "/eventtimeline"
-
-    private eventTimeLines = new BehaviorSubject<EventTimeLine[]>([]);
+    private eventTimeLineData: EventTimeLine[] = [];
+    private eventTimeLines = new Subject<EventTimeLine[]>();
     private eventTimeLines$ = this.eventTimeLines.asObservable();
 
     constructor(
@@ -28,46 +28,42 @@ export class RiderHistoryService {
     }
 
     getRiderTimeLines(id: string): Observable<EventTimeLine[]> {
-        if (this.eventTimeLines.value.every(eventTimeLine => eventTimeLine.riderId !== id)) {
-            let requestUrl = this.appConfigService.getProtocol() + this.appConfigService.getHostName() + this.RIDER_PAT + id + this.EVENTTIMELINE_ENDPOINT;
-            this.httpClient.get<EventTimeLine[]>(requestUrl).subscribe(
-                (responseData: EventTimeLine[]) => {
-                    const allEventTimeLines = this.eventTimeLines.getValue();
-                    allEventTimeLines.push(...responseData);
-                    allEventTimeLines.forEach(eventTimeLine => {
-                        const isongoing = new Date(eventTimeLine.timeline[0].time).toDateString() === new Date().toDateString();
-                        eventTimeLine.ongoing = isongoing;
-                    });
-                    this.eventTimeLines.next(allEventTimeLines);
-                },
-                error => {
-                    console.log('ERROR loading competitions data :-(', error)
-                }
-            )
-        }
+        let requestUrl = this.appConfigService.getProtocol() + this.appConfigService.getHostName() + this.RIDER_PAT + id + this.EVENTTIMELINE_ENDPOINT;
+        this.httpClient.get<EventTimeLine[]>(requestUrl).subscribe(
+            (responseData: EventTimeLine[]) => {
+                this.eventTimeLineData = responseData;
+                this.eventTimeLineData.forEach(eventTimeLine => {
+                    eventTimeLine.ongoing = new Date(eventTimeLine.timeline[0].time).toDateString() === new Date().toDateString();
+                });
+                this.eventTimeLines.next(this.eventTimeLineData);
+            },
+            error => {
+                console.log('ERROR loading competitions data :-(', error)
+            }
+        )
+
 
         return this.eventTimeLines$.pipe(
             map(eventTimeLines => eventTimeLines.filter(eventTimeLine => eventTimeLine.riderId === id)),
             // filter for if any of riders timelines has changed reference
             distinctUntilChanged((prevTimeLines, nextTimelines) => {
                 return prevTimeLines.length === nextTimelines.length &&
-                prevTimeLines.every(timeline => nextTimelines.includes(timeline));
+                    prevTimeLines.every(timeline => nextTimelines.includes(timeline));
             })
         );
+
     }
 
     private updateTimeLine(updatedTimeLine: EventTimeLine) {
-        const currentEventTimeLines = this.eventTimeLines.value;
-            const index = currentEventTimeLines.findIndex(item => item.id === updatedTimeLine.id);
-            if (index != -1) {
-                currentEventTimeLines[index] = updatedTimeLine;
-            } else {
-                currentEventTimeLines.push(updatedTimeLine);
-            }
-        currentEventTimeLines.forEach(eventTimeLine => {
-            const isongoing = new Date(eventTimeLine.timeline[0].time).toDateString() === new Date().toDateString();
-            eventTimeLine.ongoing = isongoing;
+        const index = this.eventTimeLineData.findIndex(item => item.id === updatedTimeLine.id);
+        if (index != -1) {
+            this.eventTimeLineData[index] = updatedTimeLine;
+        } else {
+            this.eventTimeLineData.push(updatedTimeLine);
+        }
+        this.eventTimeLineData.forEach(eventTimeLine => {
+            eventTimeLine.ongoing = new Date(eventTimeLine.timeline[0].time).toDateString() === new Date().toDateString();
         });
-        this.eventTimeLines.next(currentEventTimeLines);
+        this.eventTimeLines.next(this.eventTimeLineData);
     }
 }

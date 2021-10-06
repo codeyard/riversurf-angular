@@ -2,6 +2,7 @@ import {Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges
 import {CdkDragDrop} from "@angular/cdk/drag-drop";
 import {FormArray, FormControl, FormGroup, Validators} from "@angular/forms";
 import {Heat, Result} from "../../../../../core/models/competition.model";
+import {SnackbarService} from "../../../../../core/services/snackbar.service";
 
 @Component({
     selector: 'rs-heat',
@@ -17,7 +18,7 @@ export class HeatComponent implements OnInit, OnChanges {
 
     heatForm!: FormGroup;
 
-    constructor() {
+    constructor(private snackbarService: SnackbarService) {
     }
 
     ngOnInit(): void {
@@ -57,7 +58,11 @@ export class HeatComponent implements OnInit, OnChanges {
     }
 
     onDrop(event: CdkDragDrop<string[], any>) {
-        this.drop.emit(event);
+        if (this.heat.state === "idle") {
+            this.drop.emit(event);
+        } else {
+            this.snackbarService.send("Fella, this heat is already in progress!", "warning");
+        }
     }
 
     getControl(index: number): FormControl {
@@ -65,8 +70,6 @@ export class HeatComponent implements OnInit, OnChanges {
     }
 
     ngOnChanges(changes: SimpleChanges): void {
-        //this.status = this.heat.results.length > 0 ? 'finished' : 'assigned'
-
         this.heatForm?.get('heat')?.reset();
 
         this.heatForm = new FormGroup({

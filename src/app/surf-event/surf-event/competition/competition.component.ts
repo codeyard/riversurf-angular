@@ -45,9 +45,10 @@ export class CompetitionComponent implements OnInit, OnDestroy {
             )
             .subscribe(
                 competition => {
-                    if(this.competition?.id === competition.id && this.competition.version === competition.version) {
+                    if(this.competition?.id === competition.id && this.competition.version >= competition.version) {
                         return;
                     }
+                    console.log("SETTING COMPETITION");
                     this.competition = competition;
                     this.selectedTabIndex = this.competition.rounds
                         .map(round =>

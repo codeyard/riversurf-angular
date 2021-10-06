@@ -33,7 +33,7 @@ export class RiderHistoryService {
             (responseData: EventTimeLine[]) => {
                 this.eventTimeLineData = responseData;
                 this.eventTimeLineData.forEach(eventTimeLine => {
-                    eventTimeLine.ongoing = new Date(eventTimeLine.timeline[0].time).toDateString() === new Date().toDateString();
+                    eventTimeLine.ongoing = new Date(+eventTimeLine.timeline[0].time).toDateString() === new Date().toDateString();
                 });
                 this.eventTimeLines.next(this.eventTimeLineData);
             },
@@ -62,7 +62,7 @@ export class RiderHistoryService {
             this.eventTimeLineData.push(updatedTimeLine);
         }
         this.eventTimeLineData.forEach(eventTimeLine => {
-            eventTimeLine.ongoing = new Date(eventTimeLine.timeline[0].time).toDateString() === new Date().toDateString();
+            eventTimeLine.ongoing = new Date(+eventTimeLine.timeline[0].time).toDateString() === new Date().toDateString();
         });
         this.eventTimeLines.next(this.eventTimeLineData);
     }

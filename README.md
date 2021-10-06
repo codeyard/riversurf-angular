@@ -16,7 +16,9 @@ Team:
 
 ## Live Demo
 
-You can visit the application at [https://test.riversurf.app](https://test.riversurf.app).
+You can visit the application at [https://test.riversurf.app](https://test.riversurf.app). Alternatively you can scan the following QR Code:
+
+![QR Code](src/assets/images/qr-code.png)
 
 
 ## Administrator Access

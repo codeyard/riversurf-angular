@@ -60,9 +60,9 @@ export class SurfEventService {
                 return results.sort((a, b) => new Date(a.startDateTime).getTime() - new Date(b.startDateTime).getTime())
             }),
             tap(currentSurfEvents => {
-                for(const currentSurfEvent of currentSurfEvents){
-                    this.competitionService.getCompetitionsByIds(currentSurfEvent.competitions).subscribe();
-                }
+                // for(const currentSurfEvent of currentSurfEvents){
+                //     this.competitionService.getCompetitionsByIds(currentSurfEvent.competitions).subscribe();
+                // }
             })
         );
     }

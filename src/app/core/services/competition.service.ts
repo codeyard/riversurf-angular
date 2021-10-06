@@ -33,12 +33,12 @@ export class CompetitionService {
         this.fetchAllCompetitions();
         this.dexieDB = dexieService.getDB();
         this.dexieDB.competitions.toArray().then((competitions: Competition[]) => {
-            if(competitions.length > 0) {
+            if (competitions.length > 0) {
                 let allCompetitions = [...this.competitionData.value];
                 competitions.forEach(competition => {
                     const compToBeUpdated = allCompetitions.find(comp => comp.id === competition.id);
                     // filter for "if I already have the correct verison" AND for "if i dont have this competition at all"
-                    if(compToBeUpdated?.version !== competition.version){
+                    if (compToBeUpdated?.version !== competition.version) {
                         Object.assign(compToBeUpdated, competition);
                     }
                 })
@@ -70,14 +70,16 @@ export class CompetitionService {
 
         this.webSocketService.getUpdatedAboutTopic('competition')
             .subscribe(competition => {
-            const allCompetitions = [...this.competitionData.getValue()];
-            const compToBeUpdated = allCompetitions.find(comp => comp.id === competition.id);
-            // filter for "if I already have the correct verison" AND for "if i dont have this competition at all"
-            if(compToBeUpdated?.version !== competition.version){
-                Object.assign(compToBeUpdated, competition);
-                this.competitionData.next(allCompetitions);
-            }
-        });
+                const currentCompetitions = this.competitionData.getValue();
+                const index = currentCompetitions.findIndex(comp => comp.id === competition.id);
+                if (index >= 0) {
+                    currentCompetitions[index] = competition;
+                } else {
+                    currentCompetitions.push(competition)
+                }
+                // filter for "if I already have the correct verison" AND for "if i dont have this competition at all"
+                this.competitionData.next(currentCompetitions);
+            });
     }
 
     get competition() {

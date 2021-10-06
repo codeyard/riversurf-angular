@@ -107,7 +107,7 @@ export class ResultViewComponent implements OnInit, AfterViewInit, OnDestroy {
                     this.competition = competition;
                     this.isLoading = false;
                     this.cd.detectChanges();
-                    this.getPointsAndLines();
+                    this.calcPointsAndLines();
                 },
                 (error: string) => {
                     let errorMessage = "Sorry fella, we couldn't load the Competition";
@@ -132,19 +132,6 @@ export class ResultViewComponent implements OnInit, AfterViewInit, OnDestroy {
 
         this.qrCodeLink = window.location.toString();
 
-        this.surfEventService.getCompetitionUpdates().subscribe(
-            (competitions) => {
-                if (this.competition) {
-                    if (competitions.findIndex(competition => competition.id === this.competition.id) !== -1) {
-                        this.lines = [];
-                        this.points = [];
-                        this.cd.detectChanges();
-                        this.getPointsAndLines();
-                    }
-                }
-            }
-        )
-
         combineLatest(this.getUser(), this.getSurfEvent()).subscribe(
             ([user, surfEvent]) => {
                 this.surfEvent = surfEvent;
@@ -168,7 +155,7 @@ export class ResultViewComponent implements OnInit, AfterViewInit, OnDestroy {
             distinctUntilChanged()
         ).subscribe(() => {
             this.cd.detectChanges();
-            this.getPointsAndLines();
+            this.calcPointsAndLines();
         });
 
         this.networkStatusSubscription = this.networkStatusService.getNetworkStatus().subscribe(status => {
@@ -234,7 +221,9 @@ export class ResultViewComponent implements OnInit, AfterViewInit, OnDestroy {
         }
     }
 
-    getPointsAndLines() {
+    calcPointsAndLines() {
+        this.lines = [];
+        this.points = [];
         const ridersWithTheirMaxRound: RiderProgress[] = [];
         this.competition.rounds.forEach((round, roundNumber) =>
             round.heats.forEach(heat =>
@@ -395,7 +384,7 @@ export class ResultViewComponent implements OnInit, AfterViewInit, OnDestroy {
     }
 
     hasCompetitionStarted() {
-        return !this.competition.rounds.every(round => round.heats.length === 0);
+        return !this.competition?.rounds.every(round => round.heats.length === 0);
     }
 
     private highlightRider(riderId: string) {

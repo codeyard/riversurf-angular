@@ -28,9 +28,14 @@ You can visit the application at [https://test.riversurf.app](https://test.river
 
 ## Installation
 
-* Clone the repository: `git clone https://gitlab.ti.bfh.ch/aligmara/riversurf-angular.git`
-* Run `npm ci` to install all required modules
-* Run `npm start` or `ng serve` and navigate to [http://localhost:4200](http://localhost:4200).
+Clone the repository and install dependencies:
+```
+git clone https://gitlab.ti.bfh.ch/aligmara/riversurf-angular.git
+cd riversurf-angular
+npm ci
+```
+
+Run the app in development mode with `npm start` or `ng serve` and open [http://localhost:4200](http://localhost:4200) in your browser.
 
 ## Build
 

@@ -22,6 +22,7 @@ import {RidersRoutingModule} from "./riders-routing.module";
 import {RouterModule} from "@angular/router";
 import {SharedModule} from "../shared/shared.module";
 import {TimeLineComponent} from "./rider-profile/rider-timeline/time-line/time-line.component";
+import { PrependUrlProtocolPipe } from './rider-profile/rider-overview/prepend-url-protocol.pipe';
 
 
 @NgModule({
@@ -31,7 +32,8 @@ import {TimeLineComponent} from "./rider-profile/rider-timeline/time-line/time-l
         RiderProfileComponent,
         RiderTimeLineComponent,
         RidersComponent,
-        TimeLineComponent
+        TimeLineComponent,
+        PrependUrlProtocolPipe
     ],
     imports: [
         CommonModule,

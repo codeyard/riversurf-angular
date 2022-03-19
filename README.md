@@ -4,6 +4,8 @@ Angular frontend for RiverSurf.app.
 
 *"Plan, keep track and stay up to date at river surf events."*
 
+Realized as a group work during the studies for the CAS in Application Development with JavaScript & HTML5, Bern University of Applied Sciences.
+
 Team:
 
 * Alain Messerli @messa4

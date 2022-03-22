@@ -58,4 +58,4 @@ Please note that `Port 9000` is only a suggestion and can be customized as desir
 
 ## Documentation
 
-The detailed documentation can be found in our [Wiki](https://gitlab.ti.bfh.ch/aligmara/riversurf-angular/-/wikis/home).
+The detailed documentation can be found in our [Wiki](https://gitlab.ti.bfh.ch/aligmara/riversurf-angular/-/wikis/home) or in [PDF-Format](https://github.com/codeyard/riversurf-angular/blob/develop/export_wiki_riversurf.pdf).
